@@ -24,6 +24,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       if (media && media.file_id) {
         actions.push({
           kind: 'ingest', id: 'q_' + u.update_id,
+          fileId: media.file_id,
           fromChatId: msg.chat.id, fromMsgId: msg.message_id,
           name: (msg.from && msg.from.first_name) || 'Anónima',
           tags: (msg.caption || '').trim(),

@@ -24,6 +24,8 @@ export function Telegram(token) {
       call('copyMessage', { chat_id: chatId, from_chat_id: fromChatId,
         message_id: messageId, reply_markup: replyMarkup }),
     sendMessage: (chatId, text) => call('sendMessage', { chat_id: chatId, text }),
+    // Post an audio by remote URL — Telegram fetches it (used for the Cloudinary clip).
+    sendAudioByUrl: (chatId, url, caption) => call('sendAudio', { chat_id: chatId, audio: url, caption }),
     answerCallback: (id, text) => call('answerCallbackQuery', { callback_query_id: id, text }),
     editReplyMarkupClear: (chatId, messageId) =>
       call('editMessageReplyMarkup', { chat_id: chatId, message_id: messageId, reply_markup: { inline_keyboard: [] } }),

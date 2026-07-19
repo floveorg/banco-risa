@@ -2,5 +2,6 @@
   "botUsername": "RisaLiberadaBot",
   "channel": "@risaliberada",
   "modGroupId": null,
-  "pagesBase": "https://floveorg.github.io/banco-risa"
+  "pagesBase": "https://floveorg.github.io/banco-risa",
+  "cloudinaryFolder": "banco-risa"
 }

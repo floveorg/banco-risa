@@ -14,7 +14,7 @@ test('a private voice message becomes an ingest action', () => {
   assert.equal(offset, 11);
   assert.equal(actions.length, 1);
   assert.deepEqual(actions[0], {
-    kind: 'ingest', id: 'q_10', fromChatId: 777, fromMsgId: 5,
+    kind: 'ingest', id: 'q_10', fileId: 'AAA', fromChatId: 777, fromMsgId: 5,
     name: 'Marta', tags: '', uploaderChatId: 777
   });
 });
@@ -29,6 +29,7 @@ test('an audio message with a caption carries the caption as tags', () => {
   assert.equal(actions[0].kind, 'ingest');
   assert.equal(actions[0].tags, 'de vientre');
   assert.equal(actions[0].id, 'q_12');
+  assert.equal(actions[0].fileId, 'BBB');
 });
 
 test('approve/reject callbacks from the mod group are parsed', () => {
