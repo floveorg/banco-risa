@@ -35,3 +35,18 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   const offset = maxId >= 0 ? maxId + 1 : currentOffset;
   return { actions, offset };
 }
+
+export function bancoEntry({ id, name, tags, when, pagesBase }) {
+  const e = {
+    id,
+    name: name || 'Anónima',
+    src: pagesBase + '/audio/' + id + '.mp3',
+    when
+  };
+  if (tags) e.tags = tags;
+  return e;
+}
+
+export function prependClip(banco, entry) {
+  return [entry, ...(Array.isArray(banco) ? banco : [])];
+}
