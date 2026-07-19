@@ -2,20 +2,20 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bancoEntry, prependClip } from '../logic.mjs';
 
-const BASE = 'https://floveorg.github.io/banco-risa';
+const SRC = 'https://res.cloudinary.com/risa/video/upload/v1/banco-risa/q_10.mp3';
 
-test('bancoEntry builds absolute src and keeps name (no by field)', () => {
-  const e = bancoEntry({ id: 'q_10', name: 'Marta', tags: 'de grupo', when: '2026-07-19', pagesBase: BASE });
+test('bancoEntry keeps name + given src (no by field)', () => {
+  const e = bancoEntry({ id: 'q_10', name: 'Marta', tags: 'de grupo', when: '2026-07-19', src: SRC });
   assert.deepEqual(e, {
     id: 'q_10', name: 'Marta',
-    src: 'https://floveorg.github.io/banco-risa/audio/q_10.mp3',
+    src: SRC,
     tags: 'de grupo', when: '2026-07-19'
   });
   assert.equal('by' in e, false);
 });
 
 test('bancoEntry omits tags when empty', () => {
-  const e = bancoEntry({ id: 'q_11', name: 'Yusuf', tags: '', when: '2026-07-19', pagesBase: BASE });
+  const e = bancoEntry({ id: 'q_11', name: 'Yusuf', tags: '', when: '2026-07-19', src: SRC });
   assert.equal('tags' in e, false);
 });
 

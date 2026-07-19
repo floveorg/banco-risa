@@ -36,11 +36,13 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   return { actions, offset };
 }
 
-export function bancoEntry({ id, name, tags, when, pagesBase }) {
+export function bancoEntry({ id, name, tags, when, src }) {
+  // `src` is the absolute audio URL (Cloudinary secure_url). The website composes
+  // the license (`by`, `orig`) from `name`; the bot never writes those (see spec §4).
   const e = {
     id,
     name: name || 'Anónima',
-    src: pagesBase + '/audio/' + id + '.mp3',
+    src,
     when
   };
   if (tags) e.tags = tags;
