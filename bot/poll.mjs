@@ -22,6 +22,9 @@ const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '🗑 Borrar',   callback_data: 'no:' + id }
 ]] });
 
+// Answering the callback is cosmetic — never let it block the real work.
+const bestEffort = (promise) => promise.catch((err) => console.error('non-fatal:', err.message));
+
 async function main() {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) throw new Error('TELEGRAM_BOT_TOKEN missing');
@@ -50,7 +53,7 @@ async function main() {
           'Al enviarla la publicas en libre, bajo CC BY-SA 4.0.');
       } else if (a.kind === 'approve') {
         const q = queue[a.id];
-        await tg.answerCallback(a.callbackId, q ? 'Publicando…' : 'Ya resuelta');
+        await bestEffort(tg.answerCallback(a.callbackId, q ? 'Publicando…' : 'Ya resuelta'));
         if (!q) continue;
         if (!q.fileId) throw new Error('queue entry missing fileId for ' + a.id);
         const filePath = await tg.getFilePath(q.fileId);
@@ -72,7 +75,7 @@ async function main() {
         delete queue[a.id];
       } else if (a.kind === 'reject') {
         const q = queue[a.id];
-        await tg.answerCallback(a.callbackId, 'Borrada');
+        await bestEffort(tg.answerCallback(a.callbackId, 'Borrada'));
         if (q) {
           await tg.editReplyMarkupClear(cfg.modGroupId, q.modMsgId);
           await tg.editCaption(cfg.modGroupId, q.modMsgId, '🗑 Borrada');
