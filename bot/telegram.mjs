@@ -18,8 +18,8 @@ export function Telegram(token) {
   }
 
   return {
-    getUpdates: (offset) =>
-      call('getUpdates', { offset, timeout: 0, allowed_updates: ['message', 'callback_query'] }),
+    getUpdates: (offset, timeout = 0) =>
+      call('getUpdates', { offset, timeout, allowed_updates: ['message', 'callback_query'] }),
     copyMessage: (chatId, fromChatId, messageId, replyMarkup) =>
       call('copyMessage', { chat_id: chatId, from_chat_id: fromChatId,
         message_id: messageId, reply_markup: replyMarkup }),

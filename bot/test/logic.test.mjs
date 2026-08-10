@@ -1,8 +1,20 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseUpdates } from '../logic.mjs';
+import { parseUpdates, decisionOf } from '../logic.mjs';
 
 const CTX = { modGroupId: -1001234 };
+
+test('decisionOf maps approval/rejection words', () => {
+  assert.equal(decisionOf('ok'), 'approve');
+  assert.equal(decisionOf('SÍ'), 'approve');
+  assert.equal(decisionOf('publicar'), 'approve');
+  assert.equal(decisionOf('✅'), 'approve');
+  assert.equal(decisionOf('no'), 'reject');
+  assert.equal(decisionOf('borrar'), 'reject');
+  assert.equal(decisionOf('🗑'), 'reject');
+  assert.equal(decisionOf('qué risa'), null);
+  assert.equal(decisionOf(''), null);
+});
 
 test('a private voice message becomes an ingest action', () => {
   const updates = [{
@@ -53,6 +65,34 @@ test('callbacks from other chats and non-audio messages are ignored', () => {
   const { actions, offset } = parseUpdates(updates, CTX);
   assert.equal(actions.length, 0);
   assert.equal(offset, 32);
+});
+
+test('a reply to a mod message approves/rejects via text', () => {
+  const ctx = { modGroupId: -1001234, modMsgToId: { 42: 'q_10', 43: 'q_12' } };
+  const updates = [
+    { update_id: 40, message: { message_id: 1, chat: { id: -1001234 },
+      from: { first_name: 'Mod' }, text: 'ok',
+      reply_to_message: { message_id: 42 } } },
+    { update_id: 41, message: { message_id: 2, chat: { id: -1001234 },
+      from: { first_name: 'Mod' }, text: 'borrar',
+      reply_to_message: { message_id: 43 } } },
+  ];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0], { kind: 'approve', id: 'q_10', modMsgId: 42, via: 'reply' });
+  assert.deepEqual(actions[1], { kind: 'reject', id: 'q_12', modMsgId: 43, via: 'reply' });
+});
+
+test('a reply to an unknown mod message or with unrelated text is ignored', () => {
+  const ctx = { modGroupId: -1001234, modMsgToId: { 42: 'q_10' } };
+  const updates = [
+    { update_id: 50, message: { message_id: 1, chat: { id: -1001234 }, text: 'ok',
+      reply_to_message: { message_id: 999 } } },
+    { update_id: 51, message: { message_id: 2, chat: { id: -1001234 }, text: 'qué bien',
+      reply_to_message: { message_id: 42 } } },
+  ];
+  const { actions, offset } = parseUpdates(updates, ctx);
+  assert.equal(actions.length, 0);
+  assert.equal(offset, 52);
 });
 
 test('empty batch keeps the current offset', () => {

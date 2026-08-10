@@ -1,5 +1,20 @@
 // Pure logic: Telegram getUpdates -> ordered actions + new offset. No I/O.
 
+const APPROVE_WORDS = new Set(['ok', 'si', 'sí', 'yes', 'publicar', 'publish', 'dale', 'adelante', 'aprobado', 'subir', 'listo']);
+const REJECT_WORDS = new Set(['no', 'borrar', 'delete', 'rechazar', 'quitar', 'fuera', 'cancelar', 'anular']);
+
+// Map the text a moderator types (as a reply to a mod message) to a decision.
+export function decisionOf(raw) {
+  const text = (raw || '').trim();
+  if (/^(✅|👍|✔️|sí|si|ok|yes)$/i.test(text)) return 'approve';
+  if (/^(🗑|❌|🚫|no)$/i.test(text)) return 'reject';
+  const t = text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '').trim();
+  if (!t) return null;
+  if (APPROVE_WORDS.has(t)) return 'approve';
+  if (REJECT_WORDS.has(t)) return 'reject';
+  return null;
+}
+
 export function parseUpdates(updates, ctx, currentOffset = 0) {
   const actions = [];
   let maxId = -1;
@@ -19,6 +34,15 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
     }
 
     const msg = u.message;
+    if (msg && msg.chat && msg.chat.id === ctx.modGroupId &&
+        msg.reply_to_message && msg.reply_to_message.message_id) {
+      const id = ctx.modMsgToId && ctx.modMsgToId[msg.reply_to_message.message_id];
+      const kind = decisionOf(msg.text);
+      if (id && kind) {
+        actions.push({ kind, id, modMsgId: msg.reply_to_message.message_id, via: 'reply' });
+      }
+      continue;
+    }
     if (msg && msg.chat && msg.chat.type === 'private') {
       const media = msg.voice || msg.audio;
       if (media && media.file_id) {
