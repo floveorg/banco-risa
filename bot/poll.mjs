@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseUpdates, bancoEntry, prependClip } from './logic.mjs';
 import { Telegram } from './telegram.mjs';
-import { uploadAudio } from './cloudinary.mjs';
+import { uploadAudio } from './r2.mjs';
 
 const run = promisify(execFile);
 const ROOT = new URL('..', import.meta.url).pathname;
@@ -28,8 +28,6 @@ const bestEffort = (promise) => promise.catch((err) => console.error('non-fatal:
 async function main() {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) throw new Error('TELEGRAM_BOT_TOKEN missing');
-  const cloudinaryUrl = process.env.CLOUDINARY_URL;
-  if (!cloudinaryUrl) throw new Error('CLOUDINARY_URL missing');
   const cfg = await readJSON('config.json', {});
   if (!cfg.modGroupId) throw new Error('config.json modGroupId not set (run Task 6)');
   const tg = Telegram(token);
@@ -62,8 +60,8 @@ async function main() {
         try {
           await tg.downloadFile(filePath, oga);
           await run('ffmpeg', ['-y', '-i', oga, '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
-          // audio → Cloudinary (video resource type); banco.json keeps only the URL
-          const src = await uploadAudio(cloudinaryUrl, mp3, { publicId: a.id, folder: cfg.cloudinaryFolder });
+          // audio → R2 (S3-compatible); banco.json keeps only the public URL
+          const src = await uploadAudio(mp3, { publicId: a.id, folder: cfg.r2Folder });
           banco = prependClip(banco, bancoEntry({ id: a.id, name: q.name, tags: q.tags, when: isoToday(), src }));
           await tg.sendAudioByUrl(cfg.channel, src, q.name + ' · CC BY-SA 4.0');
         } finally {
