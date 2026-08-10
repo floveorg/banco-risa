@@ -27,11 +27,11 @@ test('a private voice message becomes an ingest action', () => {
   assert.equal(actions.length, 1);
   assert.deepEqual(actions[0], {
     kind: 'ingest', id: 'q_10', fileId: 'AAA', fromChatId: 777, fromMsgId: 5,
-    name: 'Marta', tags: '', uploaderChatId: 777
+    name: 'Marta', title: '', uploaderChatId: 777
   });
 });
 
-test('an audio message with a caption carries the caption as tags', () => {
+test('an audio message with a caption carries the caption as title', () => {
   const updates = [{
     update_id: 12,
     message: { message_id: 6, chat: { id: 888, type: 'private' },
@@ -39,7 +39,7 @@ test('an audio message with a caption carries the caption as tags', () => {
   }];
   const { actions } = parseUpdates(updates, CTX);
   assert.equal(actions[0].kind, 'ingest');
-  assert.equal(actions[0].tags, 'de vientre');
+  assert.equal(actions[0].title, 'de vientre');
   assert.equal(actions[0].id, 'q_12');
   assert.equal(actions[0].fileId, 'BBB');
 });

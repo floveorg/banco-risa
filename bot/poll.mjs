@@ -38,8 +38,11 @@ async function publishClip(tg, cfg, q, id, banco) {
     await tg.downloadFile(filePath, oga);
     await run('ffmpeg', ['-y', '-i', oga, '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
     const src = await uploadAudio(mp3, { publicId: id, folder: cfg.r2Folder });
-    banco = prependClip(banco, bancoEntry({ id, name: q.name, tags: q.tags, when: isoToday(), src }));
-    await tg.sendAudioByUrl(cfg.channel, src, q.name + ' · CC BY-SA 4.0');
+    banco = prependClip(banco, bancoEntry({ id, name: q.name, tags: q.title, when: isoToday(), src, t: q.title }));
+    const posted = await tg.sendAudioByUrl(cfg.channel, src, q.name + ' · CC BY-SA 4.0');
+    if (posted && posted.message_id) {
+      await bestEffort(tg.setMessageReaction(cfg.channel, posted.message_id, '😂'));
+    }
   } finally {
     await rm(oga, { force: true });
     await rm(mp3, { force: true });
@@ -53,10 +56,11 @@ async function handleAction(a, tg, cfg, queue, banco) {
   if (a.kind === 'ingest') {
     if (queue[a.id] || banco.some((e) => e.id === a.id)) return { banco, dirty: false };
     const copied = await tg.copyMessage(cfg.modGroupId, a.fromChatId, a.fromMsgId, BUTTONS(a.id));
-    queue[a.id] = { fileId: a.fileId, name: a.name, tags: a.tags,
+    queue[a.id] = { fileId: a.fileId, name: a.name, title: a.title,
                     uploaderChatId: a.uploaderChatId, modMsgId: copied.message_id, ts: Date.now() };
     await tg.sendMessage(a.uploaderChatId,
-      '¡Recibida! 💛 Se publica sola en un momento; los moderadores pueden frenarla si no procede.');
+      '¡Recibida! 💛 Se publica sola en un momento; los moderadores pueden frenarla si no procede.\n' +
+      'Puedes ponerle un título añadiendo un pie (caption) al audio.');
     return { banco, dirty: true };
   }
   if (a.kind === 'approve') {
@@ -69,6 +73,15 @@ async function handleAction(a, tg, cfg, queue, banco) {
     delete queue[a.id];
     await bestEffort(tg.editReplyMarkupClear(cfg.modGroupId, q.modMsgId));
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
+    if (q.uploaderChatId) {
+      const src = banco[0] && banco[0].src;
+      await bestEffort(tg.sendMessage(q.uploaderChatId, [
+        '✅ ¡Tu risa ya está publicada!',
+        '📣 Grupo Risa liberada: ' + cfg.groupUrl,
+        '🌐 Web: ' + cfg.webUrl,
+        src ? '🔊 Tu risa: ' + src : ''
+      ].filter(Boolean).join('\n')));
+    }
     return { banco, dirty: true };
   }
   if (a.kind === 'reject') {

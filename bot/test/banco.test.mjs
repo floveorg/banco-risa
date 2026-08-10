@@ -19,6 +19,11 @@ test('bancoEntry omits tags when empty', () => {
   assert.equal('tags' in e, false);
 });
 
+test('bancoEntry keeps the title t when given', () => {
+  const e = bancoEntry({ id: 'q_12', name: 'Yusuf', t: 'de vientre', when: '2026-07-19', src: SRC });
+  assert.equal(e.t, 'de vientre');
+});
+
 test('prependClip puts the new clip first and does not mutate input', () => {
   const banco = [{ id: 'old' }];
   const out = prependClip(banco, { id: 'new' });

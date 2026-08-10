@@ -51,7 +51,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           fileId: media.file_id,
           fromChatId: msg.chat.id, fromMsgId: msg.message_id,
           name: (msg.from && msg.from.first_name) || 'Anónima',
-          tags: (msg.caption || '').trim(),
+          title: (msg.caption || '').trim(),
           uploaderChatId: msg.chat.id
         });
       }
@@ -61,7 +61,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   return { actions, offset };
 }
 
-export function bancoEntry({ id, name, tags, when, src }) {
+export function bancoEntry({ id, name, tags, when, src, t }) {
   // `src` is the absolute audio URL (Cloudinary secure_url). The website composes
   // the license (`by`, `orig`) from `name`; the bot never writes those (see spec §4).
   const e = {
@@ -70,6 +70,7 @@ export function bancoEntry({ id, name, tags, when, src }) {
     src,
     when
   };
+  if (t) e.t = t;
   if (tags) e.tags = tags;
   return e;
 }
