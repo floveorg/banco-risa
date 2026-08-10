@@ -22,6 +22,29 @@ const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '🗑 Borrar',   callback_data: 'no:' + id }
 ]] });
 
+const OPTIONS = (chatId) => ({ inline_keyboard: [
+  [{ text: '✏️ Título', callback_data: 'draft:title' },
+   { text: '🙈 Ocultar nombre', callback_data: 'draft:anon' }],
+  [{ text: '✅ Enviar a moderación', callback_data: 'draft:send' }]
+] });
+
+const CANCEL_TITLE = () => ({ inline_keyboard: [[
+  { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
+]] });
+
+// Texto del mensaje de opciones del borrador.
+function draftText(d) {
+  const shown = d.anon ? '🙈 nombre oculto' : (d.name || 'Anónima');
+  return [
+    '🎵 Risa recibida 💛',
+    '',
+    '✏️ Título: ' + (d.title || '—'),
+    '🙂 Nombre: ' + shown,
+    '',
+    'Ajusta lo que quieras y pulsa «Enviar a moderación».'
+  ].join('\n');
+}
+
 // Answering the callback is cosmetic — never let it block the real work.
 const bestEffort = (promise) => promise.catch((err) => console.error('non-fatal:', err.message));
 
@@ -38,8 +61,10 @@ async function publishClip(tg, cfg, q, id, banco) {
     await tg.downloadFile(filePath, oga);
     await run('ffmpeg', ['-y', '-i', oga, '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
     const src = await uploadAudio(mp3, { publicId: id, folder: cfg.r2Folder });
-    banco = prependClip(banco, bancoEntry({ id, name: q.name, tags: q.title, when: isoToday(), src, t: q.title }));
-    const posted = await tg.sendAudioByUrl(cfg.channel, src, q.name + ' · CC BY-SA 4.0');
+    const name = q.anon ? 'Anónima' : q.name;
+    banco = prependClip(banco, bancoEntry({ id, name, tags: q.title, when: isoToday(), src, t: q.title }));
+    const caption = [q.title, name, 'CC BY-SA 4.0'].filter(Boolean).join(' · ');
+    const posted = await tg.sendAudioByUrl(cfg.channel, src, caption);
     if (posted && posted.message_id) {
       await bestEffort(tg.setMessageReaction(cfg.channel, posted.message_id, '😂'));
     }
@@ -52,15 +77,67 @@ async function publishClip(tg, cfg, q, id, banco) {
 
 // Apply one action. Every handler is idempotent (safe when updates re-deliver after
 // an offset rollback). Returns { banco, dirty } — dirty tells the caller to persist+commit.
-async function handleAction(a, tg, cfg, queue, banco) {
-  if (a.kind === 'ingest') {
-    if (queue[a.id] || banco.some((e) => e.id === a.id)) return { banco, dirty: false };
-    const copied = await tg.copyMessage(cfg.modGroupId, a.fromChatId, a.fromMsgId, BUTTONS(a.id));
-    queue[a.id] = { fileId: a.fileId, name: a.name, title: a.title,
-                    uploaderChatId: a.uploaderChatId, modMsgId: copied.message_id, ts: Date.now() };
-    await tg.sendMessage(a.uploaderChatId,
-      '¡Recibida! 💛 Se publica sola en un momento; los moderadores pueden frenarla si no procede.\n' +
-      'Puedes ponerle un título añadiendo un pie (caption) al audio.');
+async function handleAction(a, tg, cfg, queue, drafts, banco) {
+  if (a.kind === 'draft') {
+    const key = String(a.chatId);
+    const prev = drafts[key] || {};
+    drafts[key] = {
+      id: a.id, fileId: a.fileId, name: a.name, title: a.title,
+      anon: false, fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
+      draftMsgId: prev.draftMsgId, awaitingTitle: false
+    };
+    const text = draftText(drafts[key]);
+    if (prev.draftMsgId) {
+      await bestEffort(tg.editMessageText(a.chatId, prev.draftMsgId, text, OPTIONS(a.chatId)));
+    } else {
+      const sent = await tg.sendMessage(a.chatId, text, OPTIONS(a.chatId));
+      drafts[key].draftMsgId = sent.message_id;
+    }
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-title') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { banco, dirty: false };
+    d.awaitingTitle = true;
+    await bestEffort(tg.answerCallback(a.callbackId, 'Escribe el título'));
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId,
+      '✏️ Escribe el título de tu risa (una palabra o frase corta):', CANCEL_TITLE()));
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-title-text') {
+    const d = drafts[String(a.chatId)];
+    if (!d || !d.awaitingTitle) return { banco, dirty: false };
+    d.title = (a.title || '').slice(0, 60);
+    d.awaitingTitle = false;
+    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, draftText(d), OPTIONS(a.chatId)));
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-anon') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { banco, dirty: false };
+    d.anon = !d.anon;
+    await bestEffort(tg.answerCallback(a.callbackId, d.anon ? '🙈 Nombre oculto' : '🙂 Nombre visible'));
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(a.chatId)));
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-cancel') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { banco, dirty: false };
+    d.awaitingTitle = false;
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(a.chatId)));
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-send') {
+    const d = drafts[String(a.chatId)];
+    if (!d) { await bestEffort(tg.answerCallback(a.callbackId, 'Nada que enviar')); return { banco, dirty: false }; }
+    if (queue[d.id] || banco.some((e) => e.id === d.id)) { delete drafts[String(a.chatId)]; return { banco, dirty: true }; }
+    const copied = await tg.copyMessage(cfg.modGroupId, d.fromChatId, d.fromMsgId, BUTTONS(d.id));
+    queue[d.id] = { fileId: d.fileId, name: d.name, title: d.title, anon: d.anon,
+                    uploaderChatId: a.chatId, modMsgId: copied.message_id, ts: Date.now() };
+    delete drafts[String(a.chatId)];
+    await bestEffort(tg.answerCallback(a.callbackId, 'Enviada a moderación'));
+    await bestEffort(tg.sendMessage(a.chatId,
+      '¡Enviada a moderación! 💛 Se publica sola en un momento; los moderadores pueden frenarla si no procede.'));
     return { banco, dirty: true };
   }
   if (a.kind === 'approve') {
@@ -127,6 +204,7 @@ async function main() {
 
   let offset = parseInt(await readFile(p('state/offset.txt'), 'utf8'), 10) || 0;
   let queue = await readJSON('state/queue.json', {});
+  let drafts = await readJSON('state/drafts.json', {});
   let banco = await readJSON('banco.json', []);
   for (const e of Object.values(queue)) if (!e.ts) e.ts = Date.now(); // legacy entries
 
@@ -134,9 +212,11 @@ async function main() {
   while (Date.now() - startedAt < LOOP_MAX_MS) {
     const modMsgToId = Object.fromEntries(
       Object.entries(queue).map(([id, e]) => [e.modMsgId, id]));
+    const awaitingTitle = Object.fromEntries(
+      Object.entries(drafts).filter(([, d]) => d.awaitingTitle));
     const updates = await tg.getUpdates(offset, POLL_TIMEOUT);
     const { actions, offset: nextOffset } = parseUpdates(
-      updates, { modGroupId: cfg.modGroupId, modMsgToId }, offset);
+      updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle }, offset);
 
     // Trusted mod group: clips nobody decided on within the grace period publish on their own.
     for (const id of Object.keys(queue)) {
@@ -147,10 +227,11 @@ async function main() {
 
     for (const a of actions) {
       try {
-        const r = await handleAction(a, tg, cfg, queue, banco);
+        const r = await handleAction(a, tg, cfg, queue, drafts, banco);
         banco = r.banco;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
+          await writeJSON('state/drafts.json', drafts);
           await writeJSON('banco.json', banco);
           await bestEffort(commitState());
         }
@@ -169,6 +250,7 @@ async function main() {
   }
 
   await writeJSON('state/queue.json', queue);
+  await writeJSON('state/drafts.json', drafts);
   await writeJSON('banco.json', banco);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());

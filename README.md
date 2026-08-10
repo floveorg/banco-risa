@@ -1,7 +1,9 @@
 # Banco de la risa — bot
 
 Serverless Telegram moderation bot for [Risa Liberada](https://flove.org). People DM their
-laugh to **@RisaLiberadaBot**; moderators approve/reject in the private group *Risas Nuevas*;
+laugh to **@RisaLiberadaBot**; the bot replies with a *draft* card offering a **título**
+(una palabra o frase corta), **ocultar el nombre** (anónima) y **Enviar a moderación**.
+Once sent, moderators approve/reject in the private group *Risas Nuevas*;
 approved clips are uploaded to **Cloudinary** and indexed in `banco.json` (served by GitHub
 Pages), plus posted to the public channel [t.me/risaliberada](https://t.me/risaliberada).
 Runs on a GitHub Actions cron — no server.

@@ -22,13 +22,25 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
     if (typeof u.update_id === 'number') maxId = Math.max(maxId, u.update_id);
 
     const cb = u.callback_query;
-    if (cb && cb.message && cb.message.chat && cb.message.chat.id === ctx.modGroupId) {
-      const m = /^(ok|no):(.+)$/.exec(cb.data || '');
-      if (m) {
-        actions.push({
-          kind: m[1] === 'ok' ? 'approve' : 'reject',
-          id: m[2], callbackId: cb.id, modMsgId: cb.message.message_id
-        });
+    if (cb && cb.message && cb.message.chat) {
+      const chatId = cb.message.chat.id;
+      if (chatId === ctx.modGroupId) {
+        const m = /^(ok|no):(.+)$/.exec(cb.data || '');
+        if (m) {
+          actions.push({
+            kind: m[1] === 'ok' ? 'approve' : 'reject',
+            id: m[2], callbackId: cb.id, modMsgId: cb.message.message_id
+          });
+        }
+        continue;
+      }
+      if (cb.message.chat.type === 'private' && cb.from && cb.from.id === chatId) {
+        const m = /^draft:(title|anon|send|cancel)$/.exec(cb.data || '');
+        if (m) {
+          actions.push({
+            kind: 'draft-' + m[1], chatId, callbackId: cb.id, draftMsgId: cb.message.message_id
+          });
+        }
       }
       continue;
     }
@@ -44,16 +56,18 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       continue;
     }
     if (msg && msg.chat && msg.chat.type === 'private') {
+      const key = String(msg.chat.id);
       const media = msg.voice || msg.audio;
       if (media && media.file_id) {
         actions.push({
-          kind: 'ingest', id: 'q_' + u.update_id,
+          kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
           fileId: media.file_id,
           fromChatId: msg.chat.id, fromMsgId: msg.message_id,
           name: (msg.from && msg.from.first_name) || 'Anónima',
-          title: (msg.caption || '').trim(),
-          uploaderChatId: msg.chat.id
+          title: (msg.caption || '').trim()
         });
+      } else if (msg.text && ctx.awaitingTitle && ctx.awaitingTitle[key]) {
+        actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
       }
     }
   }

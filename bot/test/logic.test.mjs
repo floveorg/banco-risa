@@ -16,7 +16,7 @@ test('decisionOf maps approval/rejection words', () => {
   assert.equal(decisionOf(''), null);
 });
 
-test('a private voice message becomes an ingest action', () => {
+test('a private voice message becomes a draft action', () => {
   const updates = [{
     update_id: 10,
     message: { message_id: 5, chat: { id: 777, type: 'private' },
@@ -26,8 +26,8 @@ test('a private voice message becomes an ingest action', () => {
   assert.equal(offset, 11);
   assert.equal(actions.length, 1);
   assert.deepEqual(actions[0], {
-    kind: 'ingest', id: 'q_10', fileId: 'AAA', fromChatId: 777, fromMsgId: 5,
-    name: 'Marta', title: '', uploaderChatId: 777
+    kind: 'draft', id: 'q_10', chatId: 777, fileId: 'AAA', fromChatId: 777, fromMsgId: 5,
+    name: 'Marta', title: ''
   });
 });
 
@@ -38,10 +38,60 @@ test('an audio message with a caption carries the caption as title', () => {
       from: { first_name: 'Yusuf' }, audio: { file_id: 'BBB' }, caption: 'de vientre' }
   }];
   const { actions } = parseUpdates(updates, CTX);
-  assert.equal(actions[0].kind, 'ingest');
+  assert.equal(actions[0].kind, 'draft');
   assert.equal(actions[0].title, 'de vientre');
   assert.equal(actions[0].id, 'q_12');
   assert.equal(actions[0].fileId, 'BBB');
+});
+
+test('draft callbacks from a private chat are parsed', () => {
+  const updates = [
+    { update_id: 13, callback_query: { id: 'cb3', data: 'draft:title',
+      message: { message_id: 20, chat: { id: 777, type: 'private' } }, from: { id: 777 } } },
+    { update_id: 14, callback_query: { id: 'cb4', data: 'draft:anon',
+      message: { message_id: 21, chat: { id: 777, type: 'private' } }, from: { id: 777 } } },
+    { update_id: 15, callback_query: { id: 'cb5', data: 'draft:send',
+      message: { message_id: 22, chat: { id: 777, type: 'private' } }, from: { id: 777 } } },
+  ];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(offset, 16);
+  assert.deepEqual(actions[0], { kind: 'draft-title', chatId: 777, callbackId: 'cb3', draftMsgId: 20 });
+  assert.deepEqual(actions[1], { kind: 'draft-anon', chatId: 777, callbackId: 'cb4', draftMsgId: 21 });
+  assert.deepEqual(actions[2], { kind: 'draft-send', chatId: 777, callbackId: 'cb5', draftMsgId: 22 });
+});
+
+test('draft callbacks from another user or the mod group are ignored', () => {
+  const updates = [
+    { update_id: 16, callback_query: { id: 'cb6', data: 'draft:send',
+      message: { message_id: 23, chat: { id: 777, type: 'private' } }, from: { id: 999 } } },
+    { update_id: 17, callback_query: { id: 'cb7', data: 'draft:send',
+      message: { message_id: 24, chat: { id: -1001234 } } } },
+  ];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 0);
+  assert.equal(offset, 18);
+});
+
+test('a text reply while awaiting a title becomes a draft-title-text action', () => {
+  const updates = [{
+    update_id: 18,
+    message: { message_id: 9, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, text: 'la de la boda' }
+  }];
+  const ctx = { modGroupId: -1001234, awaitingTitle: { '777': true } };
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0], { kind: 'draft-title-text', chatId: 777, title: 'la de la boda' });
+});
+
+test('plain text without awaiting title is ignored', () => {
+  const updates = [{
+    update_id: 19,
+    message: { message_id: 10, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, text: 'hola' }
+  }];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 0);
+  assert.equal(offset, 20);
 });
 
 test('approve/reject callbacks from the mod group are parsed', () => {
