@@ -20,9 +20,9 @@ export function Telegram(token) {
   return {
     getUpdates: (offset, timeout = 0) =>
       call('getUpdates', { offset, timeout, allowed_updates: ['message', 'callback_query'] }),
-    copyMessage: (chatId, fromChatId, messageId, replyMarkup) =>
+    copyMessage: (chatId, fromChatId, messageId, replyMarkup, caption) =>
       call('copyMessage', { chat_id: chatId, from_chat_id: fromChatId,
-        message_id: messageId, reply_markup: replyMarkup }),
+        message_id: messageId, reply_markup: replyMarkup, caption }),
     sendMessage: (chatId, text, replyMarkup) =>
       call('sendMessage', { chat_id: chatId, text, reply_markup: replyMarkup }),
     editMessageText: (chatId, messageId, text, replyMarkup) =>

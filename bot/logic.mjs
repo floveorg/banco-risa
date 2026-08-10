@@ -35,11 +35,19 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         continue;
       }
       if (cb.message.chat.type === 'private' && cb.from && cb.from.id === chatId) {
-        const m = /^draft:(title|anon|send|cancel)$/.exec(cb.data || '');
+        const m = /^draft:([a-z-]+)(?::([^:]*))?$/.exec(cb.data || '');
         if (m) {
-          actions.push({
-            kind: 'draft-' + m[1], chatId, callbackId: cb.id, draftMsgId: cb.message.message_id
-          });
+          const act = m[1];
+          if (act === 'tag' && m[2]) {
+            actions.push({ kind: 'draft-tag-toggle', chatId, callbackId: cb.id,
+              draftMsgId: cb.message.message_id, tag: m[2] });
+          } else if (act === 'id' && m[2]) {
+            actions.push({ kind: 'draft-id', chatId, callbackId: cb.id,
+              draftMsgId: cb.message.message_id, mode: m[2] });
+          } else if (['title', 'tags', 'tags-done', 'send', 'cancel'].includes(act)) {
+            actions.push({ kind: 'draft-' + act, chatId, callbackId: cb.id,
+              draftMsgId: cb.message.message_id });
+          }
         }
       }
       continue;
@@ -64,10 +72,17 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           fileId: media.file_id,
           fromChatId: msg.chat.id, fromMsgId: msg.message_id,
           name: (msg.from && msg.from.first_name) || 'Anónima',
+          username: (msg.from && msg.from.username) || '',
           title: (msg.caption || '').trim()
         });
-      } else if (msg.text && ctx.awaitingTitle && ctx.awaitingTitle[key]) {
-        actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
+      } else if (msg.text) {
+        if (ctx.awaitingTitle && ctx.awaitingTitle[key]) {
+          actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
+        } else if (ctx.awaitingTags && ctx.awaitingTags[key]) {
+          actions.push({ kind: 'draft-tags-text', chatId: msg.chat.id, tagsText: (msg.text || '').trim() });
+        } else {
+          actions.push({ kind: 'welcome', chatId: msg.chat.id });
+        }
       }
     }
   }

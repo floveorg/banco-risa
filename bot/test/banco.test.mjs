@@ -24,6 +24,13 @@ test('bancoEntry keeps the title t when given', () => {
   assert.equal(e.t, 'de vientre');
 });
 
+test('bancoEntry keeps title t AND tags together', () => {
+  const e = bancoEntry({ id: 'q_13', name: 'Marta', t: 'la de la boda', tags: 'loca, grupo',
+    when: '2026-07-19', src: SRC });
+  assert.equal(e.t, 'la de la boda');
+  assert.equal(e.tags, 'loca, grupo');
+});
+
 test('prependClip puts the new clip first and does not mutate input', () => {
   const banco = [{ id: 'old' }];
   const out = prependClip(banco, { id: 'new' });
