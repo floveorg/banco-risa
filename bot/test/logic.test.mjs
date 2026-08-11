@@ -44,6 +44,21 @@ test('an audio message with a caption carries the caption as title', () => {
   assert.equal(actions[0].fileId, 'BBB');
 });
 
+test('oversized or overlong media is rejected instead of drafted', () => {
+  const updates = [
+    { update_id: 60, message: { message_id: 1, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, voice: { file_id: 'BIG', file_size: 11 * 1024 * 1024, duration: 3 } } },
+    { update_id: 61, message: { message_id: 2, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, voice: { file_id: 'LONG', file_size: 1024, duration: 1001 } } },
+    { update_id: 62, message: { message_id: 3, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, audio: { file_id: 'OK', file_size: 10 * 1024 * 1024, duration: 1000 } } },
+  ];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.deepEqual(actions[0], { kind: 'draft-invalid', chatId: 777, reason: 'size' });
+  assert.deepEqual(actions[1], { kind: 'draft-invalid', chatId: 777, reason: 'duration' });
+  assert.equal(actions[2].kind, 'draft');
+});
+
 test('the telegram username rides into the draft action', () => {
   const updates = [{
     update_id: 12,
@@ -75,16 +90,16 @@ test('tags and identity callbacks parse into their actions', () => {
     message: { message_id: 100 + mid, chat: { id: 777, type: 'private' } }, from: { id: 777 } } });
   const { actions } = parseUpdates([
     mk('draft:tags', 1),
-    mk('draft:tag:loca', 2),
-    mk('draft:tags-done', 3),
-    mk('draft:id:tg', 4),
-    mk('draft:id:name', 5)
+    mk('draft:tags-done', 2),
+    mk('draft:id:tg', 3),
+    mk('draft:id:name', 4),
+    mk('draft:id:anon', 5)
   ], CTX);
   assert.deepEqual(actions[0], { kind: 'draft-tags', chatId: 777, callbackId: 'cb1', draftMsgId: 101 });
-  assert.deepEqual(actions[1], { kind: 'draft-tag-toggle', chatId: 777, callbackId: 'cb2', draftMsgId: 102, tag: 'loca' });
-  assert.deepEqual(actions[2], { kind: 'draft-tags-done', chatId: 777, callbackId: 'cb3', draftMsgId: 103 });
-  assert.deepEqual(actions[3], { kind: 'draft-id', chatId: 777, callbackId: 'cb4', draftMsgId: 104, mode: 'tg' });
-  assert.deepEqual(actions[4], { kind: 'draft-id', chatId: 777, callbackId: 'cb5', draftMsgId: 105, mode: 'name' });
+  assert.deepEqual(actions[1], { kind: 'draft-tags-done', chatId: 777, callbackId: 'cb2', draftMsgId: 102 });
+  assert.deepEqual(actions[2], { kind: 'draft-id', chatId: 777, callbackId: 'cb3', draftMsgId: 103, mode: 'tg' });
+  assert.deepEqual(actions[3], { kind: 'draft-id', chatId: 777, callbackId: 'cb4', draftMsgId: 104, mode: 'name' });
+  assert.deepEqual(actions[4], { kind: 'draft-id', chatId: 777, callbackId: 'cb5', draftMsgId: 105, mode: 'anon' });
 });
 
 test('unknown draft callbacks are ignored', () => {

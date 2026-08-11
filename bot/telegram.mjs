@@ -28,7 +28,10 @@ export function Telegram(token) {
     editMessageText: (chatId, messageId, text, replyMarkup) =>
       call('editMessageText', { chat_id: chatId, message_id: messageId, text, reply_markup: replyMarkup }),
     // Post an audio by remote URL — Telegram fetches it (used for the Cloudinary clip).
-    sendAudioByUrl: (chatId, url, caption) => call('sendAudio', { chat_id: chatId, audio: url, caption }),
+    sendAudioByUrl: (chatId, url, caption, opts = {}) =>
+      call('sendAudio', { chat_id: chatId, audio: url, caption,
+        ...(opts.title ? { title: opts.title } : {}),
+        ...(opts.performer ? { performer: opts.performer } : {}) }),
     // React to a message with one emoji (the bot react on its own channel post).
     setMessageReaction: (chatId, messageId, emoji) =>
       call('setMessageReaction', { chat_id: chatId, message_id: messageId,

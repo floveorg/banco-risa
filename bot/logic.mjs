@@ -3,6 +3,10 @@
 const APPROVE_WORDS = new Set(['ok', 'si', 'sí', 'yes', 'publicar', 'publish', 'dale', 'adelante', 'aprobado', 'subir', 'listo']);
 const REJECT_WORDS = new Set(['no', 'borrar', 'delete', 'rechazar', 'quitar', 'fuera', 'cancelar', 'anular']);
 
+const MAX_FILE_BYTES = 10 * 1024 * 1024;  // 10 MB
+const MAX_DURATION_S = 1000;              // 1000 seconds
+export { MAX_FILE_BYTES, MAX_DURATION_S };
+
 // Map the text a moderator types (as a reply to a mod message) to a decision.
 export function decisionOf(raw) {
   const text = (raw || '').trim();
@@ -38,10 +42,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         const m = /^draft:([a-z-]+)(?::([^:]*))?$/.exec(cb.data || '');
         if (m) {
           const act = m[1];
-          if (act === 'tag' && m[2]) {
-            actions.push({ kind: 'draft-tag-toggle', chatId, callbackId: cb.id,
-              draftMsgId: cb.message.message_id, tag: m[2] });
-          } else if (act === 'id' && m[2]) {
+          if (act === 'id' && m[2]) {
             actions.push({ kind: 'draft-id', chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id, mode: m[2] });
           } else if (['title', 'tags', 'tags-done', 'send', 'cancel'].includes(act)) {
@@ -67,14 +68,20 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       const key = String(msg.chat.id);
       const media = msg.voice || msg.audio;
       if (media && media.file_id) {
-        actions.push({
-          kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
-          fileId: media.file_id,
-          fromChatId: msg.chat.id, fromMsgId: msg.message_id,
-          name: (msg.from && msg.from.first_name) || 'Anónima',
-          username: (msg.from && msg.from.username) || '',
-          title: (msg.caption || '').trim()
-        });
+        if (media.file_size && media.file_size > MAX_FILE_BYTES) {
+          actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'size' });
+        } else if (media.duration && media.duration > MAX_DURATION_S) {
+          actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'duration' });
+        } else {
+          actions.push({
+            kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
+            fileId: media.file_id,
+            fromChatId: msg.chat.id, fromMsgId: msg.message_id,
+            name: (msg.from && msg.from.first_name) || 'Anónima',
+            username: (msg.from && msg.from.username) || '',
+            title: (msg.caption || '').trim()
+          });
+        }
       } else if (msg.text) {
         if (ctx.awaitingTitle && ctx.awaitingTitle[key]) {
           actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });

@@ -18,22 +18,27 @@ const writeJSON = (rel, v) => writeFile(p(rel), JSON.stringify(v, null, 2) + '\n
 const isoToday = () => new Date().toISOString().slice(0, 10);
 
 const WELCOME_TEXT = 'Actívame para compartir tu risa con el mundo, de forma anónima o con tu identidad.';
-const SUGGESTED_TAGS = ['loca', 'grupo', 'niños', 'contagiosa', 'familiar', 'breve', 'musical', 'carcajada'];
 
 const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '✅ Publicar', callback_data: 'ok:' + id },
   { text: '🗑 Borrar',   callback_data: 'no:' + id }
 ]] });
 
-// Identidad de 3 vías: 1. Usuario telegram · 2. Nombre perfil · 3. Anónimo.
+// Identidad: «Usuario telegram» y «Autor» son multiselect; «Anónimo» los anula (radio).
+const DEFAULT_SEL = { tg: false, name: true, anon: false };
+const selOf = (d) => d.sel || { ...DEFAULT_SEL };
 function displayName(d) {
-  if (d.identity === 'tg') return d.username ? '@' + d.username : (d.name || 'Anónima');
-  if (d.identity === 'anon') return 'Anónima';
-  return d.name || 'Anónima';
+  const s = selOf(d);
+  if (s.anon) return 'Anónima';
+  const parts = [];
+  if (s.tg) parts.push(d.username ? '@' + d.username : (d.name || 'Anónima'));
+  if (s.name) parts.push(d.name || 'Anónima');
+  return [...new Set(parts)].join(' · ') || 'Anónima';
 }
 function identityLabel(d) {
-  if (d.identity === 'tg') return '👤 ' + displayName(d);
-  if (d.identity === 'anon') return '🙈 ' + displayName(d);
+  const s = selOf(d);
+  if (s.anon) return '🙈 ' + displayName(d);
+  if (s.tg) return '👤 ' + displayName(d);
   return '🙂 ' + displayName(d);
 }
 
@@ -59,24 +64,25 @@ function draftText(d) {
   return [
     '🎵 Risa recibida 💛',
     '',
-    '✏️ Título: ' + (d.title || '—'),
-    '🏷️ Etiquetas: ' + ((d.tags && d.tags.length) ? d.tags.join(', ') : '—'),
-    '🙂 Nombre: ' + identityLabel(d),
+    '✏️ ' + (d.title || '—'),
+    '🏷️ ' + ((d.tags && d.tags.length) ? d.tags.join(', ') : '—'),
+    identityLabel(d),
     '',
-    'Ajusta lo que quieras y pulsa «Enviar a moderación».'
+    'Ajusta lo que quieras y pulsa «Enviar».'
   ].join('\n');
 }
 
 function OPTIONS(d) {
+  const s = selOf(d);
   const mk = (mode, base) => ({
-    text: (d.identity === mode ? '✓ ' : '') + base,
+    text: (s[mode] ? '✓ ' : '') + base,
     callback_data: 'draft:id:' + mode
   });
   return { inline_keyboard: [
     [{ text: '✏️ Título', callback_data: 'draft:title' },
      { text: '🏷️ Tags', callback_data: 'draft:tags' }],
-    [mk('tg', '👤 Usuario telegram'), mk('name', '🙂 Nombre perfil'), mk('anon', '🙈 Anónimo')],
-    [{ text: '✅ Enviar a moderación', callback_data: 'draft:send' }]
+    [mk('tg', '👤 Usuario telegram'), mk('name', '🙂 Autor'), mk('anon', '🙈 Anónimo')],
+    [{ text: '✅ Enviar', callback_data: 'draft:send' }]
   ]};
 }
 
@@ -84,24 +90,16 @@ const CANCEL_KEYS = () => ({ inline_keyboard: [[
   { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
 ]] });
 
-// Editor de etiquetas: sugerencias clicables + campo para añadir (escribir texto).
+// Editor de etiquetas: solo texto libre (separado por comas).
 function tagsText(d) {
-  return '🏷️ Etiqueta tu risa — toca las que encajen o escribe las tuyas (separadas por coma).\n\n' +
+  return '🏷️ Etiqueta tu risa — escribe las etiquetas separadas por coma.\n\n' +
     'Actuales: ' + ((d.tags && d.tags.length) ? d.tags.join(', ') : '—');
 }
-function tagsKeys(d) {
-  const selected = new Set((d.tags || []).map(t => t.toLowerCase()));
-  const rows = [];
-  let row = [];
-  SUGGESTED_TAGS.forEach(tag => {
-    const on = selected.has(tag.toLowerCase());
-    row.push({ text: (on ? '✓ ' : '') + tag, callback_data: 'draft:tag:' + tag });
-    if (row.length === 3) { rows.push(row); row = []; }
-  });
-  if (row.length) rows.push(row);
-  rows.push([{ text: '✅ Listo', callback_data: 'draft:tags-done' },
-             { text: '✖️ Cancelar', callback_data: 'draft:cancel' }]);
-  return { inline_keyboard: rows };
+function tagsKeys() {
+  return { inline_keyboard: [[
+    { text: '✅ Listo', callback_data: 'draft:tags-done' },
+    { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
+  ]] };
 }
 
 // Answering the callback is cosmetic — never let it block the real work.
@@ -109,7 +107,6 @@ const bestEffort = (promise) => promise.catch((err) => console.error('non-fatal:
 
 const LOOP_MAX_MS = 55 * 60 * 1000;   // one workflow run covers most of the hour
 const POLL_TIMEOUT = 25;              // seconds of long polling per getUpdates
-const AUTO_PUBLISH_MS = 15 * 60 * 1000; // auto-publish clips nobody decided on (trusted group)
 
 // Download -> loudnorm -> R2 -> banco -> channel. Returns the new banco array.
 async function publishClip(tg, cfg, q, id, banco) {
@@ -124,8 +121,8 @@ async function publishClip(tg, cfg, q, id, banco) {
     banco = prependClip(banco, bancoEntry({
       id, name, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src
     }));
-    const caption = [q.title, tagsHash(q.tags), name, 'CC BY-SA 4.0'].filter(Boolean).join(' · ');
-    const posted = await tg.sendAudioByUrl(cfg.channel, src, caption);
+    const caption = [q.title, tagsHash(q.tags), name].filter(Boolean).join(' · ');
+    const posted = await tg.sendAudioByUrl(cfg.channel, src, caption, { title: q.title, performer: name });
     if (posted && posted.message_id) {
       await bestEffort(tg.setMessageReaction(cfg.channel, posted.message_id, '😂'));
     }
@@ -144,7 +141,7 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     const prev = drafts[key] || {};
     drafts[key] = {
       id: a.id, fileId: a.fileId, name: a.name, username: a.username,
-      title: a.title || '', tags: [], identity: 'name',
+      title: a.title || '', tags: [], sel: { ...DEFAULT_SEL },
       fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
       draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false
     };
@@ -181,25 +178,14 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     d.awaitingTitle = false;
     d.awaitingTags = true;
     await bestEffort(tg.answerCallback(a.callbackId, 'Etiqueta tu risa'));
-    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, tagsText(d), tagsKeys(d)));
-    return { banco, dirty: true };
-  }
-  if (a.kind === 'draft-tag-toggle') {
-    const d = drafts[String(a.chatId)];
-    if (!d || !d.awaitingTags) return { banco, dirty: false };
-    const arr = d.tags || [];
-    const i = arr.findIndex(t => t.toLowerCase() === a.tag.toLowerCase());
-    if (i >= 0) arr.splice(i, 1); else arr.push(a.tag.toLowerCase());
-    d.tags = arr;
-    await bestEffort(tg.answerCallback(a.callbackId, arr.length ? 'Etiquetas: ' + arr.join(', ') : 'Sin etiquetas'));
-    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, tagsText(d), tagsKeys(d)));
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, tagsText(d), tagsKeys()));
     return { banco, dirty: true };
   }
   if (a.kind === 'draft-tags-text') {
     const d = drafts[String(a.chatId)];
     if (!d || !d.awaitingTags) return { banco, dirty: false };
     addTags(d, a.tagsText);
-    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, tagsText(d), tagsKeys(d)));
+    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, tagsText(d), tagsKeys()));
     return { banco, dirty: true };
   }
   if (a.kind === 'draft-tags-done') {
@@ -213,8 +199,11 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
   if (a.kind === 'draft-id') {
     const d = drafts[String(a.chatId)];
     if (!d) return { banco, dirty: false };
-    d.identity = (['tg', 'name', 'anon'].includes(a.mode)) ? a.mode : 'name';
-    await bestEffort(tg.answerCallback(a.callbackId, 'Nombre: ' + displayName(d)));
+    const s = selOf(d);
+    if (a.mode === 'anon') { s.tg = false; s.name = false; s.anon = true; }
+    else if (a.mode === 'tg') { s.tg = !s.tg; s.anon = false; }
+    else if (a.mode === 'name') { s.name = !s.name; s.anon = false; }
+    await bestEffort(tg.answerCallback(a.callbackId, 'Autor: ' + displayName(d)));
     await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
     return { banco, dirty: true };
   }
@@ -232,19 +221,26 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     if (queue[d.id] || banco.some((e) => e.id === d.id)) { delete drafts[String(a.chatId)]; return { banco, dirty: true }; }
     const name = displayName(d);
     const caption = [
-      d.title ? 'Título: ' + d.title : '',
+      d.title || '',
       tagsHash(d.tags),
-      'Por: ' + name
+      name
     ].filter(Boolean).join('\n');
     const copied = await tg.copyMessage(cfg.modGroupId, d.fromChatId, d.fromMsgId, BUTTONS(d.id), caption);
     queue[d.id] = { fileId: d.fileId, name, username: d.username, title: d.title,
-                    tags: d.tags || [], identity: d.identity || 'name',
-                    uploaderChatId: a.chatId, modMsgId: copied.message_id, ts: Date.now() };
+                    tags: d.tags || [], sel: d.sel || { ...DEFAULT_SEL },
+                    uploaderChatId: a.chatId, modMsgId: copied.message_id };
     delete drafts[String(a.chatId)];
     await bestEffort(tg.answerCallback(a.callbackId, 'Enviada a moderación'));
     await bestEffort(tg.sendMessage(a.chatId,
-      '¡Enviada a moderación! 💛 Se publica sola en un momento; los moderadores pueden frenarla si no procede.'));
+      'Gracias, lo revisamos en breve y te avisamos cuando se publique.'));
     return { banco, dirty: true };
+  }
+  if (a.kind === 'draft-invalid') {
+    const msg = a.reason === 'size'
+      ? 'Ups… tu archivo supera el límite de 10 MB. Mándalo en un formato más ligero 💛'
+      : 'Ups… tu risa supera el límite de 1000 segundos. Mándala más cortita 💛';
+    await bestEffort(tg.sendMessage(a.chatId, msg));
+    return { banco, dirty: false };
   }
   if (a.kind === 'welcome') {
     await bestEffort(tg.sendMessage(a.chatId, WELCOME_TEXT));
@@ -262,9 +258,9 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
     if (q.uploaderChatId) {
       const lines = ['✅ ¡Tu risa ya está publicada!'];
-      if (q.title) lines.push('✏️ Título: ' + q.title);
-      if (q.tags && q.tags.length) lines.push('🏷️ Etiquetas: ' + q.tags.join(', '));
-      lines.push('🙂 Nombre: ' + (q.name || 'Anónima'));
+      if (q.title) lines.push('✏️ ' + q.title);
+      if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
+      lines.push('🙂 ' + (q.name || 'Anónima'));
       lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
       await bestEffort(tg.sendMessage(q.uploaderChatId, lines.join('\n')));
     }
@@ -315,7 +311,6 @@ async function main() {
   let queue = await readJSON('state/queue.json', {});
   let drafts = await readJSON('state/drafts.json', {});
   let banco = await readJSON('banco.json', []);
-  for (const e of Object.values(queue)) if (!e.ts) e.ts = Date.now(); // legacy entries
 
   const startedAt = Date.now();
   while (Date.now() - startedAt < LOOP_MAX_MS) {
@@ -328,13 +323,6 @@ async function main() {
     const updates = await tg.getUpdates(offset, POLL_TIMEOUT);
     const { actions, offset: nextOffset } = parseUpdates(
       updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags }, offset);
-
-    // Trusted mod group: clips nobody decided on within the grace period publish on their own.
-    for (const id of Object.keys(queue)) {
-      if (Date.now() - (queue[id].ts || 0) > AUTO_PUBLISH_MS) {
-        actions.push({ kind: 'approve', id, via: 'auto' });
-      }
-    }
 
     for (const a of actions) {
       try {

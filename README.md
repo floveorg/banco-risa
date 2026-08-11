@@ -3,14 +3,15 @@
 Serverless Telegram moderation bot for [Risa Liberada](https://flove.org). People DM their
 laugh to **@RisaLiberadaBot**; a fixed welcome message greets them («Actívame para compartir
 tu risa con el mundo, de forma anónima o con tu identidad»), and every audio opens a *draft*
-card: **✏️ Título** + **🏷️ Tags** in one row, identity (**👤 Usuario telegram · 🙂 Nombre
-perfil · 🙈 Anónimo**) in another, and **✅ Enviar a moderación** in a third. Tags pick from
-suggestions (`loca`, `grupo`, `niños`…) or free text.
+card: **✏️ Título** + **🏷️ Tags** in one row, attribution (**👤 Usuario telegram** and
+**🙂 Autor** are multi-select, **🙈 Anónimo** overrides both) in another, and **✅ Enviar** in
+a third. Tags are free text (comma-separated). Files are capped at 10 MB / 1000 s.
 Once sent, moderators approve/reject in the private group *Risas Nuevas* — the mod message
 carries the title + tags as hashtags (searchable in Telegram). Approved clips are uploaded
 to **Cloudflare R2** and indexed in `banco.json` (`src` = R2 URL, plus `t` title and `tags`),
-and posted to the public channel [t.me/risaliberada](https://t.me/risaliberada). On approval
-the bot tells the uploader what they submitted (title, tags, name) — no media link.
+and posted to the public channel [t.me/risaliberada](https://t.me/risaliberada) with the clip
+title attached. On approval the bot tells the uploader what they submitted (title, tags,
+name) — no media link. Clips wait for a moderator decision (no auto-publish).
 Runs on a GitHub Actions cron — no server.
 
 Audio (the community-uploaded laugh clips) lives on Cloudflare R2, not in git; the repo holds
