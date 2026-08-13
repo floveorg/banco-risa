@@ -970,7 +970,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>✅ Etiquetas → chips filtrables</li>
               <li>✅ Búsqueda por tag · título · nombre</li>
               <li>✅ Recientes · favoritos ❤️/⭐ · paginador (tope 10.000)</li>
-              <li>Modal «Claim it» en la web: palabra en rojo + affordance (i18n/es)</li>
+              <li>Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
             </ol>
             <h5 class="feat-area">B · Bot — el circuito serverless</h5>
             <ol start="7">
@@ -986,7 +986,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
               <li><code>key</code> inmutable + palabra editable (slug first-wins; <code>/name</code> en DM, API en el backend)</li>
               <li>Origen oscurecido: hash salado = handle de autor (nunca @username)</li>
-              <li>Claim (L2→L3): nonce one-shot + confirmación por DM (mismo id que subió)</li>
+              <li>Claim (L2→L3): nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
               <li>Filespace <code>central/users/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>)</li>
               <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
               <li>Opt-in <code>tg_public</code> (enlace a t.me, nunca automático)</li>
@@ -998,17 +998,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Favoritos ❤️ públicos / ⭐ privados según nivel authy</li>
               <li>Tope de esta rama → las contribuciones y el feed del perfil se viven desde la app <b>appy</b> (enlace a esa rama)</li>
             </ol>
-            <h5 class="feat-area">E · Comandos del bot — lo más simple de cada categoría va primero</h5>
+            <h5 class="feat-area">E · Comandos del bot — mínimos, de solo lectura y reproducción</h5>
             <ol start="24">
-              <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · luego <code>/name</code> · <code>/claim</code> · <code>/history</code> · <code>/status</code> · <code>/queue</code></li>
-              <li>Exploración: <code>/latest</code> · <code>/random</code> · luego <code>/search</code> unificado · <code>/trending</code> · <code>/now</code> · <code>/since</code></li>
-              <li>Reproducción: <code>/play</code> · luego <code>/radio</code> · <code>/today</code></li>
-              <li>Control del autor: <code>/draft</code> · luego <code>/retake</code> · <code>/edit</code> · <code>/del</code></li>
-              <li>Moderación/admin: <code>/mute</code> (+strikes) · luego <code>/pin</code> · <code>/mirror</code> · <code>/report</code> · <code>/rules</code></li>
-              <li>Social: <code>/fave</code> · luego <code>/echo</code> · <code>/totem</code> · <code>/alias</code> · <code>/swap</code> · <code>/trust</code></li>
+              <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
+              <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
+              <li>Reproducción: <code>/play</code> · <code>/radio</code> (solo los últimos 1.000)</li>
             </ol>
+            <p>Lo demás vive en la <b>web</b>: buscar, reclamar (claim), favoritos y editar/borrar tus risas. La identidad (authy) es el puente, no comandos del bot.</p>
             <h5 class="feat-area">F · Lovy — la hermana</h5>
-            <ol start="30">
+            <ol start="27">
               <li>Multi-app: mismo esqueleto, cada app con su campo</li>
               <li>LovyBot + bucket R2 propio + <code>central/apps/lovy/</code> (misma mecánica)</li>
               <li>Vídeo ≤ 1 min con thumbnail y reproducción inline</li>
@@ -1017,7 +1015,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Cadenas colaborativas: <code>/chain</code> · <code>/seeds</code> · <code>/cameo</code> · <code>/lore</code> · <code>/reprise</code></li>
             </ol>
             <h5 class="feat-area">G · flovebot — el paraguas</h5>
-            <ol start="36">
+            <ol start="33">
               <li>Un bot para todas: <code>/start</code> · <code>/app</code>; identidad authy compartida (claim una vez, visible en todas)</li>
               <li>Búsqueda cross-app + reproducción en-chat</li>
               <li><code>/vault</code> + <code>/passport</code>: recuperación y portabilidad de identidad</li>
@@ -1025,7 +1023,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Reacciones del canal como señal (selección HTML)</li>
             </ol>
             <h5 class="feat-area">H · Backend — Railway + libSQL (tiempo real)</h5>
-            <ol start="41">
+            <ol start="38">
               <li>Tiempo real: webhooks en vez del cron + rate-limit server-side</li>
               <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> + tablas libSQL + import del filespace</li>
               <li>Notificaciones DM al aprobar/denegar</li>
@@ -1033,13 +1031,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Feed cross-app vía endpoint central</li>
             </ol>
             <h5 class="feat-area">I · Confianza y moderación asistida</h5>
-            <ol start="46">
+            <ol start="43">
               <li>Claims firmados por browsy (sin re-derivación de claves)</li>
               <li>IA para moderación: transcripción + flagging, dailies, rachas, top/trending reales</li>
               <li>Mini App + inline mode de Telegram</li>
             </ol>
             <h5 class="feat-area">J · Integración con flove</h5>
-            <ol start="49">
+            <ol start="46">
               <li>✅ Enriquecimiento de <code>flove.json</code> (fail-silent): la web lo llama sin interrumpirse jamás; al claim tu palabra enlaza al perfil único de flove donde ves tus risas y activas Lovy ya autenticado</li>
               <li>Addons que se activan sin romper lo ya publicado: un flag en <code>risa.json</code> hace de fallback y de toggle desde la interfaz</li>
               <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
