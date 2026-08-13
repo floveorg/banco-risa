@@ -562,8 +562,17 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rtab-panel a{color:var(--grape); font-weight:700; text-decoration:none; border-bottom:2px solid var(--marigold)}
 .rtab-panel a:hover{color:var(--persimmon)}
 .rtab-intro{font-size:1.03rem; color:var(--ink); max-width:72ch}
-.feat-area{margin:18px 0 4px; font-family:var(--mono); font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--persimmon)}
-.rtab-panel ol{max-width:74ch}
+ .feat-area{margin:18px 0 4px; font-family:var(--mono); font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--persimmon)}
+ .feat-list{border:2.5px dashed rgba(42,24,16,.3); border-radius:16px; padding:14px 18px; margin-top:14px; background:rgba(255,248,238,.55)}
+ .feat-list summary{cursor:pointer; font-family:var(--disp); font-weight:700; font-size:1.02rem; color:var(--ink); list-style:none}
+ .feat-list summary::before{content:'▸ '; color:var(--persimmon)}
+ .feat-list[open] summary::before{content:'▾ '}
+ .feat-list summary:hover{color:var(--persimmon)}
+ .feat-list .feat-body{margin-top:14px; padding-top:14px; border-top:1px dashed rgba(42,24,16,.22)}
+ .scope{border-radius:999px; padding:2px 10px; font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; vertical-align:middle}
+ .scope.v1{background:var(--marigold); color:var(--ink)}
+ .scope.v2{background:var(--grape); color:#fff}
+ .rtab-panel ol{max-width:74ch}
 .rtab-panel ol li{margin-bottom:5px}
 .circuit-fig{max-width:720px; margin:24px auto 0}
 .circuit-fig svg{width:100%; height:auto; display:block}
@@ -973,7 +982,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
             <p class="rtab-intro">El desarrollo es una <b>lista única de features</b>, agrupadas por área y ordenadas de la más simple a la más compleja. Las ya hechas llevan ✅; las demás se van tachando a medida que se hacen. Cuando una rama desborda risa, enlazamos al plan de flove correspondiente.</p>
-            <h4>El desarrollo, feature a feature</h4>
+            <details class="feat-list">
+              <summary>El desarrollo, feature a feature — el que la propone se la come… 😉</summary>
+              <div class="feat-body">
             <h5 class="feat-area">A · Web — el escaparate</h5>
             <ol start="1">
               <li>✅ Feed real: la playlist y «Últimas risas» leen de <code>risa.json</code> (un solo json)</li>
@@ -981,7 +992,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>✅ Etiquetas → chips filtrables</li>
               <li>✅ Búsqueda por tag · título · nombre</li>
               <li>✅ Recientes · favoritos ❤️/⭐ · paginador (sin tope total: puede agregar feeds de otros bots)</li>
-              <li>Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
+              <li><span class="scope v2">v2 · railways</span> Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
             </ol>
             <h5 class="feat-area">B · Bot — el circuito serverless</h5>
             <ol start="7">
@@ -997,7 +1008,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
               <li><code>key</code> inmutable + palabra editable (slug first-wins; <code>/name</code> en DM, API en el backend)</li>
               <li>Origen oscurecido: hash salado = handle de autor (nunca @username)</li>
-              <li>Claim (L2→L3): nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
+              <li>Claim (L2→L3) <span class="scope v2">v2 · railways</span>: nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
               <li>Filespace <code>central/users/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>)</li>
               <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
               <li>Opt-in <code>tg_public</code> (enlace a t.me, nunca automático)</li>
@@ -1009,7 +1020,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Favoritos ❤️ públicos / ⭐ privados según nivel authy</li>
               <li>Tope de esta rama → las contribuciones y el feed del perfil se viven desde la app <b>appy</b> (enlace a esa rama)</li>
             </ol>
-            <h5 class="feat-area">E · Comandos del bot — mínimos, de solo lectura y reproducción</h5>
+            <h5 class="feat-area">E · Comandos del bot — mínimos, de solo lectura y reproducción <span class="scope v1">v1 · se implementa ya</span></h5>
             <ol start="24">
               <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
               <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
@@ -1054,6 +1065,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
               <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
             </ol>
+              </div>
+            </details>
             <p class="rtab-more">El desarrollo continúa en otras ramas de flove: <b>appy</b> (perfil y contribuciones), <b>browsy</b> (keys, trust y claims firmados), <b>central-backend</b> (Railway + FastAPI + libSQL) y la <b>feature matrix</b> + roadmap.</p>
             <h4>El circuito entre los 3 jsons</h4>
             <figure class="circuit-fig">
