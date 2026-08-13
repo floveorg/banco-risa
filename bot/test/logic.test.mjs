@@ -280,3 +280,29 @@ test('a reply to an unknown mod message or with unrelated text is ignored', () =
 test('empty batch keeps the current offset', () => {
   assert.deepEqual(parseUpdates([], CTX, 500), { actions: [], offset: 500 });
 });
+
+test('/name and /pub in a private chat become rename/tgpub-ask commands', () => {
+  const updates = [
+    { update_id: 60, message: { message_id: 1, chat: { id: 777, type: 'private' }, text: '/name Marta 2' } },
+    { update_id: 61, message: { message_id: 2, chat: { id: 777, type: 'private' }, text: '/pub' } },
+  ];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.deepEqual(actions[0], { kind: 'rename', chatId: 777, name: 'Marta 2' });
+  assert.deepEqual(actions[1], { kind: 'tgpub-ask', chatId: 777 });
+});
+
+test('/name without a value falls back to welcome-free ignore: handled as empty rename', () => {
+  const { actions } = parseUpdates([
+    { update_id: 62, message: { message_id: 3, chat: { id: 777, type: 'private' }, text: '/name' } },
+  ], CTX);
+  assert.deepEqual(actions[0], { kind: 'rename', chatId: 777, name: '' });
+});
+
+test('tgpub callbacks parse with the username', () => {
+  const mk = (data, id) => ({ update_id: id, callback_query: { id: 'c' + id, data,
+    message: { message_id: 40 + id, chat: { id: 777, type: 'private' } },
+    from: { id: 777, username: 'mar' } } });
+  const { actions } = parseUpdates([mk('tgpub:yes', 1), mk('tgpub:no', 2)], CTX);
+  assert.deepEqual(actions[0], { kind: 'tgpub-yes', chatId: 777, callbackId: 'c1', username: 'mar' });
+  assert.deepEqual(actions[1], { kind: 'tgpub-no', chatId: 777, callbackId: 'c2', username: 'mar' });
+});

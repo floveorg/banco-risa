@@ -99,6 +99,16 @@ const CANCEL_KEYS = () => ({ inline_keyboard: [[
   { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
 ]] });
 
+// C19 · Opt-in del @ en la web: se pregunta una vez al primer envío; el enlace
+// a t.me solo aparece si el autor dice que sí. Se puede volver a preguntar con /pub.
+const TGPUB_TEXT = '📣 ¿Mostrar tu @ en la web?\n\n' +
+  'Risa nunca enlaza tu Telegram automáticamente: solo si tú lo pides, junto a ' +
+  'tu nombre público aparecerá un enlace a t.me. Puedes cambiarlo luego con /pub.';
+const TGPUB_KEYS = () => ({ inline_keyboard: [[
+  { text: '✅ Sí, mostrar mi @', callback_data: 'tgpub:yes' },
+  { text: '✖️ No', callback_data: 'tgpub:no' }
+]] });
+
 // Editor de etiquetas: solo texto libre (separado por comas).
 function tagsText(d) {
   return '🏷️ Etiqueta tu risa — escribe las etiquetas separadas por coma.\n\n' +
@@ -118,7 +128,7 @@ const LOOP_MAX_MS = 55 * 60 * 1000;   // one workflow run covers most of the hou
 const POLL_TIMEOUT = 25;              // seconds of long polling per getUpdates
 
 // Download -> loudnorm -> R2 -> banco -> channel. Returns the new banco array.
-async function publishClip(tg, cfg, q, id, banco) {
+async function publishClip(tg, cfg, q, id, banco, names, tgpub) {
   const filePath = await tg.getFilePath(q.fileId);
   const oga = join(tmpdir(), id + '.oga');
   const mp3 = join(tmpdir(), id + '.mp3');
@@ -126,9 +136,11 @@ async function publishClip(tg, cfg, q, id, banco) {
     await tg.downloadFile(filePath, oga);
     await run('ffmpeg', ['-y', '-i', oga, '-vn', '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
     const src = await uploadAudio(mp3, { publicId: id, folder: cfg.r2Folder });
-    const name = q.name || 'Anónima';
+    const who = q.uploader;
+    const name = (who && names && names[who]) || q.name || 'Anónima';
+    const tgLink = (who && tgpub && tgpub[who] && tgpub[who].ok) ? tgpub[who].username : undefined;
     banco = prependClip(banco, bancoEntry({
-      id, name, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src
+      id, name, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src, tg: tgLink
     }));
     const caption = [q.title, tagsHash(q.tags), name].filter(Boolean).join(' · ');
     const posted = await tg.sendAudioByUrl(cfg.channel, src, caption, { title: q.title, performer: name });
@@ -144,7 +156,7 @@ async function publishClip(tg, cfg, q, id, banco) {
 
 // Apply one action. Every handler is idempotent (safe when updates re-deliver after
 // an offset rollback). Returns { banco, dirty } — dirty tells the caller to persist+commit.
-async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads) {
+async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads, tgpub, names) {
   const limits = cfg.limits || {};
   if (a.kind === 'draft') {
     const key = String(a.chatId);
@@ -262,6 +274,10 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads
     await bestEffort(tg.answerCallback(a.callbackId, 'Enviada a moderación'));
     await bestEffort(tg.sendMessage(a.chatId,
       'Gracias, lo revisamos en breve y te avisamos cuando se publique.'));
+    const entry = queue[d.id];
+    if (entry.idHash && !tgpub[who]) {
+      await bestEffort(tg.sendMessage(a.chatId, TGPUB_TEXT, TGPUB_KEYS()));
+    }
     return { banco, dirty: true };
   }
   if (a.kind === 'draft-invalid') {
@@ -275,13 +291,37 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads
     await bestEffort(tg.sendMessage(a.chatId, WELCOME_TEXT));
     return { banco, dirty: false };
   }
+  if (a.kind === 'rename') {
+    const who = hashId(a.chatId, TG_ID_SECRET);
+    const n = (a.name || '').trim();
+    if (!n) {
+      await bestEffort(tg.sendMessage(a.chatId, 'Uso: /name <tu nombre público>'));
+      return { banco, dirty: false };
+    }
+    names[who] = n;
+    await bestEffort(tg.sendMessage(a.chatId,
+      'Nombre público guardado: ' + n + ' — se aplica a tus próximas risas publicadas.'));
+    return { banco, dirty: true };
+  }
+  if (a.kind === 'tgpub-ask') {
+    await bestEffort(tg.sendMessage(a.chatId, TGPUB_TEXT, TGPUB_KEYS()));
+    return { banco, dirty: false };
+  }
+  if (a.kind === 'tgpub-yes' || a.kind === 'tgpub-no') {
+    const who = hashId(a.chatId, TG_ID_SECRET);
+    const yes = a.kind === 'tgpub-yes';
+    tgpub[who] = { ok: yes, username: a.username ? '@' + a.username : '' };
+    await bestEffort(tg.answerCallback(a.callbackId,
+      yes ? 'Tu @ se mostrará junto a tu nombre' : 'Perfecto, tu @ quedará oculto'));
+    return { banco, dirty: true };
+  }
   if (a.kind === 'approve') {
     const q = queue[a.id];
     if (a.callbackId) await bestEffort(tg.answerCallback(a.callbackId, q ? 'Publicando…' : 'Ya resuelta'));
     if (!q) return { banco, dirty: false };
     if (banco.some((e) => e.id === a.id)) { delete queue[a.id]; return { banco, dirty: true }; }
     if (!q.fileId) throw new Error('queue entry missing fileId for ' + a.id);
-    banco = await publishClip(tg, cfg, q, a.id, banco);
+    banco = await publishClip(tg, cfg, q, a.id, banco, names, tgpub);
     delete queue[a.id];
     await bestEffort(tg.editReplyMarkupClear(cfg.modGroupId, q.modMsgId));
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
@@ -345,6 +385,8 @@ async function main() {
   let drafts = await readJSON('state/drafts.json', {});
   let uploaders = await readJSON('state/.uploaders.json', {});
   let uploads = await readJSON('state/uploads.json', {});
+  let tgpub = await readJSON('state/tgpub.json', {});
+  let names = await readJSON('state/names.json', {});
   let banco = await readJSON('risa.json', []);
 
   const startedAt = Date.now();
@@ -362,13 +404,15 @@ async function main() {
 
     for (const a of actions) {
       try {
-        const r = await handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads);
+        const r = await handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads, tgpub, names);
         banco = r.banco;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
           await writeJSON('state/drafts.json', drafts);
           await writeJSON('state/.uploaders.json', uploaders);
           await writeJSON('state/uploads.json', uploads);
+          await writeJSON('state/tgpub.json', tgpub);
+          await writeJSON('state/names.json', names);
           await writeJSON('risa.json', banco);
           await bestEffort(commitState());
         }
@@ -390,6 +434,8 @@ async function main() {
   await writeJSON('state/drafts.json', drafts);
   await writeJSON('state/.uploaders.json', uploaders);
   await writeJSON('state/uploads.json', uploads);
+  await writeJSON('state/tgpub.json', tgpub);
+  await writeJSON('state/names.json', names);
   await writeJSON('risa.json', banco);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());

@@ -31,6 +31,13 @@ test('bancoEntry keeps title t AND tags together', () => {
   assert.equal(e.tags, 'loca, grupo');
 });
 
+test('bancoEntry keeps the tg link only when opted in', () => {
+  const e = bancoEntry({ id: 'q_14', name: 'Marta', when: '2026-08-13', src: SRC, tg: '@mar' });
+  assert.equal(e.tg, '@mar');
+  const e2 = bancoEntry({ id: 'q_15', name: 'Marta', when: '2026-08-13', src: SRC });
+  assert.equal(e2.tg, undefined);
+});
+
 test('prependClip puts the new clip first and does not mutate input', () => {
   const banco = [{ id: 'old' }];
   const out = prependClip(banco, { id: 'new' });

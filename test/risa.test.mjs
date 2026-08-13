@@ -14,6 +14,7 @@ test('buildRisaTracks maps fields and composes by/orig from the license', () => 
   assert.deepEqual(tracks[0], {
     t: 'Risa de Marta', src: 'audio/a.mp3', tags: 'contagiosa',
     by: 'Marta · CC BY-SA 4.0',
+    tg: '',
     orig: 'https://creativecommons.org/licenses/by-sa/4.0/deed.es',
     origLabel: 'licencia',
     isVideo: false,
@@ -30,6 +31,13 @@ test('isVideo marks vídeo feeds by flag, kind or src extension', () => {
     { name: 'E', src: 'r2.dev/z.webm' },
   ]);
   assert.deepEqual(tracks.map(t => t.isVideo), [true, true, true, false, true]);
+});
+
+test('the tg opt-in link rides into the track (C19, never automatic)', () => {
+  const [t] = Risa.buildRisaTracks([{ name: 'Marta', src: 'a.mp3', tg: '@mar' }]);
+  assert.equal(t.tg, '@mar');
+  const [t2] = Risa.buildRisaTracks([{ name: 'Yusuf', src: 'a.mp3' }]);
+  assert.equal(t2.tg, '');
 });
 
 test('buildRisaTracks derives a title and defaults tags when missing', () => {

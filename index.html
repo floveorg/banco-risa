@@ -174,6 +174,9 @@ img{max-width:100%; display:block}
 .clip-author a:hover{text-decoration:underline}
 .clip-author a.clip-flove{color:var(--persimmon)}
 .clip-author a.clip-flove::after{content:'↗'; font-size:.62em; vertical-align:super; margin-left:2px}
+.clip-tg-link{font-family:var(--mono); font-size:.68rem; font-weight:700; color:var(--grape); text-decoration:none;
+  white-space:nowrap; border-bottom:1.5px dashed var(--grape)}
+.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon)}
 .clip-tg{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--grape); cursor:pointer;
   border:1.5px solid var(--grape); border-radius:999px; background:transparent; padding:1px 8px; line-height:1.4}
 .clip-tg:hover{background:var(--marigold)}
@@ -1002,8 +1005,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <ol start="12">
               <li>✅ Núcleo <code>authy.js</code> canal-agnóstico + driver Telegram (email/phone = stubs) <span class="scope v1">v1</span></li>
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
-              <li><code>key</code> inmutable + palabra editable (slug first-wins; <code>/name</code> en DM, API en el backend)</li>
-              <li>Origen oscurecido: hash salado = handle de autor (nunca @username)</li>
+              <li>✅ <code>key</code> inmutable + palabra editable: <code>/name</code> en DM ya activo (backfill del histórico con la API en v2) <span class="scope v1">v1</span></li>
+              <li>✅ Origen oscurecido: hash salado = handle de autor (nunca @username) <span class="scope v1">v1</span></li>
               <li>Claim (L2→L3) <span class="scope v2">v2 · railways</span>: nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
               <li>Filespace <code>central/users/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>)</li>
               <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
@@ -1044,7 +1047,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <ol start="38">
               <li>Tiempo real: webhooks en vez del cron + rate-limit server-side</li>
               <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> + tablas libSQL + import del filespace</li>
-              <li>Notificaciones DM al aprobar/denegar</li>
+              <li>✅ Notificaciones DM al aprobar/denegar <span class="scope v1">v1</span></li>
               <li>Programación de publicación</li>
               <li>Feed cross-app vía endpoint central</li>
             </ol>
@@ -1665,9 +1668,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
   // Meta de cada clip: telegram id (como tag conmutable), y cuándo llegó.
   // Anónimo no muestra autor. La licencia se queda en el footer.
+  // C19: el enlace a t.me solo aparece si el autor hizo opt-in (c.tg), nunca automático.
   function clipMeta(t){
     const c=t.clip||{};
     const anon=c.anonimo || !c.name || /^an[oó]nima$/.test(String(c.name).trim());
+    const optIn=String(c.tg||'').replace(/^@/,'');
     let author='';
     if(!anon){
       const key=(c.key||'').trim();
@@ -1679,6 +1684,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         author='<button type="button" class="clip-tg'+(on?' on':'')+'" data-tg="'+esc(tg)+'" aria-pressed="'+(on?'true':'false')+'">@'+esc(tg)+'</button>';
       } else if(c.username) author='<span class="clip-author">@'+esc(c.username)+'</span>';
       else author='<span class="clip-author">'+esc(c.name)+'</span>';
+    }
+    if(optIn){
+      author += ' <a class="clip-tg-link" href="https://t.me/'+esc(optIn)+'" target="_blank" rel="noopener" title="Telegram del autor (solo con su permiso)">@'+esc(optIn)+' ↗</a>';
     }
     const when=timeAgo(c.when);
     const parts=[author, when].filter(Boolean);

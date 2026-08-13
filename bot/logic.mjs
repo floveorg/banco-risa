@@ -73,6 +73,12 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
             actions.push({ kind: 'draft-' + act, chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id });
           }
+          continue;
+        }
+        const tp = /^tgpub:(yes|no)$/.exec(cb.data || '');
+        if (tp) {
+          actions.push({ kind: 'tgpub-' + tp[1], chatId, callbackId: cb.id,
+            username: (cb.from && cb.from.username) || '' });
         }
       }
       continue;
@@ -107,7 +113,14 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           });
         }
       } else if (msg.text) {
-        if (ctx.awaitingTitle && ctx.awaitingTitle[key]) {
+        const cmd = /^\/(name|pub)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
+        if (cmd) {
+          if (cmd[1].toLowerCase() === 'name') {
+            actions.push({ kind: 'rename', chatId: msg.chat.id, name: (cmd[2] || '').trim().slice(0, 40) });
+          } else {
+            actions.push({ kind: 'tgpub-ask', chatId: msg.chat.id });
+          }
+        } else if (ctx.awaitingTitle && ctx.awaitingTitle[key]) {
           actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
         } else if (ctx.awaitingTags && ctx.awaitingTags[key]) {
           actions.push({ kind: 'draft-tags-text', chatId: msg.chat.id, tagsText: (msg.text || '').trim() });
@@ -121,7 +134,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   return { actions, offset };
 }
 
-export function bancoEntry({ id, name, tags, when, src, t }) {
+export function bancoEntry({ id, name, tags, when, src, t, tg }) {
   // `src` is the absolute audio URL (Cloudinary secure_url). The website composes
   // the license (`by`, `orig`) from `name`; the bot never writes those (see spec §4).
   const e = {
@@ -132,6 +145,7 @@ export function bancoEntry({ id, name, tags, when, src, t }) {
   };
   if (t) e.t = t;
   if (tags) e.tags = tags;
+  if (tg) e.tg = tg;   // enlace t.me solo si el autor hizo opt-in (C19), nunca automático
   return e;
 }
 
