@@ -36,7 +36,7 @@ async function main() {
     for (const f of (await walk(p(root))).sort()) {
       const contentType = CONTENT_TYPES[extname(f).toLowerCase()];
       if (!contentType) continue;
-      const rel = f.slice(root.length + 1);
+      const rel = f.slice(p(root).length + 1);
       const url = await uploadMedia(f, { key: root + '/' + rel, contentType });
       console.log('ok ' + rel + '  ->  ' + url);
       n++;
