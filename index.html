@@ -537,6 +537,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rtab-panel .step{border-left:4px solid var(--marigold); padding:2px 0 2px 16px; margin:14px 0}
 .rtab-panel a{color:var(--grape); font-weight:700; text-decoration:none; border-bottom:2px solid var(--marigold)}
 .rtab-panel a:hover{color:var(--persimmon)}
+.rtab-intro{font-size:1.03rem; color:var(--ink); max-width:72ch}
 .rtab-more{color:var(--ink-soft); line-height:1.55; max-width:72ch; margin-top:26px; padding-top:16px; border-top:1px dashed rgba(42,24,16,.22)}
 .plan-links{list-style:none; padding:0; display:grid; gap:8px}
 .montar-row{margin-top:24px}
@@ -905,18 +906,25 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <p class="rtab-more">La guía técnica completa — flujos subir/moderar/escuchar, modelo de datos (<code>risa.json</code>), identidad y privacidad, hosting y licencia — vive en el estándar <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">RisaLiberada v1 (estándar del circuito) ↗</a>. Resumen de un párrafo: un bot de Telegram recoge notas de voz, un grupo humano modera, y todo lo aprobado acaba como MP3 en Cloudflare R2 con su entrada en <code>risa.json</code>; la web solo lee el feed.</p>
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
-            <p>La versión <b>avanzada</b>: la definición conceptual del addon, las mejoras que propone la v2, y la mirada a la v3. Vamos de lo conceptual a lo concreto.</p>
-            <h4>Definición técnica: el addon</h4>
-            <p><b>Conceptualmente primero.</b> Risa es el primer caso de un <b>addon reutilizable</b>: un circuito de comunidad — subida por Telegram → moderación humana → feed versionado → web — montado como piezas independientes. Cada addon declara solo su parte (app, bucket R2, canal, grupo de moderación); todo lo demás (<code>bot-core</code>, feed, renderer de autor, modal de claim) es código compartido. Ese es el salto de «una web» a «un sistema que cualquiera replica».</p>
+            <p class="rtab-intro">La versión <b>avanzada</b>: la v2 cambia la arquitectura <b>sin tocar v1</b>, añade formatos nuevos (vídeo corto, fotos) y unos cuantos comandos. Vamos de lo conceptual a lo concreto.</p>
+            <h4>Definición técnica: el addon se vuelve un campo de Lovy</h4>
+            <p><b>Conceptualmente primero.</b> La v2 no es otra web: es la risa convirtiéndose en un <b>campo (field) de Lovy</b>, la app nueva que acoge el circuito compartido. El contrato se declara en dos archivos por app:</p>
+            <ul>
+              <li><b><code>flove.json</code></b> — el feed compartido: cada app publica su campo (risas, vídeos, fotos) en una lista versionada con la misma forma que <code>risa.json</code>.</li>
+              <li><b><code>flovebot.json</code></b> — el bot compartido: qué app, qué canal, qué grupo de moderación y qué bucket R2 usa cada addon.</li>
+            </ul>
+            <p><b>Compatibilidad perfecta hacia atrás.</b> El código v1 — el bot de risa, <code>risa.json</code>, la web — no se toca: un addon viejo sigue publicando exactamente igual, y la v2 convive leyendo el mismo feed. De «una web» se pasa a «un sistema replicable» sin romper nada de lo ya publicado.</p>
             <h4>Mejoras que propone la v2</h4>
             <ul>
               <li><b>Origen oscurecido = prueba de autoría.</b> Con ①+② el ID se guarda como <b>hash</b> y ese hash es el <i>handle</i> en la web; deja de ser un mero filtro de playlist y se vuelve tu llave de autor.</li>
               <li><b>Reclamar autoría (<i>Claim it</i>).</b> Una risa sin reclamar se vincula a un perfil con nonce + confirmación por DM; el id que confirma debe ser el mismo que subió el clip.</li>
+              <li><b>Etiquetas con dueño.</b> Una etiqueta puede ser <b>propia</b>: reclamable, como las risas. Quien la reclamó aparece en su chip y en su feed.</li>
+              <li><b>URLs de autor (<code>/username#tag</code>, con Railway).</b> El backend v2 resuelve <code>/username</code> en la página de cada autor — <b>mis risas</b> y <b>favoritas</b> — y la etiqueta reclamada queda como ancla <code>#tag</code>. La web v1 sigue estática; estas rutas las sirve el backend v2 (Railway + libSQL) con authy central.</li>
               <li><b>Perfil de autor.</b> Cada autor tiene su página <code>users/&lt;key&gt;/</code>: sus risas, sus favoritos y su nivel <code>authy</code>.</li>
               <li><b>Favoritos ❤️ públicos / ⭐ privados.</b> Los públicos se ven en tu página de autor; los privados son solo tuyos, según tu nivel authy.</li>
               <li><b>Authy L1–L5.</b> Identidad canal-agnóstica: anónima · presencia · verificada · +teléfono · +biometría.</li>
-              <li><b>Multi-app.</b> Lovy (audio y vídeo ≤ 1 min) y las apps que vengan corren sobre el mismo esqueleto, cada una con su feed y su bucket.</li>
-              <li><b>Etiquetas en la web.</b> Chips que filtran, tag cloud, risas relacionadas, feed por etiqueta y estadísticas.</li>
+              <li><b>Multi-app.</b> Lovy (audio y vídeo ≤ 1 min) y las apps que vengan corren sobre el mismo esqueleto, cada una con su campo en <code>flove.json</code>.</li>
+              <li><b>Etiquetas en la web.</b> Chips que filtran (¡con <code>#etiqueta</code> en la URL!), tag cloud, risas relacionadas, feed por etiqueta y estadísticas.</li>
             </ul>
             <h4>El flujo v2</h4>
             <p>El circuito compartido con la identidad oscurecida en el centro:</p>
@@ -924,12 +932,28 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <img src="flove-v2-thread.png" alt="Diagrama de secuencia de la versión 2 (flove-v2): identidad oscurecida como handle, reclamación de autoría y favoritos" loading="lazy">
               <figcaption>Flujo v2: un bot central, varios bots subordinados, claim y favoritos</figcaption>
             </figure>
+            <h4>Formatos nuevos en la v2</h4>
+            <ul>
+              <li><b>Vídeo corto.</b> Risas en vídeo de hasta 1 minuto: mismo flujo (subida → moderación → feed → web), con <b>thumbnail</b> en moderación y <b>reproducción inline</b> en la web. Lovy ya acepta vídeo; la v2 lo publica y lo sirve.</li>
+              <li><b>Fotos.</b> Risas que no suenan: una foto con su pie. Se sirven en la web como <b>tarjeta</b> (imagen + autor + etiquetas) dentro del mismo feed, y entran por el mismo canal y grupo.</li>
+            </ul>
+            <h4>Comandos (v2)</h4>
+            <ul>
+              <li><b><code>/play</code></b> — reproduce una risa al azar, o una de una etiqueta concreta, en el propio chat.</li>
+              <li><b><code>/radio</code></b> — racha de risas en modo radio: una detrás de otra sin tener que pedir.</li>
+              <li><b><code>/search</code></b> — busca en el feed por etiqueta o palabra y devuelve enlaces a la web.</li>
+              <li><b><code>/chain</code></b> — encadena una risa a otra (esta continúa a aquella), construyendo hilos.</li>
+              <li><b><code>/mis-risas</code></b> — tu página: devuelve el enlace a <code>/username</code> con tus risas publicadas.</li>
+              <li><b><code>/favoritas</code></b> — alterna un favorito ❤️ público o ⭐ privado desde el chat, sin abrir la web.</li>
+              <li><b><code>/claim</code></b> — reclama la autoría de una etiqueta o risa sin reclamar (nonce + DM).</li>
+              <li><b><code>/perfil</code></b> — ver y editar tu nombre público y tu nivel authy.</li>
+            </ul>
             <h4>Código y alternativas</h4>
             <ul>
               <li><b>Bot</b> — Node.js sin dependencias pesadas: Telegram Bot API (<code>getUpdates</code>) y <code>ffmpeg</code> con <code>loudnorm</code>.</li>
-              <li><b>Feed</b> — <code>risa.json</code> es la «base de datos»: lista versionada; entrada <code>{id, name, t, tags, when, src}</code>.</li>
+              <li><b>Feed</b> — <code>flove.json</code> (v2) mantiene la forma de <code>risa.json</code> (v1): lista versionada; entrada <code>{id, name, t, tags, when, src}</code>.</li>
               <li><b>Privacidad</b> — el id en claro nunca viaja al feed; con ①+② solo el hash, con solo-① el id directo.</li>
-              <li><b>R2 → cualquier hosting</b> de objetos; <b>feed JSON → API</b> cuando crece; <b>moderación humana</b>, automatizable con un bot auxiliar.</li>
+              <li><b>R2 → cualquier hosting</b> de objetos; <b>feed JSON → API + Railway/libSQL</b> en v2 para las rutas de autor; <b>moderación humana</b>, automatizable con un bot auxiliar.</li>
             </ul>
             <h4>Hacia la v3 — las features más difíciles</h4>
             <p>Repasando los planes, las piezas más ambiciosas que toca abordar son:</p>
@@ -1527,6 +1551,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const selected=new Set();
   const genteRaf={id:null};
 
+  // URL hash: #tag (o tag1+tag2) selecciona etiquetas al cargar. Los nombres de
+  // sección (#ciencia, #cultura…) quedan reservados para el deep-link de pestañas.
+  const TAG_SECTIONS=new Set(['espiritualidad','cultura','ciencia','comunidad']);
+  const initialTagHash=(location.hash||'').slice(1);
+  if(!TAG_SECTIONS.has(initialTagHash)){
+    initialTagHash.split('+').forEach(raw=>{
+      let t=raw; try{ t=decodeURIComponent(raw); }catch{}
+      if(t) selected.add(t);
+    });
+  }
+
   let favFilter=false;
   const favChip=document.createElement('button');
   favChip.className='chip fav-chip'; favChip.type='button';
@@ -1656,6 +1691,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(selected.has(tag)) selected.delete(tag); else selected.add(tag);
     btn.setAttribute('aria-pressed', selected.has(tag)?'true':'false');
     updateGentePlaylist();
+    syncTagHash();
+  }
+
+  function syncTagHash(){
+    const parts=[...selected].map(t=>encodeURIComponent(t));
+    const base=location.pathname+location.search;
+    const wanted=parts.length ? '#'+parts.join('+') : (initialTagHash?'#'+initialTagHash:base);
+    if(location.hash!==(wanted.startsWith('#')?wanted:'')) history.replaceState(null, '', wanted);
   }
 
   function resetTags(){
@@ -1666,6 +1709,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     chipStart=0; chipCount=TAG_START; plusClicks=0; plusChip.classList.remove('done');
     [...space.children].forEach(c=>{ if(c!==recienteBtn && c!==favChip && c!==plusChip) c.remove(); });
     updateGentePlaylist();
+    syncTagHash();
   }
 
   function floatChips(container, els, rafRef){
