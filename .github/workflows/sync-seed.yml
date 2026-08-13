@@ -1,0 +1,28 @@
+name: sync-seed
+on:
+  push:
+    paths:
+      - 'seed/**'
+      - '.github/workflows/sync-seed.yml'
+      - 'bot/sync-seed.mjs'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: sync-seed
+  cancel-in-progress: true
+jobs:
+  sync-seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Sync seed audio to Cloudflare R2
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_BASE: ${{ secrets.R2_PUBLIC_BASE }}
+        run: node bot/sync-seed.mjs
