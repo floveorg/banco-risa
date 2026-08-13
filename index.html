@@ -534,6 +534,10 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rtab-panel pre{background:#22140c; color:#f6e7cf; font-family:var(--mono); font-size:.8rem; line-height:1.55;
   padding:16px 18px; border-radius:14px; overflow-x:auto; white-space:pre-wrap; word-break:break-word; max-width:72ch}
 .rtab-panel .step{border-left:4px solid var(--marigold); padding:2px 0 2px 16px; margin:14px 0}
+.rtab-panel a{color:var(--grape); font-weight:700; text-decoration:none; border-bottom:2px solid var(--marigold)}
+.rtab-panel a:hover{color:var(--persimmon)}
+.rtab-more{color:var(--ink-soft); line-height:1.55; max-width:72ch; margin-top:26px; padding-top:16px; border-top:1px dashed rgba(42,24,16,.22)}
+.plan-links{list-style:none; padding:0; display:grid; gap:8px}
 .montar-row{margin-top:24px}
 .promo-emojis{font-size:2.6rem; letter-spacing:.18em; line-height:1;
   text-shadow:1px 1px 0 rgba(42,24,16,.3), 2px 2px 0 rgba(42,24,16,.22), 3px 3px 0 rgba(42,24,16,.12)}
@@ -897,53 +901,58 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
               <figcaption>Flujo v1: de la nota de voz a la web y al canal</figcaption>
             </figure>
+            <p class="rtab-more">La guía técnica completa — flujos subir/moderar/escuchar, modelo de datos (<code>risa.json</code>), identidad y privacidad, hosting y licencia — vive en el estándar <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">RisaLiberada v1 (estándar del circuito) ↗</a>. Resumen de un párrafo: un bot de Telegram recoge notas de voz, un grupo humano modera, y todo lo aprobado acaba como MP3 en Cloudflare R2 con su entrada en <code>risa.json</code>; la web solo lee el feed.</p>
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
-            <p>La versión <b>avanzada</b>: el mismo flujo con código, alternativas y hacia dónde crece. Partimos del diagrama de la versión 1.</p>
+            <p>La versión <b>avanzada</b>: la definición conceptual del addon, las mejoras que propone la v2, y la mirada a la v3. Vamos de lo conceptual a lo concreto.</p>
+            <h4>Definición técnica: el addon</h4>
+            <p><b>Conceptualmente primero.</b> Risa es el primer caso de un <b>addon reutilizable</b>: un circuito de comunidad — subida por Telegram → moderación humana → feed versionado → web — montado como piezas independientes. Cada addon declara solo su parte (app, bucket R2, canal, grupo de moderación); todo lo demás (<code>bot-core</code>, feed, renderer de autor, modal de claim) es código compartido. Ese es el salto de «una web» a «un sistema que cualquiera replica».</p>
+            <h4>Mejoras que propone la v2</h4>
+            <ul>
+              <li><b>Origen oscurecido = prueba de autoría.</b> Con ①+② el ID se guarda como <b>hash</b> y ese hash es el <i>handle</i> en la web; deja de ser un mero filtro de playlist y se vuelve tu llave de autor.</li>
+              <li><b>Reclamar autoría (<i>Claim it</i>).</b> Una risa sin reclamar se vincula a un perfil con nonce + confirmación por DM; el id que confirma debe ser el mismo que subió el clip.</li>
+              <li><b>Perfil de autor.</b> Cada autor tiene su página <code>users/&lt;key&gt;/</code>: sus risas, sus favoritos y su nivel <code>authy</code>.</li>
+              <li><b>Favoritos ❤️ públicos / ⭐ privados.</b> Los públicos se ven en tu página de autor; los privados son solo tuyos, según tu nivel authy.</li>
+              <li><b>Authy L1–L5.</b> Identidad canal-agnóstica: anónima · presencia · verificada · +teléfono · +biometría.</li>
+              <li><b>Multi-app.</b> Lovy (audio y vídeo ≤ 1 min) y las apps que vengan corren sobre el mismo esqueleto, cada una con su feed y su bucket.</li>
+              <li><b>Etiquetas en la web.</b> Chips que filtran, tag cloud, risas relacionadas, feed por etiqueta y estadísticas.</li>
+            </ul>
+            <h4>El flujo v2</h4>
+            <p>El circuito compartido con la identidad oscurecida en el centro:</p>
             <figure>
-              <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1) en detalle" loading="lazy">
-              <figcaption>Flujo v1 en detalle</figcaption>
+              <img src="flove-v2-thread.png" alt="Diagrama de secuencia de la versión 2 (flove-v2): identidad oscurecida como handle, reclamación de autoría y favoritos" loading="lazy">
+              <figcaption>Flujo v2: un bot central, varios bots subordinados, claim y favoritos</figcaption>
             </figure>
-            <h4>Código</h4>
+            <h4>Código y alternativas</h4>
             <ul>
-              <li><b>Bot</b> — Node.js sin dependencias pesadas: Telegram Bot API (<code>getUpdates</code>) y <code>ffmpeg</code> con <code>loudnorm</code> para normalizar el volumen.</li>
-              <li><b>Feed</b> — <code>risa.json</code> es la «base de datos»: una lista versionada; cada entrada <code>{id, name, t, tags, when, src}</code>.</li>
-              <li><b>Privacidad</b> — con identidad Telegram solo se guardan el nombre público y un <b>hash</b> del id; el id nunca va en claro, ni en <code>queue.json</code> ni en el feed.</li>
-              <li><b>Web</b> — un solo HTML (CSS/JS sin frameworks) que consume el feed y los audios por URL pública.</li>
+              <li><b>Bot</b> — Node.js sin dependencias pesadas: Telegram Bot API (<code>getUpdates</code>) y <code>ffmpeg</code> con <code>loudnorm</code>.</li>
+              <li><b>Feed</b> — <code>risa.json</code> es la «base de datos»: lista versionada; entrada <code>{id, name, t, tags, when, src}</code>.</li>
+              <li><b>Privacidad</b> — el id en claro nunca viaja al feed; con ①+② solo el hash, con solo-① el id directo.</li>
+              <li><b>R2 → cualquier hosting</b> de objetos; <b>feed JSON → API</b> cuando crece; <b>moderación humana</b>, automatizable con un bot auxiliar.</li>
             </ul>
-            <h4>Alternativas</h4>
+            <h4>Hacia la v3 — las features más difíciles</h4>
+            <p>Repasando los planes, las piezas más ambiciosas que toca abordar son:</p>
             <ul>
-              <li><b>R2</b> — cualquier almacenamiento de objetos estático sirve; con volumen bajo, hasta el propio repo.</li>
-              <li><b>Feed</b> — el JSON versionado es la opción más sencilla; un backend con API aparece cuando el volumen crece.</li>
-              <li><b>Moderación</b> — humana (recomendada para empezar); automatizable con un bot auxiliar más adelante.</li>
+              <li><b>Tiempo real.</b> Dejar el cron atrás: <b>webhooks</b> + backend (Railway + libSQL) con respuesta instantánea y rate-limit server-side.</li>
+              <li><b>Claims firmados por browsy.</b> Prueba criptográfica de autoría firmada con las claves existentes, sin re-derivarlas (D17).</li>
+              <li><b>Recuperación y herencia de la identidad.</b> <code>/vault</code> (frase + QR para restaurar authy entre canales) y <code>/heritage</code> (transferir/recuperar la cuenta vía red de avales).</li>
+              <li><b>Creación colaborativa.</b> <code>/cameo</code>, <code>/reprise</code> y <code>/lore</code>: remixes y cadenas que se renderizan como hilos en la web.</li>
+              <li><b>IA para moderación.</b> Transcripción + flagging asistido, dailies, rachas y top/trending con estadísticas reales.</li>
+              <li><b>Mini App + inline mode.</b> Subir y reproducir sin salir de Telegram, y buscar clips desde cualquier chat.</li>
             </ul>
-            <h4>Posibilidades</h4>
-            <ul>
-              <li>Playlists por etiquetas y chips de búsqueda, reacciones en el canal, feed RSS, estadísticas por palabra.</li>
-              <li>Identidades y licencias trazables (CC BY-SA 4.0) sin exponer datos personales.</li>
+            <h4>Planes</h4>
+            <p>El detalle completo vive en los planes del estándar:</p>
+            <ul class="plan-links">
+              <li><a href="https://flove.org/development/standards/debates/making-of/superpowers/plans/2026-08-11-risa-authy-telegram-shared.md" target="_blank" rel="noopener">risa → authy · circuito compartido (v2) ↗</a></li>
+              <li><a href="https://flove.org/development/standards/debates/making-of/superpowers/specs/2026-07-19-risa-banco-telegram-moderation-design.md" target="_blank" rel="noopener">spec del circuito (v1) ↗</a></li>
+              <li><a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">estándar RisaLiberada v1 ↗</a></li>
             </ul>
-            <h4>Etiquetas en la web</h4>
-            <ul>
-              <li><b>Chips</b> — cada etiqueta es un botón: filtra la playlist al instante.</li>
-              <li><b>Tag cloud</b> — las etiquetas con más risas destacan y enlazan a su filtro.</li>
-              <li><b>Risas relacionadas</b> — una risa propone otras con la misma etiqueta.</li>
-              <li><b>Feed por etiqueta</b> — «mis risas», «top risas» o «por etiqueta» como vista o enlace directo.</li>
-              <li><b>Estadísticas</b> — la etiqueta como unidad de medida: cuántas risas hay y cuál crece.</li>
-            </ul>
-            <h4>Hacia la versión 2</h4>
-            <p>El modelo se generaliza en <b>flove-v2</b>: un bot central y varios bots/app subordinados que comparten el flujo central y publican cada uno en su canal y su feed. Aquí el origen oscurecido deja de ser un simple filtro: <b>es la prueba de autoría</b> que enlaza el feed con un perfil.</p>
-            <ul>
-              <li><b>Multi-app</b> — cada app (risa y otras) envía a su propio canal y <code>risa.json</code>.</li>
-              <li><b>Autenticación por niveles</b> — L1–L5 en el bot central, con páginas centrales de usuarios.</li>
-              <li><b>Reclamar autoría</b> — con ①+② el ID oscurecido (hash) es tu <i>handle</i> en la web: <i>Claim it</i>, nonce y confirmación por DM, y pasas a tener un perfil propio con tus risas.</li>
-              <li><b>Favoritos</b> — ❤️ públicos (se ven en tu página de autor) y ⭐ privados (solo tú, según nivel de <code>authy</code>).</li>
-              <li><b>Extensiones</b> — comandos <code>/play</code>, <code>/radio</code>, <code>/search</code>, <code>/chain</code> y Mini App.</li>
-            </ul>
-            <figure>
-              <img src="flove-v2-thread.png" alt="Diagrama de secuencia de la versión 2 (flove-v2): un bot central y varios bots subordinados" loading="lazy">
-              <figcaption>Flujo v2: un bot central y varios bots subordinados</figcaption>
-            </figure>
           </div>
+          <nav class="rtab-bar" aria-label="Versiones de la réplica (final de la sección)">
+            <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
+            <button type="button" class="rtab-btn" data-tab="introduccion" aria-pressed="true">Introducción</button>
+            <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
+          </nav>
         </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
