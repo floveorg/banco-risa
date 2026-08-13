@@ -5,6 +5,7 @@ on:
       - 'seed/**'
       - '.github/workflows/sync-seed.yml'
       - 'bot/sync-seed.mjs'
+      - 'bot/r2.mjs'
   workflow_dispatch: {}
 permissions:
   contents: write

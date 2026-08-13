@@ -6,6 +6,7 @@ on:
       - 'risa/categorias/**'
       - '.github/workflows/sync-media.yml'
       - 'bot/sync-media.mjs'
+      - 'bot/r2.mjs'
   workflow_dispatch: {}
 permissions:
   contents: write
