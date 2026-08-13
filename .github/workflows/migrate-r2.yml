@@ -26,8 +26,8 @@ jobs:
           git config user.name 'risa bot'
           git config user.email 'bot@users.noreply.github.com'
           if ! git diff --quiet; then
-            git add risa.json index.html config.json
-            git commit -m "r2: move banco-risa/ prefix to risa/ (URLs rewritten)"
+            git add risa.json config.json
+            git commit -m "r2: move banco-risa/ clips prefix to risa/ (URLs rewritten)"
             git pull --rebase origin main
             git push origin HEAD:main
           else

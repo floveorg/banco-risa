@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { r2ClipKeys, rewriteUrls, rewriteSeedConst, rewriteConfig } from '../migrate-r2.mjs';
+import { r2ClipKeys, rewriteUrls, rewriteConfig } from '../migrate-r2.mjs';
 
 const PB = 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev';
 
@@ -16,11 +16,6 @@ test('r2ClipKeys extracts only banco-risa clip keys', () => {
 test('rewriteUrls swaps banco-risa prefix in the feed JSON', () => {
   const out = rewriteUrls(JSON.stringify([{ src: PB + '/banco-risa/q_1.mp3' }]), PB);
   assert.equal(JSON.parse(out)[0].src, PB + '/risa/q_1.mp3');
-});
-
-test('rewriteSeedConst swaps the seed const in index.html', () => {
-  const out = rewriteSeedConst(`const A = '${PB}/banco-risa/seed/audio/';`);
-  assert.equal(out, `const A = '${PB}/risa/seed/audio/';`);
 });
 
 test('rewriteConfig flips r2Folder', () => {

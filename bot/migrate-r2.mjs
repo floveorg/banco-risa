@@ -1,9 +1,10 @@
-// One-off migration: move the R2 objects stored under the `banco-risa/` prefix
-// to the `risa/` prefix (clips + seed audio), then rewrite every URL that points
-// at the old prefix (risa.json srcs, the seed `A` const in index.html,
-// config.json r2Folder). Run from .github/workflows/migrate-r2.yml (manual).
+// One-off migration: move the R2 clips stored under the `banco-risa/` prefix to
+// the `risa/` prefix, then rewrite every URL that points at the old prefix
+// (risa.json srcs and config.json r2Folder). The seed audio library lives only
+// in R2 (never in this repo) and keeps its own path, so the app's seed const is
+// untouched. Run from .github/workflows/migrate-r2.yml (manual dispatch).
 // Needs the same R2_* env vars as the bot (GitHub secrets).
-import { readFile, writeFile, readdir } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
 export function r2ClipKeys(srcs, publicBase) {
@@ -17,10 +18,6 @@ export function r2ClipKeys(srcs, publicBase) {
 export function rewriteUrls(jsonText, publicBase) {
   const base = publicBase.replace(/\/+$/, '');
   return jsonText.split(base + '/banco-risa/').join(base + '/risa/');
-}
-
-export function rewriteSeedConst(html) {
-  return html.split('.r2.dev/banco-risa/seed/audio/').join('.r2.dev/risa/seed/audio/');
 }
 
 export function rewriteConfig(configText) {
@@ -50,15 +47,7 @@ async function main() {
     moved++;
   }
 
-  const seedFiles = (await readdir(p('seed/audio'))).filter((f) => f.endsWith('.mp3')).sort();
-  for (const f of seedFiles) {
-    const url = await uploadAudio(p('seed/audio/' + f), { publicId: f.replace(/\.mp3$/, ''), folder: 'risa/seed/audio' });
-    console.log('seed ' + f + ' -> ' + url);
-    moved++;
-  }
-
   await writeFile(p('risa.json'), rewriteUrls(await readFile(p('risa.json'), 'utf8'), publicBase));
-  await writeFile(p('index.html'), rewriteSeedConst(await readFile(p('index.html'), 'utf8')));
   await writeFile(p('config.json'), rewriteConfig(await readFile(p('config.json'), 'utf8')));
 
   console.log(moved ? 'done: ' + moved + ' objects migrated to risa/' : 'nothing to migrate (already risa/)');

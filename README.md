@@ -15,8 +15,9 @@ title attached. On approval the bot tells the uploader what they submitted (titl
 name) — no media link. Clips wait for a moderator decision (no auto-publish).
 Runs on a GitHub Actions cron — no server.
 
-Audio (the community-uploaded laugh clips) lives on Cloudflare R2, not in git; the repo holds
-only the metadata (`risa.json`, each entry's `src` is an R2 URL) and the bot code.
+Audio — the community-uploaded laugh clips **and** the seed laugh library — lives on Cloudflare
+R2, never in git; the repo holds only the metadata (`risa.json`, each entry's `src` is an R2 URL)
+and the bot code. The seed clips play straight from their R2 seed path.
 
 ## Web app
 
