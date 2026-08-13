@@ -246,8 +246,8 @@ img{max-width:100%; display:block}
 .tag-search button:hover{transform:translateY(-2px)}
 .media-toggle{display:flex; gap:8px; flex:none; align-items:center}
 .mt-btn{border:2.5px solid var(--ink); border-radius:999px; background:var(--cream); color:var(--ink);
-  font-family:var(--disp); font-weight:700; line-height:1; cursor:pointer; padding:9px 14px;
-  font-size:.82rem; white-space:nowrap}
+  display:grid; place-items:center; line-height:0; cursor:pointer; padding:9px;
+  font-family:var(--disp); font-weight:700; white-space:nowrap}
 .mt-btn:hover{transform:translateY(-2px)}
 .mt-btn[aria-pressed="true"].mt-audio{background:var(--marigold)}
 .mt-btn[aria-pressed="true"].mt-video{background:var(--grape); color:#fff}
@@ -259,12 +259,12 @@ img{max-width:100%; display:block}
 .player-col .player{width:100%; max-width:560px}
 .title-head{display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; max-width:560px; text-align:left}
 .title-head h3{max-width:calc(100% - 170px); margin:14px auto 10px; font-size:1.3rem}
-.transport{display:flex; gap:10px; flex:none}
-.tr-btn{width:23px; height:23px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
-  color:var(--ink); font-family:var(--disp); font-size:.7rem; line-height:1; cursor:pointer;
-  display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
-.tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
-.tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.6rem; width:69px; height:69px}
+ .transport{display:flex; gap:10px; flex:none}
+ .tr-btn{width:35px; height:35px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
+   color:var(--ink); font-family:var(--disp); font-size:1rem; line-height:1; cursor:pointer;
+   display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
+ .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
+ .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:.8rem; width:35px; height:35px}
 @media(max-width:560px){.title-head{flex-wrap:wrap}}
 
 /* ============ BURBUJAS DE BENEFICIOS ============ */
@@ -563,12 +563,6 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rtab-panel a:hover{color:var(--persimmon)}
 .rtab-intro{font-size:1.03rem; color:var(--ink); max-width:72ch}
  .feat-area{margin:18px 0 4px; font-family:var(--mono); font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--persimmon)}
- .feat-list{border:2.5px dashed rgba(42,24,16,.3); border-radius:16px; padding:14px 18px; margin-top:14px; background:rgba(255,248,238,.55)}
- .feat-list summary{cursor:pointer; font-family:var(--disp); font-weight:700; font-size:1.02rem; color:var(--ink); list-style:none}
- .feat-list summary::before{content:'▸ '; color:var(--persimmon)}
- .feat-list[open] summary::before{content:'▾ '}
- .feat-list summary:hover{color:var(--persimmon)}
- .feat-list .feat-body{margin-top:14px; padding-top:14px; border-top:1px dashed rgba(42,24,16,.22)}
  .scope{border-radius:999px; padding:2px 10px; font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; vertical-align:middle}
  .scope.v1{background:var(--marigold); color:var(--ink)}
  .scope.v2{background:var(--grape); color:#fff}
@@ -626,11 +620,15 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
             </div>
             <div class="tag-search">
               <input id="tag-search-input" type="search" placeholder="Tag, Title, Name…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
-              <button id="tag-search-btn" type="button">Search</button>
+              <button id="tag-search-btn" type="button">Go</button>
             </div>
             <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo">
-              <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true">🎙 Audio</button>
-              <button type="button" class="mt-btn mt-video" id="mt-video" aria-pressed="false">🎬 Vídeo</button>
+              <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true" aria-label="Solo audios" title="Solo audios">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <button type="button" class="mt-btn mt-video" id="mt-video" aria-pressed="false" aria-label="Solo vídeos" title="Solo vídeos">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
+              </button>
             </div>
           </div>
           <div class="player" id="gente-player">
@@ -737,7 +735,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
               <button class="chan-link" id="chan-propone" type="button" aria-expanded="false">
                 <span class="chan-plus">➕</span>
               </button>
-              <p class="propone-note" id="propone-note">El que la propone se la come... 😉</p>
+              <p class="propone-note" id="propone-note" hidden>El que la propone se la come... 😉</p>
             </div>
           </div>
         <div class="btn-center montar-row">
@@ -982,9 +980,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
             <p class="rtab-intro">El desarrollo es una <b>lista única de features</b>, agrupadas por área y ordenadas de la más simple a la más compleja. Las ya hechas llevan ✅; las demás se van tachando a medida que se hacen. Cuando una rama desborda risa, enlazamos al plan de flove correspondiente.</p>
-            <details class="feat-list">
-              <summary>El desarrollo, feature a feature — el que la propone se la come… 😉</summary>
-              <div class="feat-body">
+            <h4>El desarrollo, feature a feature</h4>
             <h5 class="feat-area">A · Web — el escaparate</h5>
             <ol start="1">
               <li>✅ Feed real: la playlist y «Últimas risas» leen de <code>risa.json</code> (un solo json)</li>
@@ -1065,8 +1061,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
               <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
             </ol>
-              </div>
-            </details>
             <p class="rtab-more">El desarrollo continúa en otras ramas de flove: <b>appy</b> (perfil y contribuciones), <b>browsy</b> (keys, trust y claims firmados), <b>central-backend</b> (Railway + FastAPI + libSQL) y la <b>feature matrix</b> + roadmap.</p>
             <h4>El circuito entre los 3 jsons</h4>
             <figure class="circuit-fig">
