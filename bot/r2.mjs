@@ -13,6 +13,11 @@ const SERVICE = 's3';
 const sha256 = (data) => createHash('sha256').update(data).digest('hex');
 const hmac = (key, data) => createHmac('sha256', key).update(data).digest();
 
+// encodeURIComponent leaves `!~*'()` unescaped; R2 canonicalizes those (e.g. `(`
+// -> `%28`) when building the SigV4 canonical request, so we must match: encode
+// them strictly for both the signed URI and the wire path.
+const enc = (s) => encodeURIComponent(s).replace(/[!'()*]/g, (c) => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+
 // Pure SigV4 signing for a path-style PUT Object. Returns everything the
 // request needs; no I/O, so it is unit-testable.
 export function signPut({ accessKeyId, secretAccessKey, endpoint, bucket, key, contentType, payloadHash, now = new Date() }) {
@@ -20,7 +25,7 @@ export function signPut({ accessKeyId, secretAccessKey, endpoint, bucket, key, c
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
   const datestamp = amzDate.slice(0, 8);
 
-  const uri = '/' + [bucket, ...key.split('/')].map(encodeURIComponent).join('/');
+  const uri = '/' + [bucket, ...key.split('/')].map(enc).join('/');
   const canonicalHeaders =
     'content-type:' + contentType + '\n' +
     'host:' + host + '\n' +

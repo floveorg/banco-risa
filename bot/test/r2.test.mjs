@@ -36,3 +36,8 @@ test('signPut signature changes when the key changes', () => {
     signPut({ ...BASE, key: 'banco-risa/another.mp3' }).signature
   );
 });
+
+test('signPut strict-encodes parens in the key path (R2 canonicalization)', () => {
+  const s = signPut({ ...BASE, key: 'risa/categorias/Imagen/IMG(1).jpg' });
+  assert.equal(s.uri, '/banco-risa/risa/categorias/Imagen/IMG%281%29.jpg');
+});
