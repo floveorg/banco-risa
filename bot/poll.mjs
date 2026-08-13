@@ -3,9 +3,14 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parseUpdates, bancoEntry, prependClip } from './logic.mjs';
+import { parseUpdates, bancoEntry, prependClip, identityOf } from './logic.mjs';
 import { Telegram } from './telegram.mjs';
 import { uploadAudio } from './r2.mjs';
+
+// Salt for the obfuscated Telegram-id hash. Each deployer sets their own; the
+// default keeps the hash one-way (never reversible) but sharing it across
+// installs is fine too — it is not a password.
+const TG_ID_SECRET = process.env.TG_ID_SECRET || 'risa-dev-secret';
 
 const run = promisify(execFile);
 const ROOT = new URL('..', import.meta.url).pathname;
@@ -135,7 +140,7 @@ async function publishClip(tg, cfg, q, id, banco) {
 
 // Apply one action. Every handler is idempotent (safe when updates re-deliver after
 // an offset rollback). Returns { banco, dirty } — dirty tells the caller to persist+commit.
-async function handleAction(a, tg, cfg, queue, drafts, banco) {
+async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders) {
   if (a.kind === 'draft') {
     const key = String(a.chatId);
     const prev = drafts[key] || {};
@@ -228,7 +233,8 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     const copied = await tg.copyMessage(cfg.modGroupId, d.fromChatId, d.fromMsgId, BUTTONS(d.id), caption);
     queue[d.id] = { fileId: d.fileId, name, username: d.username, title: d.title,
                     tags: d.tags || [], sel: d.sel || { ...DEFAULT_SEL },
-                    uploaderChatId: a.chatId, modMsgId: copied.message_id };
+                    ...identityOf(d.sel, a.chatId, TG_ID_SECRET), modMsgId: copied.message_id };
+    uploaders[d.id] = a.chatId;
     delete drafts[String(a.chatId)];
     await bestEffort(tg.answerCallback(a.callbackId, 'Enviada a moderación'));
     await bestEffort(tg.sendMessage(a.chatId,
@@ -256,13 +262,15 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
     delete queue[a.id];
     await bestEffort(tg.editReplyMarkupClear(cfg.modGroupId, q.modMsgId));
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
-    if (q.uploaderChatId) {
+    const upChatId = uploaders[a.id];
+    if (upChatId) {
       const lines = ['✅ ¡Tu risa ya está publicada!'];
       if (q.title) lines.push('✏️ ' + q.title);
       if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
       lines.push('🙂 ' + (q.name || 'Anónima'));
       lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
-      await bestEffort(tg.sendMessage(q.uploaderChatId, lines.join('\n')));
+      await bestEffort(tg.sendMessage(upChatId, lines.join('\n')));
+      delete uploaders[a.id];
     }
     return { banco, dirty: true };
   }
@@ -273,6 +281,7 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
       await bestEffort(tg.editReplyMarkupClear(cfg.modGroupId, q.modMsgId));
       await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '🗑 Borrada'));
       delete queue[a.id];
+      delete uploaders[a.id];
     }
     return { banco, dirty: !!q };
   }
@@ -310,6 +319,7 @@ async function main() {
   let offset = parseInt(await readFile(p('state/offset.txt'), 'utf8'), 10) || 0;
   let queue = await readJSON('state/queue.json', {});
   let drafts = await readJSON('state/drafts.json', {});
+  let uploaders = await readJSON('state/.uploaders.json', {});
   let banco = await readJSON('risa.json', []);
 
   const startedAt = Date.now();
@@ -326,11 +336,12 @@ async function main() {
 
     for (const a of actions) {
       try {
-        const r = await handleAction(a, tg, cfg, queue, drafts, banco);
+        const r = await handleAction(a, tg, cfg, queue, drafts, banco, uploaders);
         banco = r.banco;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
           await writeJSON('state/drafts.json', drafts);
+          await writeJSON('state/.uploaders.json', uploaders);
           await writeJSON('risa.json', banco);
           await bestEffort(commitState());
         }
@@ -350,6 +361,7 @@ async function main() {
 
   await writeJSON('state/queue.json', queue);
   await writeJSON('state/drafts.json', drafts);
+  await writeJSON('state/.uploaders.json', uploaders);
   await writeJSON('risa.json', banco);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());

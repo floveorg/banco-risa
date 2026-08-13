@@ -1,3 +1,6 @@
 node_modules/
 *.log
 seed/audio/
+# id de Telegram en claro (solo local, para el DM de publicación)
+state/drafts.json
+state/.uploaders.json

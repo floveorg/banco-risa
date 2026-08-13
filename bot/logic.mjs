@@ -1,11 +1,32 @@
 // Pure logic: Telegram getUpdates -> ordered actions + new offset. No I/O.
 
+import { createHash } from 'node:crypto';
+
 const APPROVE_WORDS = new Set(['ok', 'si', 'sí', 'yes', 'publicar', 'publish', 'dale', 'adelante', 'aprobado', 'subir', 'listo']);
 const REJECT_WORDS = new Set(['no', 'borrar', 'delete', 'rechazar', 'quitar', 'fuera', 'cancelar', 'anular']);
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;  // 10 MB
 const MAX_DURATION_S = 1000;              // 1000 seconds
 export { MAX_FILE_BYTES, MAX_DURATION_S };
+
+// Obfuscated store of the uploader's Telegram id. One-way, salted: the hash is
+// stable per bot install (TG_ID_SECRET) but never reversible, so the id never
+// travels in claro beyond DM autor / grupo privado / cabecera del bot.
+export function hashId(chatId, secret = '') {
+  return createHash('sha256').update(String(secret) + ':' + String(chatId)).digest('hex');
+}
+
+// Which identity fields land in queue.json (committed to the public repo):
+//   ①+②  -> { idHash }    (Nombre público oscurece el ID — hash 🔒)
+//   solo ① -> { idDirect } (ID directo)
+//   ③ / ② / nada -> {}     (sin identidad Telegram en el repo)
+export function identityOf(sel, chatId, secret = '') {
+  const s = sel || {};
+  if (s.anon) return {};
+  if (s.tg && s.name) return { idHash: hashId(chatId, secret) };
+  if (s.tg) return { idDirect: String(chatId) };
+  return {};
+}
 
 // Map the text a moderator types (as a reply to a mod message) to a decision.
 export function decisionOf(raw) {

@@ -37,6 +37,7 @@ this repo's `risa.json` feed as its "banco" data.
 
 Secrets (GitHub Actions repository secrets, never committed):
 - `TELEGRAM_BOT_TOKEN` — the @RisaLiberadaBot token
+- `TG_ID_SECRET` — salt for the obfuscated Telegram-id hash (sha256) stored in `state/queue.json`; the id itself is never committed in the clear (DM ids live in gitignored `state/.uploaders.json`)
 - `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_BUCKET`, `R2_PUBLIC_BASE` — Cloudflare R2 upload
 
 Note: free-tier scheduled workflows are best-effort (5–15 min latency; they pause after

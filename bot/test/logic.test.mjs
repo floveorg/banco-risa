@@ -1,8 +1,35 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseUpdates, decisionOf } from '../logic.mjs';
+import { parseUpdates, decisionOf, hashId, identityOf } from '../logic.mjs';
 
 const CTX = { modGroupId: -1001234 };
+
+test('hashId is one-way, stable, and salted', () => {
+  const a = hashId(12345, 'secret');
+  const b = hashId(12345, 'secret');
+  assert.equal(a, b);
+  assert.equal(a.length, 64);                       // sha256 hex
+  assert.notEqual(a, hashId(12346, 'secret'));      // differs per id
+  assert.notEqual(a, hashId(12345, 'other-secret'));// differs per salt
+  assert.notEqual(a, String(12345));                // never the raw id
+});
+
+test('identityOf: ①+② obfuscates the id (idHash only)', () => {
+  const got = identityOf({ tg: true, name: true, anon: false }, 777, 's');
+  assert.deepEqual(Object.keys(got), ['idHash']);
+  assert.equal(got.idHash, hashId(777, 's'));
+});
+
+test('identityOf: solo ① keeps the id direct', () => {
+  const got = identityOf({ tg: true, name: false, anon: false }, 777, 's');
+  assert.deepEqual(got, { idDirect: '777' });
+});
+
+test('identityOf: ③ anónimo and ② name-only store nothing', () => {
+  assert.deepEqual(identityOf({ tg: false, name: false, anon: true }, 777, 's'), {});
+  assert.deepEqual(identityOf({ tg: false, name: true, anon: false }, 777, 's'), {});
+  assert.deepEqual(identityOf({}, 777, 's'), {});
+});
 
 test('decisionOf maps approval/rejection words', () => {
   assert.equal(decisionOf('ok'), 'approve');
