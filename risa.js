@@ -44,9 +44,23 @@
     });
   }
 
+  // El feed puede ser un array de clips (v1, retrocompatible) o un objeto con
+  // cabecera `{ flag:{...}, clips:[...] }`. Los addons se activan sin romper lo
+  // ya publicado: el flag hace de toggle y de fallback desde la interfaz.
+  function clipsOf(risa) {
+    if (Array.isArray(risa)) return risa;
+    return (risa && Array.isArray(risa.clips)) ? risa.clips : [];
+  }
+  function flagsOf(risa) {
+    return (risa && !Array.isArray(risa) && risa.flag && typeof risa.flag === 'object')
+      ? risa.flag : {};
+  }
+
   var api = {
     buildRisaTracks: buildRisaTracks,
     latestFeed: latestFeed,
+    clipsOf: clipsOf,
+    flagsOf: flagsOf,
     RISA_URL: 'https://risa.liberada.net/risa.json',
     TELEGRAM_BOT: 'https://t.me/RisaLiberadaBot',
     LICENSE: LICENSE,

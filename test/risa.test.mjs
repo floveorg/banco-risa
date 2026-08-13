@@ -55,6 +55,21 @@ test('latestFeed defaults n to 6 and tolerates non-arrays', () => {
   assert.deepEqual(Risa.latestFeed(null), []);
 });
 
+test('clipsOf accepts array (v1) or {flag,clips} object, and defaults to []', () => {
+  assert.equal(Risa.clipsOf(SAMPLE), SAMPLE);
+  assert.deepEqual(Risa.clipsOf({ flag: { flove: false }, clips: SAMPLE }), SAMPLE);
+  assert.deepEqual(Risa.clipsOf({ flag: { flove: false } }), []);
+  assert.deepEqual(Risa.clipsOf(null), []);
+  assert.deepEqual(Risa.clipsOf(undefined), []);
+});
+
+test('flagsOf reads the feed header flag and defaults to {}', () => {
+  assert.deepEqual(Risa.flagsOf({ flag: { flove: false } }), { flove: false });
+  assert.deepEqual(Risa.flagsOf({ clips: [] }), {});
+  assert.deepEqual(Risa.flagsOf(SAMPLE), {});
+  assert.deepEqual(Risa.flagsOf(null), {});
+});
+
 test('constants carry the fixed license and config', () => {
   assert.equal(Risa.LICENSE, 'CC BY-SA 4.0');
   assert.equal(Risa.RISA_URL, 'https://risa.liberada.net/risa.json');

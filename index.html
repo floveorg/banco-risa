@@ -1000,7 +1000,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </ol>
             <h5 class="feat-area">C · Identidad — authy</h5>
             <ol start="12">
-              <li>Núcleo <code>authy.js</code> canal-agnóstico + driver Telegram (email/phone = stubs)</li>
+              <li>✅ Núcleo <code>authy.js</code> canal-agnóstico + driver Telegram (email/phone = stubs) <span class="scope v1">v1</span></li>
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
               <li><code>key</code> inmutable + palabra editable (slug first-wins; <code>/name</code> en DM, API en el backend)</li>
               <li>Origen oscurecido: hash salado = handle de autor (nunca @username)</li>
@@ -1057,7 +1057,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <h5 class="feat-area">J · Integración con flove</h5>
             <ol start="46">
               <li>✅ Enriquecimiento de <code>flove.json</code> (fail-silent): la web lo llama sin interrumpirse jamás; al claim tu palabra enlaza al perfil único de flove donde ves tus risas y activas Lovy ya autenticado</li>
-              <li>Addons que se activan sin romper lo ya publicado: un flag en <code>risa.json</code> hace de fallback y de toggle desde la interfaz</li>
+              <li>✅ Addons que se activan sin romper lo ya publicado: un flag en <code>risa.json</code> hace de fallback y de toggle desde la interfaz <span class="scope v1">v1</span></li>
               <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
               <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
             </ol>
@@ -1704,6 +1704,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const PLUS_CLICKS=3;              // el + añade 3 más, durante 3 toques
   let risas=[];
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
+  let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)
   const selected=new Set();
   const genteRaf={id:null};
 
@@ -2013,7 +2014,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   fetch(window.Risa.RISA_URL, {cache:'no-store'})
     .then(r=>r.ok?r.json():[])
     .then(data=>{
-      risas=Array.isArray(data)?data:[];
+      risas=window.Risa.clipsOf(data);
+      floveAllowed=window.Risa.flagsOf(data).flove!==false;   // J47: el feed toglea el addon
       updateGentePlaylist();
       buildTagChips();   // por defecto las etiquetas flotan
     })
@@ -2027,7 +2029,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     fetch('https://flove.org/flove.json', {cache:'no-store', signal:AbortSignal.timeout(4000)})
       .then(r=>r.ok?r.json():null)
       .then(f=>{
-        if(!f || !f.authy || !f.users) return;   // contrato incompleto: sin enriquecimiento
+        if(!floveAllowed || !f || !f.authy || !f.users) return;   // feed lo apagó o contrato incompleto
         floveOn=true;
         updateGentePlaylist();                   // re-render: palabra reclamada → perfil único de flove
       })
