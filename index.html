@@ -507,6 +507,34 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .promo-card{display:flex; flex-direction:column; align-items:center; gap:10px; text-decoration:none; color:var(--ink);
   padding:22px 14px; transition:transform .12s}
 .promo-card:hover{transform:translateY(-4px)}
+
+/* ============ TECNOLOGÍAS · RÉPLICA DEL SISTEMA ============ */
+.tecnologias{margin-top:46px}
+.tech-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:20px 0 8px}
+@media(max-width:640px){.tech-grid{grid-template-columns:1fr}}
+.tech-card{background:var(--cream); border:2px solid var(--ink); border-radius:18px; padding:18px 20px}
+.tech-card h4{margin:0 0 8px; font-family:var(--disp); font-size:1.15rem; color:var(--ink)}
+.tech-card p{margin:0; color:var(--ink-soft); font-size:.95rem; line-height:1.5}
+.tech-card code, .replica code{font-family:var(--mono); font-size:.85em; background:#fff; border:1px solid rgba(42,24,16,.18); border-radius:6px; padding:1px 5px; color:var(--grape)}
+.replica{margin-top:34px}
+.rtab-bar{display:flex; gap:8px; margin:22px 0 18px}
+.rtab-btn{flex:1; font-family:var(--disp); font-weight:700; font-size:.95rem; color:var(--ink);
+  background:var(--cream); border:2.5px solid var(--ink); border-radius:999px; padding:10px 8px;
+  cursor:pointer; transition:transform .12s, background .12s}
+.rtab-btn:hover{transform:translateY(-2px)}
+.rtab-btn[aria-pressed="true"]{background:var(--marigold)}
+@media(max-width:560px){.rtab-btn{font-size:.85rem; padding:9px 6px}}
+.rtab-panel[hidden]{display:none}
+.rtab-panel h4{margin:18px 0 8px; font-family:var(--disp); font-size:1.1rem; color:var(--ink)}
+.rtab-panel p{color:var(--ink-soft); line-height:1.55; max-width:68ch}
+.rtab-panel ol, .rtab-panel ul{padding-left:22px; color:var(--ink-soft); line-height:1.6}
+.rtab-panel figure{margin:22px 0 6px}
+.rtab-panel figure img{width:100%; height:auto; border:2px solid var(--ink); border-radius:14px; display:block}
+.rtab-panel figcaption{font-size:.8rem; color:var(--ink-soft); margin-top:6px; text-align:center}
+.rtab-panel pre{background:#22140c; color:#f6e7cf; font-family:var(--mono); font-size:.8rem; line-height:1.55;
+  padding:16px 18px; border-radius:14px; overflow-x:auto; white-space:pre-wrap; word-break:break-word; max-width:72ch}
+.rtab-panel .step{border-left:4px solid var(--marigold); padding:2px 0 2px 16px; margin:14px 0}
+.montar-row{margin-top:24px}
 .promo-emojis{font-size:2.6rem; letter-spacing:.18em; line-height:1;
   text-shadow:1px 1px 0 rgba(42,24,16,.3), 2px 2px 0 rgba(42,24,16,.22), 3px 3px 0 rgba(42,24,16,.12)}
 .promo-name{font-family:var(--disp); font-weight:800; font-size:1.1rem}
@@ -636,6 +664,9 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           <button id="sh-copy" type="button">Copiar enlace</button>
         </div>
         <div id="copy-note" aria-live="polite"></div>
+        <div class="btn-center montar-row">
+          <button class="btn btn-ghost" id="montar-replica" type="button">🛠️ Montar réplica</button>
+        </div>
         <div class="expande-row">
           <div class="qr-cell">
             <img class="qr-img" src="rievolucio-qr.jpg" alt="Código QR de Risa liberada: escanéalo para abrir la web" width="200" height="191">
@@ -798,6 +829,118 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
             </div>
           </div>
         </div>
+      <div class="tecnologias">
+        <div class="section-head">
+          <p class="eyebrow">Tecnologías</p>
+          <h2>Con qué está hecha</h2>
+          <p>Piezas pequeñas, estándares abiertos y coste cero: el proyecto corre sin servidor propio y cualquiera puede montar el suyo. Este sistema se replica al pie de la letra.</p>
+        </div>
+        <div class="tech-grid">
+          <article class="tech-card">
+            <h4>Cloudflare R2</h4>
+            <p>Almacenamiento de objetos gratuito (10 GB). Cada audio se guarda como <code>risa/b_*.mp3</code> y se sirve con URL pública.</p>
+          </article>
+          <article class="tech-card">
+            <h4>GitHub Pages</h4>
+            <p>La web es un solo HTML servido desde un repositorio público. Sin servidor, sin base de datos, sin coste.</p>
+          </article>
+          <article class="tech-card">
+            <h4>GitHub Actions</h4>
+            <p>Un cron en la nube llama al bot cada 5–10 minutos para vaciar la cola de subidas.</p>
+          </article>
+          <article class="tech-card">
+            <h4>Node.js + Telegram Bot API</h4>
+            <p>El bot recibe notas de voz, las normaliza con <code>ffmpeg</code> y las publica en el canal y en <code>risa.json</code>.</p>
+          </article>
+        </div>
+        <div class="replica" id="replica">
+          <div class="section-head">
+            <p class="eyebrow">Replica Nuestro Sistema</p>
+            <h2>Monta tu propia risa liberada</h2>
+            <p>Todo el proyecto es código abierto con licencia libre. Elige el nivel que te venga bien: un prompt para un agente, la introducción técnica o el desarrollo completo.</p>
+          </div>
+          <nav class="rtab-bar" aria-label="Versiones de la réplica">
+            <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
+            <button type="button" class="rtab-btn" data-tab="introduccion" aria-pressed="true">Introducción</button>
+            <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
+          </nav>
+          <div class="rtab-panel" id="agentes" hidden>
+            <p>La versión <b>mini</b>: un único prompt que convierte a un agente (IA) en el encargado de montar todo el sistema en tu proyecto. Cópialo, pégaselo y supervisa el resultado.</p>
+            <pre>Rol: asiste a montar una «risa liberada» para un proyecto propio, inspirándote en el proyecto libre github.com/floveorg/risa.
+
+Objetivo: dejar funcionando el sistema completo — subida de notas de voz por Telegram, moderación, publicación en canal + feed web — sin servidor propio.
+
+Pasos:
+1. Clona el repo de referencia y estudia bot/, index.html, risa.json y .github/workflows.
+2. Pide y valida los secretos (BOT_TOKEN, CHANNEL_ID, MOD_GROUP_ID, credenciales R2) antes de usarlos.
+3. Configura GitHub Actions como cron que llame a getUpdates cada 5–10 minutos.
+4. Monta el feed risa.json y la web en GitHub Pages.
+5. Verifica de punta a punta con una nota de voz de prueba.
+
+Permisos: leer/escribir el repo del proyecto, instalar dependencias de Node, desplegar Pages y Actions. Nada fuera del repo; confirma antes de crear credenciales.
+
+Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Pages, Actions); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.</pre>
+          </div>
+          <div class="rtab-panel" id="introduccion">
+            <h4>Las piezas</h4>
+            <ol>
+              <li><b>Repositorio público</b> — código, feed <code>risa.json</code> y la web, todo en un solo repo.</li>
+              <li><b>Bot de Telegram</b> — @BotFather te da el token y crea el bot.</li>
+              <li><b>Canal + grupo de moderación</b> — el canal publica; un grupo privado aprueba o rechaza.</li>
+              <li><b>Cloudflare R2</b> — almacenamiento gratuito (10 GB) para los audios, con URL pública.</li>
+              <li><b>GitHub Actions</b> — un cron llama al bot cada 5–10 minutos para vaciar la cola.</li>
+            </ol>
+            <h4>Cómo funciona</h4>
+            <div class="step"><p>La gente llega por <b>deep link</b> o <b>QR</b>, pulsa START y envía una nota de voz al bot.</p></div>
+            <div class="step"><p>Elige <b>identidad</b> (Telegram, palabra o anónimo) y <b>etiquetas</b>, y pulsa Enviar.</p></div>
+            <div class="step"><p>Un <b>moderador humano</b> aprueba o rechaza en el grupo privado.</p></div>
+            <div class="step"><p>Al aprobar, el bot normaliza el audio a MP3 (<code>ffmpeg</code>), lo sube a R2, lo antepone a <code>risa.json</code> (commit + push) y lo publica en el canal.</p></div>
+            <div class="step"><p>La <b>web</b> lee <code>risa.json</code> y reproduce la playlist. Esto que ves es esa web.</p></div>
+            <p>El flujo completo, paso a paso:</p>
+            <figure>
+              <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
+              <figcaption>Flujo v1: de la nota de voz a la web y al canal</figcaption>
+            </figure>
+          </div>
+          <div class="rtab-panel" id="desarrollo" hidden>
+            <p>La versión <b>avanzada</b>: el mismo flujo con código, alternativas y hacia dónde crece. Partimos del diagrama de la versión 1.</p>
+            <figure>
+              <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1) en detalle" loading="lazy">
+              <figcaption>Flujo v1 en detalle</figcaption>
+            </figure>
+            <h4>Código</h4>
+            <ul>
+              <li><b>Bot</b> — Node.js sin dependencias pesadas: Telegram Bot API (<code>getUpdates</code>) y <code>ffmpeg</code> con <code>loudnorm</code> para normalizar el volumen.</li>
+              <li><b>Feed</b> — <code>risa.json</code> es la «base de datos»: una lista versionada; cada entrada <code>{id, name, t, tags, when, src}</code>.</li>
+              <li><b>Privacidad</b> — con identidad Telegram solo se guardan el nombre público y un <b>hash</b> del id; el id nunca va en claro, ni en <code>queue.json</code> ni en el feed.</li>
+              <li><b>Web</b> — un solo HTML (CSS/JS sin frameworks) que consume el feed y los audios por URL pública.</li>
+            </ul>
+            <h4>Alternativas</h4>
+            <ul>
+              <li><b>R2</b> — cualquier almacenamiento de objetos estático sirve; con volumen bajo, hasta el propio repo.</li>
+              <li><b>Feed</b> — el JSON versionado es la opción más sencilla; un backend con API aparece cuando el volumen crece.</li>
+              <li><b>Moderación</b> — humana (recomendada para empezar); automatizable con un bot auxiliar más adelante.</li>
+            </ul>
+            <h4>Posibilidades</h4>
+            <ul>
+              <li>Playlists por etiquetas y chips de búsqueda, reacciones en el canal, feed RSS, estadísticas por palabra.</li>
+              <li>Identidades y licencias trazables (CC BY-SA 4.0) sin exponer datos personales.</li>
+            </ul>
+            <h4>Hacia la versión 2</h4>
+            <p>El modelo se generaliza en <b>flove-v2</b>: un bot central y varios bots/app subordinados que comparten el flujo central y publican cada uno en su canal y su feed.</p>
+            <ul>
+              <li><b>Multi-app</b> — cada app (risa y otras) envía a su propio canal y <code>risa.json</code>.</li>
+              <li><b>Autenticación por niveles</b> — L1–L5 en el bot central, con páginas centrales de usuarios.</li>
+              <li><b>Sistema de reclamación</b> — <i>Claim it</i>: nonce y confirmación por DM antes de vincular una palabra.</li>
+              <li><b>Extensiones</b> — comandos <code>/play</code>, <code>/radio</code>, <code>/search</code>, <code>/chain</code> y Mini App.</li>
+            </ul>
+            <figure>
+              <img src="flove-v2-thread.png" alt="Diagrama de secuencia de la versión 2 (flove-v2): un bot central y varios bots subordinados" loading="lazy">
+              <figcaption>Flujo v2: un bot central y varios bots subordinados</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
@@ -1702,6 +1845,25 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   tabBtns.forEach(b=>b.addEventListener('click', ()=>showTab(b.dataset.tab, true)));
   const initialTab=(location.hash||'').slice(1);
   if(['espiritualidad','cultura','ciencia','comunidad'].includes(initialTab)) showTab(initialTab, false);
+
+  /* ============ RÉPLICA · pestañas Agentes / Introducción / Desarrollo ============ */
+  const rtabBtns=[...document.querySelectorAll('.rtab-btn')];
+  const rtabPanels=[...document.querySelectorAll('.rtab-panel')];
+  function showRtab(id){
+    rtabPanels.forEach(p=>{ p.hidden=(p.id!==id); });
+    rtabBtns.forEach(b=>{ b.setAttribute('aria-pressed', b.dataset.tab===id?'true':'false'); });
+  }
+  rtabBtns.forEach(b=>b.addEventListener('click', ()=>showRtab(b.dataset.tab)));
+
+  /* ============ EXPANDE · botón «Montar réplica» ============ */
+  const montarReplica=document.getElementById('montar-replica');
+  if(montarReplica){
+    montarReplica.addEventListener('click', ()=>{
+      showTab('ciencia', false);
+      const r=document.getElementById('replica');
+      if(r){ if(reduce) r.scrollIntoView(); else r.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  }
 
   /* ============ CANALES · botón ➕ de la propuesta ============ */
   const chanPropone=document.getElementById('chan-propone');
