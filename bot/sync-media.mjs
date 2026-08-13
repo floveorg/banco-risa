@@ -1,8 +1,9 @@
 // Sync the risa web app's media (photos + categorias gallery) up to Cloudflare R2
 // under <PUBLIC_BASE>/risa/…, so the app loads them from the bucket with absolute
-// URLs instead of from GitHub. Idempotent: walks risa/media and risa/categorias,
-// uploads every file at the same relative key (key = risa/<rel>) and prints the
-// public URL. Needs the same R2_* env vars as the bot (GitHub secrets).
+// URLs instead of from GitHub. Idempotent: walks media/ and categorias/ at the
+// repo root, uploads every file keeping the risa/ prefix in the R2 key
+// (key = risa/<rel>) and prints the public URL. Needs the same R2_* env vars as
+// the bot (GitHub secrets).
 import { readdir, readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
 import { uploadMedia } from './r2.mjs';
@@ -30,14 +31,14 @@ async function walk(dir) {
 
 async function main() {
   await readJSON('config.json', {});
-  const roots = ['risa/media', 'risa/categorias'];
+  const roots = [['media', 'risa/media'], ['categorias', 'risa/categorias']];
   let n = 0;
-  for (const root of roots) {
+  for (const [root, keyPrefix] of roots) {
     for (const f of (await walk(p(root))).sort()) {
       const contentType = CONTENT_TYPES[extname(f).toLowerCase()];
       if (!contentType) continue;
       const rel = f.slice(p(root).length + 1);
-      const url = await uploadMedia(f, { key: root + '/' + rel, contentType });
+      const url = await uploadMedia(f, { key: keyPrefix + '/' + rel, contentType });
       console.log('ok ' + rel + '  ->  ' + url);
       n++;
     }

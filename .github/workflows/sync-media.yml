@@ -2,8 +2,8 @@ name: sync-media
 on:
   push:
     paths:
-      - 'risa/media/**'
-      - 'risa/categorias/**'
+      - 'media/**'
+      - 'categorias/**'
       - '.github/workflows/sync-media.yml'
       - 'bot/sync-media.mjs'
       - 'bot/r2.mjs'

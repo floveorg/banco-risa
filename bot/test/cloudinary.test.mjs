@@ -21,7 +21,7 @@ test('signParams builds sha1(sorted "k=v" joined by & + secret)', () => {
 });
 
 test('signParams sorts keys deterministically regardless of input order', () => {
-  const a = signParams({ folder: 'banco-risa', public_id: 'q_5', timestamp: 100 }, 's3cr3t');
-  const b = signParams({ timestamp: 100, folder: 'banco-risa', public_id: 'q_5' }, 's3cr3t');
+  const a = signParams({ folder: 'risa', public_id: 'q_5', timestamp: 100 }, 's3cr3t');
+  const b = signParams({ timestamp: 100, folder: 'risa', public_id: 'q_5' }, 's3cr3t');
   assert.equal(a, b);
 });

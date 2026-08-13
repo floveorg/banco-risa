@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bancoEntry, prependClip } from '../logic.mjs';
 
-const SRC = 'https://res.cloudinary.com/risa/video/upload/v1/banco-risa/q_10.mp3';
+const SRC = 'https://res.cloudinary.com/risa/video/upload/v1/risa/q_10.mp3';
 
 test('bancoEntry keeps name + given src (no by field)', () => {
   const e = bancoEntry({ id: 'q_10', name: 'Marta', tags: 'de grupo', when: '2026-07-19', src: SRC });

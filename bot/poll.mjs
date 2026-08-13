@@ -284,12 +284,12 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
 async function commitState() {
   const { stdout } = await run('git', ['status', '--porcelain']);
   if (!stdout.trim()) return;
-  const who = ['-c', 'user.name=banco-risa bot', '-c', 'user.email=bot@users.noreply.github.com'];
+  const who = ['-c', 'user.name=risa bot', '-c', 'user.email=bot@users.noreply.github.com'];
   await run('git', [...who, 'add', 'risa.json', 'state/']);
   await run('git', [...who, 'commit', '-m', 'banco: publish/moderate (automated)']);
   const token = process.env.GITHUB_TOKEN;
   const remote = token
-    ? `https://x-access-token:${token}@github.com/floveorg/banco-risa.git`
+    ? `https://x-access-token:${token}@github.com/floveorg/risa.git`
     : 'origin';
   try {
     await run('git', ['pull', '--rebase', 'origin', 'main']);

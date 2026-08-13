@@ -30,7 +30,7 @@ jobs:
         run: node bot/poll.mjs
       - name: Commit any changes
         run: |
-          git config user.name 'banco-risa bot'
+          git config user.name 'risa bot'
           git config user.email 'bot@users.noreply.github.com'
           if ! git diff --quiet; then
             git add risa.json state/

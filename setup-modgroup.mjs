@@ -1,6 +1,6 @@
 // One-shot helper: find the "Risas Nuevas" group id and set it in config.json.
 // Run it AFTER sending  /start@RisaLiberadaBot  inside the group.
-//   node ~/Documents/flove/apps/liberada/risa/banco-risa/setup-modgroup.mjs
+//   node ~/Documents/flove/apps/liberada/risa/setup-modgroup.mjs
 // It reads the bot token locally (never prints it), asks Telegram which chats the
 // bot has seen, and — if it finds exactly one group — writes modGroupId into
 // config.json and commits+pushes. Safe to re-run.
@@ -61,7 +61,7 @@ try {
   execFileSync('git', ['-C', REPO, 'add', 'config.json'], { stdio: 'ignore' });
   execFileSync('git', ['-C', REPO, 'commit', '-q', '-m', 'chore: set modGroupId for Risas Nuevas'], { stdio: 'ignore' });
   execFileSync('git', ['-C', REPO, 'push', '-q', 'origin', 'HEAD'], { stdio: 'ignore' });
-  console.log('✓ Committed & pushed to floveorg/banco-risa');
+  console.log('✓ Committed & pushed to floveorg/risa');
   console.log('\n🎉 Done. The bot workflow will pass on its next run (~10 min).\n');
 } catch (e) {
   console.log('\n⚠ Saved config.json but could not commit/push automatically.');

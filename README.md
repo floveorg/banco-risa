@@ -20,11 +20,11 @@ only the metadata (`risa.json`, each entry's `src` is an R2 URL) and the bot cod
 
 ## Web app
 
-The risa web app (`index.html` + the rishaman demos) lives in `risa/`. Its media — the app
-photos (`risa/media`, including the logo family under `risa/media/logos`) and the personal
-gallery (`risa/categorias`) — is synced to Cloudflare R2 under `risa/…` by `bot/sync-media.mjs`
+The risa web app (`index.html` + the rishaman demos) lives at the repo root. Its media — the app
+photos (`media/`, including the logo family under `media/logos`) and the personal
+gallery (`categorias/`) — is synced to Cloudflare R2 under `risa/…` by `bot/sync-media.mjs`
 (.github/workflows/sync-media.yml), and the pages reference those absolute R2 URLs. The app is
-served at https://risa.liberada.net (GitHub Pages of this repo, folder `risa/`) and fetches
+served at https://risa.liberada.net (GitHub Pages of this repo) and fetches
 this repo's `risa.json` feed as its "banco" data.
 
 - `bot/logic.mjs` — pure update->actions logic (tested)
