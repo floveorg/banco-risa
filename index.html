@@ -1612,12 +1612,12 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   /* ============ COMPARTIR ============ */
   const shareData = {
     title:'Risa liberada',
-    text:'El ejercicio de reír: cinco pasos, cinco playlists de risas y todo lo bueno de soltar una carcajada. 😄',
+    text:'😉 Sube tu risa y escucha las de todos\n@risaliberada\n@RisaLiberadaBot',
     url: location.href
   };
   const note = document.getElementById('copy-note');
   function fillAlt(){
-    const u=encodeURIComponent(shareData.url), t=encodeURIComponent(shareData.text+' '+shareData.url);
+    const u=encodeURIComponent(shareData.url), t=encodeURIComponent(shareData.text);
     const wa=document.getElementById('sh-wa'), tg=document.getElementById('sh-tg');
     wa.href='https://wa.me/?text='+t; wa.target='_blank'; wa.rel='noopener';
     tg.href='https://t.me/share/url?url='+u+'&text='+encodeURIComponent(shareData.text); tg.target='_blank'; tg.rel='noopener';
