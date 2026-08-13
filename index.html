@@ -235,7 +235,7 @@ img{max-width:100%; display:block}
 .title-tag[aria-pressed="true"]{color:var(--ink); border-bottom:3px solid var(--marigold)}
 .tag-space.flowing .chip{position:absolute; left:0; top:0}
 @media (prefers-reduced-motion: reduce){.tag-space.flowing .chip{animation:none}}
-.tag-search{display:flex; gap:10px; align-items:center; flex:1; min-width:0; margin:0; padding:0;
+.tag-search{display:flex; gap:10px; align-items:center; width:100%; max-width:340px; min-width:0; margin:0; padding:0;
   border:none; background:transparent}
 .tag-search input{flex:1; min-width:0; border:2.5px solid var(--ink); border-radius:999px; padding:9px 16px;
   font-family:var(--disp); font-weight:700; font-size:.95rem; color:var(--ink); background:var(--cream)}
@@ -252,8 +252,8 @@ img{max-width:100%; display:block}
 .mt-btn[aria-pressed="true"].mt-audio{background:var(--marigold)}
 .mt-btn[aria-pressed="true"].mt-video{background:var(--grape); color:#fff}
 
-/* transport + buscador · una fila: controles a la izquierda, buscador a la derecha (columna derecha) */
-.tag-col{display:flex; flex-direction:column; gap:14px; min-width:0}
+/* transport (izquierda) + toggles audio/vídeo (derecha) · una fila en la columna derecha; el buscador vive en la columna izquierda, centrado arriba */
+.tag-col{display:flex; flex-direction:column; gap:14px; min-width:0; align-items:center}
 .tag-col .section-head{margin-bottom:0}
 .player-col{display:flex; flex-direction:column; gap:14px; min-width:0; justify-content:center; align-items:center}
 .player-col .player{width:100%; max-width:560px}
@@ -264,7 +264,7 @@ img{max-width:100%; display:block}
    color:var(--ink); font-family:var(--disp); font-size:1rem; line-height:1; cursor:pointer;
    display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
  .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
- .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:.8rem; width:35px; height:35px}
+ .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.05rem; width:52px; height:52px}
 @media(max-width:560px){.title-head{flex-wrap:wrap}}
 
 /* ============ BURBUJAS DE BENEFICIOS ============ */
@@ -609,6 +609,10 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
     <div class="wrap">
       <div class="gente-grid">
         <div class="tag-col">
+          <div class="tag-search">
+            <input id="tag-search-input" type="search" placeholder="Tag, Title, Name…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
+            <button id="tag-search-btn" type="button">Go</button>
+          </div>
           <div class="tag-space flowing" id="tag-space" role="group" aria-label="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas"></div>
         </div>
         <div class="player-col">
@@ -617,10 +621,6 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
               <button class="tr-btn" type="button" id="gente-prev" aria-label="Pista anterior">‹</button>
               <button class="tr-btn tr-play" type="button" id="gente-play" aria-label="Reproducir">▶</button>
               <button class="tr-btn" type="button" id="gente-next" aria-label="Pista siguiente">›</button>
-            </div>
-            <div class="tag-search">
-              <input id="tag-search-input" type="search" placeholder="Tag, Title, Name…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
-              <button id="tag-search-btn" type="button">Go</button>
             </div>
             <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo">
               <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true" aria-label="Solo audios" title="Solo audios">
