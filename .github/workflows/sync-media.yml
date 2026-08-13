@@ -1,0 +1,29 @@
+name: sync-media
+on:
+  push:
+    paths:
+      - 'risa/media/**'
+      - 'risa/categorias/**'
+      - '.github/workflows/sync-media.yml'
+      - 'bot/sync-media.mjs'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: sync-media
+  cancel-in-progress: true
+jobs:
+  sync-media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Sync risa media to Cloudflare R2
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_BASE: ${{ secrets.R2_PUBLIC_BASE }}
+        run: node bot/sync-media.mjs

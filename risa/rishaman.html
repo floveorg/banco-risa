@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rishaman · El oficio del reír — Risa liberada</title>
+<meta name="description" content="Rishaman: la biografía-CV de un hombre que hace una vida de la risa. Un tour de 19 diapositivas por las técnicas del reír, la voz primal y las artes de raíz: Respirar → Sonar → Reír → Sanar → Compartir.">
+<link rel="icon" type="image/svg+xml" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../appy/flove.css">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ink:#2a1810;
+  --ink-soft:#000;
+  --base:#ffe8d4;
+  --base-2:#ffdcc0;
+  --cream:#fff8ee;
+  --persimmon:#ff5630;
+  --marigold:#ffb020;
+  --magenta:#f5288e;   /* el riesgo: el chispazo inesperado de la risa */
+  --grape:#5b2fa0;
+  --mint:#12b28a;
+  --shadow:rgba(58,26,10,.16);
+  --r:22px;
+  --maxw:1080px;
+  --disp:'Baloo 2', system-ui, sans-serif;
+  --body:'Figtree', system-ui, sans-serif;
+  --mono:'Space Mono', ui-monospace, monospace;
+}
+/* El toggler de tema compartido (flove-theme.js) añade class="dark"; esta página
+   es clara siempre salvo el tour (que es oscuro por diseño): fijamos tinta/sombra. */
+:root.dark{
+  --ink:#000;
+  --ink-soft:#000;
+  --shadow:rgba(58,26,10,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink);
+  background:var(--base);
+  background-image:
+    radial-gradient(1100px 600px at 82% -8%, #ffd0a6 0%, transparent 55%),
+    radial-gradient(900px 520px at -6% 12%, #ffcfe4 0%, transparent 50%);
+  line-height:1.55; overflow-x:hidden;
+}
+h1,h2,h3{font-family:var(--disp); line-height:1.02; margin:0; letter-spacing:-.01em}
+a{color:inherit}
+img{max-width:100%; display:block}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
+.eyebrow{font-family:var(--mono); font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; color:var(--persimmon); font-weight:700}
+:focus-visible{outline:3px solid var(--grape); outline-offset:3px; border-radius:8px}
+
+/* ============ TOPBAR ============ */
+.topbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(9px);
+  background:rgba(255,232,212,.72); border-bottom:2px solid rgba(42,24,16,.08)}
+.topbar .wrap{display:flex; align-items:center; gap:14px; height:64px}
+.back{width:40px; height:40px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center;
+  background:var(--cream); border:2.5px solid var(--ink); color:var(--ink); text-decoration:none;
+  font-family:var(--disp); font-weight:800; font-size:1.2rem; line-height:1;
+  box-shadow:0 3px 0 rgba(42,24,16,.2); transition:transform .12s}
+.back:hover{transform:translateY(-2px); background:var(--marigold)}
+.navlinks{display:flex; gap:8px; align-items:center; margin:0 auto}
+.navlinks a{text-decoration:none; font-weight:700; font-size:.92rem; color:var(--ink);
+  background:var(--cream); border:2px solid var(--ink); border-radius:999px; padding:8px 18px;
+  box-shadow:0 3px 0 rgba(42,24,16,.14); transition:transform .12s}
+.navlinks a:hover{transform:translateY(-1px); color:var(--persimmon)}
+.navlinks a.active{background:var(--persimmon); color:#fff}
+@media(max-width:720px){
+  .topbar .wrap{gap:8px; height:60px}
+  .navlinks{gap:5px}
+  .navlinks a{padding:7px 13px; font-size:.8rem}
+  .back{width:36px; height:36px}
+}
+
+/* ============ HERO ============ */
+.hero{padding:56px 0 40px; text-align:center; position:relative}
+.hero-logo{width:clamp(120px,26vw,184px); height:auto; margin:0 auto 8px; display:block}
+.hero h1{font-size:clamp(2.6rem,9vw,5rem); margin:6px auto 6px}
+.hero p.lead{max-width:58ch; margin:0 auto 26px; font-size:1.12rem; color:var(--ink-soft)}
+.hero .chain{font-family:var(--mono); font-size:.8rem; font-weight:700; color:var(--grape);
+  letter-spacing:.06em; margin:0 0 26px}
+.hero-cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+
+/* ============ BOTONES ============ */
+.btn{font-family:var(--disp); font-weight:700; font-size:1rem; border:none; cursor:pointer;
+  padding:14px 24px; border-radius:999px; text-decoration:none; display:inline-flex; align-items:center; gap:.5em;
+  transition:transform .12s ease, box-shadow .12s ease; box-shadow:0 6px 0 rgba(42,24,16,.18)}
+.btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(42,24,16,.18)}
+.btn-primary{background:var(--persimmon); color:#fff}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{background:var(--cream); color:var(--ink); box-shadow:0 6px 0 rgba(42,24,16,.12)}
+
+/* ============ SECCIÓN TOUR (galería oscura) ============ */
+.content-section{padding:52px 0; border-top:2px dashed rgba(42,24,16,.16)}
+.section-head{max-width:64ch; margin-bottom:30px}
+.section-head h2{font-size:clamp(1.7rem,4.5vw,2.6rem); margin:8px 0 10px}
+.section-head p{color:var(--ink-soft); font-size:1.05rem; margin:0}
+
+.tour{background:var(--ink); border-radius:26px; overflow:hidden;
+  box-shadow:12px 12px 0 rgba(42,24,16,.18); position:relative}
+.tour-track{display:flex; transition:transform .5s cubic-bezier(.4,0,.2,1); will-change:transform}
+.tour-track:focus-visible{outline:3px solid var(--marigold); outline-offset:-3px}
+.tslide{min-width:100%; padding:clamp(28px,5vw,64px); min-height:460px; display:flex; flex-direction:column;
+  background:
+    radial-gradient(600px 320px at 88% -10%, rgba(245,40,142,.16) 0%, transparent 60%),
+    radial-gradient(500px 300px at -10% 110%, rgba(18,178,138,.12) 0%, transparent 55%),
+    var(--ink); color:#ffe8d4}
+.tslide .act{font-family:var(--mono); font-size:.72rem; letter-spacing:.24em; text-transform:uppercase;
+  color:#ff5630; font-weight:700; margin:0 0 12px}
+.tslide h3{color:#fff; font-size:clamp(1.5rem,4.2vw,2.5rem); margin-bottom:14px}
+.tslide .ttext{max-width:52ch; font-size:1.08rem; color:#ffe8d4; margin:0 0 22px}
+.tslide .mslot{flex:0 0 auto; margin:0; border:2.5px dashed rgba(255,232,212,.35); border-radius:18px;
+  min-height:130px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  padding:18px; text-align:center; width:100%}
+.tslide .mslot.filled{border-style:solid; border-color:rgba(255,232,212,.22); padding:10px; gap:0}
+.tslide .mslot img{border-radius:12px; width:100%; max-height:300px; object-fit:cover}
+.tslide .mslot figcaption{font-family:var(--mono); font-size:.68rem; color:#f2c9ad; margin-top:8px}
+.tslide .mlabel{font-family:var(--mono); font-size:.78rem; letter-spacing:.08em; color:#ffb020; font-weight:700; margin:0}
+.tslide .mdesc{font-size:.8rem; color:rgba(255,232,212,.6); margin:0}
+.tslide .tslide-cta{margin-top:20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.circle-note{font-family:var(--mono); font-size:.72rem; color:var(--marigold); margin:0}
+
+/* flechas laterales */
+.t-btn{border:none; cursor:pointer; font-family:var(--disp); line-height:1; border-radius:50%;
+  display:grid; place-items:center; transition:transform .12s}
+.t-prev,.t-next{position:absolute; top:46%; transform:translateY(-50%); z-index:5; width:46px; height:46px;
+  font-size:1.6rem; border:2.5px solid var(--ink); background:var(--cream); color:var(--ink);
+  box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.t-prev{left:12px} .t-next{right:12px}
+.t-prev:hover,.t-next:hover{transform:translateY(-50%) scale(1.1); background:var(--marigold)}
+.t-prev:active,.t-next:active{transform:translateY(-50%) scale(.92)}
+.t-random{width:42px; height:42px; font-size:1.15rem; background:var(--magenta); color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.t-random:hover{transform:scale(1.1)}
+.t-random:active{transform:scale(.92)}
+
+/* barra de controles */
+.tour-bar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:space-between;
+  padding:14px 18px; background:rgba(255,255,255,.05); border-top:1px solid rgba(255,232,212,.14)}
+.t-dots{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
+.t-dots button{width:9px; height:9px; padding:0; border:none; border-radius:50%; cursor:pointer;
+  background:rgba(255,232,212,.35); transition:transform .15s, background .15s}
+.t-dots button[aria-current="true"]{background:var(--marigold); transform:scale(1.5)}
+.t-meta{display:flex; align-items:center; gap:12px}
+.t-count{font-family:var(--mono); font-size:.78rem; font-weight:700; color:var(--marigold)}
+
+/* ============ MAPA · chips por acto ============ */
+.map-acts{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px}
+.act{background:var(--cream); border:2.5px solid var(--ink); border-radius:22px; padding:20px; box-shadow:0 6px 0 rgba(42,24,16,.12)}
+.act h3{font-size:1.25rem; margin:0 0 14px; display:flex; align-items:baseline; gap:8px}
+.act .act-no{font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; color:var(--persimmon); font-weight:700}
+.act small{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); letter-spacing:.04em}
+.act .chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{position:relative; border:2.5px solid var(--ink); border-radius:999px; background:var(--cream);
+  color:var(--ink); font-family:var(--disp); font-weight:700; line-height:1; cursor:pointer;
+  padding:9px 14px; font-size:.86rem; box-shadow:0 4px 0 rgba(42,24,16,.16); white-space:nowrap; user-select:none}
+.chip:hover{transform:translateY(-2px); color:var(--persimmon)}
+.chip.inert{opacity:.5; cursor:default}
+.chip.inert:hover{transform:none; color:var(--ink)}
+
+/* ============ FOOTER / CRÉDITOS ============ */
+footer{background:var(--ink); color:#f2c9ad; padding:44px 0 60px; margin-top:40px}
+footer h3{color:#fff; font-size:1.2rem; margin-bottom:12px}
+footer p, footer li{font-size:.84rem; line-height:1.7}
+.credits{columns:2; column-gap:34px; list-style:none; padding:0; margin:0 0 18px; font-family:var(--mono); font-size:.72rem}
+.credits a{color:var(--marigold)}
+@media(max-width:560px){.credits{columns:1}}
+.credits-toggle{display:block; margin:0 auto 18px; border:2.5px solid var(--ink); border-radius:999px;
+  background:var(--cream); color:var(--ink); font-family:var(--disp); font-weight:700; font-size:1.02rem;
+  padding:10px 20px; cursor:pointer; box-shadow:0 4px 0 rgba(42,24,16,.16); transition:transform .12s}
+.credits-toggle:hover{transform:translateY(-2px); background:var(--marigold)}
+.credits-toggle .arrow{display:inline-block; transition:transform .18s}
+.credits-toggle[aria-expanded="true"] .arrow{transform:rotate(180deg)}
+.credits-body[hidden]{display:none}
+.foot-note{font-size:.78rem; opacity:.7; border-top:1px solid rgba(255,232,212,.2); padding-top:16px}
+
+/* ============ RESPONSIVE / REDUCED MOTION ============ */
+@media(max-width:720px){
+  .tslide{min-height:0; padding:34px 22px 90px}
+  .t-prev{left:8px} .t-next{right:8px}
+  .t-prev,.t-next{top:auto; bottom:118px; width:42px; height:42px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .tour-track{transition:none}
+  .t-btn,.chip,.btn,.credits-toggle{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="back" href="index.html" aria-label="Volver a Risa liberada">←</a>
+    <nav class="navlinks" aria-label="Secciones">
+      <a href="index.html">Inicio</a>
+      <a href="index.html#comunidad">Comunidad</a>
+      <a href="#tour" class="active">Rishaman</a>
+    </nav>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero wrap">
+    <img class="hero-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino-anim-carcajada.svg"
+      alt="" aria-hidden="true">
+    <p class="eyebrow">El oficio del reír</p>
+    <h1>Rishaman</h1>
+    <p class="lead">Sobre un oficio del reír. Un hombre que hace una vida de la risa: un viaje en 19 diapositivas por las técnicas del reír, la voz primal y las artes de raíz.</p>
+    <p class="chain">Respirar → Sonar → Reír → Sanar → Compartir</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#tour">Conocer a Rishaman</a>
+      <a class="btn btn-ghost" href="#mapa">Ir al mapa</a>
+    </div>
+  </section>
+
+  <!-- ============ 1 · PRESENTACIÓN (tour oscuro) ============ -->
+  <section class="content-section" id="tour">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Presentación</p>
+        <h2>19 diapositivas · un solo oficio</h2>
+        <p>Cada diapositiva es un eslabón de la cadena: Respirar → Sonar → Reír → Sanar → Compartir. Navega con las flechas, los puntos o el teclado.</p>
+      </div>
+      <div class="tour" role="region" aria-roledescription="carrusel" aria-label="Presentación de Rishaman">
+        <div class="tour-track" id="tour-track" tabindex="0">
+          <section class="tslide" id="tslide-1" aria-labelledby="tsh-1">
+            <p class="act">Acto I · El hombre — 01</p>
+            <h3 id="tsh-1">Rishaman</h3>
+            <p class="ttext">Hay un hombre que hace una vida de la risa. Este es su mapa.</p>
+            <figure class="mslot" aria-label="Reservado: foto retrato de Rishaman">
+              <p class="mlabel">📷 foto · reservado</p>
+              <p class="mdesc">Sobre mi/Personajes/Rishaman · retrato</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-2" aria-labelledby="tsh-2">
+            <p class="act">Acto I · El hombre — 02</p>
+            <h3 id="tsh-2">Nacer con el taller abierto</h3>
+            <p class="ttext">Empezó en el taller — de risa y de madera, de la mesa y del taller interior — y entendió que reírse a propósito entrena lo mismo que reírse de verdad. De ahí no salió.</p>
+            <figure class="mslot filled">
+              <img src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/categorias/Imagen/Transfigurarte/IMG-20260316-WA0008%281%29.jpg"
+                alt="Foto personal de la carpeta Transfigurarte" loading="lazy" decoding="async">
+              <figcaption>Transfigurarte · foto personal</figcaption>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-3" aria-labelledby="tsh-3">
+            <p class="act">Acto I · El hombre — 03</p>
+            <h3 id="tsh-3">La cadena</h3>
+            <p class="ttext">Respirar → sonar → reír → sanar → compartir. Cinco eslabones, un solo oficio. Las páginas que siguen son cada eslabón convertido en técnica.</p>
+            <figure class="mslot" aria-label="Reservado: diagrama simple o paisaje">
+              <p class="mlabel">📷 foto · reservado</p>
+              <p class="mdesc">diagrama de la cadena · paisaje</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-4" aria-labelledby="tsh-4">
+            <p class="act">Acto II · La risa — 04</p>
+            <h3 id="tsh-4">Sonreír es gratis</h3>
+            <p class="ttext">La risa es la herramienta más fácil y potente. Rievolución: convertir el gesto en gesta.</p>
+            <figure class="mslot" aria-label="Reservado: foto o audio de Sonreiresgratis">
+              <p class="mlabel">📷/🎵 · reservado</p>
+              <p class="mdesc">Rievolución · Sonreiresgratis</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-5" aria-labelledby="tsh-5">
+            <p class="act">Acto II · La risa — 05</p>
+            <h3 id="tsh-5">Disparos de la risa</h3>
+            <p class="ttext">El risódromo es la pista. Ahí se lanzan los disparos de risa: ráfagas cortas, mecánicas, contagiosas. Primero se fabrican, luego se sueltan.</p>
+            <figure class="mslot" aria-label="Reservado: vídeo o audio de Disparosdelarisa">
+              <p class="mlabel">🎬/🎵 · reservado</p>
+              <p class="mdesc">Risodromo · Disparosdelarisa</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-6" aria-labelledby="tsh-6">
+            <p class="act">Acto II · La risa — 06</p>
+            <h3 id="tsh-6">Reírse al respirar</h3>
+            <p class="ttext">Riespira une la risa a la respiración: las riesacudidas sacuden el diafragma, el seseo afina el aire antes del estallido. La risa se vuelve técnica de respiración.</p>
+            <figure class="mslot" aria-label="Reservado: audio de Riesacudidas y Seseo">
+              <p class="mlabel">🎵 · reservado</p>
+              <p class="mdesc">Riespira · Riesacudidas · Seseo</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-7" aria-labelledby="tsh-7">
+            <p class="act">Acto II · La risa — 07</p>
+            <h3 id="tsh-7">Monstra</h3>
+            <p class="ttext">Monstra es el personaje que se atreve. El risodrama es teatro sin guion: jugar el papel de reír hasta que el papel se vuelve cierto.</p>
+            <figure class="mslot" aria-label="Reservado: foto o vídeo de Risodrama y Monstra">
+              <p class="mlabel">📷/🎬 · reservado</p>
+              <p class="mdesc">Risodrama · Monstra</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-8" aria-labelledby="tsh-8">
+            <p class="act">Acto II · La risa — 08</p>
+            <h3 id="tsh-8">Reír en cámara lenta</h3>
+            <p class="ttext">Delia ríe, y ríe despacio, como se saborea. Risodelia es la locura apaciguada con la risa, hasta el rieset.</p>
+            <figure class="mslot filled">
+              <img src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/categorias/Risa/Risodelia/FB_IMG_1567675246036.jpg"
+                alt="Foto personal de la carpeta Risodelia" loading="lazy" decoding="async">
+              <figcaption>Risodelia · foto personal</figcaption>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-9" aria-labelledby="tsh-9">
+            <p class="act">Acto II · La risa — 09</p>
+            <h3 id="tsh-9">El experimento</h3>
+            <p class="ttext">Aquí la risa se pone bajo lupa: qué dispara, qué se contagia, qué se mide. El laboratorio de la risa devuelve la carcajada como dato.</p>
+            <figure class="mslot" aria-label="Reservado: foto o vídeo de RisaLab">
+              <p class="mlabel">📷/🎬 · reservado</p>
+              <p class="mdesc">RisaLab</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-10" aria-labelledby="tsh-10">
+            <p class="act">Acto II · La risa — 10</p>
+            <h3 id="tsh-10">El cuerpo que ríe</h3>
+            <p class="ttext">Cuando la risa se queda a vivir, despierta. Despertar de la risa y risoenergética: el cuerpo que ríe también se enciende.</p>
+            <figure class="mslot" aria-label="Reservado: fotos de Karateka y MotoDeLaRisa">
+              <p class="mlabel">📷 · reservado</p>
+              <p class="mdesc">Risoenergetica · Karateka · MotoDeLaRisa</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-11" aria-labelledby="tsh-11">
+            <p class="act">Acto III · La voz primal — 11</p>
+            <h3 id="tsh-11">La voz de raíz</h3>
+            <p class="ttext">Antes de la palabra estuvo el sonido. El gutural es la voz que sale de la tierra: grave, cruda, sin filtro. Rishaman la llama la hermana mayor de la risa.</p>
+            <figure class="mslot" aria-label="Reservado: audio de canto gutural">
+              <p class="mlabel">🎵 · reservado</p>
+              <p class="mdesc">Canto · Gutural</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-12" aria-labelledby="tsh-12">
+            <p class="act">Acto III · La voz primal — 12</p>
+            <h3 id="tsh-12">Afinar el aire</h3>
+            <p class="ttext">El canto armónico hace sonar dos notas con una garganta, y el círculo de entonación las comparte en ronda. La voz se convierte en reunión.</p>
+            <figure class="mslot" aria-label="Reservado: audio de armónico y círculo de entonación">
+              <p class="mlabel">🎵 · reservado</p>
+              <p class="mdesc">Canto · Harmonico · Circulodeentonacion</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-13" aria-labelledby="tsh-13">
+            <p class="act">Acto III · La voz primal — 13</p>
+            <h3 id="tsh-13">Sumergirse en sonido</h3>
+            <p class="ttext">Baños y mezclas: envolverse en el sonido de otros hasta que la risa entra sola. Del canto a la carcajada hay un solo puente: el aire.</p>
+            <figure class="mslot" aria-label="Reservado: audio de baños de voz y mezclas">
+              <p class="mlabel">🎵 · reservado</p>
+              <p class="mdesc">Canto · Baños · Mixes</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-14" aria-labelledby="tsh-14">
+            <p class="act">Acto IV · Arte y naturaleza — 14</p>
+            <h3 id="tsh-14">El bioart sonoro</h3>
+            <p class="ttext">La risa también se esculpe: RisArt la vuelve imagen, RisaMusic la vuelve composición, el piano de la risa la toca con teclas.</p>
+            <figure class="mslot filled">
+              <img src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/categorias/Imagen/Transfigurarte/IMG-20260316-WA0008%281%29.jpg"
+                alt="Foto personal de la carpeta Transfigurarte" loading="lazy" decoding="async">
+              <figcaption>RisArt · foto personal</figcaption>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-15" aria-labelledby="tsh-15">
+            <p class="act">Acto IV · Arte y naturaleza — 15</p>
+            <h3 id="tsh-15">El equilibrio</h3>
+            <p class="ttext">Piedras que se apilan en silencio y arte que nace del paisaje. La misma paciencia que equilibra una piedra equilibra una risa.</p>
+            <figure class="mslot filled">
+              <img src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/categorias/Paisajes/20240528_083742.jpg"
+                alt="Foto personal de la carpeta Paisajes" loading="lazy" decoding="async">
+              <figcaption>Paisajes · NaturArt · foto personal</figcaption>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-16" aria-labelledby="tsh-16">
+            <p class="act">Acto IV · Arte y naturaleza — 16</p>
+            <h3 id="tsh-16">El cuerpo y la suerte</h3>
+            <p class="ttext">Bailar como árbol, masaje con bolas que suelta los nudos, amuletos que guardan el gesto. Las manos también reír: así lo dice Rishaman.</p>
+            <figure class="mslot" aria-label="Reservado: fotos de Danzárbol, MasajeBolas y Amuletos">
+              <p class="mlabel">📷 · reservado</p>
+              <p class="mdesc">Danzárbol · MasajeBolas · Amuletos</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-17" aria-labelledby="tsh-17">
+            <p class="act">Acto V · Amor y sanación — 17</p>
+            <h3 id="tsh-17">Reír que sana</h3>
+            <p class="ttext">Risanación, natucura y bienestar: la risa como medicina de campo y la naturaleza como consulta. Reírse a propósito también remienda.</p>
+            <figure class="mslot" aria-label="Reservado: fotos de Risanacion, Natucura y BienestarSanitario">
+              <p class="mlabel">📷 · reservado</p>
+              <p class="mdesc">Risanacion · Natucura · BienestarSanitario</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-18" aria-labelledby="tsh-18">
+            <p class="act">Acto V · Amor y sanación — 18</p>
+            <h3 id="tsh-18">El silencio antes de la risa</h3>
+            <p class="ttext">Meditar, orar, ayunar, recreo. Hasta el DMT cabe en el mapa: Rishaman explora los estados donde la risa es solo la puerta.</p>
+            <figure class="mslot" aria-label="Reservado: fotos de Meditacion, Orar, Ayuno y Recreo">
+              <p class="mlabel">📷 · reservado</p>
+              <p class="mdesc">Meditacion · Orar · Ayuno · Recreo</p>
+            </figure>
+          </section>
+
+          <section class="tslide" id="tslide-19" aria-labelledby="tsh-19">
+            <p class="act">Acto VI · La tribu — 19</p>
+            <h3 id="tsh-19">La tribu</h3>
+            <p class="ttext">Rishaman no está solo: SpiritPunk sostiene el grito y ArmandoGuasa el chiste. Este cuento termina como empieza — con la mesa del taller, y con quien quiera sentarse a reír.</p>
+            <figure class="mslot" aria-label="Reservado: fotos de SpiritPunk, ArmandoGuasa y Etc">
+              <p class="mlabel">📷 · reservado</p>
+              <p class="mdesc">Personajes · SpiritPunk · ArmandoGuasa · Etc</p>
+            </figure>
+            <div class="tslide-cta">
+              <button class="btn btn-primary" id="circle-btn" type="button" aria-pressed="false">Reír en círculo 🔁</button>
+              <p class="circle-note" id="circle-note" aria-live="polite"></p>
+            </div>
+          </section>
+        </div>
+
+        <button class="t-btn t-prev" id="t-prev" type="button" aria-label="Diapositiva anterior">‹</button>
+        <button class="t-btn t-next" id="t-next" type="button" aria-label="Diapositiva siguiente">›</button>
+
+        <div class="tour-bar">
+          <div class="t-dots" id="t-dots"></div>
+          <div class="t-meta">
+            <span class="t-count" id="t-count" aria-live="polite">01 / 19</span>
+            <button class="t-btn t-random" id="t-random" type="button" aria-label="Diapositiva aleatoria" title="Diapositiva aleatoria">⚡</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · MAPA ============ -->
+  <section class="content-section" id="mapa">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Mapa</p>
+        <h2>El mapa de Rishaman</h2>
+        <p>Cada rama es un mundo. Toca un chip para saltar a su diapositiva del tour; las ramas sin diapositiva propia están atenuadas.</p>
+      </div>
+      <div class="map-acts">
+        <div class="act">
+          <h3><span class="act-no">Acto I</span>El hombre <small>origen</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="1">Rishaman</button>
+            <button type="button" class="chip" data-go="15">Paisajes</button>
+          </div>
+        </div>
+        <div class="act">
+          <h3><span class="act-no">Acto II</span>La risa <small>reír</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="4">Rievolución</button>
+            <button type="button" class="chip" data-go="4">Sonreiresgratis</button>
+            <button type="button" class="chip" data-go="5">Risodromo</button>
+            <button type="button" class="chip" data-go="5">Disparosdelarisa</button>
+            <button type="button" class="chip" data-go="6">Riespira</button>
+            <button type="button" class="chip" data-go="6">Riesacudidas</button>
+            <button type="button" class="chip" data-go="6">Seseo</button>
+            <button type="button" class="chip" data-go="7">Risodrama</button>
+            <button type="button" class="chip" data-go="7">Monstra</button>
+            <button type="button" class="chip" data-go="8">Risodelia</button>
+            <button type="button" class="chip" data-go="9">RisaLab</button>
+            <button type="button" class="chip" data-go="10">Risoenergetica</button>
+            <button type="button" class="chip" data-go="10">Despertardelarisa</button>
+            <button type="button" class="chip" data-go="10">Karateka</button>
+            <button type="button" class="chip" data-go="10">MotoDeLaRisa</button>
+            <button type="button" class="chip" data-go="14">RisArt</button>
+            <button type="button" class="chip" data-go="14">RisaMusic</button>
+            <button type="button" class="chip" data-go="14">Pianodelarisa</button>
+            <span class="chip inert" title="Sin diapositiva propia todavía">Chistes</span>
+            <span class="chip inert" title="Sin diapositiva propia todavía">Rieset</span>
+          </div>
+        </div>
+        <div class="act">
+          <h3><span class="act-no">Acto III</span>La voz primal <small>sonar</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="11">Gutural</button>
+            <button type="button" class="chip" data-go="12">Harmonico</button>
+            <button type="button" class="chip" data-go="12">Circulodeentonacion</button>
+            <button type="button" class="chip" data-go="13">Baños</button>
+            <button type="button" class="chip" data-go="13">Mixes</button>
+          </div>
+        </div>
+        <div class="act">
+          <h3><span class="act-no">Acto IV</span>Arte y naturaleza <small>sonar + sanar</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="15">NaturArt</button>
+            <button type="button" class="chip" data-go="15">Stone balancing</button>
+            <button type="button" class="chip" data-go="2">Transfigurarte</button>
+            <button type="button" class="chip" data-go="16">Danzárbol</button>
+            <button type="button" class="chip" data-go="16">MasajeBolas</button>
+            <button type="button" class="chip" data-go="16">Amuletos</button>
+          </div>
+        </div>
+        <div class="act">
+          <h3><span class="act-no">Acto V</span>Amor y sanación <small>sanar</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="17">Risanacion</button>
+            <button type="button" class="chip" data-go="17">Natucura</button>
+            <button type="button" class="chip" data-go="17">Desnudos</button>
+            <button type="button" class="chip" data-go="17">BienestarSanitario</button>
+            <button type="button" class="chip" data-go="18">Meditacion</button>
+            <button type="button" class="chip" data-go="18">Dmt</button>
+            <button type="button" class="chip" data-go="18">Orar</button>
+            <button type="button" class="chip" data-go="18">Ayuno</button>
+            <button type="button" class="chip" data-go="18">Recreo</button>
+          </div>
+        </div>
+        <div class="act">
+          <h3><span class="act-no">Acto VI</span>La tribu <small>compartir</small></h3>
+          <div class="chips">
+            <button type="button" class="chip" data-go="19">SpiritPunk</button>
+            <button type="button" class="chip" data-go="19">ArmandoGuasa</button>
+            <button type="button" class="chip" data-go="19">Etc</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER / CRÉDITOS ============ -->
+<footer>
+  <div class="wrap">
+    <button class="credits-toggle" type="button" aria-expanded="false" aria-controls="credits-body">
+      Créditos y licencias <span class="arrow" aria-hidden="true">▾</span>
+    </button>
+    <div class="credits-body" id="credits-body" hidden>
+      <p>Este tour es la biografía-CV de Rishaman, un proyecto personal de la familia Risa liberada. Las fotos de <b>categorias/</b> son personales (retratos, risas y paisajes propios); el resto de ramas del árbol quedan como lugar reservado hasta tener su media.</p>
+      <ul class="credits">
+        <li>🖼️ Fotos de <code>categorias/</code> — personales (Transfigurarte, Risodelia, Paisajes)</li>
+        <li>🔊 Loop «Reír en círculo» — risas del <a href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener">banco de la risa</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener">CC BY-SA 4.0</a></li>
+        <li>🎨 Identidad Risa liberada — logo 15-guino, familia de apps · flove</li>
+        <li>🌐 Estándar flove §13 — página de un solo archivo, sin dependencias</li>
+      </ul>
+    </div>
+    <p class="foot-note">Risa liberada · un pequeño ejercicio para soltar. Rishaman · el oficio del reír. Hecho con cariño. Idioma: español.</p>
+  </div>
+</footer>
+
+<script src="banco.js"></script>
+<script>
+(function(){
+  "use strict";
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let circleOn = false;
+
+  /* ============ TOUR · 19 diapositivas ============ */
+  const track = document.getElementById('tour-track');
+  const slides = Array.from(track.querySelectorAll('.tslide'));
+  const total = slides.length;
+  let i = 0;
+
+  const prevBtn = document.getElementById('t-prev');
+  const nextBtn = document.getElementById('t-next');
+  const dotsBox = document.getElementById('t-dots');
+  const countEl = document.getElementById('t-count');
+  const randomBtn = document.getElementById('t-random');
+  const dots = [];
+
+  slides.forEach((s, k) => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'tdot';
+    d.dataset.dot = k + 1;
+    d.setAttribute('aria-label', 'Ir a la diapositiva ' + (k + 1));
+    d.addEventListener('click', () => go(k, true));
+    dotsBox.appendChild(d);
+    dots.push(d);
+  });
+
+  function render(){
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    countEl.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    dots.forEach((d, k) => d.setAttribute('aria-current', k === i ? 'true' : 'false'));
+    if(circleOn && i !== total - 1) stopCircle();
+  }
+  function go(n, user){
+    i = (n + total) % total;
+    render();
+  }
+  prevBtn.addEventListener('click', () => go(i - 1, true));
+  nextBtn.addEventListener('click', () => go(i + 1, true));
+  randomBtn.addEventListener('click', () => {
+    let n;
+    do { n = Math.floor(Math.random() * total); } while (total > 1 && n === i);
+    go(n, true);
+  });
+  track.addEventListener('keydown', e => {
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); go(i - 1, true); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); go(i + 1, true); }
+  });
+  if(reduce) track.style.transition = 'none';
+
+  // Los chips del mapa saltan a su diapositiva.
+  document.querySelectorAll('.map-acts .chip[data-go]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const n = parseInt(chip.dataset.go, 10);
+      if(!isNaN(n)) go(n - 1, true);
+      document.getElementById('tour').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  render();
+
+  /* ============ REÍR EN CÍRCULO · loop de risas del banco ============ */
+  const circleBtn = document.getElementById('circle-btn');
+  const circleNote = document.getElementById('circle-note');
+  let circleTracks = [];
+  let circleIdx = -1;
+  const circleAudio = new Audio();
+
+  function circleNext(){
+    if(!circleTracks.length) return;
+    circleIdx = (circleIdx + 1) % circleTracks.length;
+    const t = circleTracks[circleIdx];
+    if(t && t.src) circleAudio.src = t.src;
+  }
+  function circlePlay(){
+    if(!circleTracks.length){ circleNote.textContent = 'Aún no hay risas en el banco · vuelve pronto 💛'; return; }
+    circleOn = true;
+    circleBtn.setAttribute('aria-pressed', 'true');
+    circleBtn.textContent = '⏸ Parar el círculo';
+    circleNote.textContent = '';
+    circleAudio.play().catch(() => {});
+  }
+  function stopCircle(){
+    circleOn = false;
+    circleBtn.setAttribute('aria-pressed', 'false');
+    circleBtn.textContent = 'Reír en círculo 🔁';
+    circleAudio.pause();
+  }
+  circleAudio.addEventListener('ended', () => {
+    if(!circleOn) return;
+    circleNext();
+    circleAudio.play().catch(() => {});
+  });
+  circleBtn.addEventListener('click', () => { circleOn ? stopCircle() : circlePlay(); });
+
+  fetch(window.Banco.BANCO_URL, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : [])
+    .then(data => { circleTracks = window.Banco.buildBancoTracks(Array.isArray(data) ? data : []); })
+    .catch(() => {});
+
+  /* ============ FOOTER · créditos desplegables ============ */
+  const credToggle = document.querySelector('.credits-toggle');
+  const credBody = document.getElementById('credits-body');
+  if(credToggle && credBody){
+    credToggle.addEventListener('click', () => {
+      const open = credBody.hidden;
+      credBody.hidden = !open;
+      credToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+})();
+</script>
+<script src="../appy/flove-theme.js"></script>
+</body>
+</html>

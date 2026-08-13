@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" viewBox="0 0 200 200"><style>@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+  .s{stroke-dasharray:100;animation:draw 3.2s ease-in-out infinite}
+  @keyframes draw{0%{stroke-dashoffset:100}35%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:-100}}
+  .q{animation:baja 3.2s ease infinite}
+  @keyframes baja{0%{opacity:0;transform:translateY(-12px)}18%,85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(0)}}
+</style>
+  <g class="q"><text x="34" y="146" font-family="Georgia, 'Liberation Serif', 'DejaVu Serif', serif" font-size="190" fill="#141414">“</text></g>
+  <path class="s" pathLength="100" d="M72,148 Q100,174 128,148" fill="none" stroke="#f4501e" stroke-width="11" stroke-linecap="round"/>
+</svg>

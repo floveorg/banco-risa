@@ -8,21 +8,30 @@ card: **✏️ Título** + **🏷️ Tags** in one row, attribution (**👤 Usua
 a third. Tags are free text (comma-separated). Files are capped at 10 MB / 1000 s.
 Once sent, moderators approve/reject in the private group *Risas Nuevas* — the mod message
 carries the title + tags as hashtags (searchable in Telegram). Approved clips are uploaded
-to **Cloudflare R2** and indexed in `banco.json` (`src` = R2 URL, plus `t` title and `tags`),
+to **Cloudflare R2** and indexed in `risa.json` (`src` = R2 URL, plus `t` title and `tags`),
 and posted to the public channel [t.me/risaliberada](https://t.me/risaliberada) with the clip
 title attached. On approval the bot tells the uploader what they submitted (title, tags,
 name) — no media link. Clips wait for a moderator decision (no auto-publish).
 Runs on a GitHub Actions cron — no server.
 
 Audio (the community-uploaded laugh clips) lives on Cloudflare R2, not in git; the repo holds
-only the metadata (`banco.json`, each entry's `src` is an R2 URL) and the bot code.
+only the metadata (`risa.json`, each entry's `src` is an R2 URL) and the bot code.
+
+## Web app
+
+The risa web app (`index.html` + the rishaman demos) lives in `risa/`. Its media — the app
+photos (`risa/media`, including the logo family under `risa/media/logos`) and the personal
+gallery (`risa/categorias`) — is synced to Cloudflare R2 under `risa/…` by `bot/sync-media.mjs`
+(.github/workflows/sync-media.yml), and the pages reference those absolute R2 URLs. The app is
+served at https://risa.liberada.net (GitHub Pages of this repo, folder `risa/`) and fetches
+this repo's `risa.json` feed as its "banco" data.
 
 - `bot/logic.mjs` — pure update->actions logic (tested)
 - `bot/telegram.mjs` — thin Bot API client
 - `bot/r2.mjs` — zero-dep SigV4 signed upload (audio → Cloudflare R2)
 - `bot/poll.mjs` — orchestrator run each cron tick
 - `.github/workflows/poll.yml` — the cron
-- Data: `banco.json` (published clips, newest-first), `state/` (offset + queue + drafts)
+- Data: `risa.json` (published clips, newest-first), `state/` (offset + queue + drafts)
 
 Secrets (GitHub Actions repository secrets, never committed):
 - `TELEGRAM_BOT_TOKEN` — the @RisaLiberadaBot token

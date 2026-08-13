@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="520" viewBox="0 0 200 260">
+  <path d="M56,110 A48,48 0 0 0 152,110" fill="none" stroke="#141414" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="112" cy="88" r="3.5" fill="#141414"/>
+  <circle cx="124" cy="70" r="3.5" fill="#141414"/>
+  <circle cx="138" cy="54" r="3.5" fill="#141414"/>
+  <circle cx="156" cy="38" r="12" fill="#f4501e"/>
+
+  <text x="100" y="232" font-family="Georgia, 'Liberation Serif', 'DejaVu Serif', serif" font-style="italic" font-size="35"
+        fill="#141414" text-anchor="middle">risa</text>
+  <text x="103" y="254" font-family="Arial, 'DejaVu Sans', sans-serif" font-size="13" font-weight="bold"
+        letter-spacing="6" fill="#f4501e" text-anchor="middle">LIBERADA</text>
+</svg>

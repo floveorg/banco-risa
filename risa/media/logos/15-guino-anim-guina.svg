@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200">
+<style>
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+  .eyeR{transform-box:fill-box;transform-origin:center;animation:wink 2.4s ease-in-out infinite}
+  @keyframes wink{0%,34%,46%,100%{transform:scaleY(1)}40%{transform:scaleY(.15)}}
+  .wrap{transform-box:fill-box;transform-origin:center;animation:nod 2.4s ease-in-out infinite}
+  @keyframes nod{0%,34%,46%,100%{transform:rotate(0)}40%{transform:rotate(-3deg)}}
+</style>
+  <defs><filter id="rgi" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="turbulence" baseFrequency="0.019" numOctaves="2" seed="15" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.6"/></filter></defs>
+  <g filter="url(#rgi)" fill="none" stroke="#141414" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <g class="wrap">
+    <path class="face" d="M100,28 C142,28 172,60 172,100 C172,142 140,172 100,172 C58,172 28,140 28,100 C28,58 60,28 100,28 Z"/>
+    <path class="eyeL" d="M64,88 C70,80 80,80 86,88"/>
+    <path class="eyeR" d="M114,84 C122,92 130,92 138,84" stroke="#f4501e"/>
+    <path class="smile" d="M62,116 C82,150 120,150 140,116"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rishaman · Tour extendido — Risa liberada</title>
+<meta name="description" content="Rishaman, tour extendido: tres vistas del mismo árbol de categorias/ — una diapositiva por cada carpeta, navegación por categorías con parallax y el mapa general con la estructura de carpetas y subcarpetas.">
+<link rel="icon" type="image/svg+xml" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../appy/flove.css">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ink:#2a1810;
+  --ink-soft:#000;
+  --base:#ffe8d4;
+  --base-2:#ffdcc0;
+  --cream:#fff8ee;
+  --persimmon:#ff5630;
+  --marigold:#ffb020;
+  --magenta:#f5288e;
+  --grape:#5b2fa0;
+  --mint:#12b28a;
+  --shadow:rgba(58,26,10,.16);
+  --r:22px;
+  --maxw:1080px;
+  --disp:'Baloo 2', system-ui, sans-serif;
+  --body:'Figtree', system-ui, sans-serif;
+  --mono:'Space Mono', ui-monospace, monospace;
+}
+:root.dark{
+  --ink:#000;
+  --ink-soft:#000;
+  --shadow:rgba(58,26,10,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:var(--body); color:var(--ink);
+  background:var(--base);
+  background-image:
+    radial-gradient(1100px 600px at 82% -8%, #ffd0a6 0%, transparent 55%),
+    radial-gradient(900px 520px at -6% 12%, #ffcfe4 0%, transparent 50%);
+  line-height:1.55; overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--disp); line-height:1.02; margin:0; letter-spacing:-.01em}
+a{color:inherit}
+img{max-width:100%; display:block}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
+.eyebrow{font-family:var(--mono); font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; color:var(--persimmon); font-weight:700}
+:focus-visible{outline:3px solid var(--grape); outline-offset:3px; border-radius:8px}
+
+/* ============ TOPBAR (igual que comunidad.html) ============ */
+.topbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(9px);
+  background:rgba(255,232,212,.72); border-bottom:2px solid rgba(42,24,16,.08)}
+.topbar .wrap{display:flex; align-items:center; gap:14px; height:64px}
+.back{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-weight:700; font-size:.92rem;
+  color:var(--ink); transition:color .12s}
+.back:hover{color:var(--persimmon)}
+.navlinks{display:flex; gap:8px; align-items:center; margin:0 auto}
+.navlinks a{text-decoration:none; font-weight:700; font-size:.92rem; color:var(--ink);
+  background:var(--cream); border:2px solid var(--ink); border-radius:999px; padding:8px 18px;
+  box-shadow:0 3px 0 rgba(42,24,16,.14); transition:transform .12s}
+.navlinks a:hover{transform:translateY(-1px); color:var(--persimmon)}
+.navlinks a.active{background:var(--persimmon); color:#fff}
+@media(max-width:720px){
+  .topbar .wrap{gap:8px; height:60px}
+  .navlinks{gap:5px}
+  .navlinks a{padding:7px 13px; font-size:.8rem}
+  .ndrop-btn{padding:7px 13px; font-size:.8rem}
+}
+.ndrop{position:relative}
+.ndrop-ctl{position:absolute; opacity:0; pointer-events:none; margin:0}
+.ndrop-btn{display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-weight:700; font-size:.92rem;
+  color:var(--ink); background:var(--cream); border:2px solid var(--ink); border-radius:999px; padding:8px 18px;
+  box-shadow:0 3px 0 rgba(42,24,16,.14); cursor:pointer; transition:transform .12s; user-select:none}
+.ndrop-btn:hover{transform:translateY(-1px); color:var(--persimmon)}
+.ndrop-arrow{display:inline-block; transition:transform .18s}
+.ndrop-ctl:checked ~ .ndrop-btn{background:var(--marigold)}
+.ndrop-ctl:checked ~ .ndrop-btn .ndrop-arrow{transform:rotate(180deg)}
+.ndrop-ctl:focus-visible ~ .ndrop-btn{outline:3px solid var(--grape); outline-offset:3px}
+.ndrop-menu{display:none; position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%);
+  z-index:50; margin:0; padding:10px; list-style:none; min-width:160px; text-align:center;
+  background:var(--cream); border:2.5px solid var(--ink); border-radius:16px;
+  box-shadow:0 6px 0 rgba(42,24,16,.18)}
+.ndrop-ctl:checked ~ .ndrop-menu{display:block}
+.ndrop-menu li{margin:0; padding:0}
+.ndrop-menu a{display:block; text-decoration:none; font-weight:700; font-size:.9rem; color:var(--persimmon);
+  background:transparent; border:none; border-radius:8px; padding:7px 14px;
+  transition:color .12s, background .12s}
+.ndrop-menu a:hover{color:var(--ink); background:rgba(255,86,48,.12)}
+
+/* ============ SECCIÓN ============ */
+.content-section{padding:52px 0; border-top:2px dashed rgba(42,24,16,.16)}
+.section-head{max-width:64ch; margin-bottom:30px}
+.section-head h2{font-size:clamp(1.7rem,4.5vw,2.6rem); margin:8px 0 10px}
+.section-head p{color:var(--ink-soft); font-size:1.05rem; margin:0}
+
+/* ============ TABS (CSS-only) ============ */
+.tab-ctl{position:absolute; opacity:0; width:1px; height:1px; margin:0}
+.tab-bar{position:sticky; top:76px; z-index:30; display:flex; gap:6px; margin:0 auto 28px; width:max-content;
+  background:var(--cream); border:2.5px solid var(--ink); border-radius:999px; padding:6px;
+  box-shadow:0 5px 0 rgba(42,24,16,.16)}
+.tab-btn{display:block; font-family:var(--disp); font-weight:700; font-size:.92rem; cursor:pointer; user-select:none;
+  color:var(--ink); background:transparent; border:2px solid transparent; border-radius:999px; padding:9px 18px;
+  transition:transform .12s, background .15s}
+.tab-btn:hover{background:var(--base)}
+#tab-full:checked ~ .tab-bar label[for="tab-full"],
+#tab-cats:checked ~ .tab-bar label[for="tab-cats"],
+#tab-map:checked ~ .tab-bar label[for="tab-map"]{background:var(--persimmon); color:#fff; box-shadow:0 3px 0 rgba(42,24,16,.18)}
+#tab-full:focus-visible ~ .tab-bar label[for="tab-full"],
+#tab-cats:focus-visible ~ .tab-bar label[for="tab-cats"],
+#tab-map:focus-visible ~ .tab-bar label[for="tab-map"]{outline:3px solid var(--grape); outline-offset:3px}
+.tab-panel{display:none}
+#tab-full:checked ~ #panel-full{display:block}
+#tab-cats:checked ~ #panel-cats{display:block}
+#tab-map:checked ~ #panel-map{display:block}
+.panel-note{font-size:.9rem; color:var(--ink-soft); margin:0 0 16px}
+@media(max-width:720px){
+  .tab-bar{top:70px; width:auto; flex-wrap:wrap; justify-content:center}
+  .tab-btn{padding:8px 13px; font-size:.82rem}
+}
+
+/* ============ SLIDER GENERAL · Full slides ============ */
+.tour{background:var(--ink); border-radius:26px; overflow:hidden;
+  box-shadow:12px 12px 0 rgba(42,24,16,.18); position:relative}
+.tour-track{display:flex; transition:transform .5s cubic-bezier(.4,0,.2,1); will-change:transform}
+.tour-track:focus-visible{outline:3px solid var(--marigold); outline-offset:-3px}
+.tslide{min-width:100%; padding:clamp(26px,4vw,52px); display:flex; flex-direction:column;
+  background:
+    radial-gradient(600px 320px at 88% -10%, rgba(245,40,142,.16) 0%, transparent 60%),
+    radial-gradient(500px 300px at -10% 110%, rgba(18,178,138,.12) 0%, transparent 55%),
+    var(--ink); color:#ffe8d4}
+.slide-head{margin-bottom:8px}
+.tslide .spath{font-family:var(--mono); font-size:.66rem; letter-spacing:.08em; color:#ff5630; font-weight:700;
+  margin:0 0 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.tslide h3{color:#fff; font-size:clamp(1.5rem,4vw,2.4rem); margin-bottom:8px}
+.tslide .ttext{max-width:60ch; font-size:1rem; color:#ffe8d4; margin:0}
+
+/* subcarpetas de la carpeta en diapositiva (saltan a su slide) */
+.fsubs{display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-top:22px;
+  padding-top:16px; border-top:1px dashed rgba(255,232,212,.22)}
+.fsubs-label{font-family:var(--mono); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase;
+  color:rgba(255,232,212,.5); margin:8px 0 0}
+.fsubs-row{display:flex; flex-wrap:wrap; gap:8px}
+.fsub.chip{background:rgba(255,255,255,.08); border-color:rgba(255,232,212,.35); color:#ffe8d4;
+  box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.fsub.chip:hover{background:var(--marigold); color:var(--ink)}
+
+/* controles del slider general */
+.t-btn{border:none; cursor:pointer; font-family:var(--disp); line-height:1; border-radius:50%;
+  display:grid; place-items:center; transition:transform .12s}
+.t-prev,.t-next{position:absolute; top:46%; transform:translateY(-50%); z-index:5; width:46px; height:46px;
+  font-size:1.6rem; border:2.5px solid var(--ink); background:var(--cream); color:var(--ink);
+  box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.t-prev{left:12px} .t-next{right:12px}
+.t-prev:hover,.t-next:hover{transform:translateY(-50%) scale(1.1); background:var(--marigold)}
+.t-prev:active,.t-next:active{transform:translateY(-50%) scale(.92)}
+.tour-bar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:space-between;
+  padding:14px 18px; background:rgba(255,255,255,.05); border-top:1px solid rgba(255,232,212,.14)}
+.t-dots{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
+.t-dots button{width:9px; height:9px; padding:0; border:none; border-radius:50%; cursor:pointer;
+  background:rgba(255,232,212,.35); transition:transform .15s, background .15s}
+.t-dots button[aria-current="true"]{background:var(--marigold); transform:scale(1.5)}
+.t-count{font-family:var(--mono); font-size:.78rem; font-weight:700; color:var(--marigold)}
+
+/* ============ PER CATEGORIES · parallax ============ */
+.cats{position:relative; overflow:hidden; padding:clamp(44px,7vw,88px) 0; border-top:2px dashed rgba(42,24,16,.16)}
+.px{position:absolute; inset:-20% 0; z-index:0; pointer-events:none; will-change:transform}
+.px-num{position:absolute; top:2%; right:-2%; font-family:var(--disp); font-weight:800; font-size:clamp(7rem,22vw,16rem);
+  line-height:1; color:rgba(42,24,16,.05); -webkit-text-stroke:2px rgba(42,24,16,.14)}
+.px-glow{position:absolute; width:430px; height:430px; border-radius:50%; filter:blur(10px); opacity:.4;
+  background:radial-gradient(circle, var(--g, #ffb020) 0%, transparent 70%)}
+.glow-a{--g:#ffb020; top:-6%; left:-8%}
+.glow-b{--g:#12b28a; top:12%; right:-8%}
+.glow-c{--g:#f5288e; top:-4%; left:30%}
+.glow-d{--g:#5b2fa0; top:0%; right:-6%}
+.glow-e{--g:#ff5630; bottom:-6%; left:-6%}
+.glow-f{--g:#12b28a; top:-4%; right:24%}
+.glow-g{--g:#5b2fa0; bottom:-8%; right:-4%}
+.cat-in{position:relative; z-index:1}
+.cat-head{max-width:56ch; margin-bottom:26px}
+.cat-head h2{font-size:clamp(1.9rem,5vw,3rem); margin:8px 0 6px}
+.cat-head .cint{color:var(--ink-soft); font-size:1.05rem; margin:0}
+.cg{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px}
+.ccard{background:var(--cream); border:2.5px solid var(--ink); border-radius:16px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:4px; box-shadow:0 3px 0 rgba(42,24,16,.12)}
+.ccard h4{font-size:1.05rem}
+.ccard .fpath{font-family:var(--mono); font-size:.6rem; letter-spacing:.05em; color:var(--ink-soft); opacity:.55;
+  margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cdesc{font-size:.88rem; color:var(--ink-soft); margin:6px 0 0; line-height:1.5}
+.ccard .fmeta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:var(--mono); font-size:.68rem; margin-top:6px}
+.fslide-ref{color:var(--persimmon); font-weight:700}
+.fmedia{padding:2px 9px; border-radius:999px; font-weight:700}
+.ccard .fmedia.has{background:rgba(18,178,138,.16); color:#0b7d5f}
+.ccard .fmedia.audio{background:rgba(255,176,32,.24); color:#8a5a00}
+.ccard .fmedia.photo{background:rgba(255,86,48,.18); color:#b53a18}
+.ccard .fmedia.av{background:rgba(91,47,160,.16); color:#5b2fa0}
+.ccard .fmedia.none{background:rgba(42,24,16,.1); color:rgba(42,24,16,.5)}
+/* mini-pasador ‹ › para grupos de 1–2 subcarpetas */
+.msub{display:flex; align-items:center; gap:10px; border-top:1px dashed rgba(42,24,16,.25); padding-top:8px;
+  margin-top:10px; min-width:0}
+.msub-track{display:flex; overflow:hidden; flex:1 1 auto; min-width:0; transition:transform .35s ease}
+.msub-item{flex:0 0 100%; font-family:var(--mono); font-size:.68rem; font-weight:700; color:var(--persimmon);
+  background:none; border:none; padding:0; text-align:left; cursor:pointer; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis}
+.msub-item:hover{text-decoration:underline}
+.msub-nav{display:flex; align-items:center; gap:6px}
+.msub-btn{width:26px; height:26px; border-radius:50%; border:2px solid var(--ink); cursor:pointer;
+  font-family:var(--disp); font-size:1rem; line-height:1; background:var(--cream); color:var(--ink);
+  display:grid; place-items:center; transition:transform .12s}
+.msub-btn:hover{background:var(--marigold); transform:scale(1.08)}
+.msub-count{font-family:var(--mono); font-size:.62rem; color:var(--ink-soft); opacity:.6}
+.msub.dark{border-color:rgba(255,232,212,.22)}
+.msub.dark .msub-item{color:var(--marigold)}
+.msub.dark .msub-count{color:rgba(255,232,212,.65)}
+.msub.dark .msub-btn{border-color:rgba(255,232,212,.35); background:rgba(255,232,212,.12); color:#ffe8d4}
+.msub.dark .msub-btn:hover{background:var(--marigold); color:var(--ink)}
+.tslide .msub{margin-top:22px}
+/* ramas con ≥3 subcarpetas: nivel anidado, fiel al mapa */
+.cnest{list-style:none; margin:10px 0 0; padding:2px 0 2px 14px; border-left:2px dashed rgba(42,24,16,.25)}
+.cnest-item{margin:8px 0}
+.cnest-name{font-family:var(--disp); font-weight:700; font-size:.92rem; color:var(--ink); background:none;
+  border:none; padding:0; cursor:pointer}
+.cnest-name:hover{color:var(--persimmon)}
+.cnest-desc{font-size:.8rem; color:var(--ink-soft); margin:2px 0 0; line-height:1.45}
+.cnest-meta{font-family:var(--mono); font-size:.6rem; color:var(--ink-soft); opacity:.55; margin:2px 0 0}
+
+/* ============ WHOLE MAP · árbol de carpetas ============ */
+.mtree{display:grid; gap:18px}
+.mcat{border:2.5px solid var(--ink); border-radius:20px; padding:16px 20px; background:var(--cream);
+  box-shadow:0 5px 0 rgba(42,24,16,.12)}
+.mcat h3{margin:0 0 10px; font-size:1.1rem}
+.mnode{list-style:none; margin:6px 0 0; padding:2px 0 2px 20px; border-left:2px dashed rgba(42,24,16,.28)}
+.mnode li{margin:6px 0}
+.mrow{display:inline-block}
+
+/* ============ chips (comunes) ============ */
+.chip{position:relative; border:2.5px solid var(--ink); border-radius:999px; background:var(--base); color:var(--ink);
+  font-family:var(--disp); font-weight:700; font-size:.84rem; padding:7px 15px; cursor:pointer;
+  box-shadow:0 3px 0 rgba(42,24,16,.12); transition:transform .12s}
+.chip:hover{transform:translateY(-2px); color:var(--persimmon)}
+
+/* ============ FOOTER / CRÉDITOS ============ */
+footer{background:var(--ink); color:#f2c9ad; padding:44px 0 60px; margin-top:40px}
+footer p, footer li{font-size:.84rem; line-height:1.7}
+.credits{columns:2; column-gap:34px; list-style:none; padding:0; margin:0 0 18px; font-family:var(--mono); font-size:.72rem}
+.credits a{color:var(--marigold)}
+@media(max-width:560px){.credits{columns:1}}
+.credits-toggle{display:block; margin:0 auto 18px; border:2.5px solid var(--ink); border-radius:999px;
+  background:var(--cream); color:var(--ink); font-family:var(--disp); font-weight:700; font-size:1.02rem;
+  padding:10px 20px; cursor:pointer; box-shadow:0 4px 0 rgba(42,24,16,.16); transition:transform .12s}
+.credits-toggle:hover{transform:translateY(-2px); background:var(--marigold)}
+.credits-toggle .arrow{display:inline-block; transition:transform .18s}
+.credits-toggle[aria-expanded="true"] .arrow{transform:rotate(180deg)}
+.credits-body[hidden]{display:none}
+.foot-note{font-size:.78rem; opacity:.7; border-top:1px solid rgba(255,232,212,.2); padding-top:16px}
+
+/* ============ RESPONSIVE / REDUCED MOTION ============ */
+@media(max-width:760px){
+  .t-prev,.t-next{width:40px; height:40px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .tour-track,.msub-track{transition:none}
+  .t-btn,.chip,.btn,.credits-toggle,.ndrop-btn,.ndrop-arrow,.ndrop-menu a,.tab-btn,.msub-btn{transition:none}
+  .px{transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR (igual que comunidad.html) ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="back" href="index.html" aria-label="Volver a Risa liberada">← Risas</a>
+    <nav class="navlinks" aria-label="Secciones">
+      <div class="ndrop">
+        <input type="checkbox" id="nav-comunidad" class="ndrop-ctl" checked>
+        <label for="nav-comunidad" class="ndrop-btn">Comunidad <span class="ndrop-arrow" aria-hidden="true">▾</span></label>
+        <ul class="ndrop-menu">
+          <li><a href="rishaman.html">Rishaman</a></li>
+        </ul>
+      </div>
+      <a href="#cultura">Cultura</a>
+      <a href="#ciencia">Ciencia</a>
+    </nav>
+    <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme">◐</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ TOUR EXTENDIDO · tres vistas ============ -->
+  <section class="content-section" id="tour">
+    <div class="wrap">
+      <div class="tabs">
+        <input type="radio" name="view" id="tab-full" class="tab-ctl" checked>
+        <input type="radio" name="view" id="tab-cats" class="tab-ctl">
+        <input type="radio" name="view" id="tab-map" class="tab-ctl">
+
+        <div class="tab-bar" role="group" aria-label="Vistas del tour">
+          <label for="tab-full" class="tab-btn">Full slides</label>
+          <label for="tab-cats" class="tab-btn">Per categories</label>
+          <label for="tab-map" class="tab-btn">Whole map</label>
+        </div>
+
+        <!-- ================= VISTA 1 · FULL SLIDES ================= -->
+        <section class="tab-panel" id="panel-full" role="tabpanel" aria-label="Full slides">
+          <p class="panel-note">Una diapositiva por cada carpeta de <code>categorias/</code>, en orden de árbol. Las subcarpetas saltan a su diapositiva: chips en las ramas grandes, mini-pasador ‹ › cuando hay una o dos.</p>
+          <div class="tour" role="region" aria-roledescription="carrusel" aria-label="Full slides: una diapositiva por carpeta">
+            <div class="tour-track" id="tour-track" tabindex="0">
+
+              <!-- ===== AMOR ===== -->
+              <section class="tslide" aria-labelledby="sec-1">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor</p>
+                  <h3 id="sec-1">Amor</h3>
+                  <p class="ttext">La risa como medicina de campo y la naturaleza como consulta.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="2" title="categorias/Amor/Ayuno">Ayuno</button>
+                    <button type="button" class="chip fsub" data-s="3" title="categorias/Amor/BienestarSanitario">BienestarSanitario</button>
+                    <button type="button" class="chip fsub" data-s="4" title="categorias/Amor/Meditacion">Meditacion</button>
+                    <button type="button" class="chip fsub" data-s="6" title="categorias/Amor/Natucura">Natucura</button>
+                    <button type="button" class="chip fsub" data-s="8" title="categorias/Amor/Orar">Orar</button>
+                    <button type="button" class="chip fsub" data-s="9" title="categorias/Amor/Recreo">Recreo</button>
+                    <button type="button" class="chip fsub" data-s="10" title="categorias/Amor/Risanacion">Risanacion</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-2">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Ayuno</p>
+                  <h3 id="sec-2">Ayuno</h3>
+                  <p class="ttext">Ayunar: otro camino hacia el mismo silencio.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-3">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/BienestarSanitario</p>
+                  <h3 id="sec-3">BienestarSanitario</h3>
+                  <p class="ttext">El bienestar que se cuida.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-4">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Meditacion</p>
+                  <h3 id="sec-4">Meditación</h3>
+                  <p class="ttext">El silencio antes de la risa; estados donde la risa es solo la puerta.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="5" title="categorias/Amor/Meditacion/Dmt">Dmt</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-5">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Meditacion/Dmt</p>
+                  <h3 id="sec-5">Dmt</h3>
+                  <p class="ttext">El estado donde la risa es solo la puerta.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-6">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Natucura</p>
+                  <h3 id="sec-6">Natucura</h3>
+                  <p class="ttext">La naturaleza como consulta.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="7" title="categorias/Amor/Natucura/Desnudos">Desnudos</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-7">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Natucura/Desnudos</p>
+                  <h3 id="sec-7">Desnudos</h3>
+                  <p class="ttext">La desnudez frente a la naturaleza: sin nada entre el cuerpo y el aire.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-8">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Orar</p>
+                  <h3 id="sec-8">Orar</h3>
+                  <p class="ttext">Orar: otro camino hacia el mismo silencio.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-9">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Recreo</p>
+                  <h3 id="sec-9">Recreo</h3>
+                  <p class="ttext">Recreo: el juego que también descansa.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-10">
+                <div class="slide-head">
+                  <p class="spath">categorias/Amor/Risanacion</p>
+                  <h3 id="sec-10">Risanación</h3>
+                  <p class="ttext">Reír a propósito también remienda.</p>
+                </div>
+              </section>
+
+              <!-- ===== CANTO ===== -->
+              <section class="tslide" aria-labelledby="sec-11">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto</p>
+                  <h3 id="sec-11">Canto</h3>
+                  <p class="ttext">La hermana mayor de la risa: la voz que suena antes de la palabra.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="12" title="categorias/Canto/Baños">Baños</button>
+                    <button type="button" class="chip fsub" data-s="13" title="categorias/Canto/Circulodeentonacion">Circulodeentonacion</button>
+                    <button type="button" class="chip fsub" data-s="14" title="categorias/Canto/Gutural">Gutural</button>
+                    <button type="button" class="chip fsub" data-s="15" title="categorias/Canto/Harmonico">Harmonico</button>
+                    <button type="button" class="chip fsub" data-s="16" title="categorias/Canto/Mixes">Mixes</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-12">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto/Baños</p>
+                  <h3 id="sec-12">Baños</h3>
+                  <p class="ttext">Sumergirse en el sonido de otros.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-13">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto/Circulodeentonacion</p>
+                  <h3 id="sec-13">Circulodeentonacion</h3>
+                  <p class="ttext">La ronda que comparte el sonido.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-14">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto/Gutural</p>
+                  <h3 id="sec-14">Gutural</h3>
+                  <p class="ttext">La voz de raíz: grave, cruda, sin filtro. La hermana mayor de la risa.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-15">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto/Harmonico</p>
+                  <h3 id="sec-15">Harmonico</h3>
+                  <p class="ttext">Dos notas con una garganta: el canto armónico.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-16">
+                <div class="slide-head">
+                  <p class="spath">categorias/Canto/Mixes</p>
+                  <h3 id="sec-16">Mixes</h3>
+                  <p class="ttext">Las mezclas donde la risa entra sola.</p>
+                </div>
+              </section>
+
+              <!-- ===== ETC ===== -->
+              <section class="tslide" aria-labelledby="sec-17">
+                <div class="slide-head">
+                  <p class="spath">categorias/Etc</p>
+                  <h3 id="sec-17">Etc</h3>
+                  <p class="ttext">Lo que no cabe en otra rama: la miscelánea que también es tribu.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="18" title="categorias/Etc/Amuletos">Amuletos</button>
+                    <button type="button" class="chip fsub" data-s="19" title="categorias/Etc/Danzárbol">Danzárbol</button>
+                    <button type="button" class="chip fsub" data-s="20" title="categorias/Etc/MasajeBolas">MasajeBolas</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-18">
+                <div class="slide-head">
+                  <p class="spath">categorias/Etc/Amuletos</p>
+                  <h3 id="sec-18">Amuletos</h3>
+                  <p class="ttext">Amuletos que guardan el gesto.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-19">
+                <div class="slide-head">
+                  <p class="spath">categorias/Etc/Danzárbol</p>
+                  <h3 id="sec-19">Danzárbol</h3>
+                  <p class="ttext">Bailar como árbol, con raíces y ramas.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-20">
+                <div class="slide-head">
+                  <p class="spath">categorias/Etc/MasajeBolas</p>
+                  <h3 id="sec-20">MasajeBolas</h3>
+                  <p class="ttext">Masaje con bolas que suelta los nudos.</p>
+                </div>
+              </section>
+
+              <!-- ===== IMAGEN ===== -->
+              <section class="tslide" aria-labelledby="sec-21">
+                <div class="slide-head">
+                  <p class="spath">categorias/Imagen</p>
+                  <h3 id="sec-21">Imagen</h3>
+                  <p class="ttext">El arte que se ve: la paciencia de una imagen.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="22" title="categorias/Imagen/Etc">Etc</button>
+                    <button type="button" class="chip fsub" data-s="23" title="categorias/Imagen/NaturArt">NaturArt</button>
+                    <button type="button" class="chip fsub" data-s="24" title="categorias/Imagen/Stone balancing">Stone balancing</button>
+                    <button type="button" class="chip fsub" data-s="25" title="categorias/Imagen/Transfigurarte">Transfigurarte</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-22">
+                <div class="slide-head">
+                  <p class="spath">categorias/Imagen/Etc</p>
+                  <h3 id="sec-22">Etc · la imagen</h3>
+                  <p class="ttext">Miscelánea de imagen; pendiente de definir.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-23">
+                <div class="slide-head">
+                  <p class="spath">categorias/Imagen/NaturArt</p>
+                  <h3 id="sec-23">NaturArt</h3>
+                  <p class="ttext">Arte que nace del paisaje.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-24">
+                <div class="slide-head">
+                  <p class="spath">categorias/Imagen/Stone balancing</p>
+                  <h3 id="sec-24">Stone balancing</h3>
+                  <p class="ttext">Piedras que se apilan en silencio.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-25">
+                <div class="slide-head">
+                  <p class="spath">categorias/Imagen/Transfigurarte</p>
+                  <h3 id="sec-25">Transfigurarte</h3>
+                  <p class="ttext">Retratos: el gesto que se transfigura en risa.</p>
+                </div>
+              </section>
+
+              <!-- ===== PAISAJES ===== -->
+              <section class="tslide" aria-labelledby="sec-26">
+                <div class="slide-head">
+                  <p class="spath">categorias/Paisajes</p>
+                  <h3 id="sec-26">Paisajes</h3>
+                  <p class="ttext">El origen al aire libre: el paisaje como primera mesa de trabajo.</p>
+                </div>
+              </section>
+
+              <!-- ===== RISA ===== -->
+              <section class="tslide" aria-labelledby="sec-27">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa</p>
+                  <h3 id="sec-27">Risa</h3>
+                  <p class="ttext">Las técnicas del reír a propósito: del gesto pequeño al cuerpo entero.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="28" title="categorias/Risa/Chistes">Chistes</button>
+                    <button type="button" class="chip fsub" data-s="29" title="categorias/Risa/Despertardelarisa">Despertardelarisa</button>
+                    <button type="button" class="chip fsub" data-s="30" title="categorias/Risa/Etc">Etc</button>
+                    <button type="button" class="chip fsub" data-s="31" title="categorias/Risa/Karateka">Karateka</button>
+                    <button type="button" class="chip fsub" data-s="32" title="categorias/Risa/MotoDeLaRisa">MotoDeLaRisa</button>
+                    <button type="button" class="chip fsub" data-s="33" title="categorias/Risa/Pianodelarisa">Pianodelarisa</button>
+                    <button type="button" class="chip fsub" data-s="34" title="categorias/Risa/Rieset">Rieset</button>
+                    <button type="button" class="chip fsub" data-s="35" title="categorias/Risa/Riespira">Riespira</button>
+                    <button type="button" class="chip fsub" data-s="38" title="categorias/Risa/Rievolución">Rievolución</button>
+                    <button type="button" class="chip fsub" data-s="40" title="categorias/Risa/RisaLab">RisaLab</button>
+                    <button type="button" class="chip fsub" data-s="41" title="categorias/Risa/RisaMusic">RisaMusic</button>
+                    <button type="button" class="chip fsub" data-s="42" title="categorias/Risa/RisArt">RisArt</button>
+                    <button type="button" class="chip fsub" data-s="43" title="categorias/Risa/Risodelia">Risodelia</button>
+                    <button type="button" class="chip fsub" data-s="44" title="categorias/Risa/Risodrama">Risodrama</button>
+                    <button type="button" class="chip fsub" data-s="46" title="categorias/Risa/Risodromo">Risodromo</button>
+                    <button type="button" class="chip fsub" data-s="48" title="categorias/Risa/Risoenergetica">Risoenergetica</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-28">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Chistes</p>
+                  <h3 id="sec-28">Chistes</h3>
+                  <p class="ttext">El repertorio del chiste.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-29">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Despertardelarisa</p>
+                  <h3 id="sec-29">Despertardelarisa</h3>
+                  <p class="ttext">El primer estallido tras la práctica: la risa que despierta sola.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-30">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Etc</p>
+                  <h3 id="sec-30">Etc · la risa</h3>
+                  <p class="ttext">Miscelánea de la risa; pendiente de definir.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-31">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Karateka</p>
+                  <h3 id="sec-31">Karateka</h3>
+                  <p class="ttext">La risa que se vuelve cuerpo: el karateka como vehículo del gesto.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-32">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/MotoDeLaRisa</p>
+                  <h3 id="sec-32">MotoDeLaRisa</h3>
+                  <p class="ttext">La risa que se vuelve cuerpo: la moto como vehículo del gesto.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-33">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Pianodelarisa</p>
+                  <h3 id="sec-33">Pianodelarisa</h3>
+                  <p class="ttext">El piano donde la risa se toca en vivo.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-34">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Rieset</p>
+                  <h3 id="sec-34">Rieset</h3>
+                  <p class="ttext">El «chiste-risa»: el eslabón final de Risodelia («hasta el rieset»).</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-35">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Riespira</p>
+                  <h3 id="sec-35">Riespira</h3>
+                  <p class="ttext">La risa unida a la respiración: sacudir el diafragma y afinar el aire antes del estallido.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="36" title="categorias/Risa/Riespira/Riesacudidas">Riesacudidas</button>
+                    <button type="button" class="msub-item" data-s="37" title="categorias/Risa/Riespira/Seseo">Seseo</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 2</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-36">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Riespira/Riesacudidas</p>
+                  <h3 id="sec-36">Riesacudidas</h3>
+                  <p class="ttext">Sacudir el diafragma: risas que llegan al cuerpo en oleadas.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-37">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Riespira/Seseo</p>
+                  <h3 id="sec-37">Seseo</h3>
+                  <p class="ttext">El seseo que ríe: afinar el aire antes del estallido.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-38">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Rievolución</p>
+                  <h3 id="sec-38">Rievolución</h3>
+                  <p class="ttext">La risa como herramienta fácil y potente: convertir el gesto en gesta.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="39" title="categorias/Risa/Rievolución/Sonreiresgratis">Sonreiresgratis</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-39">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Rievolución/Sonreiresgratis</p>
+                  <h3 id="sec-39">Sonreiresgratis</h3>
+                  <p class="ttext">El gesto mínimo: sonreír no cuesta nada.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-40">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/RisaLab</p>
+                  <h3 id="sec-40">RisaLab</h3>
+                  <p class="ttext">La risa bajo lupa: qué dispara, qué se contagia, qué se mide.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-41">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/RisaMusic</p>
+                  <h3 id="sec-41">RisaMusic</h3>
+                  <p class="ttext">La música de la risa: composición y paisajes sonoros.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-42">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/RisArt</p>
+                  <h3 id="sec-42">RisArt</h3>
+                  <p class="ttext">El bioart sonoro: la risa esculpida, compuesta, tocada con teclas.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-43">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risodelia</p>
+                  <h3 id="sec-43">Risodelia</h3>
+                  <p class="ttext">Delia ríe despacio, como se saborea: la locura apaciguada con la risa.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-44">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risodrama</p>
+                  <h3 id="sec-44">Risodrama</h3>
+                  <p class="ttext">Teatro sin guion: el papel de reír hasta que el papel se vuelve cierto.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="45" title="categorias/Risa/Risodrama/Monstra">Monstra</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-45">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risodrama/Monstra</p>
+                  <h3 id="sec-45">Monstra</h3>
+                  <p class="ttext">El teatro del monstruo: reír el personaje.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-46">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risodromo</p>
+                  <h3 id="sec-46">Risodromo</h3>
+                  <p class="ttext">La pista donde se lanzan los disparos de risa: ráfagas cortas, mecánicas, contagiosas.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="47" title="categorias/Risa/Risodromo/Disparosdelarisa">Disparosdelarisa</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-47">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risodromo/Disparosdelarisa</p>
+                  <h3 id="sec-47">Disparosdelarisa</h3>
+                  <p class="ttext">Ráfagas cortas, mecánicas, contagiosas.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-48">
+                <div class="slide-head">
+                  <p class="spath">categorias/Risa/Risoenergetica</p>
+                  <h3 id="sec-48">Risoenergetica</h3>
+                  <p class="ttext">El cuerpo que ríe que también se enciende; el despertar de la risa.</p>
+                </div>
+              </section>
+
+              <!-- ===== SOBRE MI ===== -->
+              <section class="tslide" aria-labelledby="sec-49">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi</p>
+                  <h3 id="sec-49">Sobre mi</h3>
+                  <p class="ttext">Quién es Rishaman y con quién se sienta a la mesa.</p>
+                </div>
+                <div class="msub dark">
+                  <div class="msub-track">
+                    <button type="button" class="msub-item" data-s="50" title="categorias/Sobre mi/Personajes">Personajes</button>
+                  </div>
+                  <div class="msub-nav">
+                    <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                    <span class="msub-count">1 / 1</span>
+                    <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-50">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi/Personajes</p>
+                  <h3 id="sec-50">Personajes</h3>
+                  <p class="ttext">Los personajes de la familia: quien sostiene el grito y quien sostiene el chiste.</p>
+                </div>
+                <div class="fsubs">
+                  <p class="fsubs-label">Subcarpetas</p>
+                  <div class="fsubs-row">
+                    <button type="button" class="chip fsub" data-s="51" title="categorias/Sobre mi/Personajes/ArmandoGuasa">ArmandoGuasa</button>
+                    <button type="button" class="chip fsub" data-s="52" title="categorias/Sobre mi/Personajes/Etc">Etc</button>
+                    <button type="button" class="chip fsub" data-s="53" title="categorias/Sobre mi/Personajes/Rishaman">Rishaman</button>
+                    <button type="button" class="chip fsub" data-s="54" title="categorias/Sobre mi/Personajes/SpiritPunk">SpiritPunk</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-51">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi/Personajes/ArmandoGuasa</p>
+                  <h3 id="sec-51">ArmandoGuasa</h3>
+                  <p class="ttext">Sostiene el chiste.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-52">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi/Personajes/Etc</p>
+                  <h3 id="sec-52">Etc · personajes</h3>
+                  <p class="ttext">Personajes varios de la familia; pendiente de definir.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-53">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi/Personajes/Rishaman</p>
+                  <h3 id="sec-53">Rishaman</h3>
+                  <p class="ttext">El personaje central: el hombre que hace una vida de la risa.</p>
+                </div>
+              </section>
+
+              <section class="tslide" aria-labelledby="sec-54">
+                <div class="slide-head">
+                  <p class="spath">categorias/Sobre mi/Personajes/SpiritPunk</p>
+                  <h3 id="sec-54">SpiritPunk</h3>
+                  <p class="ttext">Sostiene el grito.</p>
+                </div>
+              </section>
+
+            </div>
+
+            <button class="t-btn t-prev" id="t-prev" type="button" aria-label="Sección anterior">‹</button>
+            <button class="t-btn t-next" id="t-next" type="button" aria-label="Sección siguiente">›</button>
+
+            <div class="tour-bar">
+              <div class="t-dots" id="t-dots"></div>
+              <span class="t-count" id="t-count" aria-live="polite">01 / 54</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VISTA 2 · PER CATEGORIES ================= -->
+        <section class="tab-panel" id="panel-cats" role="tabpanel" aria-label="Per categories">
+          <p class="panel-note">Desplázate hacia abajo: una categoría tras otra, fiel a la estructura de carpetas y subcarpetas — nivel anidado en las ramas pobladas, mini-pasador ‹ › en las de una o dos. «diapositiva N» = su lugar en el tour de 19 de <a href="rishaman.html">rishaman.html</a>.</p>
+
+          <!-- Categoría 01 · Sobre mi -->
+          <section class="cats" id="cat-sobremi">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">01</span>
+              <span class="px-glow glow-a"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 01</p>
+                <h2>Sobre mi</h2>
+                <p class="cint">Quién es Rishaman y con quién se sienta a la mesa.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Personajes</h4>
+                  <p class="fpath">categorias/Sobre mi/Personajes</p>
+                  <p class="cdesc">Los personajes de la familia: quien sostiene el grito y quien sostiene el chiste.</p>
+                  <div class="fmeta"><span class="fmedia none">—</span></div>
+                  <ul class="cnest">
+                    <li class="cnest-item">
+                      <button type="button" class="cnest-name" data-s="53">Rishaman</button>
+                      <p class="cnest-desc">El personaje central: el hombre que hace una vida de la risa. Retrato/avatar de la portada.</p>
+                      <p class="cnest-meta">diapositiva 1 · 📷 reservado</p>
+                    </li>
+                    <li class="cnest-item">
+                      <button type="button" class="cnest-name" data-s="54">SpiritPunk</button>
+                      <p class="cnest-desc">Sostiene el grito.</p>
+                      <p class="cnest-meta">diapositiva 19 · 📷 reservado</p>
+                    </li>
+                    <li class="cnest-item">
+                      <button type="button" class="cnest-name" data-s="51">ArmandoGuasa</button>
+                      <p class="cnest-desc">Sostiene el chiste.</p>
+                      <p class="cnest-meta">diapositiva 19 · 📷 reservado</p>
+                    </li>
+                    <li class="cnest-item">
+                      <button type="button" class="cnest-name" data-s="52">Etc</button>
+                      <p class="cnest-desc">Personajes varios de la familia; pendiente de definir.</p>
+                      <p class="cnest-meta">sin diapositiva aún</p>
+                    </li>
+                  </ul>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 02 · Paisajes -->
+          <section class="cats" id="cat-paisajes">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">02</span>
+              <span class="px-glow glow-b"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 02</p>
+                <h2>Paisajes</h2>
+                <p class="cint">El origen al aire libre: el paisaje como primera mesa de trabajo.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Paisajes</h4>
+                  <p class="fpath">categorias/Paisajes</p>
+                  <p class="cdesc">El paisaje como primera mesa de trabajo; la foto existente sirve de fondo a NaturArt.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositivas 3 · 15</span><span class="fmedia has">✅ foto</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 03 · Risa -->
+          <section class="cats" id="cat-risa">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">03</span>
+              <span class="px-glow glow-c"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 03</p>
+                <h2>Risa</h2>
+                <p class="cint">Las técnicas del reír a propósito: del gesto pequeño al cuerpo entero.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Chistes</h4>
+                  <p class="fpath">categorias/Risa/Chistes</p>
+                  <p class="cdesc">El repertorio del chiste.</p>
+                  <div class="fmeta"><span class="fmedia none">sin diapositiva aún</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Despertardelarisa</h4>
+                  <p class="fpath">categorias/Risa/Despertardelarisa</p>
+                  <p class="cdesc">El primer estallido tras la práctica: la risa que despierta sola.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 10</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Etc · la risa</h4>
+                  <p class="fpath">categorias/Risa/Etc</p>
+                  <p class="cdesc">Miscelánea de la risa; pendiente de definir.</p>
+                  <div class="fmeta"><span class="fmedia none">—</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Karateka</h4>
+                  <p class="fpath">categorias/Risa/Karateka</p>
+                  <p class="cdesc">La risa que se vuelve cuerpo: el karateka como vehículo del gesto.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 10</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>MotoDeLaRisa</h4>
+                  <p class="fpath">categorias/Risa/MotoDeLaRisa</p>
+                  <p class="cdesc">La risa que se vuelve cuerpo: la moto como vehículo del gesto.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 10</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Pianodelarisa</h4>
+                  <p class="fpath">categorias/Risa/Pianodelarisa</p>
+                  <p class="cdesc">El piano donde la risa se toca en vivo.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 14</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Rieset</h4>
+                  <p class="fpath">categorias/Risa/Rieset</p>
+                  <p class="cdesc">El «chiste-risa»: el eslabón final de Risodelia («hasta el rieset»).</p>
+                  <div class="fmeta"><span class="fmedia none">sin diapositiva aún</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Riespira</h4>
+                  <p class="fpath">categorias/Risa/Riespira</p>
+                  <p class="cdesc">La risa unida a la respiración: sacudir el diafragma y afinar el aire antes del estallido.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 6</span><span class="fmedia audio">🎵 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="36" title="categorias/Risa/Riespira/Riesacudidas">Riesacudidas</button>
+                      <button type="button" class="msub-item" data-s="37" title="categorias/Risa/Riespira/Seseo">Seseo</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 2</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>Rievolución</h4>
+                  <p class="fpath">categorias/Risa/Rievolución</p>
+                  <p class="cdesc">La risa como herramienta fácil y potente: convertir el gesto en gesta.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 4</span><span class="fmedia av">📷/🎵 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="39" title="categorias/Risa/Rievolución/Sonreiresgratis">Sonreiresgratis</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 1</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>RisaLab</h4>
+                  <p class="fpath">categorias/Risa/RisaLab</p>
+                  <p class="cdesc">La risa bajo lupa: qué dispara, qué se contagia, qué se mide.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 9</span><span class="fmedia av">📷/🎬 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>RisaMusic</h4>
+                  <p class="fpath">categorias/Risa/RisaMusic</p>
+                  <p class="cdesc">La música de la risa: composición y paisajes sonoros.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 14</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>RisArt</h4>
+                  <p class="fpath">categorias/Risa/RisArt</p>
+                  <p class="cdesc">El bioart sonoro: la risa esculpida, compuesta, tocada con teclas.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 14</span><span class="fmedia av">📷/🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Risodelia</h4>
+                  <p class="fpath">categorias/Risa/Risodelia</p>
+                  <p class="cdesc">Delia ríe despacio, como se saborea: la locura apaciguada con la risa.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 8</span><span class="fmedia has">✅ foto</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Risodrama</h4>
+                  <p class="fpath">categorias/Risa/Risodrama</p>
+                  <p class="cdesc">Teatro sin guion: el papel de reír hasta que el papel se vuelve cierto.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 7</span><span class="fmedia av">📷/🎬 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="45" title="categorias/Risa/Risodrama/Monstra">Monstra</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 1</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>Risodromo</h4>
+                  <p class="fpath">categorias/Risa/Risodromo</p>
+                  <p class="cdesc">La pista donde se lanzan los disparos de risa: ráfagas cortas, mecánicas, contagiosas.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 5</span><span class="fmedia av">🎬/🎵 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="47" title="categorias/Risa/Risodromo/Disparosdelarisa">Disparosdelarisa</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 1</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>Risoenergética</h4>
+                  <p class="fpath">categorias/Risa/Risoenergetica</p>
+                  <p class="cdesc">El cuerpo que ríe que también se enciende; el despertar de la risa.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 10</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 04 · Canto -->
+          <section class="cats" id="cat-canto">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">04</span>
+              <span class="px-glow glow-d"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 04</p>
+                <h2>Canto</h2>
+                <p class="cint">La hermana mayor de la risa: la voz que suena antes de la palabra.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Gutural</h4>
+                  <p class="fpath">categorias/Canto/Gutural</p>
+                  <p class="cdesc">La voz de raíz: grave, cruda, sin filtro. La hermana mayor de la risa.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 11</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Harmonico</h4>
+                  <p class="fpath">categorias/Canto/Harmonico</p>
+                  <p class="cdesc">Dos notas con una garganta: el canto armónico.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 12</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Circulodeentonacion</h4>
+                  <p class="fpath">categorias/Canto/Circulodeentonacion</p>
+                  <p class="cdesc">La ronda que comparte el sonido.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 12</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Baños</h4>
+                  <p class="fpath">categorias/Canto/Baños</p>
+                  <p class="cdesc">Sumergirse en el sonido de otros.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 13</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Mixes</h4>
+                  <p class="fpath">categorias/Canto/Mixes</p>
+                  <p class="cdesc">Las mezclas donde la risa entra sola.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 13</span><span class="fmedia audio">🎵 reservado</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 05 · Imagen -->
+          <section class="cats" id="cat-imagen">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">05</span>
+              <span class="px-glow glow-e"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 05</p>
+                <h2>Imagen</h2>
+                <p class="cint">El arte que se ve: la paciencia de una imagen.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Transfigurarte</h4>
+                  <p class="fpath">categorias/Imagen/Transfigurarte</p>
+                  <p class="cdesc">Retratos: el gesto que se transfigura en risa.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositivas 2 · 14</span><span class="fmedia has">✅ foto</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>NaturArt</h4>
+                  <p class="fpath">categorias/Imagen/NaturArt</p>
+                  <p class="cdesc">Arte que nace del paisaje.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 15</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Stone balancing</h4>
+                  <p class="fpath">categorias/Imagen/Stone balancing</p>
+                  <p class="cdesc">Piedras que se apilan en silencio.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 15</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Etc · la imagen</h4>
+                  <p class="fpath">categorias/Imagen/Etc</p>
+                  <p class="cdesc">Miscelánea de imagen; pendiente de definir.</p>
+                  <div class="fmeta"><span class="fmedia none">—</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 06 · Amor -->
+          <section class="cats" id="cat-amor">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">06</span>
+              <span class="px-glow glow-f"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 06</p>
+                <h2>Amor</h2>
+                <p class="cint">La risa como medicina de campo y la naturaleza como consulta.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Ayuno</h4>
+                  <p class="fpath">categorias/Amor/Ayuno</p>
+                  <p class="cdesc">Ayunar: otro camino hacia el mismo silencio.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 18</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>BienestarSanitario</h4>
+                  <p class="fpath">categorias/Amor/BienestarSanitario</p>
+                  <p class="cdesc">El bienestar que se cuida.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 17</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Meditación</h4>
+                  <p class="fpath">categorias/Amor/Meditacion</p>
+                  <p class="cdesc">El silencio antes de la risa; estados donde la risa es solo la puerta.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 18</span><span class="fmedia photo">📷 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="5" title="categorias/Amor/Meditacion/Dmt">Dmt</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 1</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>Natucura</h4>
+                  <p class="fpath">categorias/Amor/Natucura</p>
+                  <p class="cdesc">La naturaleza como consulta.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 17</span><span class="fmedia photo">📷 reservado</span></div>
+                  <div class="msub">
+                    <div class="msub-track">
+                      <button type="button" class="msub-item" data-s="7" title="categorias/Amor/Natucura/Desnudos">Desnudos</button>
+                    </div>
+                    <div class="msub-nav">
+                      <button type="button" class="msub-btn msub-prev" aria-label="Subcarpeta anterior">‹</button>
+                      <span class="msub-count">1 / 1</span>
+                      <button type="button" class="msub-btn msub-next" aria-label="Subcarpeta siguiente">›</button>
+                    </div>
+                  </div>
+                </article>
+                <article class="ccard">
+                  <h4>Orar</h4>
+                  <p class="fpath">categorias/Amor/Orar</p>
+                  <p class="cdesc">Orar: otro camino hacia el mismo silencio.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 18</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Recreo</h4>
+                  <p class="fpath">categorias/Amor/Recreo</p>
+                  <p class="cdesc">Recreo: el juego que también descansa.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 18</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Risanación</h4>
+                  <p class="fpath">categorias/Amor/Risanacion</p>
+                  <p class="cdesc">Reír a propósito también remienda.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 17</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- Categoría 07 · Etc -->
+          <section class="cats" id="cat-etc">
+            <div class="px" aria-hidden="true">
+              <span class="px-num">07</span>
+              <span class="px-glow glow-g"></span>
+            </div>
+            <div class="wrap cat-in">
+              <div class="cat-head">
+                <p class="eyebrow">Categoría 07</p>
+                <h2>Etc</h2>
+                <p class="cint">Lo que no cabe en otra rama: la miscelánea que también es tribu.</p>
+              </div>
+              <div class="cg">
+                <article class="ccard">
+                  <h4>Danzárbol</h4>
+                  <p class="fpath">categorias/Etc/Danzárbol</p>
+                  <p class="cdesc">Bailar como árbol, con raíces y ramas.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 16</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>MasajeBolas</h4>
+                  <p class="fpath">categorias/Etc/MasajeBolas</p>
+                  <p class="cdesc">Masaje con bolas que suelta los nudos.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 16</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+                <article class="ccard">
+                  <h4>Amuletos</h4>
+                  <p class="fpath">categorias/Etc/Amuletos</p>
+                  <p class="cdesc">Amuletos que guardan el gesto.</p>
+                  <div class="fmeta"><span class="fslide-ref">diapositiva 16</span><span class="fmedia photo">📷 reservado</span></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+        </section>
+
+        <!-- ================= VISTA 3 · WHOLE MAP ================= -->
+        <section class="tab-panel" id="panel-map" role="tabpanel" aria-label="Whole map">
+          <div class="section-head">
+            <p class="eyebrow">Mapa</p>
+            <h2>El mapa de Rishaman</h2>
+            <p>El árbol completo de <code>categorias/</code>, con su estructura de carpetas y subcarpetas. Cada chip salta a la diapositiva de su carpeta.</p>
+          </div>
+          <div class="mtree">
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="1" title="categorias/Amor">Amor</button></h3>
+              <ul class="mnode">
+                <li><button type="button" class="chip" data-s="2" title="categorias/Amor/Ayuno">Ayuno</button></li>
+                <li><button type="button" class="chip" data-s="3" title="categorias/Amor/BienestarSanitario">BienestarSanitario</button></li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="4" title="categorias/Amor/Meditacion">Meditacion</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="5" title="categorias/Amor/Meditacion/Dmt">Dmt</button></li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="6" title="categorias/Amor/Natucura">Natucura</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="7" title="categorias/Amor/Natucura/Desnudos">Desnudos</button></li>
+                  </ul>
+                </li>
+                <li><button type="button" class="chip" data-s="8" title="categorias/Amor/Orar">Orar</button></li>
+                <li><button type="button" class="chip" data-s="9" title="categorias/Amor/Recreo">Recreo</button></li>
+                <li><button type="button" class="chip" data-s="10" title="categorias/Amor/Risanacion">Risanacion</button></li>
+              </ul>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="11" title="categorias/Canto">Canto</button></h3>
+              <ul class="mnode">
+                <li><button type="button" class="chip" data-s="12" title="categorias/Canto/Baños">Baños</button></li>
+                <li><button type="button" class="chip" data-s="13" title="categorias/Canto/Circulodeentonacion">Circulodeentonacion</button></li>
+                <li><button type="button" class="chip" data-s="14" title="categorias/Canto/Gutural">Gutural</button></li>
+                <li><button type="button" class="chip" data-s="15" title="categorias/Canto/Harmonico">Harmonico</button></li>
+                <li><button type="button" class="chip" data-s="16" title="categorias/Canto/Mixes">Mixes</button></li>
+              </ul>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="17" title="categorias/Etc">Etc</button></h3>
+              <ul class="mnode">
+                <li><button type="button" class="chip" data-s="18" title="categorias/Etc/Amuletos">Amuletos</button></li>
+                <li><button type="button" class="chip" data-s="19" title="categorias/Etc/Danzárbol">Danzárbol</button></li>
+                <li><button type="button" class="chip" data-s="20" title="categorias/Etc/MasajeBolas">MasajeBolas</button></li>
+              </ul>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="21" title="categorias/Imagen">Imagen</button></h3>
+              <ul class="mnode">
+                <li><button type="button" class="chip" data-s="22" title="categorias/Imagen/Etc">Etc</button></li>
+                <li><button type="button" class="chip" data-s="23" title="categorias/Imagen/NaturArt">NaturArt</button></li>
+                <li><button type="button" class="chip" data-s="24" title="categorias/Imagen/Stone balancing">Stone balancing</button></li>
+                <li><button type="button" class="chip" data-s="25" title="categorias/Imagen/Transfigurarte">Transfigurarte</button></li>
+              </ul>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="26" title="categorias/Paisajes">Paisajes</button></h3>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="27" title="categorias/Risa">Risa</button></h3>
+              <ul class="mnode">
+                <li><button type="button" class="chip" data-s="28" title="categorias/Risa/Chistes">Chistes</button></li>
+                <li><button type="button" class="chip" data-s="29" title="categorias/Risa/Despertardelarisa">Despertardelarisa</button></li>
+                <li><button type="button" class="chip" data-s="30" title="categorias/Risa/Etc">Etc</button></li>
+                <li><button type="button" class="chip" data-s="31" title="categorias/Risa/Karateka">Karateka</button></li>
+                <li><button type="button" class="chip" data-s="32" title="categorias/Risa/MotoDeLaRisa">MotoDeLaRisa</button></li>
+                <li><button type="button" class="chip" data-s="33" title="categorias/Risa/Pianodelarisa">Pianodelarisa</button></li>
+                <li><button type="button" class="chip" data-s="34" title="categorias/Risa/Rieset">Rieset</button></li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="35" title="categorias/Risa/Riespira">Riespira</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="36" title="categorias/Risa/Riespira/Riesacudidas">Riesacudidas</button></li>
+                    <li><button type="button" class="chip" data-s="37" title="categorias/Risa/Riespira/Seseo">Seseo</button></li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="38" title="categorias/Risa/Rievolución">Rievolución</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="39" title="categorias/Risa/Rievolución/Sonreiresgratis">Sonreiresgratis</button></li>
+                  </ul>
+                </li>
+                <li><button type="button" class="chip" data-s="40" title="categorias/Risa/RisaLab">RisaLab</button></li>
+                <li><button type="button" class="chip" data-s="41" title="categorias/Risa/RisaMusic">RisaMusic</button></li>
+                <li><button type="button" class="chip" data-s="42" title="categorias/Risa/RisArt">RisArt</button></li>
+                <li><button type="button" class="chip" data-s="43" title="categorias/Risa/Risodelia">Risodelia</button></li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="44" title="categorias/Risa/Risodrama">Risodrama</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="45" title="categorias/Risa/Risodrama/Monstra">Monstra</button></li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="46" title="categorias/Risa/Risodromo">Risodromo</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="47" title="categorias/Risa/Risodromo/Disparosdelarisa">Disparosdelarisa</button></li>
+                  </ul>
+                </li>
+                <li><button type="button" class="chip" data-s="48" title="categorias/Risa/Risoenergetica">Risoenergetica</button></li>
+              </ul>
+            </div>
+
+            <div class="mcat">
+              <h3><button type="button" class="chip" data-s="49" title="categorias/Sobre mi">Sobre mi</button></h3>
+              <ul class="mnode">
+                <li>
+                  <span class="mrow"><button type="button" class="chip" data-s="50" title="categorias/Sobre mi/Personajes">Personajes</button></span>
+                  <ul class="mnode">
+                    <li><button type="button" class="chip" data-s="51" title="categorias/Sobre mi/Personajes/ArmandoGuasa">ArmandoGuasa</button></li>
+                    <li><button type="button" class="chip" data-s="52" title="categorias/Sobre mi/Personajes/Etc">Etc</button></li>
+                    <li><button type="button" class="chip" data-s="53" title="categorias/Sobre mi/Personajes/Rishaman">Rishaman</button></li>
+                    <li><button type="button" class="chip" data-s="54" title="categorias/Sobre mi/Personajes/SpiritPunk">SpiritPunk</button></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER / CRÉDITOS ============ -->
+<footer>
+  <div class="wrap">
+    <button class="credits-toggle" type="button" aria-expanded="false" aria-controls="credits-body">
+      Créditos y licencias <span class="arrow" aria-hidden="true">▾</span>
+    </button>
+    <div class="credits-body" id="credits-body" hidden>
+      <p>Tour extendido de Rishaman en tres vistas — diapositivas, categorías y mapa — con una diapositiva por cada carpeta de <code>categorias/</code>. Las fotos de <b>categorias/</b> son personales (Transfigurarte, Risodelia, Paisajes); el resto de ramas quedan como lugar reservado hasta tener su media.</p>
+      <ul class="credits">
+        <li>🖼️ Fotos de <code>categorias/</code> — personales</li>
+        <li>🎨 Identidad Risa liberada — logo 15-guino, familia de apps · flove</li>
+        <li>🌐 Estándar flove §13 — página de un solo archivo, sin dependencias</li>
+      </ul>
+    </div>
+    <p class="foot-note">Risa liberada · un pequeño ejercicio para soltar. Rishaman · el oficio del reír, en detalle. Idioma: español.</p>
+  </div>
+</footer>
+
+<script src="banco.js"></script>
+<script>
+(function(){
+  "use strict";
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============ SLIDER GENERAL · Full slides ============ */
+  const track = document.getElementById('tour-track');
+  const slides = Array.from(track.querySelectorAll('.tslide'));
+  const total = slides.length;
+  let i = 0;
+
+  const prevBtn = document.getElementById('t-prev');
+  const nextBtn = document.getElementById('t-next');
+  const dotsBox = document.getElementById('t-dots');
+  const countEl = document.getElementById('t-count');
+  const tabFull = document.getElementById('tab-full');
+
+  slides.forEach((s, k) => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.dataset.dot = k + 1;
+    d.setAttribute('aria-label', 'Ir a la sección ' + (k + 1));
+    d.addEventListener('click', () => go(k, true));
+    dotsBox.appendChild(d);
+  });
+
+  function render(){
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    countEl.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    [...dotsBox.children].forEach((d, k) => d.setAttribute('aria-current', k === i ? 'true' : 'false'));
+  }
+  function go(n, user){
+    i = (n + total) % total;
+    render();
+  }
+  prevBtn.addEventListener('click', () => go(i - 1, true));
+  nextBtn.addEventListener('click', () => go(i + 1, true));
+  track.addEventListener('keydown', e => {
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); go(i - 1, true); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); go(i + 1, true); }
+  });
+  if(reduce) track.style.transition = 'none';
+
+  /* ============ CHIPS · saltan a la diapositiva de su carpeta ============ */
+  const panelFull = document.getElementById('panel-full');
+  document.querySelectorAll('[data-s]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      tabFull.checked = true;
+      go(Number(chip.dataset.s) - 1, true);
+      panelFull.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+    });
+  });
+
+  /* ============ MINI-PASADOR · 1–2 subcarpetas ============ */
+  document.querySelectorAll('.msub').forEach(msub => {
+    const mtrack = msub.querySelector('.msub-track');
+    const mitems = Array.from(msub.querySelectorAll('.msub-item'));
+    const prevBtn = msub.querySelector('.msub-prev');
+    const nextBtn = msub.querySelector('.msub-next');
+    const countEl = msub.querySelector('.msub-count');
+    const n = mitems.length;
+    if(n < 2){
+      prevBtn.remove();
+      nextBtn.remove();
+      countEl.textContent = mitems[0] ? mitems[0].textContent : '';
+      return;
+    }
+    let k = 0;
+    const mrender = () => {
+      mtrack.style.transform = 'translateX(-' + (k * 100) + '%)';
+      countEl.textContent = (k + 1) + ' / ' + n;
+    };
+    prevBtn.addEventListener('click', () => { k = (k - 1 + n) % n; mrender(); });
+    nextBtn.addEventListener('click', () => { k = (k + 1) % n; mrender(); });
+    mrender();
+  });
+
+  /* ============ PER CATEGORIES · parallax ============ */
+  const pxLayers = Array.from(document.querySelectorAll('.cats .px'));
+  function parallax(){
+    if(reduce) return;
+    const vh = window.innerHeight;
+    pxLayers.forEach(layer => {
+      const r = layer.parentElement.getBoundingClientRect();
+      if(r.bottom < -200 || r.top > vh + 200) return;
+      const delta = ((r.top + r.bottom) / 2 - vh / 2) * -0.16;
+      layer.style.transform = 'translate3d(0,' + delta.toFixed(1) + 'px,0)';
+    });
+  }
+  let ticking = false;
+  function requestPx(){
+    if(!ticking){ ticking = true; requestAnimationFrame(() => { ticking = false; parallax(); }); }
+  }
+  if(pxLayers.length){
+    addEventListener('scroll', requestPx, {passive:true});
+    addEventListener('resize', requestPx);
+    document.querySelectorAll('.tab-ctl').forEach(r => r.addEventListener('change', requestPx));
+    requestPx();
+  }
+
+  /* ============ FOOTER · créditos desplegables ============ */
+  const credToggle = document.querySelector('.credits-toggle');
+  const credBody = document.getElementById('credits-body');
+  if(credToggle && credBody){
+    credToggle.addEventListener('click', () => {
+      const open = credBody.hidden;
+      credBody.hidden = !open;
+      credToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+})();
+</script>
+<script src="../appy/flove-theme.js"></script>
+</body>
+</html>

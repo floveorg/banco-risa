@@ -33,7 +33,7 @@ jobs:
           git config user.name 'banco-risa bot'
           git config user.email 'bot@users.noreply.github.com'
           if ! git diff --quiet; then
-            git add banco.json state/
+            git add risa.json state/
             git commit -m "banco: publish/moderate (automated)"
             git pull --rebase origin main
             git push origin HEAD:main

@@ -279,13 +279,13 @@ async function handleAction(a, tg, cfg, queue, drafts, banco) {
   return { banco, dirty: false };
 }
 
-// Persist banco.json + state/ and push, so the web sees new clips in real time
+// Persist risa.json + state/ and push, so the web sees new clips in real time
 // instead of waiting for the workflow's own commit step.
 async function commitState() {
   const { stdout } = await run('git', ['status', '--porcelain']);
   if (!stdout.trim()) return;
   const who = ['-c', 'user.name=banco-risa bot', '-c', 'user.email=bot@users.noreply.github.com'];
-  await run('git', [...who, 'add', 'banco.json', 'state/']);
+  await run('git', [...who, 'add', 'risa.json', 'state/']);
   await run('git', [...who, 'commit', '-m', 'banco: publish/moderate (automated)']);
   const token = process.env.GITHUB_TOKEN;
   const remote = token
@@ -310,7 +310,7 @@ async function main() {
   let offset = parseInt(await readFile(p('state/offset.txt'), 'utf8'), 10) || 0;
   let queue = await readJSON('state/queue.json', {});
   let drafts = await readJSON('state/drafts.json', {});
-  let banco = await readJSON('banco.json', []);
+  let banco = await readJSON('risa.json', []);
 
   const startedAt = Date.now();
   while (Date.now() - startedAt < LOOP_MAX_MS) {
@@ -331,7 +331,7 @@ async function main() {
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
           await writeJSON('state/drafts.json', drafts);
-          await writeJSON('banco.json', banco);
+          await writeJSON('risa.json', banco);
           await bestEffort(commitState());
         }
       } catch (err) {
@@ -350,7 +350,7 @@ async function main() {
 
   await writeJSON('state/queue.json', queue);
   await writeJSON('state/drafts.json', drafts);
-  await writeJSON('banco.json', banco);
+  await writeJSON('risa.json', banco);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());
 }

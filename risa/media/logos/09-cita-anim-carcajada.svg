@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" viewBox="0 0 200 200"><style>@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+  .g{transform-box:fill-box;transform-origin:center;animation:wob .5s ease-in-out infinite alternate}
+  @keyframes wob{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+  .s{transform-box:fill-box;transform-origin:center;animation:jelly 1s ease-in-out infinite}
+  @keyframes jelly{0%,100%{transform:scale(1)}50%{transform:scale(1.12,1.3)}}
+</style><g class="g">
+  <g class="q"><text x="34" y="146" font-family="Georgia, 'Liberation Serif', 'DejaVu Serif', serif" font-size="190" fill="#141414">“</text></g>
+  <path class="s" pathLength="100" d="M72,148 Q100,174 128,148" fill="none" stroke="#f4501e" stroke-width="11" stroke-linecap="round"/>
+</g></svg>

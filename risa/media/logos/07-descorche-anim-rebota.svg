@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="400" viewBox="0 0 200 200"><style>@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+  .ball{transform-box:fill-box;transform-origin:center;animation:bob 1.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-14px) scale(1.06,.94)}}
+  .d{animation:tw 1.6s ease-in-out infinite}
+  .d1{animation-delay:0s}.d2{animation-delay:.2s}.d3{animation-delay:.4s}
+  @keyframes tw{0%,100%{opacity:.35}50%{opacity:1}}
+  .bowl{transform-box:fill-box;transform-origin:center;animation:bow 1.6s ease-in-out infinite}
+  @keyframes bow{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+</style>
+  <g class="bowl"><path d="M56,110 A48,48 0 0 0 152,110" fill="none" stroke="#141414" stroke-width="13" stroke-linecap="round"/></g>
+  <circle class="d d1" cx="112" cy="88" r="3.5" fill="#141414"/>
+  <circle class="d d2" cx="124" cy="70" r="3.5" fill="#141414"/>
+  <circle class="d d3" cx="138" cy="54" r="3.5" fill="#141414"/>
+  <circle class="ball" cx="156" cy="38" r="12" fill="#f4501e"/>
+</svg>

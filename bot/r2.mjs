@@ -37,7 +37,7 @@ export function signPut({ accessKeyId, secretAccessKey, endpoint, bucket, key, c
   return { amzDate, payloadHash, signature, signedHeaders, scope, uri, host };
 }
 
-// Upload an mp3 to R2 and return its public URL (for banco.json + the channel).
+// Upload an mp3 to R2 and return its public URL (for risa.json + the channel).
 export async function uploadAudio(filePath, { publicId, folder } = {}) {
   const accessKeyId = process.env.R2_ACCESS_KEY_ID;
   const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
@@ -60,6 +60,40 @@ export async function uploadAudio(filePath, { publicId, folder } = {}) {
     method: 'PUT',
     headers: {
       'content-type': 'audio/mpeg',
+      'x-amz-content-sha256': payloadHash,
+      'x-amz-date': amzDate,
+      'authorization': `AWS4-HMAC-SHA256 Credential=${accessKeyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`
+    },
+    body: buf
+  });
+  if (!res.ok) throw new Error('r2 upload failed: ' + res.status + ' ' + (await res.text()));
+
+  return publicBase.replace(/\/+$/, '') + '/' + key;
+}
+
+// Upload any file (image, svg, …) to R2 under an exact key and return its public
+// URL. Same auth as uploadAudio but with an explicit content type and key.
+export async function uploadMedia(filePath, { key, contentType }) {
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  const endpoint = process.env.R2_ENDPOINT;
+  const bucket = process.env.R2_BUCKET;
+  const publicBase = process.env.R2_PUBLIC_BASE;
+  if (!accessKeyId || !secretAccessKey || !endpoint || !bucket || !publicBase) {
+    throw new Error('R2 env missing (need R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_ENDPOINT, R2_BUCKET, R2_PUBLIC_BASE)');
+  }
+  if (!key) throw new Error('key required');
+
+  const buf = await readFile(filePath);
+  const payloadHash = sha256(buf);
+
+  const { amzDate, signature, signedHeaders, scope, uri } =
+    signPut({ accessKeyId, secretAccessKey, endpoint, bucket, key, contentType, payloadHash });
+
+  const res = await fetch(endpoint + uri, {
+    method: 'PUT',
+    headers: {
+      'content-type': contentType,
       'x-amz-content-sha256': payloadHash,
       'x-amz-date': amzDate,
       'authorization': `AWS4-HMAC-SHA256 Credential=${accessKeyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`

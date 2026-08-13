@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="520" viewBox="0 0 200 260">
+  <path d="M52,70 Q100,112 148,70" fill="none" stroke="#141414" stroke-width="11" stroke-linecap="round"/>
+  <path d="M56,96 Q102,138 150,96" fill="none" stroke="#f4501e" stroke-width="11" stroke-linecap="round"/>
+  <path d="M60,122 Q104,164 152,122" fill="none" stroke="#141414" stroke-width="11" stroke-linecap="round"/>
+
+  <text x="100" y="232" font-family="Georgia, 'Liberation Serif', 'DejaVu Serif', serif" font-style="italic" font-size="35"
+        fill="#141414" text-anchor="middle">risa</text>
+  <text x="103" y="254" font-family="Arial, 'DejaVu Sans', sans-serif" font-size="13" font-weight="bold"
+        letter-spacing="6" fill="#f4501e" text-anchor="middle">LIBERADA</text>
+</svg>
