@@ -17,7 +17,7 @@ const readJSON = async (rel, fallback) => {
 const writeJSON = (rel, v) => writeFile(p(rel), JSON.stringify(v, null, 2) + '\n');
 const isoToday = () => new Date().toISOString().slice(0, 10);
 
-const WELCOME_TEXT = 'Actívame para compartir tu risa con el mundo, de forma anónima o con tu identidad.';
+const WELCOME_TEXT = 'Graba tu risa (y dale a enviar), elige visibilidad y descríbela, envía, (moderación), recibe notificación de publicación en @risaliberada y risa.liberada.net.';
 
 const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '✅ Publicar', callback_data: 'ok:' + id },
