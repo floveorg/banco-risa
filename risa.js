@@ -6,6 +6,13 @@
   var LICENSE = 'CC BY-SA 4.0';
   var LICENSE_URL = 'https://creativecommons.org/licenses/by-sa/4.0/deed.es';
 
+  // ¿El clip es un vídeo? (el feed puede agregar risas de otros bots con vídeo).
+  function isVideoClip(c) {
+    if (!c) return false;
+    if (c.video === true || c.kind === 'video' || c.type === 'video') return true;
+    return /\.(mp4|webm|mov|m4v|ogv)$/i.test(String(c.src || ''));
+  }
+
   // Clip publicado {id,t?,name,tags?,src,when?} -> pista del reproductor.
   function buildRisaTracks(risas) {
     if (!Array.isArray(risas)) return [];
@@ -19,6 +26,7 @@
           by: (c.name || 'Anónima') + ' · ' + LICENSE,
           orig: LICENSE_URL,
           origLabel: 'licencia',
+          isVideo: isVideoClip(c),
           clip: c
         };
       });

@@ -16,8 +16,20 @@ test('buildRisaTracks maps fields and composes by/orig from the license', () => 
     by: 'Marta · CC BY-SA 4.0',
     orig: 'https://creativecommons.org/licenses/by-sa/4.0/deed.es',
     origLabel: 'licencia',
+    isVideo: false,
     clip: SAMPLE[0],
   });
+});
+
+test('isVideo marks vídeo feeds by flag, kind or src extension', () => {
+  const tracks = Risa.buildRisaTracks([
+    { name: 'A', src: 'x.mp4' },
+    { name: 'B', video: true, src: 'r2.dev/x' },
+    { name: 'C', kind: 'video', src: 'r2.dev/y' },
+    { name: 'D', src: 'audio/a.mp3' },
+    { name: 'E', src: 'r2.dev/z.webm' },
+  ]);
+  assert.deepEqual(tracks.map(t => t.isVideo), [true, true, true, false, true]);
 });
 
 test('buildRisaTracks derives a title and defaults tags when missing', () => {
