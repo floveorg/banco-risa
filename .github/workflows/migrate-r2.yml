@@ -1,0 +1,35 @@
+name: migrate-r2
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: migrate-r2
+jobs:
+  migrate-r2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Migrate R2 banco-risa prefix to risa
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_BASE: ${{ secrets.R2_PUBLIC_BASE }}
+        run: node bot/migrate-r2.mjs
+      - name: Commit the URL rewrites
+        run: |
+          git config user.name 'risa bot'
+          git config user.email 'bot@users.noreply.github.com'
+          if ! git diff --quiet; then
+            git add risa.json index.html config.json
+            git commit -m "r2: move banco-risa/ prefix to risa/ (URLs rewritten)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "already migrated"
+          fi
