@@ -969,7 +969,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>✅ Compartir por Telegram: botón → deep link <code>t.me/…</code> + QR</li>
               <li>✅ Etiquetas → chips filtrables</li>
               <li>✅ Búsqueda por tag · título · nombre</li>
-              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (tope 1.000 risas reproducibles)</li>
+              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (sin tope total: puede agregar feeds de otros bots)</li>
               <li>Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
             </ol>
             <h5 class="feat-area">B · Bot — el circuito serverless</h5>
@@ -978,7 +978,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>✅ Moderación ✅/🗑 en grupo privado</li>
               <li>✅ ffmpeg → MP3 → R2 → <code>risa.json</code> (prepend) → canal público</li>
               <li>✅ Identidad al subir: palabra + hash / id / anónima</li>
-              <li>Fijar anti-abuso: límites duración/tamaño/frecuencia, copy de confirmación, lenguaje del bot</li>
+              <li>✅ Fijar anti-abuso: 1 min · 10 MB · 5 en cola y 5 al día por remitente (hash), copy de confirmación en español</li>
             </ol>
             <h5 class="feat-area">C · Identidad — authy</h5>
             <ol start="12">
@@ -1002,7 +1002,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <ol start="24">
               <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
               <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
-              <li>Reproducción: <code>/play</code> · <code>/radio</code> (solo los últimos 1.000)</li>
+              <li>Reproducción: <code>/play</code> (recorre el feed, el mismo que la web)</li>
             </ol>
             <p>Lo demás vive en la <b>web</b>: buscar, reclamar (claim), favoritos y editar/borrar tus risas. La identidad (authy) es el puente, no comandos del bot.</p>
             <h5 class="feat-area">F · Lovy — la hermana</h5>
@@ -1770,14 +1770,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     return keys;
   }
 
-  const MAX_RISAS=1000;                       // tope del feed: las últimas 1.000 risas reproducibles
-
   function currentTracks(){
-    const all=window.Risa.buildRisaTracks(risas).slice(0, MAX_RISAS);
+    const all=window.Risa.buildRisaTracks(risas);   // sin tope: puede agregar feeds de otros bots
     let list=all;
     if(selected.size) list=list.filter(t=>trackKeys(t).some(k=>selected.has(k)));
     if(favFilter) list=list.filter(t=>favs.has(t.src));
-    return list;                               // feed completo (últimas 10.000)
+    return list;                               // feed completo, sin tope total
   }
 
   function updateGentePlaylist(){

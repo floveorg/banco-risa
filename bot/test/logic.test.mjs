@@ -76,7 +76,7 @@ test('oversized or overlong media is rejected instead of drafted', () => {
     { update_id: 60, message: { message_id: 1, chat: { id: 777, type: 'private' },
       from: { first_name: 'Marta' }, voice: { file_id: 'BIG', file_size: 11 * 1024 * 1024, duration: 3 } } },
     { update_id: 61, message: { message_id: 2, chat: { id: 777, type: 'private' },
-      from: { first_name: 'Marta' }, voice: { file_id: 'LONG', file_size: 1024, duration: 31 } } },
+      from: { first_name: 'Marta' }, voice: { file_id: 'LONG', file_size: 1024, duration: 61 } } },
     { update_id: 62, message: { message_id: 3, chat: { id: 777, type: 'private' },
       from: { first_name: 'Marta' }, audio: { file_id: 'OK', file_size: 10 * 1024 * 1024, duration: 20 } } },
   ];
@@ -89,10 +89,21 @@ test('oversized or overlong media is rejected instead of drafted', () => {
 test('limits can be overridden per deployer via ctx.limits', () => {
   const mk = (duration) => [{ update_id: 70, message: { message_id: 1, chat: { id: 777, type: 'private' },
     from: { first_name: 'Marta' }, voice: { file_id: 'V', duration } } }];
-  const { actions: strict } = parseUpdates(mk(31), { modGroupId: -1001234, limits: { maxDurationS: 60 } });
+  const { actions: strict } = parseUpdates(mk(61), { modGroupId: -1001234, limits: { maxDurationS: 120 } });
   assert.equal(strict[0].kind, 'draft');
-  const { actions: lenient } = parseUpdates(mk(31), { modGroupId: -1001234, limits: { maxDurationS: 5 } });
+  const { actions: lenient } = parseUpdates(mk(61), { modGroupId: -1001234, limits: { maxDurationS: 30 } });
   assert.deepEqual(lenient[0], { kind: 'draft-invalid', chatId: 777, reason: 'duration' });
+});
+
+test('a video message becomes a draft action too', () => {
+  const updates = [{
+    update_id: 71,
+    message: { message_id: 7, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, video: { file_id: 'VID', duration: 45, file_size: 5 * 1024 * 1024 } }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions[0].kind, 'draft');
+  assert.equal(actions[0].fileId, 'VID');
 });
 
 test('the telegram username rides into the draft action', () => {

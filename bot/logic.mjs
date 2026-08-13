@@ -6,7 +6,7 @@ const APPROVE_WORDS = new Set(['ok', 'si', 'sí', 'yes', 'publicar', 'publish', 
 const REJECT_WORDS = new Set(['no', 'borrar', 'delete', 'rechazar', 'quitar', 'fuera', 'cancelar', 'anular']);
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;  // 10 MB
-const MAX_DURATION_S = 30;                // 30 s — risas cortas (estándar §6)
+const MAX_DURATION_S = 60;                // 1 min — risas cortas (estándar §6)
 export { MAX_FILE_BYTES, MAX_DURATION_S };
 
 // Obfuscated store of the uploader's Telegram id. One-way, salted: the hash is
@@ -90,7 +90,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
     }
     if (msg && msg.chat && msg.chat.type === 'private') {
       const key = String(msg.chat.id);
-      const media = msg.voice || msg.audio;
+      const media = msg.voice || msg.audio || msg.video;
       if (media && media.file_id) {
         if (media.file_size && media.file_size > maxBytes) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'size' });

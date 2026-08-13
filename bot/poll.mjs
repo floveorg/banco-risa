@@ -22,11 +22,11 @@ const readJSON = async (rel, fallback) => {
 const writeJSON = (rel, v) => writeFile(p(rel), JSON.stringify(v, null, 2) + '\n');
 const isoToday = () => new Date().toISOString().slice(0, 10);
 
-const WELCOME_TEXT = 'Graba tu risa (máx. 30 s, hasta 5 al día) y envíala: elige visibilidad, descríbela y pulsa Enviar. Un moderador la revisa y, si entra, la publicamos en @risaliberada y en risa.liberada.net 💛';
+const WELCOME_TEXT = 'Audios o vídeos de máx. 1 min, 10 MB, 5 al día. Graba y envía el tuyo: elige visibilidad, descríbelo y pulsa Enviar. Un moderador lo revisa y, si entra, lo publicamos en @risaliberada y en risa.liberada.net 💛';
 
 // Anti-abuso (frecuencia): máx. risas en cola y máx. por día y remitente. El
 // remitente se identifica por el hash de su id de Telegram (nunca en claro).
-const LIMITS_DEFAULTS = { maxFileBytes: 10 * 1024 * 1024, maxDurationS: 30, maxPending: 2, maxPerDay: 5 };
+const LIMITS_DEFAULTS = { maxFileBytes: 10 * 1024 * 1024, maxDurationS: 60, maxPending: 5, maxPerDay: 5 };
 
 const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '✅ Publicar', callback_data: 'ok:' + id },
@@ -124,7 +124,7 @@ async function publishClip(tg, cfg, q, id, banco) {
   const mp3 = join(tmpdir(), id + '.mp3');
   try {
     await tg.downloadFile(filePath, oga);
-    await run('ffmpeg', ['-y', '-i', oga, '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
+    await run('ffmpeg', ['-y', '-i', oga, '-vn', '-af', 'loudnorm', '-codec:a', 'libmp3lame', '-q:a', '4', mp3]);
     const src = await uploadAudio(mp3, { publicId: id, folder: cfg.r2Folder });
     const name = q.name || 'Anónima';
     banco = prependClip(banco, bancoEntry({
@@ -267,7 +267,7 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads
   if (a.kind === 'draft-invalid') {
     const msg = a.reason === 'size'
       ? 'Ups… tu archivo supera el límite de 10 MB. Mándalo en un formato más ligero 💛'
-      : 'Ups… tu risa supera el límite de 30 segundos. Mándala más cortita 💛';
+      : 'Ups… tu risa supera el minuto. Mándala más cortita 💛';
     await bestEffort(tg.sendMessage(a.chatId, msg));
     return { banco, dirty: false };
   }
@@ -318,7 +318,7 @@ async function commitState() {
   if (!stdout.trim()) return;
   const who = ['-c', 'user.name=risa bot', '-c', 'user.email=bot@users.noreply.github.com'];
   await run('git', [...who, 'add', 'risa.json', 'state/']);
-  await run('git', [...who, 'commit', '-m', 'banco: publish/moderate (automated)']);
+  await run('git', [...who, 'commit', '-m', 'risa: publish/moderate (automated)']);
   const token = process.env.GITHUB_TOKEN;
   const remote = token
     ? `https://x-access-token:${token}@github.com/floveorg/risa.git`
