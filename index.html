@@ -216,8 +216,8 @@ img{max-width:100%; display:block}
   padding:10px 16px; box-shadow:0 4px 0 rgba(42,24,16,.16); white-space:nowrap; user-select:none}
 .chip:hover{transform:translateY(-2px)}
 .chip[aria-pressed="true"]{background:var(--marigold)}
-.chip.reciente{background:var(--grape); color:#fff; box-shadow:0 4px 0 rgba(42,24,16,.22)}
-.chip.reciente[aria-pressed="true"]{background:var(--persimmon); color:#fff}
+.chip.reciente{background:transparent; color:var(--ink); box-shadow:none}
+.chip.reciente[aria-pressed="true"]{background:transparent}
 .tag-space.flowing .chip{position:absolute; left:0; top:0}
 @media (prefers-reduced-motion: reduce){.tag-space.flowing .chip{animation:none}}
 
@@ -1592,10 +1592,26 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   recienteBtn.textContent='Tags';
   recienteBtn.setAttribute('aria-pressed','true');
   recienteBtn.addEventListener('click', ()=>{
-    if(space.classList.contains('flowing')) resetTags();
-    else startFlow();
+    if(space.classList.contains('flowing')){
+      // Recientes no colapsa el display: solo deselecciona las etiquetas (y la ★).
+      if(selected.size || favFilter){
+        selected.clear();
+        favFilter=false;
+        refreshTagChips();
+        updateGentePlaylist();
+        syncTagHash();
+      }
+    } else {
+      startFlow();
+    }
   });
   space.appendChild(recienteBtn);
+
+  function refreshTagChips(){
+    [...space.querySelectorAll('.chip[data-tag]')].forEach(b=>{
+      b.setAttribute('aria-pressed', selected.has(b.dataset.tag)?'true':'false');
+    });
+  }
 
   function tagList(tags){ return String(tags||'').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean); }
 
