@@ -172,6 +172,8 @@ img{max-width:100%; display:block}
 .clip-author{font-weight:700}
 .clip-author a{color:var(--grape); text-decoration:none}
 .clip-author a:hover{text-decoration:underline}
+.clip-author a.clip-flove{color:var(--persimmon)}
+.clip-author a.clip-flove::after{content:'↗'; font-size:.62em; vertical-align:super; margin-left:2px}
 .clip-tg{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--grape); cursor:pointer;
   border:1.5px solid var(--grape); border-radius:999px; background:transparent; padding:1px 8px; line-height:1.4}
 .clip-tg:hover{background:var(--marigold)}
@@ -233,30 +235,30 @@ img{max-width:100%; display:block}
 .title-tag[aria-pressed="true"]{color:var(--ink); border-bottom:3px solid var(--marigold)}
 .tag-space.flowing .chip{position:absolute; left:0; top:0}
 @media (prefers-reduced-motion: reduce){.tag-space.flowing .chip{animation:none}}
-.tag-search{display:flex; gap:10px; align-items:center; justify-content:center; max-width:520px; margin:34px auto 0;
-  padding-top:26px; border-top:2.5px dashed rgba(42,24,16,.25); background:transparent}
+.tag-search{display:flex; gap:10px; align-items:center; flex:1; min-width:0; margin:0; padding:0;
+  border:none; background:transparent}
 .tag-search input{flex:1; min-width:0; border:2.5px solid var(--ink); border-radius:999px; padding:9px 16px;
   font-family:var(--disp); font-weight:700; font-size:.95rem; color:var(--ink); background:var(--cream)}
 .tag-search input::placeholder{opacity:.55}
 .tag-search button{border:2.5px solid var(--ink); border-radius:999px; background:var(--persimmon); color:#fff;
   font-family:var(--disp); font-weight:700; font-size:.95rem; line-height:1; padding:11px 18px; cursor:pointer;
-  box-shadow:0 3px 0 rgba(42,24,16,.3); transition:transform .12s}
+  box-shadow:0 3px 0 rgba(42,24,16,.3); transition:transform .12s; flex:none}
 .tag-search button:hover{transform:translateY(-2px)}
 
-/* transport · controles arriba a la derecha del título de la playlist (columna derecha) */
+/* transport + buscador · una fila: controles a la izquierda, buscador a la derecha (columna derecha) */
 .tag-col{display:flex; flex-direction:column; gap:14px; min-width:0}
 .tag-col .section-head{margin-bottom:0}
 .player-col{display:flex; flex-direction:column; gap:14px; min-width:0; justify-content:center; align-items:center}
 .player-col .player{width:100%; max-width:560px}
-.title-head{position:relative; text-align:center}
+.title-head{display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; max-width:560px; text-align:left}
 .title-head h3{max-width:calc(100% - 170px); margin:14px auto 10px; font-size:1.3rem}
-.transport{position:absolute; top:0; right:0; display:flex; gap:10px}
+.transport{display:flex; gap:10px; flex:none}
 .tr-btn{width:23px; height:23px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
   color:var(--ink); font-family:var(--disp); font-size:.7rem; line-height:1; cursor:pointer;
   display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
 .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
-.tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:.55rem}
-@media(max-width:560px){.title-head{padding-top:66px}.title-head h2{max-width:none; margin-top:0}.transport{right:0; left:0; justify-content:center}}
+.tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.6rem; width:69px; height:69px}
+@media(max-width:560px){.title-head{flex-wrap:wrap}}
 
 /* ============ BURBUJAS DE BENEFICIOS ============ */
 .bubble{position:fixed; z-index:49; max-width:230px; background:var(--cream); color:var(--ink);
@@ -517,7 +519,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .chan-link.chan-big{font-size:1.05rem; padding:12px 22px}
 .chan-plus{font-size:1.15rem; line-height:1}
 .chan-propone-row{display:flex; align-items:center; gap:10px}
-.propone-note{font-family:var(--mono); font-size:.8rem; color:var(--persimmon); font-weight:700}
+.propone-note{font-family:var(--mono); font-size:.8rem; color:var(--ink); font-weight:700}
 .promo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:18px 0 4px}
 @media(max-width:820px){.promo-grid{grid-template-columns:1fr}}
 .promo-card{display:flex; flex-direction:column; align-items:center; gap:10px; text-decoration:none; color:var(--ink);
@@ -553,6 +555,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rtab-panel a{color:var(--grape); font-weight:700; text-decoration:none; border-bottom:2px solid var(--marigold)}
 .rtab-panel a:hover{color:var(--persimmon)}
 .rtab-intro{font-size:1.03rem; color:var(--ink); max-width:72ch}
+.feat-area{margin:18px 0 4px; font-family:var(--mono); font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--persimmon)}
+.rtab-panel ol{max-width:74ch}
+.rtab-panel ol li{margin-bottom:5px}
+.circuit-fig{max-width:720px; margin:24px auto 0}
+.circuit-fig svg{width:100%; height:auto; display:block}
 .rtab-more{color:var(--ink-soft); line-height:1.55; max-width:72ch; margin-top:26px; padding-top:16px; border-top:1px dashed rgba(42,24,16,.22)}
 .plan-links{list-style:none; padding:0; display:grid; gap:8px}
 .montar-row{margin-top:24px}
@@ -601,6 +608,10 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
               <button class="tr-btn tr-play" type="button" id="gente-play" aria-label="Reproducir">▶</button>
               <button class="tr-btn" type="button" id="gente-next" aria-label="Pista siguiente">›</button>
             </div>
+            <div class="tag-search">
+              <input id="tag-search-input" type="search" placeholder="Tag, Title, Name…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
+              <button id="tag-search-btn" type="button">Search</button>
+            </div>
           </div>
           <div class="player" id="gente-player">
             <ul class="tracklist"></ul>
@@ -608,18 +619,14 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
               <div class="pg-btns">
                 <button type="button" class="pg-btn pg-prev" aria-label="Página anterior">‹</button>
                 <button type="button" class="chip pg-10" aria-label="Ver 10 más">10+</button>
-                <button type="button" class="chip pg-100" aria-label="Ver las 100 últimas de golpe">100</button>
+                <button type="button" class="chip pg-100" aria-label="Ver 100 más">100</button>
               </div>
               <span class="pg-label" aria-live="polite"></span>
-              <a class="pg-repo" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/" target="_blank" rel="noopener">Ver todas ↗</a>
+              <a class="pg-repo" href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener">Ver todas ↗</a>
             </div>
             <audio preload="none"></audio>
           </div>
         </div>
-      </div>
-      <div class="tag-search">
-        <input id="tag-search-input" type="search" placeholder="Search tag" autocomplete="off" aria-label="Buscar una etiqueta del banco de risas">
-        <button id="tag-search-btn" type="button">Search</button>
       </div>
     </div>
   </section>
@@ -681,16 +688,16 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
       <div class="share-card">
         <h2>Expande la risa 💛</h2>
         <p>Comparte esta página.</p>
-        <div class="qr-cell">
-          <img class="qr-img" src="rievolucio-qr.jpg" alt="Código QR de Risa liberada: escanéalo para abrir la web" width="200" height="191">
-          <button class="qr-share" id="qr-share" type="button" aria-label="Compartir el código QR">↗</button>
-        </div>
         <div class="share-alt" id="share-alt">
           <a id="sh-wa">WhatsApp</a>
           <a id="sh-tg">Telegram</a>
           <button id="sh-otros" type="button">Otros</button>
           <a id="sh-mail">Correo</a>
           <button id="sh-copy" type="button">Copiar enlace</button>
+        </div>
+        <div class="qr-cell">
+          <img class="qr-img" src="rievolucio-qr.jpg" alt="Código QR de Risa liberada: escanéalo para abrir la web" width="200" height="191">
+          <button class="qr-share" id="qr-share" type="button" aria-label="Compartir el código QR">↗</button>
         </div>
         <div id="copy-note" aria-live="polite"></div>
         <div class="chan-grid">
@@ -710,7 +717,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
               <button class="chan-link" id="chan-propone" type="button" aria-expanded="false">
                 <span class="chan-plus">➕</span>
               </button>
-              <p class="propone-note" id="propone-note" hidden>El que la propone se la come... 😉</p>
+              <p class="propone-note" id="propone-note">El que la propone se la come... 😉</p>
             </div>
           </div>
         <div class="btn-center montar-row">
@@ -723,11 +730,12 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 </main>
 
 <!-- ============ BARRAS INFERIORES · ESPIRITUALIDAD · CULTURA · CIENCIA · COMUNIDAD ============ -->
-<nav class="tab-bar" aria-label="Secciones de espiritualidad, comunidad, cultura y ciencia">
+<nav class="tab-bar" aria-label="Secciones de espiritualidad, comunidad, cultura, ciencia y tecnología">
   <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
   <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura">
@@ -750,7 +758,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
                 <div class="pg-btns">
                   <button type="button" class="pg-btn pg-prev" aria-label="Página anterior">‹</button>
                   <button type="button" class="chip pg-10" aria-label="Ver 10 más">10+</button>
-                  <button type="button" class="chip pg-100" aria-label="Ver las 100 últimas de golpe">100</button>
+                  <button type="button" class="chip pg-100" aria-label="Ver 100 más">100</button>
                 </div>
                 <span class="pg-label" aria-live="polite"></span>
               </div>
@@ -812,6 +820,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
       </nav>
     </div>
   </section>
@@ -848,6 +857,35 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
             </div>
           </div>
         </div>
+      <div class="cs-grid hack-row">
+        <div class="cs-text">
+          <p class="eyebrow">Hackeando</p>
+          <h2>¿Te montas la risa con nosotros?</h2>
+          <p>Esto es <b>código abierto</b> y se replica en una tarde: clona el repo, lee el estándar, lanza tu propio bot con tu bucket y tu canal. Y si lo tuyo es inventar —bot, web, IA, diseño—, hay sitio para ti: el repo y el grupo están abiertos, entra, prueba, propón.</p>
+          <div class="linkrow">
+            <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
+            <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
+          </div>
+        </div>
+        <div class="slider" role="region" data-autoplay="5000" aria-roledescription="carrusel" aria-label="Fotos del equipo montando la réplica">
+          <div class="slides">
+            <figure class="slide"><img src="media/replica-01.jpg" alt="Primera foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
+            <figure class="slide"><img src="media/replica-02.jpg" alt="Segunda foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
+            <figure class="slide"><img src="media/replica-03.jpg" alt="Tercera foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
+          </div>
+        </div>
+      </div>
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+        <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+      </nav>
+    </div>
+  </section>
+  <section class="content-section tab-panel" id="tecnologia" hidden>
+    <div class="wrap">
       <div class="tecnologias">
         <div class="section-head">
           <p class="eyebrow">Tecnologías</p>
@@ -879,8 +917,8 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
             <p>Todo el proyecto es código abierto con licencia libre. Elige el nivel que te venga bien: un prompt para un agente, la introducción técnica o el desarrollo completo.</p>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica">
+            <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
             <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
-            <button type="button" class="rtab-btn" data-tab="introduccion" aria-pressed="true">Introducción</button>
             <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
           </nav>
           <div class="rtab-panel" id="agentes" hidden>
@@ -900,7 +938,7 @@ Permisos: leer/escribir el repo del proyecto, instalar dependencias de Node, des
 
 Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Pages, Actions); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.</pre>
           </div>
-          <div class="rtab-panel" id="introduccion">
+          <div class="rtab-panel" id="presentacion">
             <h4>Las piezas</h4>
             <ol>
               <li><b>Repositorio público</b> — código, feed <code>risa.json</code> y la web, todo en un solo repo.</li>
@@ -923,64 +961,139 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <p class="rtab-more">La guía técnica completa — flujos subir/moderar/escuchar, modelo de datos (<code>risa.json</code>), identidad y privacidad, hosting y licencia — vive en el estándar <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">RisaLiberada v1 (estándar del circuito) ↗</a>. Resumen de un párrafo: un bot de Telegram recoge notas de voz, un grupo humano modera, y todo lo aprobado acaba como MP3 en Cloudflare R2 con su entrada en <code>risa.json</code>; la web solo lee el feed.</p>
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
-            <p class="rtab-intro">La versión <b>avanzada</b>: la v2 cambia la arquitectura <b>sin tocar v1</b>, añade formatos nuevos (vídeo corto, fotos) y unos cuantos comandos. Vamos de lo conceptual a lo concreto.</p>
-            <h4>Definición técnica: el addon se vuelve un campo de Lovy</h4>
-            <p><b>Conceptualmente primero.</b> La v2 no es otra web: es la risa convirtiéndose en un <b>campo (field) de Lovy</b>, la app nueva que acoge el circuito compartido. El contrato se declara en dos archivos por app:</p>
-            <ul>
-              <li><b><code>flove.json</code></b> — el feed compartido: cada app publica su campo (risas, vídeos, fotos) en una lista versionada con la misma forma que <code>risa.json</code>.</li>
-              <li><b><code>flovebot.json</code></b> — el bot compartido: qué app, qué canal, qué grupo de moderación y qué bucket R2 usa cada addon.</li>
-            </ul>
-            <p><b>Compatibilidad perfecta hacia atrás.</b> El código v1 — el bot de risa, <code>risa.json</code>, la web — no se toca: un addon viejo sigue publicando exactamente igual, y la v2 convive leyendo el mismo feed. De «una web» se pasa a «un sistema replicable» sin romper nada de lo ya publicado.</p>
-            <h4>Mejoras que propone la v2</h4>
-            <ul>
-              <li><b>Origen oscurecido = prueba de autoría.</b> Con ①+② el ID se guarda como <b>hash</b> y ese hash es el <i>handle</i> en la web; deja de ser un mero filtro de playlist y se vuelve tu llave de autor.</li>
-              <li><b>Reclamar autoría (<i>Claim it</i>).</b> Una risa sin reclamar se vincula a un perfil con nonce + confirmación por DM; el id que confirma debe ser el mismo que subió el clip.</li>
-              <li><b>Etiquetas con dueño.</b> Una etiqueta puede ser <b>propia</b>: reclamable, como las risas. Quien la reclamó aparece en su chip y en su feed.</li>
-              <li><b>URLs de autor (<code>/username#tag</code>, con Railway).</b> El backend v2 resuelve <code>/username</code> en la página de cada autor — <b>mis risas</b> y <b>favoritas</b> — y la etiqueta reclamada queda como ancla <code>#tag</code>. La web v1 sigue estática; estas rutas las sirve el backend v2 (Railway + libSQL) con authy central.</li>
-              <li><b>Perfil de autor.</b> Cada autor tiene su página <code>users/&lt;key&gt;/</code>: sus risas, sus favoritos y su nivel <code>authy</code>.</li>
-              <li><b>Favoritos ❤️ públicos / ⭐ privados.</b> Los públicos se ven en tu página de autor; los privados son solo tuyos, según tu nivel authy.</li>
-              <li><b>Authy L1–L5.</b> Identidad canal-agnóstica: anónima · presencia · verificada · +teléfono · +biometría.</li>
-              <li><b>Multi-app.</b> Lovy (audio y vídeo ≤ 1 min) y las apps que vengan corren sobre el mismo esqueleto, cada una con su campo en <code>flove.json</code>.</li>
-              <li><b>Etiquetas en la web.</b> Chips que filtran (¡con <code>#etiqueta</code> en la URL!), tag cloud, risas relacionadas, feed por etiqueta y estadísticas.</li>
-            </ul>
-            <h4>El flujo v2</h4>
-            <p>El circuito compartido con la identidad oscurecida en el centro:</p>
-            <figure>
-              <img src="flove-v2-thread.png" alt="Diagrama de secuencia de la versión 2 (flove-v2): identidad oscurecida como handle, reclamación de autoría y favoritos" loading="lazy">
-              <figcaption>Flujo v2: un bot central, varios bots subordinados, claim y favoritos</figcaption>
+            <p class="rtab-intro">El desarrollo es una <b>lista única de features</b>, agrupadas por área y ordenadas de la más simple a la más compleja. Las ya hechas llevan ✅; las demás se van tachando a medida que se hacen. Cuando una rama desborda risa, enlazamos al plan de flove correspondiente.</p>
+            <h4>El desarrollo, feature a feature</h4>
+            <h5 class="feat-area">A · Web — el escaparate</h5>
+            <ol start="1">
+              <li>✅ Feed real: la playlist y «Últimas risas» leen de <code>risa.json</code> (un solo json)</li>
+              <li>✅ Compartir por Telegram: botón → deep link <code>t.me/…</code> + QR</li>
+              <li>✅ Etiquetas → chips filtrables</li>
+              <li>✅ Búsqueda por tag · título · nombre</li>
+              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (tope 10.000)</li>
+              <li>Modal «Claim it» en la web: palabra en rojo + affordance (i18n/es)</li>
+            </ol>
+            <h5 class="feat-area">B · Bot — el circuito serverless</h5>
+            <ol start="7">
+              <li>✅ Ingesta por Telegram (nota de voz), cola, offset, idempotencia</li>
+              <li>✅ Moderación ✅/🗑 en grupo privado</li>
+              <li>✅ ffmpeg → MP3 → R2 → <code>risa.json</code> (prepend) → canal público</li>
+              <li>✅ Identidad al subir: palabra + hash / id / anónima</li>
+              <li>Fijar anti-abuso: límites duración/tamaño/frecuencia, copy de confirmación, lenguaje del bot</li>
+            </ol>
+            <h5 class="feat-area">C · Identidad — authy</h5>
+            <ol start="12">
+              <li>Núcleo <code>authy.js</code> canal-agnóstico + driver Telegram (email/phone = stubs)</li>
+              <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
+              <li><code>key</code> inmutable + palabra editable (slug first-wins; <code>/name</code> en DM, API en el backend)</li>
+              <li>Origen oscurecido: hash salado = handle de autor (nunca @username)</li>
+              <li>Claim (L2→L3): nonce one-shot + confirmación por DM (mismo id que subió)</li>
+              <li>Filespace <code>central/users/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>)</li>
+              <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
+              <li>Opt-in <code>tg_public</code> (enlace a t.me, nunca automático)</li>
+            </ol>
+            <h5 class="feat-area">D · Perfil y páginas de autor (authy + flove.json)</h5>
+            <ol start="20">
+              <li>Página de autor <code>flove.org/users/&lt;key&gt;/</code> — sale del filespace de <code>flove.json</code>, allowlist + network-first</li>
+              <li>Perfil único de flove — agrega tus risas + etiquetas favoritas + tu feed; autenticado por el match de Telegram</li>
+              <li>Favoritos ❤️ públicos / ⭐ privados según nivel authy</li>
+              <li>Tope de esta rama → las contribuciones y el feed del perfil se viven desde la app <b>appy</b> (enlace a esa rama)</li>
+            </ol>
+            <h5 class="feat-area">E · Comandos del bot — lo más simple de cada categoría va primero</h5>
+            <ol start="24">
+              <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · luego <code>/name</code> · <code>/claim</code> · <code>/history</code> · <code>/status</code> · <code>/queue</code></li>
+              <li>Exploración: <code>/latest</code> · <code>/random</code> · luego <code>/search</code> unificado · <code>/trending</code> · <code>/now</code> · <code>/since</code></li>
+              <li>Reproducción: <code>/play</code> · luego <code>/radio</code> · <code>/today</code></li>
+              <li>Control del autor: <code>/draft</code> · luego <code>/retake</code> · <code>/edit</code> · <code>/del</code></li>
+              <li>Moderación/admin: <code>/mute</code> (+strikes) · luego <code>/pin</code> · <code>/mirror</code> · <code>/report</code> · <code>/rules</code></li>
+              <li>Social: <code>/fave</code> · luego <code>/echo</code> · <code>/totem</code> · <code>/alias</code> · <code>/swap</code> · <code>/trust</code></li>
+            </ol>
+            <h5 class="feat-area">F · Lovy — la hermana</h5>
+            <ol start="30">
+              <li>Multi-app: mismo esqueleto, cada app con su campo</li>
+              <li>LovyBot + bucket R2 propio + <code>central/apps/lovy/</code> (misma mecánica)</li>
+              <li>Vídeo ≤ 1 min con thumbnail y reproducción inline</li>
+              <li><code>lovy.json</code> + <code>central/users/</code> compartido (autor agrega risa + lovy)</li>
+              <li>«risas» como subcampo de uno de los 5 campos de lovy (circuito de los 3 jsons)</li>
+              <li>Cadenas colaborativas: <code>/chain</code> · <code>/seeds</code> · <code>/cameo</code> · <code>/lore</code> · <code>/reprise</code></li>
+            </ol>
+            <h5 class="feat-area">G · flovebot — el paraguas</h5>
+            <ol start="36">
+              <li>Un bot para todas: <code>/start</code> · <code>/app</code>; identidad authy compartida (claim una vez, visible en todas)</li>
+              <li>Búsqueda cross-app + reproducción en-chat</li>
+              <li><code>/vault</code> + <code>/passport</code>: recuperación y portabilidad de identidad</li>
+              <li><code>/heritage</code>: herencia/transferencia de cuenta con grafo y red de avales</li>
+              <li>Reacciones del canal como señal (selección HTML)</li>
+            </ol>
+            <h5 class="feat-area">H · Backend — Railway + libSQL (tiempo real)</h5>
+            <ol start="41">
+              <li>Tiempo real: webhooks en vez del cron + rate-limit server-side</li>
+              <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> + tablas libSQL + import del filespace</li>
+              <li>Notificaciones DM al aprobar/denegar</li>
+              <li>Programación de publicación</li>
+              <li>Feed cross-app vía endpoint central</li>
+            </ol>
+            <h5 class="feat-area">I · Confianza y moderación asistida</h5>
+            <ol start="46">
+              <li>Claims firmados por browsy (sin re-derivación de claves)</li>
+              <li>IA para moderación: transcripción + flagging, dailies, rachas, top/trending reales</li>
+              <li>Mini App + inline mode de Telegram</li>
+            </ol>
+            <h5 class="feat-area">J · Integración con flove</h5>
+            <ol start="49">
+              <li>✅ Enriquecimiento de <code>flove.json</code> (fail-silent): la web lo llama sin interrumpirse jamás; al claim tu palabra enlaza al perfil único de flove donde ves tus risas y activas Lovy ya autenticado</li>
+              <li>Addons que se activan sin romper lo ya publicado: un flag en <code>risa.json</code> hace de fallback y de toggle desde la interfaz</li>
+              <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
+              <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
+            </ol>
+            <p class="rtab-more">El desarrollo continúa en otras ramas de flove: <b>appy</b> (perfil y contribuciones), <b>browsy</b> (keys, trust y claims firmados), <b>central-backend</b> (Railway + FastAPI + libSQL) y la <b>feature matrix</b> + roadmap.</p>
+            <h4>El circuito entre los 3 jsons</h4>
+            <figure class="circuit-fig">
+              <svg viewBox="0 0 760 430" role="img" aria-label="Circuito entre los tres json: flove.json, el pariente, facilita y enriquece a risa.json y lovy.json, sus hermanas; Lovy agrega risas como subcampo de uno de sus cinco campos">
+                <defs>
+                  <marker id="jarrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#2a1810"/>
+                  </marker>
+                </defs>
+                <style>
+                  .jmono{font-family:'Space Mono',ui-monospace,monospace; font-weight:700; font-size:17px; fill:#2a1810}
+                  .jbody{font-family:'Figtree',system-ui,sans-serif; font-size:12px; fill:#2a1810}
+                  .jsmall{font-family:'Figtree',system-ui,sans-serif; font-size:11px; fill:#2a1810}
+                  .jline{stroke:#2a1810; stroke-width:2; fill:none; marker-end:url(#jarrow)}
+                  .jlbl{font-family:'Figtree',system-ui,sans-serif; font-size:11px; font-weight:600; fill:#2a1810}
+                </style>
+                <rect x="280" y="22" width="200" height="86" rx="20" fill="#ffb020" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="380" y="58" text-anchor="middle" class="jmono">flove.json</text>
+                <text x="380" y="82" text-anchor="middle" class="jsmall">el pariente · facilita y enriquece</text>
+                <path class="jline" d="M 330 110 L 150 242"/>
+                <path class="jline" d="M 430 110 L 610 242"/>
+                <rect x="90" y="118" width="150" height="20" rx="9" fill="#fff8ee" stroke="#2a1810" stroke-width="1.2"/>
+                <text x="165" y="132" text-anchor="middle" class="jlbl">facilita y enriquece</text>
+                <rect x="610" y="118" width="150" height="20" rx="9" fill="#fff8ee" stroke="#2a1810" stroke-width="1.2"/>
+                <text x="685" y="132" text-anchor="middle" class="jlbl">facilita y enriquece</text>
+                <rect x="40" y="242" width="225" height="148" rx="20" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="152" y="278" text-anchor="middle" class="jmono" fill="#ff5630">risa.json</text>
+                <text x="152" y="302" text-anchor="middle" class="jbody">subida → moderación → MP3 (R2)</text>
+                <text x="152" y="324" text-anchor="middle" class="jbody">→ risa.json → la web</text>
+                <text x="152" y="352" text-anchor="middle" class="jsmall">el feed de risa liberada</text>
+                <rect x="495" y="242" width="225" height="148" rx="20" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="607" y="278" text-anchor="middle" class="jmono" fill="#5b2fa0">lovy.json</text>
+                <text x="607" y="302" text-anchor="middle" class="jbody">5 campos · uno acoge a su hermana:</text>
+                <rect x="546" y="314" width="122" height="36" rx="18" fill="#5b2fa0"/>
+                <text x="607" y="338" text-anchor="middle" class="jmono" fill="#fff" font-size="14">«risas»</text>
+                <text x="607" y="370" text-anchor="middle" class="jsmall">subcampo de uno de sus 5 campos</text>
+                <path class="jline" d="M 265 315 L 495 315"/>
+                <rect x="282" y="286" width="196" height="22" rx="10" fill="#fff8ee" stroke="#2a1810" stroke-width="1.2"/>
+                <text x="380" y="301" text-anchor="middle" class="jlbl">«risas» = subcampo dentro de lovy</text>
+              </svg>
+              <figcaption>flove.json (el pariente) facilita y enriquece a risa.json y lovy.json — sus hermanas; Lovy agrega «risas» como subcampo de uno de sus 5 campos.</figcaption>
             </figure>
-            <h4>Formatos nuevos en la v2</h4>
+            <h4>flove.json · cómo enriquece sin interrumpir</h4>
+            <p>Risa es autosuficiente: la web carga siempre su propio <code>risa.json</code>. Después, y solo después, hace una llamada <b>opcional</b> a <code>flove.json</code> que enriquece cuando responde y calla cuando no:</p>
             <ul>
-              <li><b>Vídeo corto.</b> Risas en vídeo de hasta 1 minuto: mismo flujo (subida → moderación → feed → web), con <b>thumbnail</b> en moderación y <b>reproducción inline</b> en la web. Lovy ya acepta vídeo; la v2 lo publica y lo sirve.</li>
-              <li><b>Fotos.</b> Risas que no suenan: una foto con su pie. Se sirven en la web como <b>tarjeta</b> (imagen + autor + etiquetas) dentro del mismo feed, y entran por el mismo canal y grupo.</li>
-            </ul>
-            <h4>Comandos (v2)</h4>
-            <ul>
-              <li><b><code>/play</code></b> — reproduce una risa al azar, o una de una etiqueta concreta, en el propio chat.</li>
-              <li><b><code>/radio</code></b> — racha de risas en modo radio: una detrás de otra sin tener que pedir.</li>
-              <li><b><code>/search</code></b> — busca en el feed por etiqueta o palabra y devuelve enlaces a la web.</li>
-              <li><b><code>/chain</code></b> — encadena una risa a otra (esta continúa a aquella), construyendo hilos.</li>
-              <li><b><code>/mis-risas</code></b> — tu página: devuelve el enlace a <code>/username</code> con tus risas publicadas.</li>
-              <li><b><code>/favoritas</code></b> — alterna un favorito ❤️ público o ⭐ privado desde el chat, sin abrir la web.</li>
-              <li><b><code>/claim</code></b> — reclama la autoría de una etiqueta o risa sin reclamar (nonce + DM).</li>
-              <li><b><code>/perfil</code></b> — ver y editar tu nombre público y tu nivel authy.</li>
-            </ul>
-            <h4>Código y alternativas</h4>
-            <ul>
-              <li><b>Bot</b> — Node.js sin dependencias pesadas: Telegram Bot API (<code>getUpdates</code>) y <code>ffmpeg</code> con <code>loudnorm</code>.</li>
-              <li><b>Feed</b> — <code>flove.json</code> (v2) mantiene la forma de <code>risa.json</code> (v1): lista versionada; entrada <code>{id, name, t, tags, when, src}</code>.</li>
-              <li><b>Privacidad</b> — el id en claro nunca viaja al feed; con ①+② solo el hash, con solo-① el id directo.</li>
-              <li><b>R2 → cualquier hosting</b> de objetos; <b>feed JSON → API + Railway/libSQL</b> en v2 para las rutas de autor; <b>moderación humana</b>, automatizable con un bot auxiliar.</li>
-            </ul>
-            <h4>Hacia la v3 — las features más difíciles</h4>
-            <p>Repasando los planes, las piezas más ambiciosas que toca abordar son:</p>
-            <ul>
-              <li><b>Tiempo real.</b> Dejar el cron atrás: <b>webhooks</b> + backend (Railway + libSQL) con respuesta instantánea y rate-limit server-side.</li>
-              <li><b>Claims firmados por browsy.</b> Prueba criptográfica de autoría firmada con las claves existentes, sin re-derivarlas (D17).</li>
-              <li><b>Recuperación y herencia de la identidad.</b> <code>/vault</code> (frase + QR para restaurar authy entre canales) y <code>/heritage</code> (transferir/recuperar la cuenta vía red de avales).</li>
-              <li><b>Creación colaborativa.</b> <code>/cameo</code>, <code>/reprise</code> y <code>/lore</code>: remixes y cadenas que se renderizan como hilos en la web.</li>
-              <li><b>IA para moderación.</b> Transcripción + flagging asistido, dailies, rachas y top/trending con estadísticas reales.</li>
-              <li><b>Mini App + inline mode.</b> Subir y reproducir sin salir de Telegram, y buscar clips desde cualquier chat.</li>
+              <li><b>Enriquecimiento progresivo, fail-silent.</b> Si <code>flove.json</code> falla (404, timeout, CORS), la web queda exactamente igual: sin enlaces, sin esperas, sin bloquear el feed.</li>
+              <li><b>Regla de oro.</b> <code>risa.json</code> es la verdad del feed; <code>flove.json</code> solo añade. Nunca al revés.</li>
+              <li><b>Al claim (authy).</b> Tu palabra reclamada se vuelve un enlace al <b>perfil único de flove</b> (<code>flove.org/users/&lt;key&gt;/</code>): ahí ves tus risas y al lado puedes <b>activar Lovy ya autenticado</b> — mismo authy, sin volver a loguearte.</li>
+              <li><b>Guarda-rrallas.</b> Timeout de 4&nbsp;s, se dispara tras renderizar el feed, lee solo claves conocidas (lo nuevo se ignora) y el contrato vive versionado en git: si se rompe, se pierde enriquecimiento, nunca risa.</li>
             </ul>
             <h4>Planes</h4>
             <p>El detalle completo vive en los planes del estándar:</p>
@@ -991,35 +1104,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </ul>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica (final de la sección)">
+            <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
             <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
-            <button type="button" class="rtab-btn" data-tab="introduccion" aria-pressed="true">Introducción</button>
             <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
           </nav>
         </div>
       </div>
-      <div class="cs-grid hack-row">
-        <div class="cs-text">
-          <p class="eyebrow">Hackeando</p>
-          <h2>¿Te montas la risa con nosotros?</h2>
-          <p>Esto es <b>código abierto</b> y se replica en una tarde: clona el repo, lee el estándar, lanza tu propio bot con tu bucket y tu canal. Y si lo tuyo es inventar —bot, web, IA, diseño—, hay sitio para ti: el repo y el grupo están abiertos, entra, prueba, propón.</p>
-          <div class="linkrow">
-            <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
-            <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
-          </div>
-        </div>
-        <div class="slider" role="region" data-autoplay="5000" aria-roledescription="carrusel" aria-label="Fotos del equipo montando la réplica">
-          <div class="slides">
-            <figure class="slide"><img src="media/replica-01.jpg" alt="Primera foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
-            <figure class="slide"><img src="media/replica-02.jpg" alt="Segunda foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
-            <figure class="slide"><img src="media/replica-03.jpg" alt="Tercera foto del equipo trabajando en la réplica, compartida por Telegram" loading="lazy"><figcaption>En el tajo · Telegram</figcaption></figure>
-          </div>
-        </div>
-      </div>
-      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Tecnología">
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="true">Tecnología</button>
       </nav>
     </div>
   </section>
@@ -1050,6 +1146,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
       </nav>
     </div>
   </section>
@@ -1106,6 +1203,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Comunidad</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
       </nav>
     </div>
   </section>
@@ -1115,8 +1213,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="um-title">
     <button class="modal-x" type="button" id="um-close" aria-label="Cerrar">×</button>
     <h2 id="um-title">Compartir mi risa</h2>
-    <p class="modal-sub">Añádela al banco. Solo risas, con cariño y en libre. 💛</p>
-    <p class="modal-note">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en el banco. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</p>
+    <p class="modal-sub">Añádela a la risa. Solo risas, con cariño y en libre. 💛</p>
+    <p class="modal-note">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</p>
     <a class="btn btn-primary" id="um-telegram" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Abrir Telegram</a>
   </div>
 </div>
@@ -1152,7 +1250,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   </div>
 </footer>
 
-<script src="banco.js"></script>
+<script src="risa.js"></script>
 <script>
 (function(){
   "use strict";
@@ -1239,8 +1337,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     const iconOnly = opts.iconOnly || false;
     let tracks=[], tagsOf=null, emptyMsg='Aún no hay pistas todavía 💛';
     let ti=0, playing=false;
-    let page=0, size=opts.pageSize||0, pageMax=opts.pageMax||0;
-    let showAll=false;
+    let page=0, size=opts.pageSize||0;
+    let bulk=false;
     const alwaysPage=!!opts.alwaysPage;
     const pagRoot=root.querySelector('.paginator')||null;
     const pgPrev=pagRoot?pagRoot.querySelector('.pg-prev'):null;
@@ -1254,7 +1352,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
     function pageCount(){ return Math.max(1, Math.ceil(tracks.length/size)); }
     function pageTracks(){
-      if(showAll||!size) return tracks;
+      if(!size) return tracks;
       if(page>pageCount()-1) page=pageCount()-1;
       return tracks.slice(page*size, (page+1)*size);
     }
@@ -1317,21 +1415,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const pages=pageCount();
       const showNav=pages>1;
       const atStart=page===0, atEnd=page>=pages-1;
-      if(showAll){                               // "100": todo de golpe, sin paginar
-        if(pgPrev) pgPrev.hidden=true;
-        if(pgLabel){
-          pgLabel.hidden=false;
-          pgLabel.textContent=tracks.length+' / '+tracks.length;
-        }
-        if(pgChip10) pgChip10.hidden=true;
-        if(pgChip100){ pgChip100.hidden=false; pgChip100.setAttribute('aria-pressed','true'); }
-        if(pgRepo){
-          pgRepo.hidden=!(repoURL);
-          if(!pgRepo.hidden) pgRepo.href=repoURL;
-        }
-        return;
-      }
-      if(pgChip100) pgChip100.setAttribute('aria-pressed','false');
+      if(pgChip100) pgChip100.setAttribute('aria-pressed', bulk?'true':'false');
       if(pgPrev) pgPrev.hidden=!(showNav && !atStart);
       if(pgLabel){
         pgLabel.hidden=!showNav;
@@ -1374,7 +1458,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     }
 
     function select(newTracks, newName, tags, empty){
-      tracks=newTracks; tagsOf=tags||null; emptyMsg=empty||'Aún no hay pistas todavía 💛'; ti=0; page=0; showAll=false;
+      tracks=newTracks; tagsOf=tags||null; emptyMsg=empty||'Aún no hay pistas todavía 💛'; ti=0; page=0; bulk=false; size=opts.pageSize||0;
       if(playing){ audio.pause(); setPlaying(false); }
       if(nowPl) nowPl.textContent=newName;
       render();
@@ -1404,7 +1488,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(pgPrev) pgPrev.addEventListener('click', ()=>{ if(page>0){ page--; render(); } });
     if(pgChip10) pgChip10.addEventListener('click', ()=>{ if(page<pageCount()-1){ page++; render(); } });
     if(pgChip100) pgChip100.addEventListener('click', ()=>{
-      showAll=!showAll;
+      if(!bulk){ bulk=true; size=100; page=0; }
+      else if(page<pageCount()-1){ page++; }
       render();
     });
 
@@ -1429,8 +1514,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     prevBtn: document.getElementById('world-prev'),
     nextBtn: document.getElementById('world-next'),
     iconOnly: true,
-    pageSize: 10,
-    pageMax: 100
+    pageSize: 10
   });
   const worldSpace=document.getElementById('world-tag-space');
   const worldSelected=new Set();
@@ -1546,10 +1630,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(!m) return '';
     const days=Math.floor((Date.now()-Date.UTC(+m[1], +m[2]-1, +m[3]))/86400000);
     if(days<=0) return 'hoy';
-    if(days<7) return days===1?'hace 1 día':'hace '+days+' días';
-    if(days<30){ const w=Math.floor(days/7); return w===1?'hace 1 semana':'hace '+w+' semanas'; }
-    if(days<365){ const mo=Math.floor(days/30.44); return mo===1?'hace 1 mes':'hace '+mo+' meses'; }
-    const y=Math.floor(days/365.25); return y===1?'hace 1 año':'hace '+y+' años';
+    if(days<7) return days===1?'1 día':days+' días';
+    if(days<30){ const w=Math.floor(days/7); return w===1?'1 semana':w+' semanas'; }
+    if(days<365){ const mo=Math.floor(days/30.44); return mo===1?'1 mes':mo+' meses'; }
+    const y=Math.floor(days/365.25); return y===1?'1 año':y+' años';
   }
 
   // Telegram id del clip (sin @): nick, username o nombre que empieza por @.
@@ -1570,8 +1654,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     const anon=c.anonimo || !c.name || /^an[oó]nima$/.test(String(c.name).trim());
     let author='';
     if(!anon){
+      const key=(c.key||'').trim();
       const tg=tgOf(c);
-      if(tg){
+      if(floveOn && key){
+        author='<a class="clip-author clip-flove" target="_blank" rel="noopener" href="'+esc('https://flove.org/users/'+encodeURIComponent(key)+'/')+'">'+esc(c.name)+'</a>';
+      } else if(tg){
         const on=selected.has(tg);
         author='<button type="button" class="clip-tg'+(on?' on':'')+'" data-tg="'+esc(tg)+'" aria-pressed="'+(on?'true':'false')+'">@'+esc(tg)+'</button>';
       } else if(c.username) author='<span class="clip-author">@'+esc(c.username)+'</span>';
@@ -1588,7 +1675,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     nextBtn: document.getElementById('gente-next'),
     iconOnly: true,
     pageSize: 4,
-    pageMax: 100,
     alwaysPage: true,
     repo: 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/',
     metaHTML: clipMeta,
@@ -1600,7 +1686,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const TAG_START=3;                // etiquetas flotando al empezar el flujo
   const TAG_BATCH=3;                // cuántas añade el + en cada toque
   const PLUS_CLICKS=3;              // el + añade 3 más, durante 3 toques
-  let banco=[];
+  let risas=[];
+  let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
   const selected=new Set();
   const genteRaf={id:null};
 
@@ -1680,16 +1767,19 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(tg) keys.push(tg);
     const title=String(t.t||'').trim().toLowerCase();
     if(title) keys.push(title);
+    const name=String((t.clip&&t.clip.name)||'').trim().toLowerCase();
+    if(name) keys.push(name);
     return keys;
   }
 
+  const MAX_RISAS=10000;                       // tope del feed: nunca más de 10.000 risas en cola
+
   function currentTracks(){
-    const all=window.Banco.buildBancoTracks(banco);
+    const all=window.Risa.buildRisaTracks(risas).slice(0, MAX_RISAS);
     let list=all;
     if(selected.size) list=list.filter(t=>trackKeys(t).some(k=>selected.has(k)));
     if(favFilter) list=list.filter(t=>favs.has(t.src));
-    if(!selected.size && !favFilter) list=all.slice(0, 100);   // feed: solo las 100 últimas añadidas
-    return list;
+    return list;                               // feed completo (últimas 10.000)
   }
 
   function updateGentePlaylist(){
@@ -1699,12 +1789,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     gentePlayer.select(currentTracks(),
       favFilter?'Mis risas favoritas ⭐':'Risas de la gente 😹', t=>t.tags,
       favFilter?'Aún no has marcado ninguna risa con la estrella ⭐'
-        :(sel?'Ninguna risa lleva esas etiquetas 😅':'Aún no hay risas en el banco · sé la primera 💛'));
+        :(sel?'Ninguna risa lleva esas etiquetas 😅':'Aún no hay risas en el risas · sé la primera 💛'));
   }
 
   function tagStats(){
     const m=new Map();
-    banco.forEach(c=>{
+    risas.forEach(c=>{
       [...new Set([...tagList(c.tags), tgOf(c)]).values()].forEach(tag=>{
         if(tag) m.set(tag, (m.get(tag)||0)+1);
       });
@@ -1808,15 +1898,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const tagSearchInput=document.getElementById('tag-search-input');
   const tagSearchBtn=document.getElementById('tag-search-btn');
 
-  function addTitleTag(title){
-    const key=title.toLowerCase();
+  function addFloating(text){
+    const key=text.toLowerCase();
     if(![...space.querySelectorAll('.title-tag')].some(el=>el.dataset.title===key)){
       const b=document.createElement('button');
       b.className='title-tag'; b.type='button';
       b.dataset.title=key;
-      b.textContent=title;
+      b.textContent=text;
       b.setAttribute('aria-pressed', selected.has(key)?'true':'false');
-      b.title='Filtrar por el título «'+title+'»';
+      b.title='Filtrar por «'+text+'»';
       b.addEventListener('click', ()=>{ toggleTag(key, b); });
       space.appendChild(b);
       if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
@@ -1861,11 +1951,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         return;
       }
     }
-    const allTracks=window.Banco.buildBancoTracks(banco);
-    const exact=allTracks.find(t=>String(t.t||'').trim().toLowerCase()===q);
-    if(exact){ addTitleTag(exact.t); tagSearchInput.value=''; return; }
-    const partial=allTracks.find(t=>String(t.t||'').trim().toLowerCase().includes(q));
-    if(partial){ addTitleTag(partial.t); tagSearchInput.value=''; return; }
+    const allTracks=window.Risa.buildRisaTracks(risas);
+    const nameOf=t=>String((t.clip&&t.clip.name)||'').trim();
+    const titleOf=t=>String(t.t||'').trim();
+    const exact=allTracks.find(t=>titleOf(t).toLowerCase()===q);
+    if(exact){ addFloating(titleOf(exact)); tagSearchInput.value=''; return; }
+    const partial=allTracks.find(t=>titleOf(t).toLowerCase().includes(q));
+    if(partial){ addFloating(titleOf(partial)); tagSearchInput.value=''; return; }
+    const exactN=allTracks.find(t=>nameOf(t).toLowerCase()===q);
+    if(exactN){ addFloating(nameOf(exactN)); tagSearchInput.value=''; return; }
+    const partialN=allTracks.find(t=>nameOf(t).toLowerCase().includes(q));
+    if(partialN){ addFloating(nameOf(partialN)); tagSearchInput.value=''; return; }
   }
 
   tagSearchBtn.addEventListener('click', doTagSearch);
@@ -1873,18 +1969,34 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(e.key==='Enter'){ e.preventDefault(); doTagSearch(); }
   });
 
-  updateGentePlaylist(); // estado inicial (banco vacío) hasta que llegue banco.json
+  updateGentePlaylist(); // estado inicial (risas vacío) hasta que llegue risas.json
 
-  fetch(window.Banco.BANCO_URL, {cache:'no-store'})
+  fetch(window.Risa.RISA_URL, {cache:'no-store'})
     .then(r=>r.ok?r.json():[])
     .then(data=>{
-      banco=Array.isArray(data)?data:[];
+      risas=Array.isArray(data)?data:[];
       updateGentePlaylist();
       buildTagChips();   // por defecto las etiquetas flotan
     })
-    .catch(()=>{ banco=[]; updateGentePlaylist(); });
+    .catch(()=>{ risas=[]; updateGentePlaylist(); });
 
-  /* ============ BOTÓN BENEFICIOS · un clip del banco por toque ============ */
+  /* ===== flove.json · enriquecimiento progresivo, fail-silent =====
+     risa siempre carga su propio risa.json (la verdad del risas). Después, y
+     solo después, intenta flove.json como capa opcional: si falla (404, timeout,
+     CORS) la web queda idéntica, sin esperas ni enlaces rotos. */
+  function fetchFlove(){
+    fetch('https://flove.org/flove.json', {cache:'no-store', signal:AbortSignal.timeout(4000)})
+      .then(r=>r.ok?r.json():null)
+      .then(f=>{
+        if(!f || !f.authy || !f.users) return;   // contrato incompleto: sin enriquecimiento
+        floveOn=true;
+        updateGentePlaylist();                   // re-render: palabra reclamada → perfil único de flove
+      })
+      .catch(()=>{ /* flove.json caído: risa sigue igual */ });
+  }
+  fetchFlove();
+
+  /* ============ BOTÓN BENEFICIOS · un clip del risas por toque ============ */
   const benefits = [
     'Libera <b>endorfinas</b> y baja el estrés al instante.',
     'Relaja los músculos hasta <b>45 minutos</b> después.',
@@ -1910,7 +2022,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   let pool = benefits.slice();
   const benefitsBtns = [...document.querySelectorAll('.benefits-btn')];
 
-  // Cada toque suena una risa del banco: empieza por la más reciente y avanza.
+  // Cada toque suena una risa del risas: empieza por la más reciente y avanza.
   const beneAudio=new Audio();
   let beneIdx=-1;
   const bubbles=new Set();
@@ -2046,9 +2158,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   }
   tabBtns.forEach(b=>b.addEventListener('click', ()=>showTab(b.dataset.tab, true)));
   const initialTab=(location.hash||'').slice(1);
-  if(['espiritualidad','cultura','ciencia','comunidad'].includes(initialTab)) showTab(initialTab, false);
+  if(['espiritualidad','cultura','ciencia','comunidad','tecnologia'].includes(initialTab)) showTab(initialTab, false);
 
-  /* ============ RÉPLICA · pestañas Agentes / Introducción / Desarrollo ============ */
+  /* ============ RÉPLICA · pestañas Presentación / Agentes / Desarrollo ============ */
   const rtabBtns=[...document.querySelectorAll('.rtab-btn')];
   const rtabPanels=[...document.querySelectorAll('.rtab-panel')];
   function showRtab(id){
@@ -2061,7 +2173,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const montarReplica=document.getElementById('montar-replica');
   if(montarReplica){
     montarReplica.addEventListener('click', ()=>{
-      showTab('ciencia', false);
+      showTab('tecnologia', false);
       const r=document.getElementById('replica');
       if(r){ if(reduce) r.scrollIntoView(); else r.scrollIntoView({behavior:'smooth', block:'start'}); }
     });
@@ -2084,7 +2196,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
   const uploadModal = document.getElementById('upload-modal');
   const tgLink = document.getElementById('um-telegram');
-  if(tgLink) tgLink.href = window.Banco.TELEGRAM_BOT;   // config en un solo sitio
+  if(tgLink) tgLink.href = window.Risa.TELEGRAM_BOT;   // config en un solo sitio
   document.getElementById('open-upload').addEventListener('click', ()=>openModal(uploadModal));
   document.getElementById('um-close').addEventListener('click', ()=>closeModal(uploadModal));
 

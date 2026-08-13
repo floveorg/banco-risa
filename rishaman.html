@@ -544,7 +544,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
       <p>Este tour es la biografía-CV de Rishaman, un proyecto personal de la familia Risa liberada. Las fotos de <b>categorias/</b> son personales (retratos, risas y paisajes propios); el resto de ramas del árbol quedan como lugar reservado hasta tener su media.</p>
       <ul class="credits">
         <li>🖼️ Fotos de <code>categorias/</code> — personales (Transfigurarte, Risodelia, Paisajes)</li>
-        <li>🔊 Loop «Reír en círculo» — risas del <a href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener">banco de la risa</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener">CC BY-SA 4.0</a></li>
+        <li>🔊 Loop «Reír en círculo» — risas del <a href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener">risa liberada</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener">CC BY-SA 4.0</a></li>
         <li>🎨 Identidad Risa liberada — logo 15-guino, familia de apps · flove</li>
         <li>🌐 Estándar flove §13 — página de un solo archivo, sin dependencias</li>
       </ul>
@@ -553,7 +553,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   </div>
 </footer>
 
-<script src="banco.js"></script>
+<script src="risa.js"></script>
 <script>
 (function(){
   "use strict";
@@ -618,7 +618,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
   render();
 
-  /* ============ REÍR EN CÍRCULO · loop de risas del banco ============ */
+  /* ============ REÍR EN CÍRCULO · loop de risas de risa liberada ============ */
   const circleBtn = document.getElementById('circle-btn');
   const circleNote = document.getElementById('circle-note');
   let circleTracks = [];
@@ -632,7 +632,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
     if(t && t.src) circleAudio.src = t.src;
   }
   function circlePlay(){
-    if(!circleTracks.length){ circleNote.textContent = 'Aún no hay risas en el banco · vuelve pronto 💛'; return; }
+    if(!circleTracks.length){ circleNote.textContent = 'Aún no hay risas · vuelve pronto 💛'; return; }
     circleOn = true;
     circleBtn.setAttribute('aria-pressed', 'true');
     circleBtn.textContent = '⏸ Parar el círculo';
@@ -652,9 +652,9 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   });
   circleBtn.addEventListener('click', () => { circleOn ? stopCircle() : circlePlay(); });
 
-  fetch(window.Banco.BANCO_URL, { cache: 'no-store' })
+  fetch(window.Risa.RISA_URL, { cache: 'no-store' })
     .then(r => r.ok ? r.json() : [])
-    .then(data => { circleTracks = window.Banco.buildBancoTracks(Array.isArray(data) ? data : []); })
+    .then(data => { circleTracks = window.Risa.buildRisaTracks(Array.isArray(data) ? data : []); })
     .catch(() => {});
 
   /* ============ FOOTER · créditos desplegables ============ */
