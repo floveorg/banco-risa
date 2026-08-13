@@ -76,14 +76,23 @@ test('oversized or overlong media is rejected instead of drafted', () => {
     { update_id: 60, message: { message_id: 1, chat: { id: 777, type: 'private' },
       from: { first_name: 'Marta' }, voice: { file_id: 'BIG', file_size: 11 * 1024 * 1024, duration: 3 } } },
     { update_id: 61, message: { message_id: 2, chat: { id: 777, type: 'private' },
-      from: { first_name: 'Marta' }, voice: { file_id: 'LONG', file_size: 1024, duration: 1001 } } },
+      from: { first_name: 'Marta' }, voice: { file_id: 'LONG', file_size: 1024, duration: 31 } } },
     { update_id: 62, message: { message_id: 3, chat: { id: 777, type: 'private' },
-      from: { first_name: 'Marta' }, audio: { file_id: 'OK', file_size: 10 * 1024 * 1024, duration: 1000 } } },
+      from: { first_name: 'Marta' }, audio: { file_id: 'OK', file_size: 10 * 1024 * 1024, duration: 20 } } },
   ];
   const { actions } = parseUpdates(updates, CTX);
   assert.deepEqual(actions[0], { kind: 'draft-invalid', chatId: 777, reason: 'size' });
   assert.deepEqual(actions[1], { kind: 'draft-invalid', chatId: 777, reason: 'duration' });
   assert.equal(actions[2].kind, 'draft');
+});
+
+test('limits can be overridden per deployer via ctx.limits', () => {
+  const mk = (duration) => [{ update_id: 70, message: { message_id: 1, chat: { id: 777, type: 'private' },
+    from: { first_name: 'Marta' }, voice: { file_id: 'V', duration } } }];
+  const { actions: strict } = parseUpdates(mk(31), { modGroupId: -1001234, limits: { maxDurationS: 60 } });
+  assert.equal(strict[0].kind, 'draft');
+  const { actions: lenient } = parseUpdates(mk(31), { modGroupId: -1001234, limits: { maxDurationS: 5 } });
+  assert.deepEqual(lenient[0], { kind: 'draft-invalid', chatId: 777, reason: 'duration' });
 });
 
 test('the telegram username rides into the draft action', () => {

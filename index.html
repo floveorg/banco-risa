@@ -969,7 +969,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li>✅ Compartir por Telegram: botón → deep link <code>t.me/…</code> + QR</li>
               <li>✅ Etiquetas → chips filtrables</li>
               <li>✅ Búsqueda por tag · título · nombre</li>
-              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (tope 10.000)</li>
+              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (tope 1.000 risas reproducibles)</li>
               <li>Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
             </ol>
             <h5 class="feat-area">B · Bot — el circuito serverless</h5>
@@ -1770,7 +1770,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     return keys;
   }
 
-  const MAX_RISAS=10000;                       // tope del feed: nunca más de 10.000 risas en cola
+  const MAX_RISAS=1000;                       // tope del feed: las últimas 1.000 risas reproducibles
 
   function currentTracks(){
     const all=window.Risa.buildRisaTracks(risas).slice(0, MAX_RISAS);

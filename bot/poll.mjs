@@ -3,7 +3,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parseUpdates, bancoEntry, prependClip, identityOf } from './logic.mjs';
+import { parseUpdates, bancoEntry, prependClip, identityOf, hashId } from './logic.mjs';
 import { Telegram } from './telegram.mjs';
 import { uploadAudio } from './r2.mjs';
 
@@ -22,7 +22,11 @@ const readJSON = async (rel, fallback) => {
 const writeJSON = (rel, v) => writeFile(p(rel), JSON.stringify(v, null, 2) + '\n');
 const isoToday = () => new Date().toISOString().slice(0, 10);
 
-const WELCOME_TEXT = 'Graba tu risa (y dale a enviar), elige visibilidad y descríbela, envía, (moderación), recibe notificación de publicación en @risaliberada y risa.liberada.net.';
+const WELCOME_TEXT = 'Graba tu risa (máx. 30 s, hasta 5 al día) y envíala: elige visibilidad, descríbela y pulsa Enviar. Un moderador la revisa y, si entra, la publicamos en @risaliberada y en risa.liberada.net 💛';
+
+// Anti-abuso (frecuencia): máx. risas en cola y máx. por día y remitente. El
+// remitente se identifica por el hash de su id de Telegram (nunca en claro).
+const LIMITS_DEFAULTS = { maxFileBytes: 10 * 1024 * 1024, maxDurationS: 30, maxPending: 2, maxPerDay: 5 };
 
 const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '✅ Publicar', callback_data: 'ok:' + id },
@@ -140,7 +144,8 @@ async function publishClip(tg, cfg, q, id, banco) {
 
 // Apply one action. Every handler is idempotent (safe when updates re-deliver after
 // an offset rollback). Returns { banco, dirty } — dirty tells the caller to persist+commit.
-async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders) {
+async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads) {
+  const limits = cfg.limits || {};
   if (a.kind === 'draft') {
     const key = String(a.chatId);
     const prev = drafts[key] || {};
@@ -224,6 +229,22 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders) {
     const d = drafts[String(a.chatId)];
     if (!d) { await bestEffort(tg.answerCallback(a.callbackId, 'Nada que enviar')); return { banco, dirty: false }; }
     if (queue[d.id] || banco.some((e) => e.id === d.id)) { delete drafts[String(a.chatId)]; return { banco, dirty: true }; }
+    const who = hashId(a.chatId, TG_ID_SECRET);
+    const today = isoToday();
+    const day = uploads[today] || (uploads[today] = {});
+    if ((day[who] || 0) >= limits.maxPerDay) {
+      await bestEffort(tg.answerCallback(a.callbackId, 'Límite diario alcanzado'));
+      await bestEffort(tg.sendMessage(a.chatId,
+        'Ya has enviado ' + limits.maxPerDay + ' risas hoy. Vuelve mañana 💛'));
+      return { banco, dirty: false };
+    }
+    const pending = Object.values(queue).filter((e) => e.uploader === who).length;
+    if (pending >= limits.maxPending) {
+      await bestEffort(tg.answerCallback(a.callbackId, 'Cola llena'));
+      await bestEffort(tg.sendMessage(a.chatId,
+        'Ya tienes ' + limits.maxPending + ' risas en moderación. Espera a que se publiquen o borren antes de enviar más 💛'));
+      return { banco, dirty: false };
+    }
     const name = displayName(d);
     const caption = [
       d.title || '',
@@ -233,7 +254,9 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders) {
     const copied = await tg.copyMessage(cfg.modGroupId, d.fromChatId, d.fromMsgId, BUTTONS(d.id), caption);
     queue[d.id] = { fileId: d.fileId, name, username: d.username, title: d.title,
                     tags: d.tags || [], sel: d.sel || { ...DEFAULT_SEL },
+                    uploader: who,
                     ...identityOf(d.sel, a.chatId, TG_ID_SECRET), modMsgId: copied.message_id };
+    day[who] = (day[who] || 0) + 1;
     uploaders[d.id] = a.chatId;
     delete drafts[String(a.chatId)];
     await bestEffort(tg.answerCallback(a.callbackId, 'Enviada a moderación'));
@@ -244,7 +267,7 @@ async function handleAction(a, tg, cfg, queue, drafts, banco, uploaders) {
   if (a.kind === 'draft-invalid') {
     const msg = a.reason === 'size'
       ? 'Ups… tu archivo supera el límite de 10 MB. Mándalo en un formato más ligero 💛'
-      : 'Ups… tu risa supera el límite de 1000 segundos. Mándala más cortita 💛';
+      : 'Ups… tu risa supera el límite de 30 segundos. Mándala más cortita 💛';
     await bestEffort(tg.sendMessage(a.chatId, msg));
     return { banco, dirty: false };
   }
@@ -314,12 +337,14 @@ async function main() {
   if (!token) throw new Error('TELEGRAM_BOT_TOKEN missing');
   const cfg = await readJSON('config.json', {});
   if (!cfg.modGroupId) throw new Error('config.json modGroupId not set (run Task 6)');
+  cfg.limits = { ...LIMITS_DEFAULTS, ...(cfg.limits || {}) };
   const tg = Telegram(token);
 
   let offset = parseInt(await readFile(p('state/offset.txt'), 'utf8'), 10) || 0;
   let queue = await readJSON('state/queue.json', {});
   let drafts = await readJSON('state/drafts.json', {});
   let uploaders = await readJSON('state/.uploaders.json', {});
+  let uploads = await readJSON('state/uploads.json', {});
   let banco = await readJSON('risa.json', []);
 
   const startedAt = Date.now();
@@ -332,16 +357,18 @@ async function main() {
       Object.entries(drafts).filter(([, d]) => d.awaitingTags));
     const updates = await tg.getUpdates(offset, POLL_TIMEOUT);
     const { actions, offset: nextOffset } = parseUpdates(
-      updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags }, offset);
+      updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags,
+                 limits: cfg.limits }, offset);
 
     for (const a of actions) {
       try {
-        const r = await handleAction(a, tg, cfg, queue, drafts, banco, uploaders);
+        const r = await handleAction(a, tg, cfg, queue, drafts, banco, uploaders, uploads);
         banco = r.banco;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
           await writeJSON('state/drafts.json', drafts);
           await writeJSON('state/.uploaders.json', uploaders);
+          await writeJSON('state/uploads.json', uploads);
           await writeJSON('risa.json', banco);
           await bestEffort(commitState());
         }
@@ -362,6 +389,7 @@ async function main() {
   await writeJSON('state/queue.json', queue);
   await writeJSON('state/drafts.json', drafts);
   await writeJSON('state/.uploaders.json', uploaders);
+  await writeJSON('state/uploads.json', uploads);
   await writeJSON('risa.json', banco);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());

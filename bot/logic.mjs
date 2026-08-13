@@ -6,7 +6,7 @@ const APPROVE_WORDS = new Set(['ok', 'si', 'sí', 'yes', 'publicar', 'publish', 
 const REJECT_WORDS = new Set(['no', 'borrar', 'delete', 'rechazar', 'quitar', 'fuera', 'cancelar', 'anular']);
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;  // 10 MB
-const MAX_DURATION_S = 1000;              // 1000 seconds
+const MAX_DURATION_S = 30;                // 30 s — risas cortas (estándar §6)
 export { MAX_FILE_BYTES, MAX_DURATION_S };
 
 // Obfuscated store of the uploader's Telegram id. One-way, salted: the hash is
@@ -41,6 +41,9 @@ export function decisionOf(raw) {
 }
 
 export function parseUpdates(updates, ctx, currentOffset = 0) {
+  const lim = ctx.limits || {};
+  const maxBytes = lim.maxFileBytes || MAX_FILE_BYTES;
+  const maxDur = lim.maxDurationS || MAX_DURATION_S;
   const actions = [];
   let maxId = -1;
   for (const u of updates) {
@@ -89,9 +92,9 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       const key = String(msg.chat.id);
       const media = msg.voice || msg.audio;
       if (media && media.file_id) {
-        if (media.file_size && media.file_size > MAX_FILE_BYTES) {
+        if (media.file_size && media.file_size > maxBytes) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'size' });
-        } else if (media.duration && media.duration > MAX_DURATION_S) {
+        } else if (media.duration && media.duration > maxDur) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'duration' });
         } else {
           actions.push({
