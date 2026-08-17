@@ -229,6 +229,10 @@ img{max-width:100%; display:block}
   border:2px solid var(--ink); text-decoration:none; display:grid; place-items:center;
   font-size:1.15rem; line-height:1; box-shadow:0 2px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .dl-btn:hover{transform:translateY(-2px); background:#7a7a7a}
+.share-btn{flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:none; color:var(--ink);
+  border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
+  font-size:1rem; line-height:1; box-shadow:0 2px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
+.share-btn:hover{transform:translateY(-2px); background:rgba(0,0,0,.08)}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
@@ -1889,11 +1893,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         const favOn=isDL && favs.has(src);
         const favBtn='<button type="button" class="fav-star'+(favOn?' on':'')+'" data-src="'+esc(src)+'" aria-pressed="'+(favOn?'true':'false')+'" aria-label="'+(favOn?'Quitar de favoritas':'Marcar como favorita')+'">'+(favOn?'★':'☆')+'</button>';
         const dlBtn=isDL?'<a class="dl-btn" href="'+esc(src)+'" download="'+esc(src.split('/').pop())+'" title="Descargar" aria-label="Descargar">↓</a>':'';
+        const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
+        const shareBtn=isDL?'<button type="button" class="share-btn" data-clip="'+esc(clipUrl)+'" title="Compartir" aria-label="Compartir">↗</button>':'';
         li.innerHTML =
           '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
           '<span class="ti">'+titleHtml+
           tagsHtml+
-          byline+'</span>'+orig+favBtn+dlBtn;
+          byline+'</span>'+orig+favBtn+dlBtn+shareBtn;
         if(isDL){
           li.style.cursor='pointer';
           li.addEventListener('click',(e)=>{ if(e.target.closest('a')||e.target.closest('button'))return;
@@ -1994,6 +2000,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     trackList.addEventListener('click',(e)=>{
       const b=e.target.closest('.fav-star');
       if(b){ toggleFav(b.dataset.src, b); return; }
+      const s=e.target.closest('.share-btn');
+      if(s){
+        const url=s.dataset.clip;
+        const text='Escucha esta risa 😂';
+        if(navigator.share){ navigator.share({title:'Risa liberada', text, url}).catch(()=>{}); }
+        else{ window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','noopener'); }
+        return;
+      }
     });
 
     audio.addEventListener('ended', ()=>{
