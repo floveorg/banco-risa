@@ -685,6 +685,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         <div class="up-actions">
           <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden>Telegram ↗</a>
           <a class="up-action-btn up-upgrade-btn" id="up-upgrade" href="#" target="_blank" rel="noopener">Mejorar perfil →</a>
+          <a class="up-action-btn" id="up-cross-ama" href="#" target="_blank" rel="noopener" style="display:none;background:var(--magenta);color:white;border-color:var(--magenta)">💗 Ver en Ama</a>
         </div>
       </header>
       <h4>Sus risas</h4>
@@ -2581,6 +2582,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     upTg.hidden=!optIn;
     if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); }
     upUpgrade.href='https://liberada.net/usa/'+key+'/';
+    var crossAma=document.getElementById('up-cross-ama');
+    crossAma.href='https://ama.liberada.net/#/u/'+encodeURIComponent(key);
+    crossAma.style.display='inline-flex';
     upClips.innerHTML='';
     if(!mine.length){
       const li=document.createElement('li');
