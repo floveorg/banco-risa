@@ -417,6 +417,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 /* ============ FEED · RISAS DE LA GENTE ============ */
 .feed{display:grid; gap:12px; align-content:start; max-height:420px; overflow-y:auto; padding:4px; margin:-4px}
+.feed li{position:relative}
+.thread-item{position:relative}
+.thread-item::before{content:''; position:absolute; left:-14px; top:0; bottom:0; width:2px; background:var(--grape); opacity:.35; border-radius:1px}
+.thread-item::after{content:''; position:absolute; left:-14px; top:18px; width:14px; height:2px; background:var(--grape); opacity:.35; border-radius:1px}
+.thread-parent-label{font-family:var(--mono); font-size:.68rem; color:var(--grape); font-weight:700; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .feed-item{display:flex; align-items:center; gap:12px; text-align:left;
   background:var(--cream); border:2.5px solid var(--ink); border-radius:18px; padding:12px 14px;
   box-shadow:0 5px 0 rgba(42,24,16,.14); cursor:pointer; font-family:var(--body);
@@ -684,7 +689,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         </div>
         <div class="up-actions">
           <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden>Telegram ↗</a>
-          <a class="up-action-btn up-upgrade-btn" id="up-upgrade" href="#" target="_blank" rel="noopener">Mejorar perfil →</a>
+          <a class="up-action-btn up-upgrade-btn" id="up-upgrade" href="#" target="_blank" rel="noopener">Username →</a>
           <a class="up-action-btn" id="up-cross-ama" href="#" target="_blank" rel="noopener" style="display:none;background:var(--magenta);color:white;border-color:var(--magenta)">💗 Ver en Ama</a>
         </div>
       </header>
@@ -1143,6 +1148,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   <li>Favoritos ❤️/⭐ compartidos por las dos playlists</li>
                   <li>Paginador del feed</li>
                   <li>Página de autor <code>#/u/&lt;key&gt;</code> con su propio feed</li>
+                  <li>Hilos: cadenas de respuesta infinitas (<code>parent</code>) con conectores visuales y etiqueta del autor respondido</li>
+                  <li>Subdominio automático al publicar: <code>username.liberada.net</code> sin_claim (v1 adelanto D21)</li>
+                  <li>Perfil agregador genérico: <code>liberada.net/usa/&lt;username&gt;/</code> unifica risas + amas</li>
                   <li>Compartir por WhatsApp, Telegram, e-mail y copiar</li>
                   <li>QR del deep link <code>t.me/RisaLiberadaBot</code> para escanear</li>
                   <li>Imágenes y audio servidos desde R2 con URL pública (no desde GitHub)</li>
@@ -1160,6 +1168,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   <li>Identidad al subir: nombre público, id de Telegram o anónima</li>
                   <li>Handle estable por palabra + hash salado (nunca <code>@username</code>)</li>
                   <li>Formulario guiado con botones inline: descripción, etiquetas y visibilidad</li>
+                  <li>Reenviar clip del canal → cadena: detecta forward, propone respuesta, publica con <code>parent</code></li>
+                  <li>Ciclo detectado: <code>hasAncestor()</code> impide A→B→…→A</li>
                   <li>Normalización a MP3 con <code>ffmpeg</code></li>
                   <li>Subida a Cloudflare R2 con firma SigV4 propia (cero dependencias)</li>
                   <li>La pieza aprobada antepone a <code>risa.json</code> (git como base de datos)</li>
@@ -1261,14 +1271,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </ul>
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
-            <p class="rtab-intro">El desarrollo en curso es la <b>v2</b>: pasar el circuito de serverless (cron + archivos) a un sistema con backend propio — <b>Railway + libSQL + FastAPI + webhooks</b> — con perfiles de autor <code>lol/&lt;key&gt;/</code>, identidad authy completa (claim L2→L3) y las hermanas <b>lovy</b> y <b>flovebot</b>. v2 no sustituye a v1: <b>potencia lo que v1 ya hace</b> — el circuito de siempre (subir → moderar → publicar) sigue como base y de respaldo; v2 se enciende encima sin tocar el contrato de lectura (la web sigue leyendo <code>risa.json</code>). Las features ya hechas viven plegadas en la <b>Presentación</b>; aquí queda lo que se va construyendo. El plan completo, centralizado: <a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan-v2.md ↗</a>.</p>
+            <p class="rtab-intro">El desarrollo en curso es la <b>v2</b>: pasar el circuito de serverless (cron + archivos) a un sistema con backend propio — <b>Railway + libSQL + FastAPI + webhooks</b> — con perfiles de autor <code>lol/&lt;key&gt;/</code>, identidad authy completa (claim L2→L3) y las hermanas <b>lovy</b> y <b>flovebot</b>. v2 no sustituye a v1: <b>potencia lo que v1 ya hace</b> — el circuito de siempre (subir → moderar → publicar) sigue como base y de respaldo; v2 se enciende encima sin tocar el contrato de lectura (la web sigue leyendo <code>risa.json</code>). Ya en v1: <b>hilos</b> (cadenas infinitas), <b>subdominio automático</b> (<code>username.liberada.net</code>) y <b>perfil agregador</b> (<code>liberada.net/usa/&lt;username&gt;/</code>). Las features ya hechas viven plegadas en la <b>Presentación</b>; aquí queda lo que se va construyendo. El plan completo, centralizado: <a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan-v2.md ↗</a>.</p>
             <h4>El desarrollo v2, feature a feature</h4>
             <h5 class="feat-area">A · Web — claim y gestión de tus contenidos</h5>
             <ol start="1">
               <li><span class="scope v2">v2 · railways</span> Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
+              <li><span class="scope v1">v1 · hecho</span> Subdominio automático <code>username.liberada.net</code> al primer approve — sin auth, sin claim; el Worker redirige al perfil agregador. El claim L2→L3 de v2 complementa y protege este espacio</li>
             </ol>
             <h5 class="feat-area">C · Identidad — authy v2</h5>
-            <ol start="2">
+            <ol start="3">
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
               <li>Claim (L2→L3) <span class="scope v2">v2 · railways</span>: nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
               <li>Filespace de risa <code>lol/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>) — <code>central/users/</code> es para flove</li>
@@ -1897,11 +1908,21 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         const dlBtn=isDL?'<a class="dl-btn" href="'+esc(src)+'" download="'+esc(src.split('/').pop())+'" title="Descargar" aria-label="Descargar">↓</a>':'';
         const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
         const shareBtn=isDL?'<button type="button" class="share-btn" data-clip="'+esc(clipUrl)+'" title="Compartir" aria-label="Compartir">↗</button>':'';
-        li.innerHTML =
+        const depth = t.depth || 0;
+        const clip = t.clip || {};
+        const parentLabel = depth > 0 && clip.parent
+          ? '<span class="thread-parent-label">↳ respondiendo a</span>'
+          : '';
+        const clipMeta =
           '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
           '<span class="ti">'+titleHtml+
           tagsHtml+
           byline+'</span>'+orig+favBtn+dlBtn+shareBtn;
+        if(depth > 0){
+          li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+parentLabel+clipMeta+'</div>';
+        } else {
+          li.innerHTML=clipMeta;
+        }
         if(isDL){
           li.style.cursor='pointer';
           li.addEventListener('click',(e)=>{ if(e.target.closest('a')||e.target.closest('button'))return;
@@ -2327,7 +2348,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(favFilter) list=list.filter(t=>favs.has(t.src));
     if(audioOn && !videoOn) list=list.filter(t=>!t.isVideo);      // solo audios
     else if(!audioOn && videoOn) list=list.filter(t=>t.isVideo);  // solo vídeos
-    return list;                               // feed completo, sin tope total
+    // Apply thread ordering: replies appear below their parent with depth info
+    const threaded=window.Risa.threadOrder(list.map(t=>t.clip||{}));
+    const depthMap=new Map(threaded.map(t=>[t.clip.id, t.depth]));
+    return list.map(t=>Object.assign({}, t, { depth: depthMap.get((t.clip||{}).id)||0 }));
   }
 
   function updateGentePlaylist(){
@@ -2568,6 +2592,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const upUpgrade=document.getElementById('up-upgrade');
   const upClips=document.getElementById('up-clips');
 
+  const USERS_URL = 'https://risa.liberada.net/usernames.json';
   function renderUserPage(){
     const m=/^#\/u\/(.+)$/.exec(location.hash||'');
     const key=m?decodeURIComponent(m[1]):'';
@@ -2581,7 +2606,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     const optIn=mine.find(t=>t.tg);
     upTg.hidden=!optIn;
     if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); }
-    upUpgrade.href='https://liberada.net/usa/'+key+'/';
+    // Resolve key → username for aggregator link + button label
+    fetch(USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}).then(function(users){
+      var uname=Object.keys(users).find(function(k){return users[k].key===key;});
+      if(uname){
+        upUpgrade.href='https://'+uname+'.liberada.net';
+        upUpgrade.textContent=uname+'.liberada.net →';
+      } else {
+        upUpgrade.href='https://liberada.net/usa/'+encodeURIComponent(key)+'/';
+      }
+    }).catch(function(){});
     var crossAma=document.getElementById('up-cross-ama');
     crossAma.href='https://ama.liberada.net/#/u/'+encodeURIComponent(key);
     crossAma.style.display='inline-flex';

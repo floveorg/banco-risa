@@ -1,0 +1,6 @@
+name = "liberada-subdomains"
+main = "worker.mjs"
+compatibility_date = "2024-01-01"
+
+# Route: intercept all *.liberada.net subdomain requests
+route = { pattern = "*liberada.net/*", zone_name = "liberada.net" }

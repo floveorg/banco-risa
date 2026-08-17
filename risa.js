@@ -46,6 +46,39 @@
     });
   }
 
+  // Thread tree: reorder clips so replies appear directly below their parent
+  // in depth-first order. Each track gains a `depth` property for indentation.
+  function threadOrder(clips) {
+    if (!Array.isArray(clips) || !clips.length) return [];
+    var byId = new Map();
+    clips.forEach(function (c) { if (c && c.id) byId.set(c.id, c); });
+    var byParent = new Map();
+    var roots = [];
+    clips.forEach(function (c) {
+      if (!c) return;
+      var p = c.parent;
+      if (p && byId.has(p)) {
+        if (!byParent.has(p)) byParent.set(p, []);
+        byParent.get(p).push(c);
+      } else {
+        roots.push(c);
+      }
+    });
+    var out = [];
+    function walk(clip, depth) {
+      out.push({ clip: clip, depth: depth });
+      var children = byParent.get(clip.id) || [];
+      children.forEach(function (child) { walk(child, depth + 1); });
+    }
+    roots.forEach(function (r) { walk(r, 0); });
+    // Append any clips whose parent wasn't found (broken refs) at the end
+    var seen = new Set(out.map(function (o) { return o.clip.id; }));
+    clips.forEach(function (c) {
+      if (c && !seen.has(c.id)) out.push({ clip: c, depth: 0 });
+    });
+    return out;
+  }
+
   // El feed puede ser un array de clips (v1, retrocompatible) o un objeto con
   // cabecera `{ flag:{...}, clips:[...] }`. Los addons se activan sin romper lo
   // ya publicado: el flag hace de toggle y de fallback desde la interfaz.
@@ -63,7 +96,12 @@
     latestFeed: latestFeed,
     clipsOf: clipsOf,
     flagsOf: flagsOf,
-    RISA_URL: 'https://risa.liberada.net/risa.json',
+    threadOrder: threadOrder,
+    // Configurable URLs — update these for v2 or new apps
+    RISA_URL:  'https://risa.liberada.net/risa.json',
+    AMA_URL:   'https://ama.liberada.net/ama.json',
+    USERS_URL: 'https://risa.liberada.net/usernames.json',
+    AGGREGATOR_BASE: 'https://liberada.net/usa',
     TELEGRAM_BOT: 'https://t.me/RisaLiberadaBot',
     LICENSE: LICENSE,
     LICENSE_URL: LICENSE_URL

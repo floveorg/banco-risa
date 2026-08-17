@@ -137,6 +137,16 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
     }
     if (msg && msg.chat && msg.chat.type === 'private') {
       const key = String(msg.chat.id);
+      // Forward from channel: user forwards a published clip to the bot (reply-to-clip flow)
+      const fwd = msg.forward_from_chat;
+      if (fwd && msg.forward_from_message_id) {
+        actions.push({
+          kind: 'forward-channel', chatId: msg.chat.id,
+          channelMsgId: msg.forward_from_message_id,
+          channelId: fwd.id
+        });
+        continue;
+      }
       const media = msg.voice || msg.audio || msg.video;
       if (media && media.file_id) {
         // Un vídeo no se rechaza por los 10 MB: entra hasta el tope de descarga
@@ -148,14 +158,21 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         } else if (media.duration && media.duration > maxDur) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'duration' });
         } else {
+          // Check for pending forward (reply-to-clip flow)
+          const pendingParent = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
           actions.push({
             kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
             fileId: media.file_id, ...(video ? { video: true } : {}),
             fromChatId: msg.chat.id, fromMsgId: msg.message_id,
             name: (msg.from && msg.from.first_name) || 'Anónima',
             username: (msg.from && msg.from.username) || '',
-            title: (msg.caption || '').trim()
+            title: (msg.caption || '').trim(),
+            parent: pendingParent || undefined
           });
+          // Clear pending forward after use
+          if (pendingParent && ctx.awaitingDraftParent) {
+            delete ctx.awaitingDraftParent[key];
+          }
         }
       } else if (msg.text) {
         // /name y /pub mutan tu identidad; el resto son consultas de solo lectura
@@ -184,7 +201,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   return { actions, offset };
 }
 
-export function risaEntry({ id, name, tags, when, src, t, tg, key, video }) {
+export function risaEntry({ id, name, tags, when, src, t, tg, key, video, parent, channelMsgId }) {
   // `src` is the absolute audio URL (Cloudinary secure_url). The website composes
   // the license (`by`, `orig`) from `name`; the bot never writes those (see spec §4).
   const e = {
@@ -198,7 +215,27 @@ export function risaEntry({ id, name, tags, when, src, t, tg, key, video }) {
   if (tg) e.tg = tg;    // enlace t.me solo si el autor hizo opt-in (C19), nunca automático
   if (key) e.key = key; // página de autor: hash salado del id (tag-url automática), estable e inédito en claro
   if (video) e.video = true; // marca de vídeo: la web lo filtra/reproduce como vídeo (mp4)
+  if (parent) e.parent = parent; // hilo: id del clip al que responde (thread reply)
+  if (channelMsgId) e.channelMsgId = channelMsgId; // mapeo canal→clip para forwards
   return e;
+}
+
+// Find a clip by its channel message id (for forward-reply detection).
+export function clipByChannelMsg(clips, channelMsgId) {
+  if (!channelMsgId) return null;
+  return (Array.isArray(clips) ? clips : []).find(c => c.channelMsgId === channelMsgId) || null;
+}
+
+// Cycle detection: returns true if linking childId as a child of proposedParent
+// would create a cycle (A→B→…→A). Safe for any depth.
+export function hasAncestor(clips, childId, proposedParent) {
+  let current = proposedParent;
+  while (current) {
+    if (current === childId) return true;
+    const parent = (Array.isArray(clips) ? clips : []).find(c => c.id === current);
+    current = parent && parent.parent;
+  }
+  return false;
 }
 
 export function prependClip(risas, entry) {

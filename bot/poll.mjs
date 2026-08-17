@@ -6,7 +6,8 @@ import { join } from 'node:path';
 import {
   parseUpdates, risaEntry, prependClip, identityOf, hashId, MAX_FILE_BYTES,
   latestClips, clipsOfAuthor, clipsToday, clipsSince, randomClip,
-  tagTrend, authorStats, searchClips, inlineResult
+  tagTrend, authorStats, searchClips, inlineResult,
+  hasAncestor, clipByChannelMsg
 } from './logic.mjs';
 import { pageUrlOf } from './pages.mjs';
 import { Telegram } from './telegram.mjs';
@@ -89,6 +90,34 @@ function addTags(d, text) {
   d.tags = out;
 }
 
+// Auto-generate a username for the subdomain on first publish.
+// Returns the username string, or null if generation failed.
+async function ensureUsername(q) {
+  let usernames = {};
+  try { usernames = JSON.parse(await readFile(p('usernames.json'), 'utf8')); } catch {}
+  const myKey = q.uploader;
+  // Already has a username?
+  const existing = Object.entries(usernames).find(([, v]) => v.key === myKey);
+  if (existing) return existing[0];
+  // Generate from Telegram @username or display name
+  const raw = (q.username || q.name || '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // strip accents
+    .replace(/[^a-z0-9_]/g, '_').replace(/_+/g, '_')
+    .replace(/^_|_$/g, '');
+  let base = raw || 'user';
+  if (base.length < 3) base = base + '_risa';
+  let candidate = base.slice(0, 20);
+  // Dedup: append suffix if taken by another key
+  let n = 1;
+  while (usernames[candidate] && usernames[candidate].key !== myKey) {
+    n++;
+    candidate = (base.slice(0, 16) + '_' + n).slice(0, 20);
+  }
+  usernames[candidate] = { key: myKey, name: q.name || 'Anónima', claimedAt: isoToday() };
+  await writeFile(p('usernames.json'), JSON.stringify(usernames, null, 2) + '\n');
+  return candidate;
+}
+
 // Detalles que un moderador propone para una risa en cola: una línea
 // "Título | Tags | Nombre" (lo que no se toque se conserva).
 function parseEditDetails(text) {
@@ -132,15 +161,17 @@ function clipLine(e) {
 
 // Texto + teclado del borrador: Título + Tags en una fila, identidad en otra, Enviar en la tercera.
 function draftText(d) {
+  const parentLine = d.parent ? '↳ Responde a: ' + (d.parentTitle || d.parent) : '';
   return [
     '🎵 Risa recibida 💛',
     '',
+    parentLine,
     '✏️ ' + (d.title || '—'),
     '🏷️ ' + ((d.tags && d.tags.length) ? d.tags.join(', ') : '—'),
     identityLabel(d),
     '',
     'Ajusta lo que quieras y pulsa «Enviar».'
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 
 function OPTIONS(d) {
@@ -217,15 +248,16 @@ async function publishClip(tg, cfg, q, id, risas, names, tgpub) {
     const who = q.uploader;
     const name = (who && names && names[who]) || q.name || 'Anónima';
     const tgLink = (who && tgpub && tgpub[who] && tgpub[who].ok) ? tgpub[who].username : undefined;
-    risas = prependClip(risas, risaEntry({
-      id, name, key: who, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src, tg: tgLink, video: !!q.video
-    }));
     const caption = [q.title, tagsHash(q.tags), name].filter(Boolean).join(' · ');
     if (q.video) {
       posted = await tg.sendVideoByUrl(cfg.channel, src, caption);
     } else {
       posted = await tg.sendAudioByUrl(cfg.channel, src, caption, { title: q.title, performer: name });
     }
+    risas = prependClip(risas, risaEntry({
+      id, name, key: who, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src, tg: tgLink, video: !!q.video,
+      parent: q.parent || null, channelMsgId: posted && posted.message_id
+    }));
     if (posted && posted.message_id) {
       await bestEffort(tg.setMessageReaction(cfg.channel, posted.message_id, '😂'));
     }
@@ -247,7 +279,8 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
       id: a.id, fileId: a.fileId, name: a.name, username: a.username, video: !!a.video,
       title: a.title || '', tags: [], sel: { ...DEFAULT_SEL },
       fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
-      draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false
+      draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false,
+      parent: a.parent || prev.pendingParent || null
     };
     const text = draftText(drafts[key]);
     if (prev.draftMsgId) {
@@ -349,7 +382,8 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
     queue[d.id] = { fileId: d.fileId, name, username: d.username, title: d.title, video: !!d.video,
                     tags: d.tags || [], sel: d.sel || { ...DEFAULT_SEL },
                     uploader: who,
-                    ...identityOf(d.sel, a.chatId, TG_ID_SECRET), modMsgId: copied.message_id };
+                    ...identityOf(d.sel, a.chatId, TG_ID_SECRET), modMsgId: copied.message_id,
+                    parent: d.parent || null };
     day[who] = (day[who] || 0) + 1;
     uploaders[d.id] = a.chatId;
     delete drafts[String(a.chatId)];
@@ -372,6 +406,23 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
   if (a.kind === 'welcome') {
     await bestEffort(tg.sendMessage(a.chatId, WELCOME_TEXT));
     return { risas, dirty: false };
+  }
+  // Forward from channel: user wants to reply to a published clip
+  if (a.kind === 'forward-channel') {
+    const parent = clipByChannelMsg(risas, a.channelMsgId);
+    if (!parent) {
+      await bestEffort(tg.sendMessage(a.chatId,
+        'No encontré esa risa en el feed. Prueba a reenviarla más tarde.'));
+      return { risas, dirty: false };
+    }
+    // Store pending forward in drafts (same state bucket as draft metadata)
+    const key = String(a.chatId);
+    const prev = drafts[key] || {};
+    drafts[key] = { ...prev, pendingParent: parent.id };
+    await bestEffort(tg.sendMessage(a.chatId,
+      '↳ Respondiendo a «' + (parent.t || parent.name || 'esta risa') + '»\n\n' +
+      'Ahora envía tu risa (nota de voz o vídeo).'));
+    return { risas, dirty: true };
   }
   if (a.kind === 'rename') {
     const who = hashId(a.chatId, TG_ID_SECRET);
@@ -419,9 +470,27 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
       if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
       lines.push('🙂 ' + (q.name || 'Anónima'));
       lines.push('🔗 Tu página de autor: ' + pageUrlOf(q.uploader, cfg.webUrl));
+      // Auto-claim subdomain on first publish
+      try {
+        const sub = await ensureUsername(q);
+        if (sub) lines.push('🌐 ' + sub + '.liberada.net');
+      } catch {}
       lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
       await bestEffort(tg.sendMessage(upChatId, lines.join('\n')));
       delete uploaders[a.id];
+      // Notify original author if this is a reply
+      if (q.parent) {
+        const parentClip = risas.find(e => e.id === q.parent);
+        if (parentClip && parentClip.key) {
+          const parentUploader = uploaders[parentClip.id];
+          if (parentUploader && parentUploader !== upChatId) {
+            await bestEffort(tg.sendMessage(parentUploader,
+              '💬 ¡Alguien respondió a tu risa!\n\n' +
+              '↳ ' + (q.title || '—') + ' · ' + (q.name || 'Anónima') + '\n' +
+              '🔗 ' + pageUrlOf(q.uploader, cfg.webUrl)));
+          }
+        }
+      }
     }
     return { risas, dirty: true };
   }
@@ -524,6 +593,11 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
       if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
       lines.push('🙂 ' + (q.name || 'Anónima'));
       lines.push('🔗 Tu página de autor: ' + pageUrlOf(q.uploader, cfg.webUrl));
+      // Auto-claim subdomain on first publish
+      try {
+        const sub = await ensureUsername(q);
+        if (sub) lines.push('🌐 ' + sub + '.liberada.net');
+      } catch {}
       lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
       await bestEffort(tg.sendMessage(upChatId, lines.join('\n')));
       delete uploaders[a.id];
@@ -741,12 +815,14 @@ async function main() {
       Object.entries(drafts).filter(([, d]) => d.awaitingTitle));
     const awaitingTags = Object.fromEntries(
       Object.entries(drafts).filter(([, d]) => d.awaitingTags));
+    const awaitingDraftParent = Object.fromEntries(
+      Object.entries(drafts).filter(([, d]) => d.pendingParent).map(([k, d]) => [k, d.pendingParent]));
     const awaitingModEdit = Object.fromEntries(
       Object.entries(queue).filter(([, e]) => e.editing));
     const updates = await tg.getUpdates(offset, POLL_TIMEOUT);
     const { actions, offset: nextOffset } = parseUpdates(
       updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags,
-                 awaitingModEdit, uploaderOf: uploaders,
+                 awaitingDraftParent, awaitingModEdit, uploaderOf: uploaders,
                  limits: cfg.limits }, offset);
 
     for (const a of actions) {
