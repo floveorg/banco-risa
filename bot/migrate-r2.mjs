@@ -34,8 +34,8 @@ async function main() {
   const { uploadAudio } = await import('./r2.mjs');
 
   let moved = 0;
-  const banco = JSON.parse(await readFile(p('risa.json'), 'utf8'));
-  const keys = r2ClipKeys(banco.map((c) => c.src || ''), publicBase);
+  const risas = JSON.parse(await readFile(p('risa.json'), 'utf8'));
+  const keys = r2ClipKeys(risas.map((c) => c.src || ''), publicBase);
   for (const key of keys) {
     const id = key.replace(/^banco-risa\/q_/, 'q_').replace(/\.mp3$/, '');
     const res = await fetch(publicBase.replace(/\/+$/, '') + '/' + key);

@@ -15,6 +15,7 @@ test('buildRisaTracks maps fields and composes by/orig from the license', () => 
     t: 'Risa de Marta', src: 'audio/a.mp3', tags: 'contagiosa',
     by: 'Marta · CC BY-SA 4.0',
     tg: '',
+    key: '',
     orig: 'https://creativecommons.org/licenses/by-sa/4.0/deed.es',
     origLabel: 'licencia',
     isVideo: false,
@@ -38,6 +39,13 @@ test('the tg opt-in link rides into the track (C19, never automatic)', () => {
   assert.equal(t.tg, '@mar');
   const [t2] = Risa.buildRisaTracks([{ name: 'Yusuf', src: 'a.mp3' }]);
   assert.equal(t2.tg, '');
+});
+
+test('the author-page key rides into the track for the tag-url page', () => {
+  const [t] = Risa.buildRisaTracks([{ name: 'sara-2', src: 'a.mp3', key: 'k_abc' }]);
+  assert.equal(t.key, 'k_abc');
+  const [t2] = Risa.buildRisaTracks([{ name: 'Anónima', src: 'a.mp3' }]);
+  assert.equal(t2.key, '');
 });
 
 test('buildRisaTracks derives a title and defaults tags when missing', () => {

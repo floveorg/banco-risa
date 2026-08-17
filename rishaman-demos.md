@@ -190,8 +190,8 @@ muestra el subitem «Rishaman»).
      lugar reservado hasta llenarlo.
    - Controles: flechas anterior/siguiente + puntos `data-dot` (19 puntos) +
      contador `03 / 19` + botón "diapositiva aleatoria" (chispazo magenta).
-   - Al llegar a 19: botón **"Reír en círculo"** que repite un loop de risas del
-     banco (misma lógica que `index.html`).
+   - Al llegar a 19: botón **"Reír en círculo"** que repite un loop de risas
+     publicadas (misma lógica que `index.html`).
 4. **#mapa** — el árbol de `categorias/` renderizado como chips agrupados por
    acto (reutiliza el patrón de chips de "Risas del mundo").
 5. **Footer** — chip colapsable "Créditos y licencias" (mismo `credits-toggle`
@@ -205,5 +205,5 @@ muestra el subitem «Rishaman»).
 - El resto de ramas del árbol no tienen archivos aún: se deja el slot con su
   etiqueta de media para llenar después (el árbol de carpetas ya existe como
   guía).
-- El botón final lanza un **loop de risas del banco** o una **mezcla de audio
+- El botón final lanza un **loop de risas publicadas** o una **mezcla de audio
    de `categorias/Canto`** cuando exista

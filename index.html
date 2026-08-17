@@ -22,6 +22,7 @@
   --marigold:#ffb020;
   --magenta:#f5288e;   /* el riesgo: el chispazo inesperado de la risa */
   --grape:#5b2fa0;
+  --azure:#1d6fe0;
   --mint:#12b28a;
   --shadow:rgba(58,26,10,.16);
   --r:22px;
@@ -177,6 +178,26 @@ img{max-width:100%; display:block}
 .clip-tg-link{font-family:var(--mono); font-size:.68rem; font-weight:700; color:var(--grape); text-decoration:none;
   white-space:nowrap; border-bottom:1.5px dashed var(--grape)}
 .clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon)}
+.userpage-wrap{max-width:560px; margin:0 auto; text-align:left}
+.up-back{font-family:var(--disp); font-weight:700; color:var(--grape); text-decoration:none; font-size:.9rem}
+.up-back:hover{text-decoration:underline}
+.up-head{display:flex; align-items:center; gap:16px; margin:18px 0 10px}
+.up-avatar{width:56px; height:56px; flex:none; display:grid; place-items:center; border-radius:50%;
+  background:var(--marigold); border:3px solid var(--ink); font-family:var(--disp); font-weight:800; font-size:1.4rem}
+.up-head h3{margin:0; font-size:1.5rem}
+.up-sub{margin:2px 0 0; font-family:var(--mono); font-size:.78rem; color:var(--ink-soft)}
+.up-tg{margin-left:auto}
+.up-levels{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 18px}
+.up-chip{font-family:var(--mono); font-size:.68rem; font-weight:700; padding:3px 10px; border-radius:999px;
+  border:1.5px solid var(--ink-soft); color:var(--ink-soft); background:transparent}
+.up-chip.ok{color:#fff; background:var(--azure); border-color:var(--azure)}
+.up-clips{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:8px}
+.up-clips li{padding:10px 14px; border:2.5px solid var(--ink); border-radius:14px; background:var(--cream)}
+.up-clips .up-t{font-weight:700}
+.up-clips .up-w{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); margin-left:8px}
+.up-clips .up-play{font-family:var(--disp); font-weight:700; font-size:1rem; background:none; border:none;
+  padding:0; color:var(--ink); cursor:pointer; text-align:left}
+.up-clips .up-play:hover{color:var(--azure); text-decoration:underline}
 .clip-tg{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--grape); cursor:pointer;
   border:1.5px solid var(--grape); border-radius:999px; background:transparent; padding:1px 8px; line-height:1.4}
 .clip-tg:hover{background:var(--marigold)}
@@ -222,7 +243,7 @@ img{max-width:100%; display:block}
 /* ============ RISAS DE LA GENTE · chips de etiquetas + playlist ============ */
 .gente-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:30px; align-items:start}
 @media(max-width:820px){.gente-grid{grid-template-columns:1fr}}
-.tag-space{position:relative; height:460px; border:none; background:transparent; overflow:hidden; padding:0}
+.tag-space{position:relative; width:100%; height:460px; border:none; background:transparent; overflow:hidden; padding:0}
 .chip{position:relative; border:2.5px solid var(--ink); border-radius:999px; background:var(--cream);
   color:var(--ink); font-family:var(--disp); font-weight:700; line-height:1; cursor:pointer;
   padding:10px 16px; box-shadow:0 4px 0 rgba(42,24,16,.16); white-space:nowrap; user-select:none}
@@ -238,6 +259,7 @@ img{max-width:100%; display:block}
 .title-tag[aria-pressed="true"]{color:var(--ink); border-bottom:3px solid var(--marigold)}
 .tag-space.flowing .chip{position:absolute; left:0; top:0}
 @media (prefers-reduced-motion: reduce){.tag-space.flowing .chip{animation:none}}
+.tag-space .chips-hint{position:absolute; inset:0; margin:auto; display:grid; place-items:center; max-width:34ch; text-align:center; font-size:.95rem; opacity:.65; padding:0 1rem}
 .tag-search{display:flex; gap:10px; align-items:center; width:100%; max-width:340px; min-width:0; margin:0; padding:0;
   border:none; background:transparent}
 .tag-search input{flex:1; min-width:0; border:2.5px solid var(--ink); border-radius:999px; padding:9px 16px;
@@ -510,7 +532,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 #cultura .cs-grid{margin-top:38px}
 #world-player .tracklist{height:460px; overflow-y:auto; align-content:start}
 
-/* ============ CIENCIA Y COMUNIDAD (contenido desde comunidad.html) ============ */
+/* ============ CIENCIA Y COMUNIDAD ============ */
 .stat .big .stat-sub{display:block; font-size:.7em}
 .btn-center{text-align:center}
 .ciencia-intro{color:var(--ink-soft); max-width:60ch}
@@ -571,6 +593,37 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
  .scope.v2{background:var(--grape); color:#fff}
  .rtab-panel ol{max-width:74ch}
 .rtab-panel ol li{margin-bottom:5px}
+.rtab-panel details.collapsed{margin:18px 0; border:2.5px solid var(--ink); border-radius:14px; background:var(--cream)}
+.rtab-panel details.collapsed summary{cursor:pointer; font-family:var(--disp); font-weight:700; font-size:.95rem; color:var(--ink); padding:12px 16px; list-style:none; display:flex; align-items:center; gap:10px}
+.rtab-panel details.collapsed summary::-webkit-details-marker{display:none}
+.rtab-panel details.collapsed summary::before{content:"+"; color:var(--persimmon); font-weight:800; font-size:1.05rem}
+.rtab-panel details.collapsed[open] summary::before{content:"-"}
+.rtab-panel details.collapsed .collapsed-body{padding:0 16px 14px}
+/* RÉPLICA · Risa v1 (formulario de configuración del prompt) */
+.setup-row{margin:12px 0 2px}
+.setup-chip{font-size:.88rem}
+.setup-modal{max-width:480px; max-height:min(680px,92vh); overflow-y:auto; overscroll-behavior:contain}
+.copy-chip{margin-left:auto; padding:7px 14px; font-size:.82rem}
+.copy-chip[aria-pressed="true"]{background:var(--marigold)}
+.see-btn{border:none; background:var(--marigold); color:var(--ink); font:inherit; font-size:.78rem; font-weight:700;
+  border-radius:999px; padding:3px 12px; margin-left:8px; cursor:pointer; vertical-align:middle}
+.see-btn:hover{transform:translateY(-1px)}
+.see-box{font-size:.86rem; line-height:1.5; color:var(--ink-soft)}
+.see-box ul{margin:2px 0 0; padding-left:18px}
+.see-box b{color:var(--ink)}
+.setup-group input[type="radio"]{accent-color:var(--persimmon)}
+.setup-form{display:grid; gap:14px}
+.setup-group{display:grid; gap:5px; border:2px dashed rgba(42,24,16,.25); border-radius:14px; padding:12px; margin:0}
+.setup-group.setup-radio{border:none; padding:0; gap:6px}
+.setup-group legend{font-family:var(--disp); font-weight:700; font-size:.9rem; color:var(--ink); padding:0 6px}
+.setup-group label{font-size:.9rem; color:var(--ink-soft)}
+.setup-group input[type="text"]{
+  border:2.5px solid var(--ink); border-radius:12px; background:#fff; color:var(--ink);
+  padding:9px 12px; font:inherit; width:100%; box-sizing:border-box}
+.setup-group input:focus{outline:3px solid rgba(255,176,32,.4)}
+.setup-ck{display:flex; align-items:center; gap:8px; cursor:pointer}
+.setup-ck input{width:18px; height:18px; accent-color:var(--persimmon)}
+.setup-actions{display:flex; gap:10px; justify-content:flex-end; align-items:center; flex-wrap:wrap}
 .circuit-fig{max-width:720px; margin:24px auto 0}
 .circuit-fig svg{width:100%; height:auto; display:block}
 .rtab-more{color:var(--ink-soft); line-height:1.55; max-width:72ch; margin-top:26px; padding-top:16px; border-top:1px dashed rgba(42,24,16,.22)}
@@ -607,13 +660,40 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 <main id="top">
 
+  <!-- ============ 0 · PÁGINA DE AUTOR (#/u/&lt;key&gt;) ============
+       Tag-url automática de cada autor: todo clip publicado lleva la key de su
+       autor (hash salado del id de Telegram, nunca en claro) y el bot se la
+       regala en el aviso de publicación. Funciona aunque el autor solo añada
+       nombre público. La identidad real (authy: claims, varios ids, niveles) se
+       construye en v2; aquí solo se certifica que un moderador aceptó la
+       publicación del autor. -->
+  <section class="content-section" id="userpage" hidden>
+    <div class="wrap userpage-wrap">
+      <a class="up-back" href="#playlist">← Volver a las risas</a>
+      <header class="up-head">
+        <span class="up-avatar" id="up-avatar" aria-hidden="true">?</span>
+        <div>
+          <h3 id="up-name">Usuario</h3>
+          <p class="up-sub" id="up-sub">Página de autor — autenticado en Telegram</p>
+        </div>
+        <a class="clip-tg-link up-tg" id="up-tg" href="#" target="_blank" rel="noopener" hidden></a>
+      </header>
+      <div class="up-levels" id="up-levels">
+        <span class="up-chip ok">Autenticado en Telegram · ✓</span>
+        <span class="up-chip">Claims e identidad completa · v2</span>
+      </div>
+      <h4>Sus risas</h4>
+      <ul class="up-clips" id="up-clips"></ul>
+    </div>
+  </section>
+
   <!-- ============ 1 · RISAS DE LA GENTE ============ -->
   <section class="content-section" id="gente">
     <div class="wrap">
       <div class="gente-grid">
         <div class="tag-col">
           <div class="tag-search">
-            <input id="tag-search-input" type="search" placeholder="Tag, Title, Name…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
+            <input id="tag-search-input" type="search" placeholder="Título, tags, usuario…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
             <button id="tag-search-btn" type="button">Go</button>
           </div>
           <div class="tag-space flowing" id="tag-space" role="group" aria-label="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas"></div>
@@ -935,31 +1015,49 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           <div class="section-head">
             <p class="eyebrow">Replica Nuestro Sistema</p>
             <h2>Monta tu propia risa liberada</h2>
-            <p>Todo el proyecto es código abierto con licencia libre. Elige el nivel que te venga bien: un prompt para un agente, la introducción técnica o el desarrollo completo.</p>
+            <p>Todo el proyecto es código abierto con licencia libre. Elige el nivel que te venga bien: un prompt para un agente, la introducción paso a paso o el desarrollo (v2).</p>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica">
             <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
-            <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
             <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
           </nav>
-          <div class="rtab-panel" id="agentes" hidden>
-            <p>La versión <b>mini</b>: un único prompt que convierte a un agente (IA) en el encargado de montar todo el sistema en tu proyecto. Cópialo, pégaselo y supervisa el resultado.</p>
-            <pre>Rol: asiste a montar una «risa liberada» para un proyecto propio, inspirándote en el proyecto libre github.com/floveorg/risa.
+          <div class="rtab-panel" id="presentacion">
+            <details class="collapsed">
+              <summary>Agentes — un prompt para montar el sistema <button class="chip copy-chip" id="copy-prompt" type="button" aria-label="Copiar el prompt al portapapeles">Copiar</button></summary>
+              <div class="collapsed-body">
+                <p>La versión <b>mini</b>: un único prompt que convierte a un agente (IA) en el encargado de montar todo el sistema en tu proyecto. Cópialo, pégaselo y supervisa el resultado.</p>
+                <div class="setup-row">
+                  <button class="chip setup-chip" id="setup-v1" type="button">📦 Risa v1 — configura el prompt</button>
+                </div>
+                <pre id="agente-prompt">Rol: asiste a montar el proyecto «mi proyecto», inspirándote en el proyecto libre github.com/floveorg/risa.
 
-Objetivo: dejar funcionando el sistema completo — subida de notas de voz por Telegram, moderación, publicación en canal + feed web — sin servidor propio.
+Objetivo: sistema completo — subida de audio · vídeo por Telegram → moderación → publicación en canal + feed web. Sin servidor propio.
+
+Datos:
+- Bot: @TuBot — cron Actions 5–10 min
+- Contenido: audio · vídeo
+- Feed: risa.json · newest-first
+- Campos por pieza: título · etiquetas · autor.
+
+Requisitos (release completa): piezas ≤ 1 min · ≤ 10 MB · máx. 5 en cola y 5 al día · CC BY-SA 4.0 («Enviar = consentir», tag «libre») · página de autor #/u/&lt;key&gt; con feed propio · comandos de solo lectura /me · /stats · /profile · /status · /queue · /latest · /now · /today · /since · /random · /trending · /play · etiquetas → chips · búsqueda · favoritos (filtro local) · entrada por deep link + QR · repo dedicado con Pages · feed risa.json newest-first.
 
 Pasos:
-1. Clona el repo de referencia y estudia bot/, index.html, risa.json y .github/workflows.
+1. Clona el repo de referencia; estudia bot/, index.html, risa.json y .github/workflows.
 2. Pide y valida los secretos (BOT_TOKEN, CHANNEL_ID, MOD_GROUP_ID, credenciales R2) antes de usarlos.
 3. Configura GitHub Actions como cron que llame a getUpdates cada 5–10 minutos.
 4. Monta el feed risa.json y la web en GitHub Pages.
-5. Verifica de punta a punta con una nota de voz de prueba.
+5. Verifica de punta a punta con una prueba real de audio · vídeo.
 
 Permisos: leer/escribir el repo del proyecto, instalar dependencias de Node, desplegar Pages y Actions. Nada fuera del repo; confirma antes de crear credenciales.
 
 Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Pages, Actions); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.</pre>
-          </div>
-          <div class="rtab-panel" id="presentacion">
+              </div>
+            </details>
+            <p>El flujo completo, paso a paso:</p>
+            <figure>
+              <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
+              <figcaption>Flujo v1: de la nota de voz a la web y al canal</figcaption>
+            </figure>
             <h4>Las piezas</h4>
             <ol>
               <li><b>Repositorio público</b> — código, feed <code>risa.json</code> y la web, todo en un solo repo.</li>
@@ -968,104 +1066,417 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li><b>Cloudflare R2</b> — almacenamiento gratuito (10 GB) para los audios, con URL pública.</li>
               <li><b>GitHub Actions</b> — un cron llama al bot cada 5–10 minutos para vaciar la cola.</li>
             </ol>
+            <figure class="circuit-fig piezas-fig">
+              <svg viewBox="0 0 760 248" role="img" aria-label="Las dos ideas clave del circuito: un tag se enriquece de Telegram a la web (chips, búsqueda, favoritos locales y el feed del perfil) y el id de Telegram se oscurece tras un hash salado y un nombre público">
+                <defs>
+                  <marker id="parrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#2a1810"/>
+                  </marker>
+                </defs>
+                <style>
+                  .pmono{font-family:'Space Mono',ui-monospace,monospace; font-weight:700; font-size:16px; fill:#2a1810}
+                  .pbody{font-family:'Figtree',system-ui,sans-serif; font-size:12px; fill:#2a1810}
+                  .psmall{font-family:'Figtree',system-ui,sans-serif; font-size:11px; fill:#2a1810}
+                  .pline{stroke:#2a1810; stroke-width:2; fill:none; marker-end:url(#parrow)}
+                </style>
+                <text x="20" y="22" class="pbody" font-weight="700">1 · Un tag se enriquece, de Telegram a la web</text>
+                <rect x="20" y="34" width="150" height="58" rx="16" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="95" y="58" text-anchor="middle" class="pmono" fill="#ff5630">Telegram</text>
+                <text x="95" y="78" text-anchor="middle" class="psmall">subida + moderación ✅</text>
+                <path class="pline" d="M 170 63 L 218 63"/>
+                <rect x="222" y="34" width="150" height="58" rx="16" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="297" y="58" text-anchor="middle" class="pmono">risa.json</text>
+                <text x="297" y="78" text-anchor="middle" class="psmall">tags · key · hash</text>
+                <path class="pline" d="M 372 63 L 420 63"/>
+                <rect x="424" y="34" width="160" height="58" rx="16" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="504" y="58" text-anchor="middle" class="pmono">La web</text>
+                <text x="504" y="78" text-anchor="middle" class="psmall">chips · búsqueda · favoritos</text>
+                <path class="pline" d="M 584 63 L 632 63"/>
+                <rect x="636" y="34" width="104" height="58" rx="16" fill="#ffb020" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="688" y="58" text-anchor="middle" class="pmono">Perfil</text>
+                <text x="688" y="78" text-anchor="middle" class="psmall">#/u/&lt;key&gt;</text>
+                <text x="20" y="112" class="psmall">Los favoritos ❤️/⭐ son un filtro local (tu navegador) sobre el mismo feed; el perfil es solo otra vista de la misma web.</text>
+                <text x="20" y="152" class="pbody" font-weight="700">2 · El id de Telegram nunca sale en claro</text>
+                <rect x="20" y="164" width="170" height="58" rx="16" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="105" y="188" text-anchor="middle" class="pmono">id de Telegram</text>
+                <text x="105" y="208" text-anchor="middle" class="psmall">123456789 — no se guarda</text>
+                <path class="pline" d="M 190 193 L 238 193"/>
+                <rect x="242" y="164" width="210" height="58" rx="16" fill="#fff8ee" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="347" y="188" text-anchor="middle" class="pmono">hash salado + nombre</text>
+                <text x="347" y="208" text-anchor="middle" class="psmall">handle estable · palabra + hash</text>
+                <path class="pline" d="M 452 193 L 500 193"/>
+                <rect x="504" y="164" width="236" height="58" rx="16" fill="#ffb020" stroke="#2a1810" stroke-width="2.5"/>
+                <text x="622" y="188" text-anchor="middle" class="pmono">Página #/u/&lt;key&gt;</text>
+                <text x="622" y="208" text-anchor="middle" class="psmall">el público solo ve tu nombre público</text>
+              </svg>
+              <figcaption>Las dos ideas clave de las piezas: el tag viaja enriquecido hasta la web (favoritos = filtro local) y el id de Telegram se oscurece tras un nombre público.</figcaption>
+            </figure>
             <h4>Cómo funciona</h4>
             <div class="step"><p>La gente llega por <b>deep link</b> o <b>QR</b>, pulsa START y envía una nota de voz al bot.</p></div>
             <div class="step"><p>Elige <b>identidad</b> (ID Telegram, nombre público o anónimo) y <b>etiquetas</b>, y pulsa Enviar.</p></div>
-            <div class="step"><p>Un <b>moderador humano</b> aprueba o rechaza en el grupo privado.</p></div>
+            <div class="step"><p>Un <b>moderador humano</b> revisa en el grupo privado: ✅ publica, 🗑 borra o ✏️ propone ajustar los detalles.</p></div>
+            <div class="step"><p>Si propone cambios, manda una línea <code>Título | Tags | Nombre</code> y el bot pide el <b>visto bueno al autor</b> por DM — solo con su aceptación se publica.</p></div>
             <div class="step"><p>Al aprobar, el bot normaliza el audio a MP3 (<code>ffmpeg</code>), lo sube a R2, lo antepone a <code>risa.json</code> (commit + push) y lo publica en el canal.</p></div>
-            <div class="step"><p>La <b>web</b> lee <code>risa.json</code> y reproduce la playlist. Esto que ves es esa web.</p></div>
-            <p>El flujo completo, paso a paso:</p>
-            <figure>
-              <img src="risaliberada-v1-thread.png" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
-              <figcaption>Flujo v1: de la nota de voz a la web y al canal</figcaption>
-            </figure>
-            <p class="rtab-more">La guía técnica completa — flujos subir/moderar/escuchar, modelo de datos (<code>risa.json</code>), identidad y privacidad, hosting y licencia — vive en el estándar <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">RisaLiberada v1 (estándar del circuito) ↗</a>. Resumen de un párrafo: un bot de Telegram recoge notas de voz, un grupo humano modera, y todo lo aprobado acaba como MP3 en Cloudflare R2 con su entrada en <code>risa.json</code>; la web solo lee el feed.</p>
+            <div class="step"><p>La <b>web</b> lee <code>risa.json</code>: reproduce la playlist y el feed, y cada autor tiene su <b>página de autor</b> con su propio feed (<code>#/u/&lt;key&gt;</code>). Esto que ves es esa web.</p></div>
+            <details class="collapsed">
+              <summary>Qué ya funciona — las features técnicas de Risa v1</summary>
+              <div class="collapsed-body">
+                <p>La v1 ya trae esto funcionando, feature a feature, y cada pieza está escrita para una sola cosa: sin build, sin servidor y sin coste. Lo que queda se vive en la pestaña <b>Desarrollo</b> (v2).</p>
+                <h5 class="feat-area">Web — el escaparate</h5>
+                <ul>
+                  <li>App de archivo único: HTML + CSS + JS, sin build y sin dependencias</li>
+                  <li>Servida desde GitHub Pages: estático, HTTPS, coste cero</li>
+                  <li>Un solo feed (<code>risa.json</code>) como fuente de verdad de la web</li>
+                  <li>Dos playlists (risas del mundo + risas de la gente) con un reproductor factory compartido</li>
+                  <li>Reproductor inline: play/pausa, anterior/siguiente y lista de pistas</li>
+                  <li>El feed puede incluir vídeo (mp4/webm) de otros bots sin tocar la web</li>
+                  <li>«Últimas risas»: feed de las últimas n piezas (por defecto 6)</li>
+                  <li>Chips de etiquetas filtrables</li>
+                  <li>Nube de tags flotante con colisiones evitadas (<code>floatChips</code>)</li>
+                  <li>Búsqueda por tag · título · nombre</li>
+                  <li>Favoritos ❤️/⭐ compartidos por las dos playlists</li>
+                  <li>Paginador del feed</li>
+                  <li>Página de autor <code>#/u/&lt;key&gt;</code> con su propio feed</li>
+                  <li>Compartir por WhatsApp, Telegram, e-mail y copiar</li>
+                  <li>QR del deep link <code>t.me/RisaLiberadaBot</code> para escanear</li>
+                  <li>Imágenes y audio servidos desde R2 con URL pública (no desde GitHub)</li>
+                  <li>Procedencia y licencia de cada pieza, enlazada a su ficha en Commons</li>
+                  <li>Carrusel de beneficios de la risa (20 datos) que conecta con la sección ciencia</li>
+                </ul>
+                <h5 class="feat-area">Bot — el circuito serverless</h5>
+                <ul>
+                  <li>Ingesta por Telegram: audios y vídeos de hasta 1 min</li>
+                  <li>Límites duros: 10 MB por pieza, 5 en cola y 5 al día por remitente</li>
+                  <li>Validación de tipo, extensión, tamaño y duración antes de subir</li>
+                  <li>Offset persistido e idempotencia en <code>getUpdates</code> (ni pérdidas ni duplicados)</li>
+                  <li>Long polling de 25 s: sin endpoint público y sin webhook</li>
+                  <li>Cron de GitHub Actions como motor (cada 5–10 minutos)</li>
+                  <li>Identidad al subir: nombre público, id de Telegram o anónima</li>
+                  <li>Handle estable por palabra + hash salado (nunca <code>@username</code>)</li>
+                  <li>Formulario guiado con botones inline: descripción, etiquetas y visibilidad</li>
+                  <li>Normalización a MP3 con <code>ffmpeg</code></li>
+                  <li>Subida a Cloudflare R2 con firma SigV4 propia (cero dependencias)</li>
+                  <li>La pieza aprobada antepone a <code>risa.json</code> (git como base de datos)</li>
+                  <li>Commit + push automáticos del feed</li>
+                  <li>Publicación en el canal público @risaliberada</li>
+                  <li>Moderación humana en grupo privado: ✅ publicar, 🗑 borrar, ✏️ proponer detalles</li>
+                  <li>Edición con visto bueno del autor: nadie publica contra su voluntad</li>
+                  <li>Confirmaciones y avisos en español (subida, aprobación, rechazo, publicación)</li>
+                  <li>Reconocimiento de decisiones por palabra («ok», «sí», «no», «borrar»…)</li>
+                  <li>Mensajes malformados nunca tumban el bucle: <code>parseUpdates</code> es una función pura</li>
+                  <li>Bienvenida con las reglas claras (1 min, 10 MB, 5 al día)</li>
+                  <li>Cliente de Telegram con timeout y manejo de errores de red</li>
+                  <li>Scripts de mantenimiento: <code>migrate-r2.mjs</code> y <code>sync-media.mjs</code></li>
+                </ul>
+                <h5 class="feat-area">E · Comandos del bot — mínimos, de solo lectura y reproducción <span class="scope v1">v1</span></h5>
+                <ul>
+                  <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
+                  <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
+                  <li>Reproducción: <code>/play</code> (recorre el feed, el mismo que la web)</li>
+                  <li>Todo es de solo lectura y reproducción: nada escribe; <code>/name</code> renombra en DM (backfill del histórico en v2)</li>
+                </ul>
+                <h5 class="feat-area">Moderación y confianza</h5>
+                <ul>
+                  <li>Solo los moderadores del grupo pueden aprobar o rechazar</li>
+                  <li>Nada se publica sin revisión humana (un par de ojos antes del canal)</li>
+                  <li>Gate de aceptación: la edición propuesta se publica solo si el autor acepta</li>
+                  <li>Certificación «autenticado en Telegram» en la página de autor (un moderador aceptó tu post)</li>
+                  <li>Enlace a t.me solo con opt-in explícito (nunca automático)</li>
+                  <li>Cuota y cola por remitente como anti-abuso</li>
+                  <li>Licencia CC BY-SA 4.0 declarada en cada pieza publicada</li>
+                </ul>
+                <h5 class="feat-area">Página de autor — tag-url</h5>
+                <ul>
+                  <li>Cada publicación genera su tag-url <code>#/u/&lt;key&gt;</code> automáticamente</li>
+                  <li>El bot envía la URL de tu página en el aviso de publicación — funciona aunque solo añadas nombre público</li>
+                  <li>Feed propio con todas tus risas</li>
+                  <li>El reproductor de la página reutiliza el reproductor global</li>
+                  <li>Enlace a t.me solo si hay opt-in</li>
+                  <li>Avatar con inicial y fecha relativa (<code>timeAgo</code>)</li>
+                </ul>
+                <h5 class="feat-area">Privacidad y datos</h5>
+                <ul>
+                  <li>Nunca se guardan ids de Telegram en claro en el repo</li>
+                  <li>Origen oscurecido: el handle público es un hash salado de la identidad</li>
+                  <li>Anónimo es una opción real al subir (y la más común)</li>
+                  <li>Esquema <code>risa.json</code> versionado: <code>id</code>, <code>t</code>, <code>name</code>, <code>tags</code>, <code>src</code>, <code>when</code>, <code>tg</code>, <code>key</code></li>
+                  <li>Retrocompatible: el feed puede ser array (v1) u objeto <code>{flag, clips}</code></li>
+                  <li>Addons por flag: se activan desde la interfaz sin romper lo publicado</li>
+                  <li>Feed agregable: puede sumar risas de otros bots (vídeo incluido)</li>
+                  <li>Guardarraíles del contrato: las claves desconocidas de <code>flove.json</code> se ignoran</li>
+                </ul>
+                <h5 class="feat-area">Integración con flove</h5>
+                <ul>
+                  <li><code>flove.json</code> enriquece sin interrumpir: timeout de 4 s y fail-silent</li>
+                  <li>Regla de oro: <code>risa.json</code> es la verdad; <code>flove.json</code> solo añade, nunca al revés</li>
+                  <li>Al claim (v2), el enlace lleva al perfil único de flove donde ves tus risas y activas Lovy ya autenticado</li>
+                </ul>
+                <h5 class="feat-area">Infraestructura y hosting</h5>
+                <ul>
+                  <li>Coste cero: R2 (10 GB gratis) + Pages + Actions</li>
+                  <li>Sin servidor propio y sin base de datos: git + archivos</li>
+                  <li>Secretos de GitHub Actions (BOT_TOKEN, CHANNEL_ID, MOD_GROUP_ID, R2_*)</li>
+                  <li>Uploader R2 propio (SigV4) que sustituyó a Cloudinary por falta de permiso</li>
+                  <li>Migración de prefijos y reescritura de URLs lista en <code>migrate-r2.mjs</code></li>
+                  <li>Medios sincronizados a R2 con <code>sync-media.mjs</code> (idempotente)</li>
+                  <li>Replicable en una tarde: clona, lee el estándar, lanza tu bot, tu bucket y tu canal</li>
+                  <li>El sitio se sirve dentro de flove.org, que además precachea offline (service worker)</li>
+                </ul>
+                <h5 class="feat-area">Calidad y documentación</h5>
+                <ul>
+                  <li>Suite de tests <code>node --test</code>: 75 verdes sobre la lógica del bot y de la web</li>
+                  <li>Ayudantes puros compartidos: <code>risa.js</code> corre igual en la web y en Node</li>
+                  <li>Verificación con jsdom sin navegador (harness repetible)</li>
+                  <li>Chequeo de sintaxis <code>node --check</code> en todos los archivos</li>
+                  <li>Estándar RisaLiberada v1 documentado: flujos, datos, identidad, hosting y licencia</li>
+                  <li>Diagramas mermaid (thread + flow) versionados junto al estándar</li>
+                  <li>Plan de v2 centralizado en <code>plan-v2.md</code> del estándar</li>
+                  <li>Vocabulario consistente: los nombres del código coinciden con el texto de la interfaz</li>
+                </ul>
+                <h5 class="feat-area">Accesibilidad y experiencia</h5>
+                <ul>
+                  <li><code>prefers-reduced-motion</code> respetado (animaciones off)</li>
+                  <li>Teclado: flechas en carruseles, foco visible en chips y botones</li>
+                  <li><code>aria-label</code> y roles en los controles importantes</li>
+                  <li>Contraste alto sobre crema/ink</li>
+                  <li><code>alt</code> descriptivo en todas las imágenes</li>
+                  <li>Carga perezosa (<code>loading="lazy"</code>) de imágenes</li>
+                  <li>Audio con <code>preload="none"</code> (no descarga hasta reproducir)</li>
+                  <li>Micro-interacciones solo con CSS, sin JavaScript de más</li>
+                  <li>El botón de la risa reproduce un clip al toque (detalle audiovisual)</li>
+                  <li>QR + deep link pensados para compartir desde el móvil</li>
+                </ul>
+              </div>
+            </details>
+            <p class="rtab-more">La guía técnica completa — flujos subir/moderar/escuchar, modelo de datos (<code>risa.json</code>), identidad y privacidad, hosting y licencia — vive en el estándar RisaLiberada v1. Resumen de un párrafo: un bot de Telegram recoge notas de voz, un grupo humano modera, y todo lo aprobado acaba como MP3 en Cloudflare R2 con su entrada en <code>risa.json</code>; la web solo lee el feed.</p>
+            <ul class="plan-links">
+              <li><a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">presentación y estándar RisaLiberada v1 ↗</a></li>
+              <li><a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan de v2 (centralizado) ↗</a></li>
+            </ul>
           </div>
           <div class="rtab-panel" id="desarrollo" hidden>
-            <p class="rtab-intro">El desarrollo es una <b>lista única de features</b>, agrupadas por área y ordenadas de la más simple a la más compleja. Las ya hechas llevan ✅; las demás se van tachando a medida que se hacen. Cuando una rama desborda risa, enlazamos al plan de flove correspondiente.</p>
-            <h4>El desarrollo, feature a feature</h4>
-            <h5 class="feat-area">A · Web — el escaparate</h5>
+            <p class="rtab-intro">El desarrollo en curso es la <b>v2</b>: pasar el circuito de serverless (cron + archivos) a un sistema con backend propio — <b>Railway + libSQL + FastAPI + webhooks</b> — con perfiles de autor <code>lol/&lt;key&gt;/</code>, identidad authy completa (claim L2→L3) y las hermanas <b>lovy</b> y <b>flovebot</b>. v2 no sustituye a v1: <b>potencia lo que v1 ya hace</b> — el circuito de siempre (subir → moderar → publicar) sigue como base y de respaldo; v2 se enciende encima sin tocar el contrato de lectura (la web sigue leyendo <code>risa.json</code>). Las features ya hechas viven plegadas en la <b>Presentación</b>; aquí queda lo que se va construyendo. El plan completo, centralizado: <a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan-v2.md ↗</a>.</p>
+            <h4>El desarrollo v2, feature a feature</h4>
+            <h5 class="feat-area">A · Web — claim y gestión de tus contenidos</h5>
             <ol start="1">
-              <li>✅ Feed real: la playlist y «Últimas risas» leen de <code>risa.json</code> (un solo json)</li>
-              <li>✅ Compartir por Telegram: botón → deep link <code>t.me/…</code> + QR</li>
-              <li>✅ Etiquetas → chips filtrables</li>
-              <li>✅ Búsqueda por tag · título · nombre</li>
-              <li>✅ Recientes · favoritos ❤️/⭐ · paginador (sin tope total: puede agregar feeds de otros bots)</li>
               <li><span class="scope v2">v2 · railways</span> Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
             </ol>
-            <h5 class="feat-area">B · Bot — el circuito serverless</h5>
-            <ol start="7">
-              <li>✅ Ingesta por Telegram (nota de voz), cola, offset, idempotencia</li>
-              <li>✅ Moderación ✅/🗑 en grupo privado</li>
-              <li>✅ ffmpeg → MP3 → R2 → <code>risa.json</code> (prepend) → canal público</li>
-              <li>✅ Identidad al subir: palabra + hash / id / anónima</li>
-              <li>✅ Fijar anti-abuso: 1 min · 10 MB · 5 en cola y 5 al día por remitente (hash), copy de confirmación en español</li>
-            </ol>
-            <h5 class="feat-area">C · Identidad — authy</h5>
-            <ol start="12">
-              <li>✅ Núcleo <code>authy.js</code> canal-agnóstico + driver Telegram (email/phone = stubs) <span class="scope v1">v1</span></li>
+            <h5 class="feat-area">C · Identidad — authy v2</h5>
+            <ol start="2">
               <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
-              <li>✅ <code>key</code> inmutable + palabra editable: <code>/name</code> en DM ya activo (backfill del histórico con la API en v2) <span class="scope v1">v1</span></li>
-              <li>✅ Origen oscurecido: hash salado = handle de autor (nunca @username) <span class="scope v1">v1</span></li>
               <li>Claim (L2→L3) <span class="scope v2">v2 · railways</span>: nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
-              <li>Filespace <code>central/users/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>)</li>
+              <li>Filespace de risa <code>lol/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>) — <code>central/users/</code> es para flove</li>
               <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
               <li>Opt-in <code>tg_public</code> (enlace a t.me, nunca automático)</li>
             </ol>
-            <h5 class="feat-area">D · Perfil y páginas de autor (authy + flove.json)</h5>
-            <ol start="20">
-              <li>Página de autor <code>flove.org/users/&lt;key&gt;/</code> — sale del filespace de <code>flove.json</code>, allowlist + network-first</li>
-              <li>Perfil único de flove — agrega tus risas + etiquetas favoritas + tu feed; autenticado por el match de Telegram</li>
+            <h5 class="feat-area">D · Perfil y páginas de autor (authy + lol/)</h5>
+            <ol start="7">
+              <li>Página de autor <code>risa.liberada.net/lol/&lt;key&gt;/</code> — sale del filespace <code>lol/</code> y de libSQL, allowlist + network-first</li>
+              <li>Perfil de autor — agrega tus risas + etiquetas favoritas + tu feed; autenticado por el match de Telegram</li>
               <li>Favoritos ❤️ públicos / ⭐ privados según nivel authy</li>
               <li>Tope de esta rama → las contribuciones y el feed del perfil se viven desde la app <b>appy</b> (enlace a esa rama)</li>
             </ol>
-            <h5 class="feat-area">E · Comandos del bot — mínimos, de solo lectura y reproducción <span class="scope v1">v1 · se implementa ya</span></h5>
-            <ol start="24">
-              <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
-              <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
-              <li>Reproducción: <code>/play</code> (recorre el feed, el mismo que la web)</li>
-            </ol>
-            <p>Lo demás vive en la <b>web</b>: buscar, reclamar (claim), favoritos y editar/borrar tus risas. La identidad (authy) es el puente, no comandos del bot.</p>
-            <h5 class="feat-area">F · Lovy — la hermana</h5>
-            <ol start="27">
+            <h5 class="feat-area">F · Lovy — la hermana, clon extendido (repo propio)</h5>
+            <ol start="11">
+              <li>Repo propio <code>floveorg/lovy</code>: LovyBot + <code>index.html</code>, clon extendido de risa v2 en paralelo</li>
               <li>Multi-app: mismo esqueleto, cada app con su campo</li>
-              <li>LovyBot + bucket R2 propio + <code>central/apps/lovy/</code> (misma mecánica)</li>
               <li>Vídeo ≤ 1 min con thumbnail y reproducción inline</li>
-              <li><code>lovy.json</code> + <code>central/users/</code> compartido (autor agrega risa + lovy)</li>
+              <li>LovyBot + bucket R2 propio + filespace propio (misma mecánica que <code>lol/</code>)</li>
+              <li>Identidad compartida: si ya eres de risa, Lovy te ve claimed</li>
               <li>«risas» como subcampo de uno de los 5 campos de lovy (circuito de los 3 jsons)</li>
               <li>Cadenas colaborativas: <code>/chain</code> · <code>/seeds</code> · <code>/cameo</code> · <code>/lore</code> · <code>/reprise</code></li>
             </ol>
-            <h5 class="feat-area">G · flovebot — el paraguas</h5>
-            <ol start="33">
-              <li>Un bot para todas: <code>/start</code> · <code>/app</code>; identidad authy compartida (claim una vez, visible en todas)</li>
+            <h5 class="feat-area">G · flovebot — el agregador minimal</h5>
+            <ol start="18">
+              <li>Por ahora en <code>floveorg.github.io</code>: identidad authy compartida (claim una vez, visible en todas)</li>
+              <li>Cross-publish: si eres de risa publicas en lovy ya autenticado, y viceversa</li>
               <li>Búsqueda cross-app + reproducción en-chat</li>
-              <li><code>/vault</code> + <code>/passport</code>: recuperación y portabilidad de identidad</li>
-              <li><code>/heritage</code>: herencia/transferencia de cuenta con grafo y red de avales</li>
-              <li>Reacciones del canal como señal (selección HTML)</li>
             </ol>
             <h5 class="feat-area">H · Backend — Railway + libSQL (tiempo real)</h5>
-            <ol start="38">
+            <ol start="21">
               <li>Tiempo real: webhooks en vez del cron + rate-limit server-side</li>
-              <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> + tablas libSQL + import del filespace</li>
-              <li>✅ Notificaciones DM al aprobar/denegar <span class="scope v1">v1</span></li>
+              <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> · <code>/api/lol/&lt;key&gt;/</code> + tablas libSQL + import del filespace</li>
               <li>Programación de publicación</li>
               <li>Feed cross-app vía endpoint central</li>
             </ol>
             <h5 class="feat-area">I · Confianza y moderación asistida</h5>
-            <ol start="43">
+            <ol start="25">
               <li>Claims firmados por browsy (sin re-derivación de claves)</li>
               <li>IA para moderación: transcripción + flagging, dailies, rachas, top/trending reales</li>
               <li>Mini App + inline mode de Telegram</li>
             </ol>
             <h5 class="feat-area">J · Integración con flove</h5>
-            <ol start="46">
-              <li>✅ Enriquecimiento de <code>flove.json</code> (fail-silent): la web lo llama sin interrumpirse jamás; al claim tu palabra enlaza al perfil único de flove donde ves tus risas y activas Lovy ya autenticado</li>
-              <li>✅ Addons que se activan sin romper lo ya publicado: un flag en <code>risa.json</code> hace de fallback y de toggle desde la interfaz <span class="scope v1">v1</span></li>
+            <ol start="28">
               <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
               <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
             </ol>
             <p class="rtab-more">El desarrollo continúa en otras ramas de flove: <b>appy</b> (perfil y contribuciones), <b>browsy</b> (keys, trust y claims firmados), <b>central-backend</b> (Railway + FastAPI + libSQL) y la <b>feature matrix</b> + roadmap.</p>
-            <h4>El circuito entre los 3 jsons</h4>
+            <h4>v2, extensión lineal de v1 — dos esquemas</h4>
+            <p>v2 no se instala al lado de v1: <b>se enciende encima</b>. Cada novedad aterriza sobre la etapa de v1 que potencia, y la web sigue leyendo el mismo <code>risa.json</code>.</p>
+            <figure class="circuit-fig">
+              <svg viewBox="0 0 760 372" role="img" aria-label="v2 como superposición de v1: el circuito v1 (Persona → RisaLiberadaBot con cron → moderadores → Cloudflare R2 → risa.json → canal → web) sigue como base y respaldo; v2 se enciende encima — Railway FastAPI con webhook sobre el bot, libSQL como store canónico con risa.json como read-model, authy claim sobre la web, perfiles lol key con API">
+                <defs>
+                  <marker id="v2a" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#b57100"/>
+                  </marker>
+                  <marker id="v1a" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#8a7a68"/>
+                  </marker>
+                </defs>
+                <style>
+                  .v2mono{font-family:'Space Mono',ui-monospace,monospace; font-weight:700; font-size:15px; fill:#2a1810}
+                  .v2body{font-family:'Figtree',system-ui,sans-serif; font-size:12px; fill:#2a1810}
+                  .v2small{font-family:'Figtree',system-ui,sans-serif; font-size:10.5px; fill:#6b5d4f}
+                  .v2v{stroke:#b57100; stroke-width:2; fill:none; marker-end:url(#v2a)}
+                  .v2l{stroke:#8a7a68; stroke-width:2; fill:none; marker-end:url(#v1a)}
+                  .v2d{stroke:#b57100; stroke-width:1.6; stroke-dasharray:5 4; fill:none; marker-end:url(#v2a)}
+                  .v1b{fill:#f6efe2; stroke:#8a7a68; stroke-width:1.6; rx:14}
+                  .v2b{fill:#fff3d6; stroke:#b57100; stroke-width:2.5; rx:16}
+                </style>
+                <text x="18" y="18" class="v2mono">v2 · se enciende encima — aditivo, no sustituto</text>
+                <text x="18" y="240" class="v2small" font-weight="700">v1 · el circuito de siempre — sigue corriendo como respaldo (base de recuperación)</text>
+                <rect class="v2b" x="18" y="26" width="150" height="56"/>
+                <text x="93" y="50" text-anchor="middle" class="v2mono" font-size="13">Railway · FastAPI</text>
+                <text x="93" y="70" text-anchor="middle" class="v2small">webhook — el cron queda de respaldo</text>
+                <rect class="v2b" x="210" y="26" width="160" height="56"/>
+                <text x="290" y="50" text-anchor="middle" class="v2mono" font-size="13">libSQL · canónico</text>
+                <text x="290" y="70" text-anchor="middle" class="v2small">risa.json = read-model (la web no cambia)</text>
+                <rect class="v2b" x="412" y="26" width="150" height="56"/>
+                <text x="487" y="50" text-anchor="middle" class="v2mono" font-size="13">authy · claim L2→L3</text>
+                <text x="487" y="70" text-anchor="middle" class="v2small">nonce + confirmación por DM</text>
+                <rect class="v2b" x="604" y="26" width="136" height="56"/>
+                <text x="672" y="50" text-anchor="middle" class="v2mono" font-size="13">lol/&lt;key&gt; + API</text>
+                <text x="672" y="70" text-anchor="middle" class="v2small">perfiles · editar · favoritos</text>
+                <path class="v2d" d="M 93 82 L 157 258"/>
+                <path class="v2d" d="M 290 82 L 482 258"/>
+                <path class="v2d" d="M 487 82 L 700 258"/>
+                <path class="v2d" d="M 672 82 L 660 258"/>
+                <rect class="v1b" x="18" y="258" width="66" height="60"/>
+                <text x="51" y="282" text-anchor="middle" class="v2body" font-weight="700">Persona</text>
+                <text x="51" y="302" text-anchor="middle" class="v2small">palabra</text>
+                <path class="v2l" d="M 84 288 L 94 288"/>
+                <rect class="v1b" x="96" y="258" width="122" height="60"/>
+                <text x="157" y="278" text-anchor="middle" class="v2body" font-weight="700">RisaLiberadaBot</text>
+                <text x="157" y="296" text-anchor="middle" class="v2small">getUpdates · cron Actions 5–10 min</text>
+                <text x="157" y="311" text-anchor="middle" class="v2small">id · palabra · anónimo</text>
+                <path class="v2l" d="M 218 288 L 228 288"/>
+                <rect class="v1b" x="230" y="258" width="100" height="60"/>
+                <text x="280" y="282" text-anchor="middle" class="v2body" font-weight="700">🔒 Moderadores</text>
+                <text x="280" y="302" text-anchor="middle" class="v2small">✅ Publicar · 🗑 Borrar</text>
+                <path class="v2l" d="M 330 288 L 340 288"/>
+                <rect class="v1b" x="342" y="258" width="80" height="60"/>
+                <text x="382" y="282" text-anchor="middle" class="v2body" font-weight="700">R2</text>
+                <text x="382" y="302" text-anchor="middle" class="v2small">MP3 · URL pública</text>
+                <path class="v2l" d="M 422 288 L 432 288"/>
+                <rect class="v1b" x="434" y="258" width="96" height="60"/>
+                <text x="482" y="282" text-anchor="middle" class="v2body" font-weight="700">risa.json</text>
+                <text x="482" y="302" text-anchor="middle" class="v2small">feed · newest-first</text>
+                <path class="v2l" d="M 530 288 L 540 288"/>
+                <rect class="v1b" x="542" y="258" width="78" height="60"/>
+                <text x="581" y="282" text-anchor="middle" class="v2body" font-weight="700">📢 Canal</text>
+                <text x="581" y="302" text-anchor="middle" class="v2small">@risaliberada</text>
+                <path class="v2l" d="M 620 288 L 630 288"/>
+                <rect class="v1b" x="632" y="258" width="110" height="60"/>
+                <text x="687" y="278" text-anchor="middle" class="v2body" font-weight="700">Web</text>
+                <text x="687" y="296" text-anchor="middle" class="v2small">fetch risa.json</text>
+                <text x="687" y="311" text-anchor="middle" class="v2small">playlist · chips · palabra</text>
+                <text x="18" y="342" class="v2small">Las flechas de v2 aterrizan sobre la etapa de v1 que potencian. La web sigue leyendo risa.json: si v2 se apaga,</text>
+                <text x="18" y="358" class="v2small">v1 sigue sirviendo el circuito completo sin interrupción (v1 = base de recuperación).</text>
+              </svg>
+              <figcaption>Superposición: v2 se enciende encima del circuito v1 (capa inferior) y aterriza sobre la etapa que potencia; v1 queda como base y respaldo.</figcaption>
+            </figure>
+            <figure class="circuit-fig">
+              <svg viewBox="0 0 760 430" role="img" aria-label="v2 como extensión lineal del circuito v1: la línea de v1 (subir → moderar → publicar) se extiende por debajo con las novedades — claim de identidad (reclamar tu palabra), tu perfil en lol key (editar, ocultar, borrar, renombrar, favoritos) y tiempo real (webhooks, aviso al autor, rate-limit)">
+                <defs>
+                  <marker id="k2a" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#b57100"/>
+                  </marker>
+                  <marker id="k2g" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                    <path d="M0 0 L8 3.5 L0 7 Z" fill="#8a7a68"/>
+                  </marker>
+                </defs>
+                <style>
+                  .k2mono{font-family:'Space Mono',ui-monospace,monospace; font-weight:700; font-size:14px; fill:#2a1810}
+                  .k2body{font-family:'Figtree',system-ui,sans-serif; font-size:12px; fill:#2a1810}
+                  .k2small{font-family:'Figtree',system-ui,sans-serif; font-size:10.5px; fill:#6b5d4f}
+                  .k2g{stroke:#8a7a68; stroke-width:2; fill:none; marker-end:url(#k2g)}
+                  .k2v{stroke:#b57100; stroke-width:2; fill:none; marker-end:url(#k2a)}
+                  .k2d{stroke:#b57100; stroke-width:1.6; stroke-dasharray:5 4; fill:none; marker-end:url(#k2a)}
+                  .k2gbox{fill:#f6efe2; stroke:#8a7a68; stroke-width:1.6; rx:14}
+                  .k2vbox{fill:#fff3d6; stroke:#b57100; stroke-width:1.6; rx:12}
+                  .k2end{fill:#ffe9b0; stroke:#b57100; stroke-width:2; rx:12}
+                </style>
+                <text x="20" y="20" class="k2small" font-weight="700">v1 · el circuito en una línea — lo que ya hace</text>
+                <rect class="k2gbox" x="20" y="30" width="230" height="52"/>
+                <text x="135" y="52" text-anchor="middle" class="k2body" font-weight="700">1 · Subir</text>
+                <text x="135" y="71" text-anchor="middle" class="k2small">Telegram · palabra · tags</text>
+                <path class="k2g" d="M 250 56 L 263 56"/>
+                <rect class="k2gbox" x="265" y="30" width="230" height="52"/>
+                <text x="380" y="52" text-anchor="middle" class="k2body" font-weight="700">2 · Moderar</text>
+                <text x="380" y="71" text-anchor="middle" class="k2small">grupo 🔒 · ✅ / 🗑</text>
+                <path class="k2g" d="M 495 56 L 508 56"/>
+                <rect class="k2gbox" x="510" y="30" width="230" height="52"/>
+                <text x="625" y="52" text-anchor="middle" class="k2body" font-weight="700">3 · Publicar</text>
+                <text x="625" y="71" text-anchor="middle" class="k2small">R2 · risa.json · 📢 canal</text>
+                <path class="k2d" d="M 135 82 L 135 112"/>
+                <path class="k2d" d="M 380 82 L 380 112"/>
+                <path class="k2d" d="M 625 82 L 625 112"/>
+                <text x="135" y="122" text-anchor="middle" class="k2mono" font-size="13">＋ Claim · identidad</text>
+                <text x="135" y="140" text-anchor="middle" class="k2small">reclamar tu palabra (L2→L3)</text>
+                <text x="380" y="122" text-anchor="middle" class="k2mono" font-size="13">＋ Tu perfil · lol/&lt;key&gt;</text>
+                <text x="380" y="140" text-anchor="middle" class="k2small">editar tus contenidos</text>
+                <text x="625" y="122" text-anchor="middle" class="k2mono" font-size="13">＋ Tiempo real</text>
+                <text x="625" y="140" text-anchor="middle" class="k2small">webhook · avisos al autor</text>
+                <rect class="k2vbox" x="30" y="160" width="210" height="28"/>
+                <text x="135" y="179" text-anchor="middle" class="k2small">palabra no reclamada → roja</text>
+                <path class="k2v" d="M 135 188 L 135 196"/>
+                <rect class="k2vbox" x="30" y="198" width="210" height="28"/>
+                <text x="135" y="217" text-anchor="middle" class="k2small">modal «Claim it»</text>
+                <path class="k2v" d="M 135 226 L 135 234"/>
+                <rect class="k2vbox" x="30" y="236" width="210" height="28"/>
+                <text x="135" y="255" text-anchor="middle" class="k2small">nonce one-shot · TTL · rate-limit</text>
+                <path class="k2v" d="M 135 264 L 135 272"/>
+                <rect class="k2vbox" x="30" y="274" width="210" height="28"/>
+                <text x="135" y="293" text-anchor="middle" class="k2small">deep link t.me/…?start=claim_…</text>
+                <path class="k2v" d="M 135 302 L 135 310"/>
+                <rect class="k2vbox" x="30" y="312" width="210" height="28"/>
+                <text x="135" y="331" text-anchor="middle" class="k2small">DM: ¿reclamas? — mismo id que subió</text>
+                <path class="k2v" d="M 135 340 L 135 348"/>
+                <rect class="k2end" x="30" y="350" width="210" height="28"/>
+                <text x="135" y="369" text-anchor="middle" class="k2small" font-weight="700">L3 · la palabra enlaza a tu perfil</text>
+                <rect class="k2vbox" x="275" y="160" width="210" height="28"/>
+                <text x="380" y="179" text-anchor="middle" class="k2small">risa.liberada.net/lol/&lt;key&gt;/</text>
+                <path class="k2v" d="M 380 188 L 380 196"/>
+                <rect class="k2vbox" x="275" y="198" width="210" height="28"/>
+                <text x="380" y="217" text-anchor="middle" class="k2small">editar · ocultar · borrar tus clips</text>
+                <path class="k2v" d="M 380 226 L 380 234"/>
+                <rect class="k2vbox" x="275" y="236" width="210" height="28"/>
+                <text x="380" y="255" text-anchor="middle" class="k2small">renombrar palabra (backfill risa.json)</text>
+                <path class="k2v" d="M 380 264 L 380 272"/>
+                <rect class="k2vbox" x="275" y="274" width="210" height="28"/>
+                <text x="380" y="293" text-anchor="middle" class="k2small">favoritos ❤️ públicos / ⭐ privados</text>
+                <path class="k2v" d="M 380 302 L 380 310"/>
+                <rect class="k2end" x="275" y="312" width="210" height="28"/>
+                <text x="380" y="331" text-anchor="middle" class="k2small" font-weight="700">reacciones · /me · /passport</text>
+                <rect class="k2vbox" x="520" y="160" width="210" height="28"/>
+                <text x="625" y="179" text-anchor="middle" class="k2small">webhook (Railway) en vez del cron</text>
+                <path class="k2v" d="M 625 188 L 625 196"/>
+                <rect class="k2vbox" x="520" y="198" width="210" height="28"/>
+                <text x="625" y="217" text-anchor="middle" class="k2small">publicación instantánea a canal + feed</text>
+                <path class="k2v" d="M 625 226 L 625 234"/>
+                <rect class="k2vbox" x="520" y="236" width="210" height="28"/>
+                <text x="625" y="255" text-anchor="middle" class="k2small">DM al autor al aprobar / denegar</text>
+                <path class="k2v" d="M 625 264 L 625 272"/>
+                <rect class="k2vbox" x="520" y="274" width="210" height="28"/>
+                <text x="625" y="293" text-anchor="middle" class="k2small">rate-limit server-side</text>
+                <path class="k2v" d="M 625 302 L 625 310"/>
+                <rect class="k2end" x="520" y="312" width="210" height="28"/>
+                <text x="625" y="331" text-anchor="middle" class="k2small" font-weight="700">la web no cambia: sigue leyendo risa.json</text>
+                <text x="20" y="404" class="k2small">Cada columna extiende hacia abajo la etapa de v1 que tiene encima. v1 queda de base: apagar v2 = volver al circuito de siempre.</text>
+                <text x="20" y="420" class="k2small">Claim + perfil responden a «¿cómo edito mi perfil en v2?»: reclamas desde la web (confirmando por DM) y desde tu página ya editas, ocultas y borras.</text>
+              </svg>
+              <figcaption>Extensión lineal: la línea de v1 (subir → moderar → publicar) se prolonga hacia abajo con las novedades de v2 que potencian cada etapa.</figcaption>
+            </figure>
             <figure class="circuit-fig">
               <svg viewBox="0 0 760 430" role="img" aria-label="Circuito entre los tres json: flove.json, el pariente, facilita y enriquece a risa.json y lovy.json, sus hermanas; Lovy agrega risas como subcampo de uno de sus cinco campos">
                 <defs>
@@ -1115,16 +1526,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li><b>Guarda-rrallas.</b> Timeout de 4&nbsp;s, se dispara tras renderizar el feed, lee solo claves conocidas (lo nuevo se ignora) y el contrato vive versionado en git: si se rompe, se pierde enriquecimiento, nunca risa.</li>
             </ul>
             <h4>Planes</h4>
-            <p>El detalle completo vive en los planes del estándar:</p>
+            <p>El detalle completo vive en los planes del estándar y del repo:</p>
             <ul class="plan-links">
-              <li><a href="https://flove.org/development/standards/debates/making-of/superpowers/plans/2026-08-11-risa-authy-telegram-shared.md" target="_blank" rel="noopener">risa → authy · circuito compartido (v2) ↗</a></li>
-              <li><a href="https://flove.org/development/standards/debates/making-of/superpowers/specs/2026-07-19-risa-banco-telegram-moderation-design.md" target="_blank" rel="noopener">spec del circuito (v1) ↗</a></li>
-              <li><a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">estándar RisaLiberada v1 ↗</a></li>
+              <li><a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">risa v2 — plan centralizado (Railway + libSQL + lol/ · authy) ↗</a></li>
             </ul>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica (final de la sección)">
             <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
-            <button type="button" class="rtab-btn" data-tab="agentes" aria-pressed="false">Agentes</button>
             <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
           </nav>
         </div>
@@ -1235,6 +1643,77 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <p class="modal-sub">Añádela a la risa. Solo risas, con cariño y en libre. 💛</p>
     <p class="modal-note">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</p>
     <a class="btn btn-primary" id="um-telegram" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Abrir Telegram</a>
+  </div>
+</div>
+
+<!-- ============ MODAL · RISA V1 — CONFIGURAR EL PROMPT DEL AGENTE ============ -->
+<div class="modal-back" id="setup-modal" hidden>
+  <div class="modal setup-modal" role="dialog" aria-modal="true" aria-labelledby="sm-title">
+    <button class="modal-x" type="button" id="sm-close" aria-label="Cerrar">×</button>
+    <h2 id="sm-title">📦 Risa v1</h2>
+    <p class="modal-sub">Tus datos se insertan solos en el prompt de «Agentes», en la introducción. Cambia lo que quieras y pulsa «Generar prompt».</p>
+    <form id="setup-form" class="setup-form">
+      <div class="setup-group">
+        <label for="sf-proj">Nombre del proyecto</label>
+        <input id="sf-proj" type="text" autocomplete="off" placeholder="p. ej. Risas del Huerto — sustituye a «risa» en el prompt (feed risa.json → tu-proyecto.json…)">
+      </div>
+      <div class="setup-group">
+        <label for="sf-bot">Nombre del bot</label>
+        <input id="sf-bot" type="text" autocomplete="off" placeholder="p. ej. @TuBot — cron de Actions cada 5–10 min">
+      </div>
+      <div class="setup-group">
+        <label for="sf-group">Grupo de moderadores</label>
+        <input id="sf-group" type="text" autocomplete="off">
+      </div>
+      <div class="setup-group">
+        <label for="sf-channel">Canal público</label>
+        <input id="sf-channel" type="text" autocomplete="off">
+      </div>
+      <div class="setup-group">
+        <label for="sf-web">Folder-Repo-Url</label>
+        <input id="sf-web" type="text" autocomplete="off" placeholder="miweb.com · github.com/usuario/repo · carpeta local">
+      </div>
+      <div class="setup-group">
+        <label for="sf-media">URL de los medios</label>
+        <input id="sf-media" type="text" autocomplete="off" placeholder="p. ej. r2.dev/… — bucket público (R2) · MP3 con ffmpeg">
+      </div>
+      <fieldset class="setup-group">
+        <legend>Campos para describir una pieza</legend>
+        <label class="setup-ck"><input type="checkbox" id="sf-hide-title"> Ocultar <b>título</b></label>
+        <label class="setup-ck"><input type="checkbox" id="sf-hide-tags"> Ocultar <b>etiquetas</b></label>
+        <label class="setup-ck"><input type="checkbox" id="sf-hide-name"> Ocultar <b>autor</b></label>
+      </fieldset>
+      <fieldset class="setup-group">
+        <legend>Tipos de contenido permitidos</legend>
+        <label class="setup-ck"><input type="checkbox" id="sf-t-text"> Texto</label>
+        <label class="setup-ck"><input type="checkbox" id="sf-t-audio" checked> Audio</label>
+        <label class="setup-ck"><input type="checkbox" id="sf-t-video" checked> Vídeo</label>
+      </fieldset>
+      <fieldset class="setup-group">
+        <legend>Otros requisitos <button type="button" class="see-btn" id="sm-see" aria-expanded="false" aria-controls="sm-see-box">Ver</button></legend>
+        <div class="see-box" id="sm-see-box" hidden>
+          <p>Detalles que diferencian una <b>release completa</b> de un circuito pelado (subir · moderar · publicar):</p>
+          <ul>
+            <li>Audios o vídeos de máx. <b>1 min</b> y <b>10 MB</b></li>
+            <li>Máx. <b>5 en cola</b> y <b>5 al día</b> por remitente</li>
+            <li>Licencia <b>CC BY-SA 4.0</b> en cada pieza, con aviso «Enviar = consentir» y tag por defecto <b>«libre»</b></li>
+            <li><b>Página de autor automática</b> por persona: <code>#/u/&lt;key&gt;</code> con su propio feed, y el bot regala el enlace en el aviso de publicación (funciona con solo nombre público)</li>
+            <li><b>Comandos de consulta</b> en el bot, todos de solo lectura y reproducción: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code> · <code>/latest</code> · <code>/now</code> · <code>/today</code> · <code>/since</code> · <code>/random</code> · <code>/trending</code> · <code>/play</code></li>
+            <li><b>Etiquetas enriquecidas hasta la web</b>: chips filtrables, búsqueda y favoritos ❤️/⭐ como filtro local del mismo feed</li>
+            <li><b>Entrada por deep link y QR</b> desde la web</li>
+            <li><b>Repo dedicado</b> con su propio GitHub Pages, con feed <b>newest-first</b></li>
+          </ul>
+        </div>
+      </fieldset>
+      <div class="setup-group setup-radio">
+        <label class="setup-ck"><input type="radio" name="sf-req" id="sf-req-here" value="here" checked> <span>Como aquí — usar los límites de risa liberada</span></label>
+        <label class="setup-ck"><input type="radio" name="sf-req" id="sf-req-ask" value="ask"> <span>Pregúntame — que el agente me pregunte antes de fijarlos</span></label>
+      </div>
+      <div class="setup-actions">
+        <button type="button" class="btn btn-ghost" id="sm-reset">Restaurar prompt original</button>
+        <button type="submit" class="btn btn-primary">Generar prompt</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -1524,7 +2003,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       else { ti=0; setPlaying(false); if(nowTrack) nowTrack.textContent='Fin de la playlist · dale otra vuelta 🔁'; }
     });
 
-    return { select };
+    function playSrc(src){
+      const list=playable();
+      const i=list.findIndex(t=>t.src===src);
+      if(i>=0){ ti=i; startTrack(); }
+    }
+
+    return { select, playSrc };
   }
 
   /* ============ RISAS DEL MUNDO · chips de categorías (icono + keyword) ============ */
@@ -1677,8 +2162,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(!anon){
       const key=(c.key||'').trim();
       const tg=tgOf(c);
-      if(floveOn && key){
-        author='<a class="clip-author clip-flove" target="_blank" rel="noopener" href="'+esc('https://flove.org/users/'+encodeURIComponent(key)+'/')+'">'+esc(c.name)+'</a>';
+      if(key){
+        author='<a class="clip-author clip-flove" href="#/u/'+esc(encodeURIComponent(key))+'">'+esc(c.name)+'</a>';
       } else if(tg){
         const on=selected.has(tg);
         author='<button type="button" class="clip-tg'+(on?' on':'')+'" data-tg="'+esc(tg)+'" aria-pressed="'+(on?'true':'false')+'">@'+esc(tg)+'</button>';
@@ -1711,6 +2196,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const TAG_BATCH=3;                // cuántas añade el + en cada toque
   const PLUS_CLICKS=3;              // el + añade 3 más, durante 3 toques
   let risas=[];
+  let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
   let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)
   const selected=new Set();
@@ -1864,6 +2350,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     const stats=tagStats();
     if(!stats.length){
       if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
+      space.querySelectorAll('.chips-hint').forEach(el=>el.remove());
+      const hint=document.createElement('p');
+      hint.className='chips-hint';
+      hint.setAttribute('role','status');
+      hint.textContent=feedError
+        ? 'No se pudieron cargar las risas. Revisa tu conexión; si abriste este archivo sin servidor (file://), sírvelo con uno local.'
+        : 'Aún no hay risas — la primera que grabes aparecerá aquí.';
+      space.appendChild(hint);
       floatChips(space, [recienteBtn], genteRaf);
       return;
     }
@@ -1913,7 +2407,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const r=el.getBoundingClientRect();
       return {
         el, w:r.width, h:r.height,
-        x:Math.random()*(w-r.width), y:Math.random()*(h-r.height),
+        x:Math.random()*Math.max(0, w-r.width), y:Math.random()*Math.max(0, h-r.height),
         vx:(Math.random()*2-1)*0.55, vy:(Math.random()*2-1)*0.55
       };
     });
@@ -2023,27 +2517,79 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     .then(r=>r.ok?r.json():[])
     .then(data=>{
       risas=window.Risa.clipsOf(data);
+      feedError=false;
       floveAllowed=window.Risa.flagsOf(data).flove!==false;   // J47: el feed toglea el addon
       updateGentePlaylist();
       buildTagChips();   // por defecto las etiquetas flotan
+      renderUserPage();  // si llegamos con #/u/<key>, la página de autor ya tiene feed
     })
-    .catch(()=>{ risas=[]; updateGentePlaylist(); });
+    .catch(()=>{ risas=[]; feedError=true; updateGentePlaylist(); buildTagChips(); });
 
-  /* ===== flove.json · enriquecimiento progresivo, fail-silent =====
-     risa siempre carga su propio risa.json (la verdad del risas). Después, y
-     solo después, intenta flove.json como capa opcional: si falla (404, timeout,
-     CORS) la web queda idéntica, sin esperas ni enlaces rotos. */
+  /* ===== flove.json · llamada mínima y vacía (nota documentativa) =====
+     v1 no consume el contrato de flove: la página de autor se sirve con la key
+     del clip (tag-url automática). Este fetch solo comprueba que el pariente
+     responde y queda listo para v2, cuando flove central validará la identidad
+     real (claims, niveles) y servirá la URL canónica flove.org/users/<key>/.
+     Fail-silent: si calla, risa queda idéntica. El flag del feed (J47) puede
+     apagar incluso esta llamada. */
   function fetchFlove(){
+    if(!floveAllowed) return;
     fetch('https://flove.org/flove.json', {cache:'no-store', signal:AbortSignal.timeout(4000)})
       .then(r=>r.ok?r.json():null)
-      .then(f=>{
-        if(!floveAllowed || !f || !f.authy || !f.users) return;   // feed lo apagó o contrato incompleto
-        floveOn=true;
-        updateGentePlaylist();                   // re-render: palabra reclamada → perfil único de flove
-      })
+      .then(f=>{ floveOn=!!(f && f.authy && f.users); })
       .catch(()=>{ /* flove.json caído: risa sigue igual */ });
   }
   fetchFlove();
+
+  /* ============ PÁGINA DE AUTOR · ruta #/u/<key> ============
+     El nombre de un clip enlaza aquí: cada autor tiene su página, tag-url
+     automática. V1 solo certifica la autenticación en Telegram (un moderador
+     aceptó su publicación); los claims y niveles se construyen en v2. */
+  const upSec=document.getElementById('userpage');
+  const upName=document.getElementById('up-name');
+  const upAvatar=document.getElementById('up-avatar');
+  const upTg=document.getElementById('up-tg');
+  const upClips=document.getElementById('up-clips');
+
+  function renderUserPage(){
+    const m=/^#\/u\/(.+)$/.exec(location.hash||'');
+    const key=m?decodeURIComponent(m[1]):'';
+    upSec.hidden=!key;
+    if(!key){ return; }
+    const mine=window.Risa.buildRisaTracks(risas).filter(t=>t.key===key);
+    const c=mine[0]&&mine[0].clip;
+    const name=(c&&c.name)||'Anónima';
+    upName.textContent=name;
+    upAvatar.textContent=(name.trim().charAt(0)||'?').toUpperCase();
+    const optIn=mine.find(t=>t.tg);
+    upTg.hidden=!optIn;
+    if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); upTg.textContent=optIn.tg+' ↗'; }
+    upClips.innerHTML='';
+    if(!mine.length){
+      const li=document.createElement('li');
+      li.textContent='Aún no tiene risas publicadas 💛';
+      upClips.appendChild(li);
+    } else {
+      mine.forEach(t=>{
+        const li=document.createElement('li');
+        const btn=document.createElement('button');
+        btn.type='button'; btn.className='up-play'; btn.dataset.src=t.src; btn.textContent=t.t;
+        li.appendChild(btn);
+        const w=document.createElement('span');
+        w.className='up-w'; w.textContent=timeAgo(t.clip&&t.clip.when);
+        li.appendChild(w);
+        upClips.appendChild(li);
+      });
+    }
+    gentePlayer.select(mine, (name||'Anónima')+' · sus risas', null, 'Aún no tiene risas publicadas 💛');
+    if(!m) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  upClips.addEventListener('click', e=>{
+    const b=e.target.closest('.up-play');
+    if(b) gentePlayer.playSrc(b.dataset.src);
+  });
+  window.addEventListener('hashchange', renderUserPage);
+  renderUserPage();
 
   /* ============ BOTÓN BENEFICIOS · un clip del risas por toque ============ */
   const benefits = [
@@ -2209,7 +2755,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const initialTab=(location.hash||'').slice(1);
   if(['espiritualidad','cultura','ciencia','comunidad','tecnologia'].includes(initialTab)) showTab(initialTab, false);
 
-  /* ============ RÉPLICA · pestañas Presentación / Agentes / Desarrollo ============ */
+  /* ============ RÉPLICA · pestañas Presentación / Desarrollo ============ */
   const rtabBtns=[...document.querySelectorAll('.rtab-btn')];
   const rtabPanels=[...document.querySelectorAll('.rtab-panel')];
   function showRtab(id){
@@ -2217,6 +2763,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     rtabBtns.forEach(b=>{ b.setAttribute('aria-pressed', b.dataset.tab===id?'true':'false'); });
   }
   rtabBtns.forEach(b=>b.addEventListener('click', ()=>showRtab(b.dataset.tab)));
+
+  /* ============ RÉPLICA · paneles desplegables se pliegan al clicar la caja ============ */
+  document.querySelectorAll('#replica details.collapsed').forEach(d=>{
+    d.addEventListener('click', e=>{
+      if(e.target.closest('summary,a,button,input,label,code')) return;   // lo interactivo no alterna
+      if(window.getSelection && window.getSelection().toString()) return;  // seleccionar texto no pliega
+      d.open=!d.open;
+    });
+  });
 
   /* ============ EXPANDE · botón «Montar réplica» ============ */
   const montarReplica=document.getElementById('montar-replica');
@@ -2325,6 +2880,149 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     }
     render(); restart();
   });
+
+  /* ============ RÉPLICA · Risa v1 — configurar el prompt del agente ============ */
+  const promptPre=document.getElementById('agente-prompt');
+  const setupChip=document.getElementById('setup-v1');
+  const setupModal=document.getElementById('setup-modal');
+  const copyBtn=document.getElementById('copy-prompt');
+  if(promptPre && setupChip && setupModal){
+    const LS_KEY='risa-v1-setup';
+    const DEFAULT_PROMPT=promptPre.textContent;
+    const EMPTY_FORM={
+      proj:'', bot:'', group:'', channel:'', web:'', media:'',
+      hideTitle:false, hideTags:false, hideName:false,
+      tText:false, tAudio:true, tVideo:true, req:'here'
+    };
+    const sfProj=document.getElementById('sf-proj'), sfBot=document.getElementById('sf-bot'),
+      sfGroup=document.getElementById('sf-group'), sfChannel=document.getElementById('sf-channel'),
+      sfWeb=document.getElementById('sf-web'), sfMedia=document.getElementById('sf-media'),
+      sfHideTitle=document.getElementById('sf-hide-title'),
+      sfHideTags=document.getElementById('sf-hide-tags'),
+      sfHideName=document.getElementById('sf-hide-name'),
+      sfTText=document.getElementById('sf-t-text'), sfTAudio=document.getElementById('sf-t-audio'),
+      sfTVideo=document.getElementById('sf-t-video');
+    function readSetup(){
+      const selReq=document.querySelector('input[name="sf-req"]:checked');
+      return {
+        proj:sfProj.value.trim(), bot:sfBot.value.trim(), group:sfGroup.value.trim(),
+        channel:sfChannel.value.trim(), web:sfWeb.value.trim(), media:sfMedia.value.trim(),
+        hideTitle:sfHideTitle.checked, hideTags:sfHideTags.checked, hideName:sfHideName.checked,
+        tText:sfTText.checked, tAudio:sfTAudio.checked, tVideo:sfTVideo.checked,
+        req:(selReq&&selReq.value)||'here'
+      };
+    }
+    function slug(s){
+      const k=(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+      return k||'risa';
+    }
+    function buildPrompt(v){
+      const tipos=[v.tText&&'texto', v.tAudio&&'audio', v.tVideo&&'vídeo'].filter(Boolean);
+      const tiposStr=tipos.length?tipos.join(' · '):'contenido';
+      const desc=[!v.hideTitle&&'título', !v.hideTags&&'etiquetas', !v.hideName&&'autor'].filter(Boolean);
+      const lineaCampos=desc.length
+        ? 'Campos por pieza: '+desc.join(' · ')+'.'
+        : 'Campos por pieza: ninguno.';
+      const feed=slug(v.proj);
+      const reqLine=(v.req==='ask')
+        ? 'Requisitos: antes de fijar límites, pregunta al dueño del proyecto — duración máx · tamaño máx · cuota diaria · flujo de moderación (qué decide un moderador · visto bueno final).'
+        : 'Requisitos (release completa): piezas ≤ 1 min · ≤ 10 MB · máx. 5 en cola y 5 al día · CC BY-SA 4.0 («Enviar = consentir», tag «libre») · página de autor #/u/<key> con feed propio · comandos de solo lectura /me · /stats · /profile · /status · /queue · /latest · /now · /today · /since · /random · /trending · /play · etiquetas → chips · búsqueda · favoritos (filtro local) · entrada por deep link + QR · repo dedicado con Pages · feed '+feed+'.json newest-first.';
+      const restricciones=v.web
+        ? 'Restricciones: sin servidor ni base de datos propios; despliegue en «'+v.web+'» (piezas gratuitas R2 + Pages + Actions si es GitHub); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.'
+        : 'Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Pages, Actions); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.';
+      const datos=[
+        v.proj&&('Proyecto: '+v.proj), v.bot&&('Bot: '+v.bot+' — cron Actions 5–10 min'),
+        v.group&&('Grupo de moderadores: '+v.group), v.channel&&('Canal público: '+v.channel),
+        v.web&&('Web/repo: '+v.web),
+        v.media&&('Medios: '+v.media+' — R2 público · ffmpeg'),
+        'Contenido: '+tiposStr, 'Feed: '+feed+'.json · newest-first', lineaCampos
+      ].filter(Boolean);
+      return [
+        'Rol: asiste a montar el proyecto «'+(v.proj||'mi proyecto')+'», inspirándote en el proyecto libre github.com/floveorg/risa.',
+        '',
+        'Objetivo: sistema completo — subida de '+tiposStr+' por Telegram → moderación → publicación en canal + feed web. Sin servidor propio.',
+        '',
+        'Datos:',
+        ...datos.map(d=>'- '+d),
+        '',
+        reqLine,
+        '',
+        'Pasos:',
+        '1. Clona el repo de referencia; estudia bot/, index.html, '+feed+'.json y .github/workflows.',
+        '2. Pide y valida los secretos (BOT_TOKEN, CHANNEL_ID, MOD_GROUP_ID, credenciales R2) antes de usarlos.',
+        '3. Configura GitHub Actions como cron que llame a getUpdates cada 5–10 minutos.',
+        '4. Monta el feed '+feed+'.json y la web en GitHub Pages.',
+        '5. Verifica de punta a punta con una prueba real de '+tiposStr+'.',
+        '',
+        'Permisos: leer/escribir el repo del proyecto, instalar dependencias de Node, desplegar Pages y Actions. Nada fuera del repo; confirma antes de crear credenciales.',
+        '',
+        restricciones
+      ].join('\n');
+    }
+    function applyPrompt(){ promptPre.textContent=buildPrompt(readSetup()); }
+    function saveSetup(){
+      try{ localStorage.setItem(LS_KEY, JSON.stringify(readSetup())); }catch(e){}
+    }
+    function fillForm(v){
+      sfProj.value=v.proj||''; sfBot.value=v.bot||''; sfGroup.value=v.group||'';
+      sfChannel.value=v.channel||''; sfWeb.value=v.web||''; sfMedia.value=v.media||'';
+      sfHideTitle.checked=!!v.hideTitle; sfHideTags.checked=!!v.hideTags; sfHideName.checked=!!v.hideName;
+      sfTText.checked=!!v.tText; sfTAudio.checked=v.tAudio!==false; sfTVideo.checked=v.tVideo!==false;
+      const req=(v.req==='ask')?document.getElementById('sf-req-ask'):document.getElementById('sf-req-here');
+      if(req) req.checked=true;
+    }
+    fillForm(EMPTY_FORM);
+    if(copyBtn){
+      copyBtn.addEventListener('click', e=>{
+        e.preventDefault(); e.stopPropagation();   // dentro del summary: no debe plegar el panel
+        const txt=promptPre.textContent;
+        const done=()=>{
+          copyBtn.textContent='¡Copiado!';
+          copyBtn.setAttribute('aria-pressed','true');
+          setTimeout(()=>{ copyBtn.textContent='Copiar'; copyBtn.setAttribute('aria-pressed','false'); }, 1600);
+        };
+        const legacy=()=>{
+          const ta=document.createElement('textarea');
+          ta.value=txt; ta.setAttribute('readonly','');
+          ta.style.position='fixed'; ta.style.opacity='0';
+          document.body.appendChild(ta); ta.select();
+          try{ document.execCommand('copy'); }catch(e){}
+          document.body.removeChild(ta);
+          done();
+        };
+        if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, legacy);
+        else legacy();
+      });
+    }
+    setupChip.addEventListener('click', ()=>openModal(setupModal));
+    document.getElementById('sm-close').addEventListener('click', ()=>closeModal(setupModal));
+    setupModal.addEventListener('click', e=>{ if(e.target===setupModal) closeModal(setupModal); });
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Escape' && !setupModal.hidden) closeModal(setupModal);
+    });
+    document.getElementById('setup-form').addEventListener('submit', e=>{
+      e.preventDefault(); applyPrompt(); saveSetup(); closeModal(setupModal);
+    });
+    const smSee=document.getElementById('sm-see');
+    const smSeeBox=document.getElementById('sm-see-box');
+    if(smSee && smSeeBox){
+      smSee.addEventListener('click', ()=>{
+        const open=smSeeBox.hidden;
+        smSeeBox.hidden=!open;
+        smSee.setAttribute('aria-expanded', open?'true':'false');
+        smSee.textContent=open?'Ocultar':'Ver';
+      });
+    }
+    document.getElementById('sm-reset').addEventListener('click', ()=>{
+      try{ localStorage.removeItem(LS_KEY); }catch(e){}
+      fillForm(EMPTY_FORM);
+      promptPre.textContent=DEFAULT_PROMPT;
+    });
+    try{
+      const saved=JSON.parse(localStorage.getItem(LS_KEY)||'null');
+      if(saved){ fillForm(saved); applyPrompt(); }
+    }catch(e){}
+  }
 
 })();
 </script>

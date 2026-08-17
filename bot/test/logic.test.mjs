@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseUpdates, decisionOf, hashId, identityOf } from '../logic.mjs';
+import { parseUpdates, decisionOf, hashId, identityOf, risaEntry, MAX_VIDEO_BYTES,
+         latestClips, clipsOfAuthor, clipsToday, clipsSince,
+         randomClip, tagTrend, authorStats, searchClips, inlineResult } from '../logic.mjs';
 
 const CTX = { modGroupId: -1001234 };
 
@@ -95,7 +97,7 @@ test('limits can be overridden per deployer via ctx.limits', () => {
   assert.deepEqual(lenient[0], { kind: 'draft-invalid', chatId: 777, reason: 'duration' });
 });
 
-test('a video message becomes a draft action too', () => {
+test('a video message becomes a draft action with the video mark', () => {
   const updates = [{
     update_id: 71,
     message: { message_id: 7, chat: { id: 777, type: 'private' },
@@ -104,6 +106,25 @@ test('a video message becomes a draft action too', () => {
   const { actions } = parseUpdates(updates, CTX);
   assert.equal(actions[0].kind, 'draft');
   assert.equal(actions[0].fileId, 'VID');
+  assert.equal(actions[0].video, true);
+});
+
+test('a vídeo over 10 MB is drafted (it will be compressed on publish), over 20 MB rejected', () => {
+  const mk = (bytes) => [{ update_id: 72, message: { message_id: 8, chat: { id: 777, type: 'private' },
+    from: { first_name: 'Marta' }, video: { file_id: 'V' + bytes, duration: 40, file_size: bytes } } }];
+  const { actions: big } = parseUpdates(mk(15 * 1024 * 1024), CTX);
+  assert.equal(big[0].kind, 'draft');
+  assert.equal(big[0].video, true);
+  const { actions: huge } = parseUpdates(mk(MAX_VIDEO_BYTES + 1), CTX);
+  assert.deepEqual(huge[0], { kind: 'draft-invalid', chatId: 777, reason: 'size' });
+});
+
+test('risaEntry carries the video mark for the web filter', () => {
+  const plain = risaEntry({ id: 'b_1', name: 'A', src: 'https://x/a.mp3', when: '2026-01-01' });
+  assert.equal(plain.video, undefined);
+  const clip = risaEntry({ id: 'b_2', name: 'A', src: 'https://x/a.mp4', when: '2026-01-01', video: true });
+  assert.equal(clip.video, true);
+  assert.equal(clip.src.endsWith('.mp4'), true);
 });
 
 test('the telegram username rides into the draft action', () => {
@@ -305,4 +326,219 @@ test('tgpub callbacks parse with the username', () => {
   const { actions } = parseUpdates([mk('tgpub:yes', 1), mk('tgpub:no', 2)], CTX);
   assert.deepEqual(actions[0], { kind: 'tgpub-yes', chatId: 777, callbackId: 'c1', username: 'mar' });
   assert.deepEqual(actions[1], { kind: 'tgpub-no', chatId: 777, callbackId: 'c2', username: 'mar' });
+});
+
+test('moderator edit callbacks in the mod group are parsed', () => {
+  const updates = [
+    { update_id: 80, callback_query: { id: 'cb1', data: 'edit:q_10',
+      message: { message_id: 50, chat: { id: -1001234 } } } },
+    { update_id: 81, callback_query: { id: 'cb2', data: 'edit-send:q_10',
+      message: { message_id: 50, chat: { id: -1001234 } } } },
+    { update_id: 82, callback_query: { id: 'cb3', data: 'edit-cancel:q_10',
+      message: { message_id: 50, chat: { id: -1001234 } } } },
+  ];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(offset, 83);
+  assert.deepEqual(actions[0], { kind: 'mod-edit', id: 'q_10', callbackId: 'cb1', modMsgId: 50 });
+  assert.deepEqual(actions[1], { kind: 'mod-edit-send', id: 'q_10', callbackId: 'cb2', modMsgId: 50 });
+  assert.deepEqual(actions[2], { kind: 'mod-edit-cancel', id: 'q_10', callbackId: 'cb3', modMsgId: 50 });
+});
+
+test('a mod group text becomes edit details while an entry is being edited', () => {
+  const ctx = { modGroupId: -1001234, awaitingModEdit: { q_10: true } };
+  const updates = [{
+    update_id: 90,
+    message: { message_id: 3, chat: { id: -1001234 }, from: { first_name: 'Mod' },
+      text: 'de la boda | loca, café | Marta' }
+  }];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0],
+    { kind: 'mod-edit-text', id: 'q_10', chatId: -1001234, text: 'de la boda | loca, café | Marta' });
+});
+
+test('a decision reply still wins over awaiting edit text', () => {
+  const ctx = { modGroupId: -1001234, modMsgToId: { 42: 'q_10' }, awaitingModEdit: { q_10: true } };
+  const updates = [{ update_id: 91, message: { message_id: 3, chat: { id: -1001234 },
+    text: 'ok', reply_to_message: { message_id: 42 } } }];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0], { kind: 'approve', id: 'q_10', modMsgId: 42, via: 'reply' });
+});
+
+test('plain mod group text without edit context is ignored', () => {
+  const updates = [{ update_id: 92, message: { message_id: 3, chat: { id: -1001234 },
+    text: 'de la boda' } }];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 0);
+  assert.equal(offset, 93);
+});
+
+test('accept/reject-edit callbacks parse only from the original uploader', () => {
+  const mk = (data, id) => ({ update_id: id, callback_query: { id: 'c' + id, data,
+    message: { message_id: 60 + id, chat: { id: 777, type: 'private' } }, from: { id: 777 } } });
+  const ctx = { modGroupId: -1001234, uploaderOf: { q_10: 777, q_11: 555 } };
+  const { actions } = parseUpdates([
+    mk('accept:q_10', 1),
+    mk('reject-edit:q_10', 2),
+    mk('accept:q_11', 3),
+    mk('reject-edit:q_999', 4)
+  ], ctx);
+  assert.deepEqual(actions[0], { kind: 'edit-accept', id: 'q_10', chatId: 777, callbackId: 'c1', msgId: 61 });
+  assert.deepEqual(actions[1], { kind: 'edit-reject', id: 'q_10', chatId: 777, callbackId: 'c2', msgId: 62 });
+  assert.equal(actions.length, 2);
+});
+
+test('read-only commands in a private chat become cmd-* actions', () => {
+  const mk = (text, id) => ({ update_id: id,
+    message: { message_id: id, chat: { id: 777, type: 'private' }, text } });
+  const { actions, offset } = parseUpdates([
+    mk('/me', 100), mk('/stats', 101), mk('/profile', 102), mk('/status', 103),
+    mk('/queue', 104), mk('/latest', 105), mk('/random', 106), mk('/now', 107),
+    mk('/since 3', 108), mk('/today', 109), mk('/trending', 110), mk('/play', 111),
+  ], CTX);
+  assert.equal(offset, 112);
+  assert.deepEqual(actions.map((a) => a.kind), [
+    'cmd-me', 'cmd-stats', 'cmd-profile', 'cmd-status', 'cmd-queue',
+    'cmd-latest', 'cmd-random', 'cmd-now', 'cmd-since', 'cmd-today',
+    'cmd-trending', 'cmd-play'
+  ]);
+  assert.equal(actions[8].arg, '3');
+  assert.deepEqual(actions[2], { kind: 'cmd-profile', chatId: 777, arg: '' });
+});
+
+test('/profile with a name passes it as arg; unknown commands stay welcome', () => {
+  const mk = (text, id) => ({ update_id: id,
+    message: { message_id: id, chat: { id: 777, type: 'private' }, text } });
+  const { actions } = parseUpdates([
+    mk('/profile Marta', 120), mk('/since', 121), mk('/mute', 122)
+  ], CTX);
+  assert.deepEqual(actions[0], { kind: 'cmd-profile', chatId: 777, arg: 'Marta' });
+  assert.deepEqual(actions[1], { kind: 'cmd-since', chatId: 777, arg: '' });
+  assert.deepEqual(actions[2], { kind: 'welcome', chatId: 777 });
+});
+
+const BANCO = [
+  { id: 'a', name: 'Marta', key: 'K1', t: 'De la boda', tags: 'loca, café', when: '2026-08-16', src: 'https://x/a.mp3' },
+  { id: 'b', name: 'Marta', key: 'K1', t: 'El lunes', tags: 'loca', when: '2026-08-15', src: 'https://x/b.mp3' },
+  { id: 'c', name: 'Luis', key: 'K2', t: 'Risa rota', tags: 'café', when: '2026-08-10', src: 'https://x/c.mp3' },
+  { id: 'd', name: 'Ana', key: 'K3', t: 'En el parque', tags: 'libre', when: '2026-07-01', src: 'https://x/d.mp3' },
+];
+
+test('latestClips keeps newest-first and respects the limit', () => {
+  assert.deepEqual(latestClips(BANCO, 2).map((e) => e.id), ['a', 'b']);
+  assert.deepEqual(latestClips(BANCO).map((e) => e.id), ['a', 'b', 'c', 'd']);
+  assert.deepEqual(latestClips(undefined, 3), []);
+});
+
+test('clipsOfAuthor filters by author key, newest-first', () => {
+  assert.deepEqual(clipsOfAuthor(BANCO, 'K1').map((e) => e.id), ['a', 'b']);
+  assert.deepEqual(clipsOfAuthor(BANCO, 'nobody'), []);
+});
+
+test('clipsToday matches the ISO date exactly', () => {
+  assert.deepEqual(clipsToday(BANCO, '2026-08-16').map((e) => e.id), ['a']);
+  assert.deepEqual(clipsToday(BANCO, '2020-01-01'), []);
+});
+
+test('clipsSince includes today and counts back N days', () => {
+  assert.deepEqual(clipsSince(BANCO, 1, '2026-08-16').map((e) => e.id), ['a']);
+  assert.deepEqual(clipsSince(BANCO, 2, '2026-08-16').map((e) => e.id), ['a', 'b']);
+  assert.deepEqual(clipsSince(BANCO, 7, '2026-08-16').map((e) => e.id), ['a', 'b', 'c']);
+  assert.deepEqual(clipsSince(BANCO, 90, '2026-08-16').length, BANCO.length);
+});
+
+test('randomClip returns a member of the risas or undefined when empty', () => {
+  const got = randomClip(BANCO);
+  assert.ok(BANCO.includes(got));
+  assert.equal(randomClip([]), undefined);
+  assert.equal(randomClip(undefined), undefined);
+});
+
+test('tagTrend counts and sorts tags by frequency over recent clips', () => {
+  assert.deepEqual(tagTrend(BANCO, 2), [
+    { tag: 'loca', count: 2 }, { tag: 'café', count: 1 }
+  ]);
+  assert.deepEqual(tagTrend(BANCO, 50), [
+    { tag: 'loca', count: 2 }, { tag: 'café', count: 2 },
+    { tag: 'libre', count: 1 }
+  ]);
+  assert.deepEqual(tagTrend([], 10), []);
+});
+
+test('authorStats counts published and pending per key', () => {
+  const queue = { q1: { uploader: 'K1', title: 'Nueva' }, q2: { uploader: 'K2', title: 'Otra' } };
+  assert.deepEqual(authorStats(BANCO, queue, 'K1'), { key: 'K1', published: 2, pending: 1 });
+  assert.deepEqual(authorStats(BANCO, queue, 'nobody'), { key: 'nobody', published: 0, pending: 0 });
+  assert.deepEqual(authorStats(BANCO, undefined, 'K1').published, 2);
+});
+
+// ---- Inline mode tests ----
+
+test('inline_query update becomes an inline-search action', () => {
+  const updates = [{
+    update_id: 200,
+    inline_query: { id: 'iq1', query: 'café', from: { id: 777 } }
+  }];
+  const { actions, offset } = parseUpdates(updates, CTX);
+  assert.equal(offset, 201);
+  assert.deepEqual(actions[0], { kind: 'inline-search', queryId: 'iq1', query: 'café', userId: 777 });
+});
+
+test('empty inline query parses correctly', () => {
+  const updates = [{
+    update_id: 201,
+    inline_query: { id: 'iq2', query: '', from: { id: 888 } }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.deepEqual(actions[0], { kind: 'inline-search', queryId: 'iq2', query: '', userId: 888 });
+});
+
+test('searchClips returns latest when query is empty', () => {
+  const results = searchClips(BANCO, '', 3);
+  assert.equal(results.length, 3);
+  assert.deepEqual(results.map((e) => e.id), ['a', 'b', 'c']);
+});
+
+test('searchClips filters by title', () => {
+  const results = searchClips(BANCO, 'boda');
+  assert.equal(results.length, 1);
+  assert.equal(results[0].id, 'a');
+});
+
+test('searchClips filters by tags (case-insensitive)', () => {
+  const results = searchClips(BANCO, 'café');
+  assert.equal(results.length, 2);
+  assert.deepEqual(results.map((e) => e.id), ['a', 'c']);
+});
+
+test('searchClips filters by author name', () => {
+  const results = searchClips(BANCO, 'luis');
+  assert.equal(results.length, 1);
+  assert.equal(results[0].id, 'c');
+});
+
+test('searchClips respects the limit', () => {
+  const results = searchClips(BANCO, '', 2);
+  assert.equal(results.length, 2);
+});
+
+test('searchClips returns empty array when nothing matches', () => {
+  const results = searchClips(BANCO, 'xyz');
+  assert.equal(results.length, 0);
+});
+
+test('searchClips handles undefined/empty banco', () => {
+  assert.deepEqual(searchClips(undefined, 'test'), []);
+  assert.deepEqual(searchClips([], 'test'), []);
+});
+
+test('inlineResult formats a clip as InlineQueryResultAudio', () => {
+  const clip = BANCO[0];
+  const result = inlineResult(clip);
+  assert.equal(result.type, 'audio');
+  assert.equal(result.id, 'a');
+  assert.equal(result.audio_url, 'https://x/a.mp3');
+  assert.equal(result.title, 'De la boda');
+  assert.equal(result.performer, 'Marta');
+  assert.ok(result.caption.includes('loca'));
+  assert.equal(result.description, 'loca, café');
 });

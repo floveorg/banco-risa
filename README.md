@@ -1,4 +1,4 @@
-# Banco de la risa — bot
+# Risa Liberada — bot
 
 Serverless Telegram moderation bot for [Risa Liberada](https://flove.org). People DM their
 laugh to **@RisaLiberadaBot**; a fixed welcome message greets them («Graba tu risa (y dale a
@@ -26,7 +26,7 @@ photos (`media/`, including the logo family under `media/logos`) and the persona
 gallery (`categorias/`) — is synced to Cloudflare R2 under `risa/…` by `bot/sync-media.mjs`
 (.github/workflows/sync-media.yml), and the pages reference those absolute R2 URLs. The app is
 served at https://risa.liberada.net (GitHub Pages of this repo) and fetches
-this repo's `risa.json` feed as its "banco" data.
+this repo's `risa.json` feed as its published-risas data.
 
 - `bot/logic.mjs` — pure update->actions logic (tested)
 - `bot/telegram.mjs` — thin Bot API client
@@ -44,3 +44,8 @@ Note: free-tier scheduled workflows are best-effort (5–15 min latency; they pa
 60 days of no repo activity — any push resets that).
 
 License of published clips: **CC BY-SA 4.0**.
+
+## Versioning
+
+- **v1 = production** (this repo, frozen except fixes) · **v2 = development** (flove central: authy, lovy, `central/users/`).
+- Releases: `CHANGELOG.md` + tag `v1.x.y` — see [VERSIONING.md](VERSIONING.md) for the scheme, backwards-compat contract and release logics.

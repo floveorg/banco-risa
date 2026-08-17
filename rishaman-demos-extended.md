@@ -179,5 +179,5 @@ taller y con quien quiera sentarse a reír.*
 todo el material de audio de `Canto/` (mezcla de `Baños`/`Mixes` cuando
 exista), los retratos de `Personajes/`, y el vídeo de `Risodromo`/`Risodrama`/`RisaLab`.
 
-El botón final "Reír en círculo" lanza un **loop de risas del banco**
+El botón final "Reír en círculo" lanza un **loop de risas publicadas**
 (una mezcla de audio de `Categorias/Canto` cuando exista).

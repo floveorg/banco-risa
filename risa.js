@@ -25,6 +25,7 @@
           tags: c.tags || 'risa libre',
           by: (c.name || 'Anónima') + ' · ' + LICENSE,
           tg: c.tg || '',                  // enlace t.me solo si el autor hizo opt-in (C19)
+          key: c.key || '',                // página de autor: clave estable (tag-url automática), nunca en claro
           orig: LICENSE_URL,
           origLabel: 'licencia',
           isVideo: isVideoClip(c),
