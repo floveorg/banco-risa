@@ -15,23 +15,27 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 #### Añadido
 
-- **Identidad authy v1** (`authy.js`): núcleo canal-agnóstico — niveles L1–L5,
-  `keyOf` inmutable salada (sha256 `secret:canal:id`), driver Telegram real,
-  email/phone stubs; contrato compartido bot ↔ web (tests).
+- **Circuito serverless completo**: subir (DM @RisaLiberadaBot) → moderar
+  (grupo privado ✅ Publicar / 🗑 Borrar / ✏️ Editar) → publicar (ffmpeg →
+  Cloudflare R2 → `risa.json` newest-first → canal público) · cron GitHub Actions.
 - **Subida identificada**: palabra + hash salado (`idHash`) u id directo
   (`idDirect`), o anónima. El id en claro jamás viaja en el repo
   (`state/.uploaders.json` gitignored; `queue.json` solo lleva hash/id).
 - **Clips con `key` (presencia L2)** → el nombre enlaza a `#/u/<key>` y una
   **mini-página de autor** agrega todas sus risas.
-- **Opt-in C19**: enlace a `t.me` solo si el autor lo elige (`tg`), nunca
+- **Opt-in C19**: enlace a `t.me` solo si el autor lo elige (`tg_public`), nunca
   automático. `/name` en DM para la palabra reclamada.
-- **J47**: `risa.json` tolera array (v1) u objeto `{flag, clips}` (`clipsOf` /
-  `flagsOf`); el flag `flove` toggla el addon desde la interfaz.
-- **Circuito serverless completo**: subir (DM @RisaLiberadaBot) → moderar
-  (grupo privado ✅ Publicar / 🗑 Borrar) → publicar (ffmpeg → Cloudflare R2 →
-  `risa.json` newest-first → canal público) · cron GitHub Actions.
+- **Inline mode** (`@RisaLiberadaBot <query>`): búsqueda de clips por título,
+  tags y nombre de autor; compartir en cualquier chat como audio. Requiere
+  webhook para funcionar de forma fiable (v2).
+- **Vídeo**: soporte para notas de vídeo ≤ 1 min (mismos límites que audio).
+- **Páginas de autor**: `#/u/<key>` agrega todos los clips de un autor.
 - **Anti-abuso**: máx 60 s · 10 MB · 5 en cola y 5/día por remitente (hash);
   tope de feed en la web.
+- **`/pub`** en DM: re-preguntar visibilidad del enlace a Telegram.
+- **`/name`** en DM: establecer o cambiar la palabra de display.
+- **Moderação mejorada**: botón ✏️ Editar para cambiar título/tags antes de
+  publicar.
 
 #### Corregido
 
@@ -46,6 +50,12 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
   un script muerto).
 - **Tests sincronizados al esquema authy** (`key` en `buildRisaTracks`) + test
   dedicado de la key L2.
+
+#### Eliminado
+
+- **`authy.js`**: eliminado; la identidad v1 se resuelve con `key` + hash salado
+  en `logic.mjs`. La capa completa authy (claim L2→L3, niveles L3–L5) queda
+  para v2 (plan-v2.md).
 
 #### Seguridad
 
