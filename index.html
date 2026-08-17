@@ -186,11 +186,13 @@ img{max-width:100%; display:block}
   background:var(--marigold); border:3px solid var(--ink); font-family:var(--disp); font-weight:800; font-size:1.4rem}
 .up-head h3{margin:0; font-size:1.5rem}
 .up-sub{margin:2px 0 0; font-family:var(--mono); font-size:.78rem; color:var(--ink-soft)}
-.up-tg{margin-left:auto}
-.up-levels{display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 18px}
-.up-chip{font-family:var(--mono); font-size:.68rem; font-weight:700; padding:3px 10px; border-radius:999px;
-  border:1.5px solid var(--ink-soft); color:var(--ink-soft); background:transparent}
-.up-chip.ok{color:#fff; background:var(--azure); border-color:var(--azure)}
+.up-actions{display:flex; gap:8px; margin-left:auto}
+.up-action-btn{font-family:var(--mono); font-size:.75rem; font-weight:700; padding:6px 14px;
+  border-radius:999px; text-decoration:none; cursor:pointer; transition:all .15s}
+.up-tg-btn{color:var(--azure); border:1.5px solid var(--azure); background:transparent}
+.up-tg-btn:hover{background:var(--azure); color:#fff}
+.up-upgrade-btn{color:#fff; border:1.5px solid var(--ink); background:var(--ink)}
+.up-upgrade-btn:hover{opacity:.85}
 .up-clips{list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:8px}
 .up-clips li{padding:10px 14px; border:2.5px solid var(--ink); border-radius:14px; background:var(--cream)}
 .up-clips .up-t{font-weight:700}
@@ -678,14 +680,13 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         <span class="up-avatar" id="up-avatar" aria-hidden="true">?</span>
         <div>
           <h3 id="up-name">Usuario</h3>
-          <p class="up-sub" id="up-sub">Página de autor — autenticado en Telegram</p>
+          <p class="up-sub" id="up-sub">Página de autor</p>
         </div>
-        <a class="clip-tg-link up-tg" id="up-tg" href="#" target="_blank" rel="noopener" hidden></a>
+        <div class="up-actions">
+          <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden>Telegram ↗</a>
+          <a class="up-action-btn up-upgrade-btn" id="up-upgrade" href="#" target="_blank" rel="noopener">Mejorar perfil →</a>
+        </div>
       </header>
-      <div class="up-levels" id="up-levels">
-        <span class="up-chip ok">Autenticado en Telegram · ✓</span>
-        <span class="up-chip">Claims e identidad completa · v2</span>
-      </div>
       <h4>Sus risas</h4>
       <ul class="up-clips" id="up-clips"></ul>
     </div>
@@ -2563,6 +2564,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const upName=document.getElementById('up-name');
   const upAvatar=document.getElementById('up-avatar');
   const upTg=document.getElementById('up-tg');
+  const upUpgrade=document.getElementById('up-upgrade');
   const upClips=document.getElementById('up-clips');
 
   function renderUserPage(){
@@ -2577,7 +2579,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     upAvatar.textContent=(name.trim().charAt(0)||'?').toUpperCase();
     const optIn=mine.find(t=>t.tg);
     upTg.hidden=!optIn;
-    if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); upTg.textContent=optIn.tg+' ↗'; }
+    if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); }
+    upUpgrade.href='https://liberada.net/usa/'+key+'/';
     upClips.innerHTML='';
     if(!mine.length){
       const li=document.createElement('li');
