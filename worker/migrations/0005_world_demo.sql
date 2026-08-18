@@ -39,5 +39,4 @@ INSERT OR IGNORE INTO aliases (key, alias, private, created_at) VALUES
 ('maria','Contagiosa',0,'2026-08-18'),
 ('maria','Carcajada',0,'2026-08-18'),
 ('maria','Prueba',0,'2026-08-18'),
-('maria','Alias privado',1,'2026-08-18'),
-('maria','Prueba privado',1,'2026-08-18');
+('maria','privi',1,'2026-08-18');

@@ -9,8 +9,7 @@
     { "alias": "Contagiosa", "private": false },
     { "alias": "Carcajada", "private": false },
     { "alias": "Prueba", "private": false },
-    { "alias": "Alias privado", "private": true },
-    { "alias": "Prueba privado", "private": true }
+    { "alias": "privi", "private": true }
   ],
   "maria-adv": [
     { "alias": "María", "private": false },
