@@ -2,6 +2,7 @@ name = "liberada-subdomains"
 main = "api.mjs"
 compatibility_date = "2024-01-01"
 
+<<<<<<< HEAD
 # Route: SOLO subdominios (*.liberada.net/*). El apex liberada.net NO se
 # intercepta (si no, el Worker redirigía liberada.net → liberada.net en bucle,
 # que rompía el SSL/certificado de Pages). Usa A/AAAA de GitHub Pages + Pages
@@ -22,3 +23,8 @@ database_id = "<d1-id-risa-d1>"
 # Secrets del entorno (nunca en el repo):
 #   npx wrangler secret put TG_WEBHOOK_SECRET   # secreto compartido con setWebhook
 #   npx wrangler secret put CLAIM_SECRET        # firma de tokens de claim (dev)
+=======
+# Route: SOLO subdominios (*.liberada.net/*). El apex liberada.net NO se intercepta
+# (evita el bucle liberada.net→liberada.net que rompía el SSL de Pages).
+route = { pattern = "*.liberada.net/*", zone_name = "liberada.net" }
+>>>>>>> main
