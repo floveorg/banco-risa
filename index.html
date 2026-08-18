@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Risa liberada · el ejercicio de reír</title>
-<meta name="description" content="Un ejercicio de risa para respirar, soltar y reír en compañía. Playlists de risas reales, beneficios, cultura y comunidad.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Risa liberada · Respira, escucha, disfruta</title>
+  <meta name="description" content="Playlists de risas, cultura y comunidad.">
 <link rel="icon" type="image/svg+xml" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,7 +124,7 @@ img{max-width:100%; display:block}
 
 /* ============ PLAYLISTS ============ */
 /* player */
-.player{background:var(--base); border:2px solid rgba(42,24,16,.14);
+.player{background:var(--base); border:none;
   border-radius:26px; padding:22px; display:grid; gap:14px}
 .risometro{display:flex; align-items:flex-end; gap:4px; height:44px}
 .risometro span{width:6px; background:var(--marigold); border-radius:3px; height:22%;
@@ -455,6 +455,33 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 @keyframes fade{from{opacity:0}}
 @keyframes pop-modal{from{opacity:0; transform:translateY(20px) scale(.94)}}
 
+/* opciones de los modales Entrar / Mejorar */
+.entrar-opts{display:grid; gap:10px; margin:0 0 14px}
+.entrar-opts .btn{justify-content:center; width:100%; text-decoration:none; text-align:center}
+.entrar-opts .btn-ghost{width:100%; border:2.5px solid var(--ink); background:var(--base)}
+.entrar-note{margin:0}
+.mejorar-list{margin:0 0 16px; padding-left:20px; line-height:1.55; color:var(--ink-soft)}
+.mejorar-list b{color:var(--ink)}
+.mejorar-list code{font-family:var(--mono); font-size:.85em; background:var(--base); padding:1px 6px; border-radius:8px}
+.mejorar-links{display:grid; gap:2px; margin-top:10px; border-top:2px dashed rgba(42,24,16,.18); padding-top:10px}
+.mejorar-links a{color:var(--ink); text-decoration:none; padding:8px 4px; border-radius:10px; font-size:.95rem}
+.mejorar-links a:hover{background:var(--marigold)}
+/* miniapp #/entrar */
+.entrar-wrap{max-width:560px}
+.entrar-intro{color:var(--ink-soft); line-height:1.55; margin:14px 0}
+.en-code-row{display:flex; gap:10px; flex-wrap:wrap; align-items:stretch}
+#en-code{font-family:var(--mono); font-size:1.3rem; letter-spacing:.35em; text-align:center;
+  border:2.5px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink);
+  padding:12px 10px; min-width:0; flex:1 1 180px}
+#en-code:focus{outline:3px solid rgba(255,176,32,.4)}
+#en-result{margin-top:16px; line-height:1.6; color:var(--ink-soft)}
+#en-result b{color:var(--ink)}
+#en-result .btn{display:inline-flex; margin-top:10px}
+.en-activate{margin-top:16px; padding:16px; border:2.5px dashed var(--ink); border-radius:16px; background:var(--cream)}
+.en-activate h4{margin:0 0 6px; color:var(--ink); font-size:1rem}
+.en-activate p{margin:0 0 10px; color:var(--ink-soft)}
+.en-activate .en-note{font-size:.82rem; margin-top:10px; border-left:3px solid var(--marigold); padding-left:10px}
+
 /* formulario de subida */
 .modal-note{color:var(--ink-soft); line-height:1.5; margin:0 0 4px}
 #upload-modal .btn-primary{justify-content:center; width:100%; text-decoration:none}
@@ -644,6 +671,30 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   text-shadow:1px 1px 0 rgba(42,24,16,.3), 2px 2px 0 rgba(42,24,16,.22), 3px 3px 0 rgba(42,24,16,.12)}
 .promo-name{font-family:var(--disp); font-weight:800; font-size:1.1rem}
 
+/* ============ DROPDOWN MENU (topbar logo) ============ */
+.brand-wrap{position:relative}
+.brand-dropdown{position:absolute; top:calc(100% + 6px); left:0; min-width:200px;
+  background:var(--cream); border:2.5px solid var(--ink); border-radius:18px;
+  box-shadow:8px 8px 0 rgba(42,24,16,.18); padding:8px 0; z-index:50; display:none}
+.brand-dropdown.open{display:block}
+.brand-dropdown a,.brand-dropdown button{display:block; width:100%; text-align:left; padding:10px 18px;
+  font-family:var(--body); font-size:.95rem; color:var(--ink); background:none; border:none;
+  cursor:pointer; text-decoration:none; transition:background .12s}
+.brand-dropdown a:hover,.brand-dropdown button:hover{background:var(--marigold)}
+.brand-dropdown .dd-sep{height:1px; background:rgba(42,24,16,.12); margin:4px 0}
+.brand-dropdown .dd-sub{padding-left:28px}
+/* ============ DIAGRAM (full width, no bg/borders) ============ */
+.rtab-panel figure{margin:22px -22px 6px; width:calc(100% + 44px)}
+.rtab-panel figure img{width:100%; height:auto; border:none; border-radius:0; display:block;
+  max-height:none; object-fit:contain}
+/* ============ USER PROFILE VIEW (/U/username) ============ */
+.user-view-as{display:flex; align-items:center; gap:10px; padding:8px 20px;
+  background:var(--sand); border-bottom:1px solid var(--sep)}
+.user-view-label{color:var(--ink); opacity:.6; font-size:.85rem}
+.user-view-name{font-weight:600; color:var(--ink); font-size:1.1rem}
+.user-view-back{margin-left:auto; color:var(--marigold); text-decoration:none; font-size:.85rem}
+.user-view-back:hover{text-decoration:underline}
+
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important; scroll-behavior:auto !important}
@@ -655,10 +706,19 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 <!-- ============ TOPBAR ============ -->
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="#top">
-      <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg" alt="" width="34" height="34">
-      <span>Risa liberada</span>
-    </a>
+    <div class="brand-wrap">
+      <a class="brand" id="brand-logo" href="#top" role="button" aria-expanded="false" aria-controls="brand-dd">
+        <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg" alt="" width="34" height="34">
+        <span>Risa liberada</span>
+      </a>
+      <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal">
+        <a href="#top">Inicio</a>
+        <button type="button" id="dd-sobre">Sobre nos</button>
+        <button type="button" id="dd-entrar">Entrar</button>
+        <div class="dd-sep"></div>
+        <button type="button" id="dd-mejorar" aria-expanded="false">Mejorar ▾</button>
+      </nav>
+    </div>
     <div class="brand-group">
       <button class="btn btn-ghost benefits-btn" type="button" id="benefits-btn" aria-label="Descubrir los beneficios de reír">
         Porque
@@ -685,16 +745,39 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         <span class="up-avatar" id="up-avatar" aria-hidden="true">?</span>
         <div>
           <h3 id="up-name">Usuario</h3>
-          <p class="up-sub" id="up-sub">Página de autor</p>
         </div>
         <div class="up-actions">
           <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden>Telegram ↗</a>
-          <a class="up-action-btn up-upgrade-btn" id="up-upgrade" href="#" target="_blank" rel="noopener">Username →</a>
-          <a class="up-action-btn" id="up-cross-ama" href="#" target="_blank" rel="noopener" style="display:none;background:var(--magenta);color:white;border-color:var(--magenta)">💗 Ver en Ama</a>
         </div>
       </header>
-      <h4>Sus risas</h4>
+      <h4>Mis risas</h4>
       <ul class="up-clips" id="up-clips"></ul>
+    </div>
+  </section>
+
+  <!-- ============ 0b · MINIAPP · #/entrar (perfil) ============
+       Entrada con código de 6 dígitos que da el bot (/entrar). El código va
+       ligado a la key del autor en codes.json; con él se identifica quién eres
+       y se muestra el perfil con sus risas juntas. Editar (nombre público y
+       subdominio) se hace desde el bot: /name y /usuario. -->
+  <section class="content-section" id="entrar-page" hidden>
+    <div class="wrap entrar-wrap">
+      <a class="up-back" href="#playlist">← Volver a las risas</a>
+      <header class="up-head">
+        <span class="up-avatar" aria-hidden="true">🌐</span>
+        <div>
+          <h3>Entrar · Mi perfil</h3>
+          <p class="up-sub">Miniapp de risa liberada</p>
+        </div>
+      </header>
+      <p class="entrar-intro">Introduce el código que te dio el bot — escribe <code>/entrar</code> a
+        <a href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">@RisaLiberadaBot</a> y pulsa «Código por el bot».</p>
+      <div class="en-code-row">
+        <input id="en-code" type="text" inputmode="numeric" autocomplete="one-time-code"
+          maxlength="6" placeholder="000000" aria-label="Tu código de 6 dígitos">
+        <button class="btn btn-primary" type="button" id="en-go">Entrar</button>
+      </div>
+      <p id="en-result" role="status"></p>
     </div>
   </section>
 
@@ -843,11 +926,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 <!-- ============ BARRAS INFERIORES · ESPIRITUALIDAD · CULTURA · CIENCIA · COMUNIDAD ============ -->
 <nav class="tab-bar" aria-label="Secciones de espiritualidad, comunidad, cultura, ciencia y tecnología">
-  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
-  <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+  <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura">
@@ -928,11 +1011,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Cultura">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
-        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -988,11 +1071,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
-        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1000,7 +1083,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
     <div class="wrap">
       <div class="tecnologias">
         <div class="section-head">
-          <p class="eyebrow">Tecnologías</p>
+          <p class="eyebrow">Techs</p>
           <h2>Con qué está hecha</h2>
           <p>Piezas pequeñas, estándares abiertos y coste cero: el proyecto corre sin servidor propio y cualquiera puede montar el suyo. Este sistema se replica al pie de la letra.</p>
         </div>
@@ -1023,16 +1106,12 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           </article>
         </div>
         <div class="replica" id="replica">
-          <div class="section-head">
-            <p class="eyebrow">Replica Nuestro Sistema</p>
-            <h2>Monta tu propia risa liberada</h2>
-            <p>Todo el proyecto es código abierto con licencia libre. Elige el nivel que te venga bien: un prompt para un agente, la introducción paso a paso o el desarrollo (v2).</p>
-          </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica">
-            <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
-            <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
+            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Pasado</button>
+            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Presente</button>
+            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Futuro</button>
           </nav>
-          <div class="rtab-panel" id="presentacion">
+          <div class="rtab-panel" id="pasado">
             <details class="collapsed">
               <summary>Agentes — un prompt para montar el sistema <button class="chip copy-chip" id="copy-prompt" type="button" aria-label="Copiar el prompt al portapapeles">Copiar</button></summary>
               <div class="collapsed-body">
@@ -1122,13 +1201,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               </svg>
               <figcaption>Las dos ideas clave de las piezas: el tag viaja enriquecido hasta la web (favoritos = filtro local) y el id de Telegram se oscurece tras un nombre público.</figcaption>
             </figure>
-            <h4>Cómo funciona</h4>
-            <div class="step"><p>La gente llega por <b>deep link</b> o <b>QR</b>, pulsa START y envía una nota de voz al bot.</p></div>
-            <div class="step"><p>Elige <b>identidad</b> (ID Telegram, nombre público o anónimo) y <b>etiquetas</b>, y pulsa Enviar.</p></div>
-            <div class="step"><p>Un <b>moderador humano</b> revisa en el grupo privado: ✅ publica, 🗑 borra o ✏️ propone ajustar los detalles.</p></div>
-            <div class="step"><p>Si propone cambios, manda una línea <code>Título | Tags | Nombre</code> y el bot pide el <b>visto bueno al autor</b> por DM — solo con su aceptación se publica.</p></div>
-            <div class="step"><p>Al aprobar, el bot normaliza el audio a MP3 (<code>ffmpeg</code>), lo sube a R2, lo antepone a <code>risa.json</code> (commit + push) y lo publica en el canal.</p></div>
-            <div class="step"><p>La <b>web</b> lee <code>risa.json</code>: reproduce la playlist y el feed, y cada autor tiene su <b>página de autor</b> con su propio feed (<code>#/u/&lt;key&gt;</code>). Esto que ves es esa web.</p></div>
             <details class="collapsed">
               <summary>Qué ya funciona — las features técnicas de Risa v1</summary>
               <div class="collapsed-body">
@@ -1270,64 +1342,28 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li><a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan de v2 (centralizado) ↗</a></li>
             </ul>
           </div>
-          <div class="rtab-panel" id="desarrollo" hidden>
-            <p class="rtab-intro">El desarrollo en curso es la <b>v2</b>: pasar el circuito de serverless (cron + archivos) a un sistema con backend propio — <b>Railway + libSQL + FastAPI + webhooks</b> — con perfiles de autor <code>lol/&lt;key&gt;/</code>, identidad authy completa (claim L2→L3) y las hermanas <b>lovy</b> y <b>flovebot</b>. v2 no sustituye a v1: <b>potencia lo que v1 ya hace</b> — el circuito de siempre (subir → moderar → publicar) sigue como base y de respaldo; v2 se enciende encima sin tocar el contrato de lectura (la web sigue leyendo <code>risa.json</code>). Ya en v1: <b>hilos</b> (cadenas infinitas), <b>subdominio automático</b> (<code>username.liberada.net</code>) y <b>perfil agregador</b> (<code>liberada.net/usa/&lt;username&gt;/</code>). Las features ya hechas viven plegadas en la <b>Presentación</b>; aquí queda lo que se va construyendo. El plan completo, centralizado: <a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">plan-v2.md ↗</a>.</p>
-            <h4>El desarrollo v2, feature a feature</h4>
-            <h5 class="feat-area">A · Web — claim y gestión de tus contenidos</h5>
-            <ol start="1">
-              <li><span class="scope v2">v2 · railways</span> Claim por web: palabra en rojo + affordance (i18n/es); reclama tu palabra y desde tu perfil <b>esconder / editar / borrar</b> tus publicaciones en la web. En Telegram se mantienen; el grupo puede borrarlas si están firmadas con tu id</li>
-              <li><span class="scope v1">v1 · hecho</span> Subdominio automático <code>username.liberada.net</code> al primer approve — sin auth, sin claim; el Worker redirige al perfil agregador. El claim L2→L3 de v2 complementa y protege este espacio</li>
-            </ol>
-            <h5 class="feat-area">C · Identidad — authy v2</h5>
-            <ol start="3">
-              <li>Niveles L1–L5: anónima · presencia · verificada · +teléfono · +biometría</li>
-              <li>Claim (L2→L3) <span class="scope v2">v2 · railways</span>: nonce one-shot + confirmación por DM desde el mismo id que subió — se inicia en la web</li>
-              <li>Filespace de risa <code>lol/&lt;key&gt;/</code>: <code>clips.json</code> + <code>authy.json</code> (+ <code>profile.json</code>) — <code>central/users/</code> es para flove</li>
-              <li>Backfill de <code>name</code> en <code>risa.json</code> al renombrar</li>
-              <li>Opt-in <code>tg_public</code> (enlace a t.me, nunca automático)</li>
-            </ol>
-            <h5 class="feat-area">D · Perfil y páginas de autor (authy + lol/)</h5>
-            <ol start="7">
-              <li>Página de autor <code>risa.liberada.net/lol/&lt;key&gt;/</code> — sale del filespace <code>lol/</code> y de libSQL, allowlist + network-first</li>
-              <li>Perfil de autor — agrega tus risas + etiquetas favoritas + tu feed; autenticado por el match de Telegram</li>
-              <li>Favoritos ❤️ públicos / ⭐ privados según nivel authy</li>
-              <li>Tope de esta rama → las contribuciones y el feed del perfil se viven desde la app <b>appy</b> (enlace a esa rama)</li>
-            </ol>
-            <h5 class="feat-area">F · Lovy — la hermana, clon extendido (repo propio)</h5>
-            <ol start="11">
-              <li>Repo propio <code>floveorg/lovy</code>: LovyBot + <code>index.html</code>, clon extendido de risa v2 en paralelo</li>
-              <li>Multi-app: mismo esqueleto, cada app con su campo</li>
-              <li>Vídeo ≤ 1 min con thumbnail y reproducción inline</li>
-              <li>LovyBot + bucket R2 propio + filespace propio (misma mecánica que <code>lol/</code>)</li>
-              <li>Identidad compartida: si ya eres de risa, Lovy te ve claimed</li>
-              <li>«risas» como subcampo de uno de los 5 campos de lovy (circuito de los 3 jsons)</li>
-              <li>Cadenas colaborativas: <code>/chain</code> · <code>/seeds</code> · <code>/cameo</code> · <code>/lore</code> · <code>/reprise</code></li>
-            </ol>
-            <h5 class="feat-area">G · flovebot — el agregador minimal</h5>
-            <ol start="18">
-              <li>Por ahora en <code>floveorg.github.io</code>: identidad authy compartida (claim una vez, visible en todas)</li>
-              <li>Cross-publish: si eres de risa publicas en lovy ya autenticado, y viceversa</li>
-              <li>Búsqueda cross-app + reproducción en-chat</li>
-            </ol>
-            <h5 class="feat-area">H · Backend — Railway + libSQL (tiempo real)</h5>
-            <ol start="21">
-              <li>Tiempo real: webhooks en vez del cron + rate-limit server-side</li>
-              <li>FastAPI: <code>/api/authy/claim</code> · <code>/api/users/&lt;handle&gt;/</code> · <code>/api/lol/&lt;key&gt;/</code> + tablas libSQL + import del filespace</li>
-              <li>Programación de publicación</li>
-              <li>Feed cross-app vía endpoint central</li>
-            </ol>
-            <h5 class="feat-area">I · Confianza y moderación asistida</h5>
-            <ol start="25">
-              <li>Claims firmados por browsy (sin re-derivación de claves)</li>
-              <li>IA para moderación: transcripción + flagging, dailies, rachas, top/trending reales</li>
-              <li>Mini App + inline mode de Telegram</li>
-            </ol>
-            <h5 class="feat-area">J · Integración con flove</h5>
-            <ol start="28">
-              <li>Un <code>bot-core</code> esqueleto compartido por todas las apps (risa parcial, lovy completo)</li>
-              <li>Lovy 2 — la segunda generación de la app hermana, con sus comandos y las mejoras de flove-central</li>
-            </ol>
-            <p class="rtab-more">El desarrollo continúa en otras ramas de flove: <b>appy</b> (perfil y contribuciones), <b>browsy</b> (keys, trust y claims firmados), <b>central-backend</b> (Railway + FastAPI + libSQL) y la <b>feature matrix</b> + roadmap.</p>
+          <div class="rtab-panel" id="presente" hidden>
+            <div class="section-head">
+              <p class="eyebrow">Risa v1</p>
+              <h2>Descarga y monta la tuya</h2>
+              <p>Código abierto, sin servidor, sin coste. Clona el repo, lanza tu bot y empieza a publicar risas en una tarde.</p>
+            </div>
+            <div class="linkrow">
+              <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
+              <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
+            </div>
+          </div>
+          <div class="rtab-panel" id="futuro" hidden>
+            <p class="rtab-intro">El desarrollo continua con estas mejoras (añade al plan si no están ya):</p>
+            <h4>Mejoras que propone la v2</h4>
+            <ul>
+              <li><b>Perfiles más sólidos y extendidos.</b> SQL via Service Workers de Cloudflare: datos locales rápidos, sin servidor propio, con sync offline.</li>
+              <li><b>Autenticación y protección de cuenta.</b> Recoveries: mail, OAuth, browsy, nety… la identidad se respalda y recupera.</li>
+              <li><b>Integración con otras apps-bots.</b> Liberada, Ama… la risa conecta estrictamente con el resto del circuito.</li>
+              <li><b>Playlists de favoritos.</b> Con URL propia: comparte tu selección con un enlace.</li>
+              <li><b>Cadenas enriquecidas.</b> Risas encadenadas con contexto: respuestas, hilos, historias.</li>
+              <li><b>Comandos avanzados.</b> Más control desde el bot: gestionar, buscar, filtrar, ordenar.</li>
+            </ul>
             <h4>v2, extensión lineal de v1 — dos esquemas</h4>
             <p>v2 no se instala al lado de v1: <b>se enciende encima</b>. Cada novedad aterriza sobre la etapa de v1 que potencia, y la web sigue leyendo el mismo <code>risa.json</code>.</p>
             <figure class="circuit-fig">
@@ -1549,24 +1585,25 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </ul>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica (final de la sección)">
-            <button type="button" class="rtab-btn" data-tab="presentacion" aria-pressed="true">Presentación</button>
-            <button type="button" class="rtab-btn" data-tab="desarrollo" aria-pressed="false">Desarrollo</button>
+            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Pasado</button>
+            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Presente</button>
+            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Futuro</button>
           </nav>
         </div>
       </div>
-      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Tecnología">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
-        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Tech">
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="true">Tecnología</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="true">Tech</button>
       </nav>
     </div>
   </section>
   <section class="content-section tab-panel" id="espiritualidad" hidden>
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Espiritualidad</p>
+        <p class="eyebrow">Interior</p>
         <h2>Una risa que conecta</h2>
         <p>La carcajada no pide traducción: se entiende antes que las palabras. Esta sección es una introducción a la risa como puente — una pausa compartida que nos acerca a quienes ríen con nosotros y a lo que nos hace humanos.</p>
       </div>
@@ -1585,12 +1622,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <span class="play">▶</span><span><b>Archivo de vídeos de risa</b><small>Wikimedia Commons · libre</small></span></a>
         </div>
       </div>
-      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Espiritualidad">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Espiritualidad</button>
-        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Comunidad</button>
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Interior">
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Interior</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1642,12 +1679,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       </div>
     </div>
     <div class="wrap">
-      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Comunidad">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Espiritualidad</button>
-        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Comunidad</button>
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Común">
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tecnología</button>
+        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1734,6 +1771,41 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   </div>
 </div>
 
+<!-- ============ MODAL · ENTRAR (acceso al perfil) ============ -->
+<div class="modal-back" id="entrar-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="em-title">
+    <button class="modal-x" type="button" id="em-close" aria-label="Cerrar">×</button>
+    <h2 id="em-title">Entrar · Mi perfil</h2>
+    <p class="modal-sub">Accede a tu perfil liberada para ver todas tus risas juntas y editarlo.</p>
+    <div class="entrar-opts">
+      <a class="btn btn-primary" id="em-miniapp" href="#/entrar">📱 Abrir mi perfil (miniapp)</a>
+      <button type="button" class="btn btn-ghost" id="em-code">🔑 Código por el bot</button>
+      <button type="button" class="btn btn-ghost" id="em-email">📧 Código por email</button>
+    </div>
+    <p class="modal-note entrar-note" id="em-note" hidden></p>
+  </div>
+</div>
+
+<!-- ============ MODAL · MEJORAR (novedades) ============ -->
+<div class="modal-back" id="mejorar-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mm-title">
+    <button class="modal-x" type="button" id="mm-close" aria-label="Cerrar">×</button>
+    <h2 id="mm-title">✨ Mejorar tu risa</h2>
+    <p class="modal-sub">Novedades nuevas.</p>
+    <ul class="mejorar-list">
+      <li><b>🌐 Subdominio de autor</b> — tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</li>
+      <li><b>✏️ Editar perfil</b> — cambia tu nombre público y tu subdominio desde la web o el bot.</li>
+      <li><b>🚀 Más funciones y apps</b> — seguimos sumando apps liberada y perfiles cada vez más tuyos.</li>
+    </ul>
+    <p class="modal-note">➡️ Tu perfil redirigirá a tus risas allí.</p>
+    <nav class="mejorar-links">
+      <a href="#tecnologia" data-tab-link="tecnologia">Tecnología</a>
+      <a href="#" id="mm-sobre-liberada">Sobre liberada</a>
+      <a href="#" id="mm-contactar">Contactar</a>
+    </nav>
+  </div>
+</div>
+
 <!-- ============ FOOTER / CRÉDITOS ============ -->
 <footer>
   <div class="wrap">
@@ -1771,7 +1843,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   "use strict";
 
   /* ============ DATOS DE PLAYLISTS ============ */
-  const A = 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/seed/audio/';
+  const A = 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/seed/audio/';
   const P = 'https://commons.wikimedia.org/wiki/File:';
   const playlists = [
     { id:'contagiosa', emoji:'😄', name:'Risa contagiosa', desc:'Multitudes riendo',
@@ -2222,7 +2294,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     iconOnly: true,
     pageSize: 4,
     alwaysPage: true,
-    repo: 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/',
+    repo: 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/',
     metaHTML: clipMeta,
     tagsAsChips: true,
     titlesAsTags: true,
@@ -2435,6 +2507,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   }
 
   function syncTagHash(){
+    // No pisar rutas propias: la página de autor y la miniapp tienen su hash.
+    if(/^#\/(u|entrar)\b/.test(location.hash||'')) return;
     const parts=[...selected].map(t=>encodeURIComponent(t));
     const base=location.pathname+location.search;
     const wanted=parts.length ? '#'+parts.join('+') : (initialTagHash?'#'+initialTagHash:base);
@@ -2607,18 +2681,22 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     upTg.hidden=!optIn;
     if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); }
     // Resolve key → username for aggregator link + button label
-    fetch(USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}).then(function(users){
-      var uname=Object.keys(users).find(function(k){return users[k].key===key;});
-      if(uname){
-        upUpgrade.href='https://'+uname+'.liberada.net';
-        upUpgrade.textContent=uname+'.liberada.net →';
-      } else {
-        upUpgrade.href='https://liberada.net/usa/'+encodeURIComponent(key)+'/';
-      }
-    }).catch(function(){});
+    if(upUpgrade){
+      fetch(USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}).then(function(users){
+        var uname=Object.keys(users).find(function(k){return users[k].key===key;});
+        if(uname){
+          upUpgrade.href='https://'+uname+'.liberada.net';
+          upUpgrade.textContent=uname+'.liberada.net →';
+        } else {
+          upUpgrade.href='https://liberada.net/usa/'+encodeURIComponent(key)+'/';
+        }
+      }).catch(function(){});
+    }
     var crossAma=document.getElementById('up-cross-ama');
-    crossAma.href='https://ama.liberada.net/#/u/'+encodeURIComponent(key);
-    crossAma.style.display='inline-flex';
+    if(crossAma){
+      crossAma.href='https://ama.liberada.net/#/u/'+encodeURIComponent(key);
+      crossAma.style.display='inline-flex';
+    }
     upClips.innerHTML='';
     if(!mine.length){
       const li=document.createElement('li');
@@ -2643,7 +2721,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     const b=e.target.closest('.up-play');
     if(b) gentePlayer.playSrc(b.dataset.src);
   });
-  window.addEventListener('hashchange', renderUserPage);
+  window.addEventListener('hashchange', ()=>{ renderUserPage(); renderEntrar(); });
   renderUserPage();
 
   /* ============ BOTÓN BENEFICIOS · un clip del risas por toque ============ */
@@ -2795,7 +2873,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     });
   }
 
-  /* ============ BARRAS INFERIORES · Cultura · Ciencia · Comunidad ============ */
+  /* ============ BARRAS INFERIORES · Cultura · Ciencia · Común ============ */
   const tabBtns=[...document.querySelectorAll('.tab-bar .tab-btn')];
   const tabPanels=[...document.querySelectorAll('.tab-panel')];
   function showTab(id, scroll){
@@ -2862,6 +2940,99 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   // cerrar al pulsar fuera o con Escape
   uploadModal.addEventListener('click', e=>{ if(e.target===uploadModal) closeModal(uploadModal); });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(uploadModal); });
+
+  /* ============ MODALES · ENTRAR y MEJORAR ============ */
+  const entrarModal=document.getElementById('entrar-modal');
+  const mejorarModal=document.getElementById('mejorar-modal');
+  function wireModal(m, closeId){
+    if(!m) return;
+    const x=document.getElementById(closeId);
+    if(x) x.addEventListener('click', ()=>closeModal(m));
+    m.addEventListener('click', e=>{ if(e.target===m) closeModal(m); });
+  }
+  wireModal(entrarModal, 'em-close');
+  wireModal(mejorarModal, 'mm-close');
+  document.addEventListener('keydown', e=>{
+    if(e.key!=='Escape') return;
+    [uploadModal, entrarModal, mejorarModal].forEach(m=>{ if(m && !m.hidden) closeModal(m); });
+  });
+
+  const emNote=document.getElementById('em-note');
+  const emNoteShow=(html)=>{ emNote.innerHTML=html; emNote.hidden=false; };
+  document.getElementById('em-miniapp')?.addEventListener('click', ()=>{ closeModal(entrarModal); });
+  document.getElementById('em-code')?.addEventListener('click', ()=>{
+    emNoteShow('Escribe <code>/entrar</code> a <a href="'+window.Risa.TELEGRAM_BOT+'" target="_blank" rel="noopener">@RisaLiberadaBot</a>, pulsa «Código por el bot» y luego introduce el código en la miniapp.');
+  });
+  document.getElementById('em-email')?.addEventListener('click', ()=>{
+    emNoteShow('📧 El código por email llegará pronto. Mientras tanto usa «Código por el bot» o abre la miniapp.');
+  });
+
+  const mmSobre=document.getElementById('mm-sobre-liberada');
+  if(mmSobre) mmSobre.addEventListener('click', ()=>{
+    closeModal(mejorarModal);
+    window.open('https://liberada.net', '_blank', 'noopener');
+  });
+  const mmContactar=document.getElementById('mm-contactar');
+  if(mmContactar) mmContactar.addEventListener('click', ()=>{
+    closeModal(mejorarModal);
+    window.location='mailto:risa@liberada.net';
+  });
+
+  /* ============ MINIAPP · #/entrar (perfil con código) ============ */
+  const entrarPage=document.getElementById('entrar-page');
+  const enCode=document.getElementById('en-code');
+  const enGo=document.getElementById('en-go');
+  const enResult=document.getElementById('en-result');
+  function renderEntrar(){
+    const isEntrar=/^#\/entrar$/.test(location.hash||'');
+    if(!entrarPage) return;
+    entrarPage.hidden=!isEntrar;
+    if(isEntrar){
+      enResult.textContent='';
+      enCode.value='';
+      if(!reduce) window.scrollTo({top:0, behavior:'smooth'});
+      else window.scrollTo(0,0);
+      enCode.focus();
+    }
+  }
+  function entrarConCode(){
+    const code=(enCode.value||'').trim();
+    if(!/^\d{6}$/.test(code)){ enResult.innerHTML='⚠️ El código tiene 6 dígitos.'; return; }
+    enResult.textContent='Comprobando…';
+    Promise.all([
+      fetch(window.Risa.CODES_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}),
+      fetch(window.Risa.USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}),
+      fetch(window.Risa.NAMES_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{})
+    ]).then(([codes, users, names])=>{
+      const hit=codes[code];
+      const today=new Date().toISOString().slice(0,10);
+      if(!hit || !hit.key || (hit.at && hit.at!==today)){
+        enResult.innerHTML='<b>Ese código no es válido o ha caducado.</b> Pide uno nuevo con <code>/entrar</code> al bot.';
+        return;
+      }
+      const key=hit.key;
+      const sub=Object.keys(users||{}).find(k=>users[k].key===key);
+      const name=(names&&names[key])||'Anónima';
+      const page=location.origin+location.pathname+'#/u/'+encodeURIComponent(key);
+      const subUrl='https://'+(sub||key)+'.liberada.net';
+      const activate=sub
+        ? '<a class="btn btn-primary" href="'+subUrl+'" target="_blank" rel="noopener">(Activar) — '+esc(sub)+'.liberada.net</a>'
+        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">(Activar) en tu próxima publicación</button>';
+      enResult.innerHTML='<b>Hola, '+esc(name)+'</b> — sesión iniciada.<br>'+
+        '👤 Nombre público: <code>'+esc(name)+'</code> — cámbialo con <code>/name TuNombre</code> en el bot.<br>'+
+        '🌐 Subdominio: <code>'+esc(sub||(key.slice(0,20)||'tu-nombre'))+'.liberada.net</code> — cámbialo con <code>/usuario nuevo_nombre</code>.'+
+        '<div class="en-activate"><h4>Activa tu perfil en <code>'+esc(sub||'tunombre')+'.liberada.net</code></h4>'+
+        '<p>Editar, bio extendida, juega y filtra — muestra la actividad de tus otras aplicaciones.</p>'+
+        activate+
+        '<p class="en-note">Nota: este enlace redirigirá a tus últimas risas en tu nuevo perfil.</p></div>'+
+        '<br><a class="btn btn-ghost" href="'+page+'">Ver mis risas en risa.liberada.net</a>';
+    }).catch(()=>{
+      enResult.textContent='No se pudo comprobar el código. Revisa tu conexión e inténtalo otra vez.';
+    });
+  }
+  if(enGo) enGo.addEventListener('click', entrarConCode);
+  if(enCode) enCode.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); entrarConCode(); } });
+  renderEntrar();   // estado inicial (tras declarar la sección y sus refs)
 
   /* ============ SERVICIOS · «Quiero» muestra el correo (ofuscado) ============ */
   const servQuiero=document.getElementById('serv-quiero');
@@ -3077,6 +3248,88 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const saved=JSON.parse(localStorage.getItem(LS_KEY)||'null');
       if(saved){ fillForm(saved); applyPrompt(); }
     }catch(e){}
+  }
+
+  /* ============ DROPDOWN MENU (topbar logo) ============ */
+  const brandLogo=document.getElementById('brand-logo');
+  const brandDD=document.getElementById('brand-dd');
+  if(brandLogo && brandDD){
+    brandLogo.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const open=brandDD.classList.toggle('open');
+      brandLogo.setAttribute('aria-expanded',open?'true':'false');
+    });
+    document.addEventListener('click',(e)=>{
+      if(!e.target.closest('.brand-wrap')){
+        brandDD.classList.remove('open');
+        brandLogo.setAttribute('aria-expanded','false');
+      }
+    });
+    const closeDD=()=>{
+      brandDD.classList.remove('open');
+      brandLogo.setAttribute('aria-expanded','false');
+    };
+    const ddEntrar=document.getElementById('dd-entrar');
+    if(ddEntrar) ddEntrar.addEventListener('click',()=>{ closeDD(); openModal(entrarModal); });
+    const ddMejorar=document.getElementById('dd-mejorar');
+    if(ddMejorar) ddMejorar.addEventListener('click',()=>{ closeDD(); openModal(mejorarModal); });
+    const ddSobre=document.getElementById('dd-sobre');
+    if(ddSobre) ddSobre.addEventListener('click',()=>{
+      brandDD.classList.remove('open');
+      brandLogo.setAttribute('aria-expanded','false');
+    });
+    const ddTechLink=brandDD.querySelector('[data-tab-link="tecnologia"]');
+    if(ddTechLink) ddTechLink.addEventListener('click',(e)=>{
+      e.preventDefault();
+      brandDD.classList.remove('open');
+      brandLogo.setAttribute('aria-expanded','false');
+      showTab('tecnologia',true);
+    });
+  }
+
+  /* ============ USERNAME PLAYLIST NAME ============ */
+  function updateGentePlaylistName(){
+    const sel=selected.size;
+    let name='Risas de la gente 😹';
+    if(favFilter) name='Mis risas favoritas ⭐';
+    else if(sel===1){
+      const t=[...selected][0];
+      name='@'+t;
+    } else if(sel>1) name='Risas filtradas ('+sel+' etiquetas)';
+    else if(recienteBtn.textContent==='Recientes') name='Risas recientes 🎙️';
+    return name;
+  }
+  const _origUpdateGentePlaylist=updateGentePlaylist;
+  updateGentePlaylist=function(){
+    const sel=selected.size;
+    let name=updateGentePlaylistName();
+    let empty=favFilter?'Aún no has marcado ninguna risa con la estrella ⭐'
+      :(sel?'Ninguna risa lleva esas etiquetas 😅':'Aún no hay risas · sé la primera 💛');
+    gentePlayer.select(currentTracks(), name, t=>t.tags, empty);
+    recienteBtn.setAttribute('aria-pressed', (sel||favFilter)?'false':'true');
+    favChip.setAttribute('aria-pressed', favFilter?'true':'false');
+  };
+
+  /* ============ RUTA /U/username · perfil simplificado ============ */
+  const userPathMatch=location.pathname.match(/^\/U\/([^/]+)\/?$/);
+  if(userPathMatch){
+    const userTag=decodeURIComponent(userPathMatch[1]);
+    selected.add(userTag);
+    document.querySelectorAll('.tag-chip').forEach(c=>{
+      if(c.dataset.tag===userTag) c.setAttribute('aria-pressed','true');
+    });
+    updateGentePlaylist();
+    syncTagHash();
+    const hero=document.querySelector('.hero');
+    if(hero) hero.hidden=true;
+    const header=document.querySelector('header.topbar');
+    if(header){
+      const viewAs=document.createElement('div');
+      viewAs.className='user-view-as';
+      viewAs.innerHTML='<span class="user-view-label">Viendo risas de</span> <span class="user-view-name">@'+userTag+'</span> <a href="/" class="user-view-back">← Volver</a>';
+      header.after(viewAs);
+    }
+    document.querySelectorAll('#ejercicios, #expande, .tab-panel, .slider-framed').forEach(el=>el.hidden=true);
   }
 
 })();

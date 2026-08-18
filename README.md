@@ -1,9 +1,9 @@
 # Risa Liberada — bot
 
 Serverless Telegram moderation bot for [Risa Liberada](https://flove.org). People DM their
-laugh to **@RisaLiberadaBot**; a fixed welcome message greets them («Graba tu risa (y dale a
-enviar), elige visibilidad y descríbela, envía, (moderación), recibe notificación de publicación
-en @risaliberada y risa.liberada.net»), and every audio opens a *draft*
+laugh to **@RisaLiberadaBot**; a fixed welcome message greets them («Comparte tu risa con todos
+aquí. Graba tu risa (y dale a enviar), elige visibilidad y descríbela, envía, (moderación),
+recibe notificación de publicación en @risaliberada y risa.liberada.net»), and every audio opens a *draft*
 card: **✏️ Título** + **🏷️ Tags** in one row, attribution (**👤 Usuario telegram** and
 **🙂 Autor** are multi-select, **🙈 Anónimo** overrides both) in another, and **✅ Enviar** in
 a third. Tags are free text (comma-separated). Files are capped at 10 MB / 1000 s.

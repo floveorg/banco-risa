@@ -48,6 +48,12 @@ export function Telegram(token) {
       call('editMessageReplyMarkup', { chat_id: chatId, message_id: messageId, reply_markup: replyMarkup }),
     editCaption: (chatId, messageId, caption) =>
       call('editMessageCaption', { chat_id: chatId, message_id: messageId, caption }),
+    // Presencia del bot: descripción corta/larga y menú de comandos (BotFather).
+    setMyDescription: (description) => call('setMyDescription', { description }),
+    setMyShortDescription: (short) => call('setMyShortDescription', { short_description: short }),
+    setMyCommands: (commands) => call('setMyCommands', { commands }),
+    setChatDescription: (chatId, description) =>
+      call('setChatDescription', { chat_id: chatId, description }),
     getFilePath: async (fileId) => (await call('getFile', { file_id: fileId })).file_path,
 
     async downloadFile(filePath, destPath) {

@@ -91,6 +91,26 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
             username: (cb.from && cb.from.username) || '' });
           continue;
         }
+        // Subdominio de autor, opt-in: Sí quiero / No sé / No, seguro.
+        const so = /^suboffer:(yes|maybe|never)$/.exec(cb.data || '');
+        if (so) {
+          actions.push({ kind: 'suboffer-' + so[1], chatId, callbackId: cb.id,
+            msgId: cb.message.message_id,
+            username: (cb.from && cb.from.username) || '' });
+          continue;
+        }
+        // «Editar» el nombre del subdominio (username.liberada.net) o cancelar.
+        const se = /^subedit(:cancel)?$/.exec(cb.data || '');
+        if (se) {
+          actions.push({ kind: se[1] ? 'subedit-cancel' : 'subedit', chatId, callbackId: cb.id });
+          continue;
+        }
+        // /entrar: opciones de acceso a la miniapp de perfil.
+        const en = /^entrar:(code|miniapp|email)$/.exec(cb.data || '');
+        if (en) {
+          actions.push({ kind: 'entrar-' + en[1], chatId, callbackId: cb.id });
+          continue;
+        }
         // Visto bueno del autor sobre los cambios propuestos por el moderador.
         // Solo cuenta si el callback llega del chat que subió la risa.
         const ok = /^accept:(.+)$/.exec(cb.data || '');
@@ -160,15 +180,16 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         } else {
           // Check for pending forward (reply-to-clip flow)
           const pendingParent = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
-          actions.push({
+          const draftAction = {
             kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
             fileId: media.file_id, ...(video ? { video: true } : {}),
             fromChatId: msg.chat.id, fromMsgId: msg.message_id,
             name: (msg.from && msg.from.first_name) || 'Anónima',
             username: (msg.from && msg.from.username) || '',
-            title: (msg.caption || '').trim(),
-            parent: pendingParent || undefined
-          });
+            title: (msg.caption || '').trim()
+          };
+          if (pendingParent) draftAction.parent = pendingParent;
+          actions.push(draftAction);
           // Clear pending forward after use
           if (pendingParent && ctx.awaitingDraftParent) {
             delete ctx.awaitingDraftParent[key];
@@ -177,7 +198,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       } else if (msg.text) {
         // /name y /pub mutan tu identidad; el resto son consultas de solo lectura
         // (cmd-*: el bot responde, no cambia estado).
-        const cmd = /^\/(name|pub|me|stats|profile|status|queue|latest|random|now|since|today|trending|play)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
+        const cmd = /^\/(name|pub|entrar|mejorar|usuario|me|stats|profile|status|queue|latest|random|now|since|today|trending|play)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
         if (cmd) {
           const c = cmd[1].toLowerCase();
           if (c === 'name') {
@@ -191,6 +212,8 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
         } else if (ctx.awaitingTags && ctx.awaitingTags[key]) {
           actions.push({ kind: 'draft-tags-text', chatId: msg.chat.id, tagsText: (msg.text || '').trim() });
+        } else if (ctx.awaitingSubedit && ctx.awaitingSubedit[key]) {
+          actions.push({ kind: 'subedit-text', chatId: msg.chat.id, text: (msg.text || '').trim() });
         } else {
           actions.push({ kind: 'welcome', chatId: msg.chat.id });
         }

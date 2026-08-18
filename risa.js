@@ -101,6 +101,8 @@
     RISA_URL:  'https://risa.liberada.net/risa.json',
     AMA_URL:   'https://ama.liberada.net/ama.json',
     USERS_URL: 'https://risa.liberada.net/usernames.json',
+    CODES_URL: 'https://risa.liberada.net/codes.json',
+    NAMES_URL: 'https://risa.liberada.net/state/names.json',
     AGGREGATOR_BASE: 'https://liberada.net/usa',
     TELEGRAM_BOT: 'https://t.me/RisaLiberadaBot',
     LICENSE: LICENSE,

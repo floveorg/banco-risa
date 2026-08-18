@@ -36,6 +36,32 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 - **`/name`** en DM: establecer o cambiar la palabra de display.
 - **Moderação mejorada**: botón ✏️ Editar para cambiar título/tags antes de
   publicar.
+- **Subdominio de autor opt-in**: tras la primera publicación el bot ofrece
+  `<usuario>.liberada.net` con «Sí, quiero / No sé / No, seguro»; el alta solo
+  ocurre con «Sí, quiero» (ya no se auto-crea). «No sé» vuelve a preguntar en
+  la siguiente publicación; «No, seguro» lo calla para siempre. En el aviso de
+  publicación: «Puedes encontrar todas tus risas juntas en este enlace: …» +
+  «Activa gratis: <usuario>.liberada.net (Editar)».
+- **`/usuario <nombre>`** en DM: cambiar el nombre del subdominio.
+- **`/entrar`** en DM y menú web «Entrar»: acceso a la miniapp de perfil
+  (`#/entrar`) con opciones de código (por el bot ahora, por email próximamente).
+- **`/mejorar`** en DM y menú web «Mejorar» (modal): novedades — subdominio,
+  editar perfil, más apps; «tu perfil redirigirá a tus risas allí».
+- **Miniapp `#/entrar`**: código de 6 dígitos que da el bot (ligado a la key,
+  caduca al final del día) para identificar quién eres y ver tu perfil con tus
+  risas juntas.
+- **Bienvenida del bot** empieza con «Comparte tu risa con todos aquí.»
+- **Título y descripción web** renombrados a «Risa liberada · Respira, escucha,
+  disfruta» / «Playlists de risas, cultura y comunidad.» (preview al compartir).
+- **Subdominios seedeados**: `usernames.json` con `marcflove` y `maria`, de modo
+  que `marcflove.liberada.net` / `maria.liberada.net` redirigen ya al perfil
+  agregador; los nuevos usuarios se registran solos con el opt-in.
+- **Presencia estable del bot**: `setMyDescription`/`setMyShortDescription`/
+  `setMyCommands` y `setChatDescription` de canal y grupo de moderación — el
+  enlace a la miniapp (`#/entrar`) queda fijo en las descripciones.
+- **Miniapp terminada**: tras autenticar con el código, muestra el panel «Activa
+  tu perfil en <tu>.liberada.net» con (Activar), la nota de redirección a tus
+  últimas risas y el acceso a tus risas en risa.liberada.net.
 
 #### Corregido
 

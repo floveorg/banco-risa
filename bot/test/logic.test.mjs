@@ -328,6 +328,42 @@ test('tgpub callbacks parse with the username', () => {
   assert.deepEqual(actions[1], { kind: 'tgpub-no', chatId: 777, callbackId: 'c2', username: 'mar' });
 });
 
+test('suboffer callbacks (Sí quiero / No sé / No, seguro) parse', () => {
+  const mk = (data, id) => ({ update_id: id, callback_query: { id: 'c' + id, data,
+    message: { message_id: 40 + id, chat: { id: 777, type: 'private' } },
+    from: { id: 777, username: 'mar' } } });
+  const { actions } = parseUpdates([
+    mk('suboffer:yes', 1), mk('suboffer:maybe', 2), mk('suboffer:never', 3)
+  ], CTX);
+  assert.deepEqual(actions[0], { kind: 'suboffer-yes', chatId: 777, callbackId: 'c1', msgId: 41, username: 'mar' });
+  assert.deepEqual(actions[1], { kind: 'suboffer-maybe', chatId: 777, callbackId: 'c2', msgId: 42, username: 'mar' });
+  assert.deepEqual(actions[2], { kind: 'suboffer-never', chatId: 777, callbackId: 'c3', msgId: 43, username: 'mar' });
+});
+
+test('subedit (and its cancel) parse from a private chat', () => {
+  const mk = (data, id) => ({ update_id: id, callback_query: { id: 'c' + id, data,
+    message: { message_id: 40 + id, chat: { id: 777, type: 'private' } }, from: { id: 777 } } });
+  const { actions } = parseUpdates([mk('subedit', 1), mk('subedit:cancel', 2)], CTX);
+  assert.deepEqual(actions[0], { kind: 'subedit', chatId: 777, callbackId: 'c1' });
+  assert.deepEqual(actions[1], { kind: 'subedit-cancel', chatId: 777, callbackId: 'c2' });
+});
+
+test('a private text while awaiting a subdomain rename becomes subedit-text', () => {
+  const ctx = { modGroupId: -1001234, awaitingSubedit: { '777': true } };
+  const updates = [{ update_id: 95, message: { message_id: 3, chat: { id: 777, type: 'private' },
+    text: 'mar_risa' } }];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0], { kind: 'subedit-text', chatId: 777, text: 'mar_risa' });
+});
+
+test('entrar callbacks parse from a private chat', () => {
+  const mk = (data, id) => ({ update_id: id, callback_query: { id: 'c' + id, data,
+    message: { message_id: 40 + id, chat: { id: 777, type: 'private' } }, from: { id: 777 } } });
+  const { actions } = parseUpdates([mk('entrar:code', 1), mk('entrar:miniapp', 2), mk('entrar:email', 3)], CTX);
+  assert.deepEqual(actions.map((a) => a.kind), ['entrar-code', 'entrar-miniapp', 'entrar-email']);
+  assert.deepEqual(actions[0], { kind: 'entrar-code', chatId: 777, callbackId: 'c1' });
+});
+
 test('moderator edit callbacks in the mod group are parsed', () => {
   const updates = [
     { update_id: 80, callback_query: { id: 'cb1', data: 'edit:q_10',
@@ -394,12 +430,13 @@ test('read-only commands in a private chat become cmd-* actions', () => {
     mk('/me', 100), mk('/stats', 101), mk('/profile', 102), mk('/status', 103),
     mk('/queue', 104), mk('/latest', 105), mk('/random', 106), mk('/now', 107),
     mk('/since 3', 108), mk('/today', 109), mk('/trending', 110), mk('/play', 111),
+    mk('/entrar', 112), mk('/mejorar', 113),
   ], CTX);
-  assert.equal(offset, 112);
+  assert.equal(offset, 114);
   assert.deepEqual(actions.map((a) => a.kind), [
     'cmd-me', 'cmd-stats', 'cmd-profile', 'cmd-status', 'cmd-queue',
     'cmd-latest', 'cmd-random', 'cmd-now', 'cmd-since', 'cmd-today',
-    'cmd-trending', 'cmd-play'
+    'cmd-trending', 'cmd-play', 'cmd-entrar', 'cmd-mejorar'
   ]);
   assert.equal(actions[8].arg, '3');
   assert.deepEqual(actions[2], { kind: 'cmd-profile', chatId: 777, arg: '' });
