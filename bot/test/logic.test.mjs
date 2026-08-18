@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseUpdates, decisionOf, hashId, identityOf, risaEntry, MAX_VIDEO_BYTES, clipsOf,
+         encChatId, decChatId,
          latestClips, clipsOfAuthor, clipsToday, clipsSince,
          randomClip, tagTrend, authorStats, searchClips, inlineResult } from '../logic.mjs';
 
@@ -25,6 +26,14 @@ test('identityOf: ①+② obfuscates the id (idHash only)', () => {
 test('identityOf: solo ① keeps the id direct', () => {
   const got = identityOf({ tg: true, name: false, anon: false }, 777, 's');
   assert.deepEqual(got, { idDirect: '777' });
+});
+
+test('encChatId/decChatId round-trip hides the id in the repo', () => {
+  const enc = encChatId(123456789, 'secret');
+  assert.notEqual(enc, '123456789');              // nunca en claro
+  assert.equal(decChatId(enc, 'secret'), '123456789');  // reversible con el secret
+  assert.notEqual(decChatId(enc, 'other'), '123456789');// sin el secret, ilegible
+  assert.equal(decChatId(encChatId(777, 's'), 's'), '777');
 });
 
 test('clipsOf extracts array or {schema,clips} (bot feed contract)', () => {

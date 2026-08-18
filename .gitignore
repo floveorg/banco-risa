@@ -1,7 +1,6 @@
 node_modules/
 *.log
 seed/audio/
-# id de Telegram en claro (solo local, para el DM de publicación)
-state/drafts.json
-state/.uploaders.json
+# ids de Telegram viajan OFUSCADOS (encChatId con TG_ID_SECRET) en drafts.json y
+# .uploaders.json — reversibles solo con el secret, nunca en claro en el repo.
 .env

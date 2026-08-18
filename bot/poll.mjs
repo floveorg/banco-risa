@@ -7,7 +7,7 @@ import {
   parseUpdates, risaEntry, prependClip, identityOf, hashId, MAX_FILE_BYTES, clipsOf,
   latestClips, clipsOfAuthor, clipsToday, clipsSince, randomClip,
   tagTrend, authorStats, searchClips, inlineResult,
-  hasAncestor, clipByChannelMsg
+  hasAncestor, clipByChannelMsg, encChatId, decChatId
 } from './logic.mjs';
 import { pageUrlOf } from './pages.mjs';
 import { Telegram } from './telegram.mjs';
@@ -34,6 +34,13 @@ const persistFeed = async (risas, cfg) => {
   await writeJSON('risa.json', { schema: 'risa-feed/1', clips: risas });
   await bestEffort(buildFeeds(risas, cfg));
 };
+
+// Persistencia de borradores/uploaders con ids de chat ofuscados (encChatId),
+// para que el cron los conserve entre corridas sin exponer ids en claro.
+const encDrafts = (d) => Object.fromEntries(Object.entries(d || {}).map(([k, v]) =>
+  [encChatId(k, TG_ID_SECRET), { ...v, fromChatId: encChatId(v.fromChatId, TG_ID_SECRET) }]));
+const encUploaders = (u) => Object.fromEntries(Object.entries(u || {}).map(([id, c]) =>
+  [id, encChatId(c, TG_ID_SECRET)]));
 
 const WELCOME_TEXT = 'Comparte tu risa con todos aquí.\n\n' +
   'Audios o vídeos de máx. 1 min, 10 MB, 5 al día. Graba y envía el tuyo: elige visibilidad, descríbelo y pulsa Enviar. Un moderador lo revisa y, si entra, lo publicamos en @risaliberada y en risa.liberada.net 💛';
@@ -1044,6 +1051,10 @@ async function main() {
   let queue = await readJSON('state/queue.json', {});
   let drafts = await readJSON('state/drafts.json', {});
   let uploaders = await readJSON('state/.uploaders.json', {});
+  // Los ids de chat viajan ofuscados en el repo; se descifran en memoria.
+  drafts = Object.fromEntries(Object.entries(drafts).map(([k, d]) =>
+    [decChatId(k, TG_ID_SECRET), { ...d, fromChatId: decChatId(d.fromChatId, TG_ID_SECRET) }]));
+  uploaders = Object.fromEntries(Object.entries(uploaders).map(([id, c]) => [id, decChatId(c, TG_ID_SECRET)]));
   let uploads = await readJSON('state/uploads.json', {});
   let tgpub = await readJSON('state/tgpub.json', {});
   let names = await readJSON('state/names.json', {});
@@ -1079,8 +1090,8 @@ async function main() {
         risas = r.risas;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
-          await writeJSON('state/drafts.json', drafts);
-          await writeJSON('state/.uploaders.json', uploaders);
+          await writeJSON('state/drafts.json', encDrafts(drafts));
+          await writeJSON('state/.uploaders.json', encUploaders(uploaders));
           await writeJSON('state/uploads.json', uploads);
           await writeJSON('state/tgpub.json', tgpub);
           await writeJSON('state/names.json', names);
@@ -1105,8 +1116,8 @@ async function main() {
   }
 
   await writeJSON('state/queue.json', queue);
-  await writeJSON('state/drafts.json', drafts);
-  await writeJSON('state/.uploaders.json', uploaders);
+  await writeJSON('state/drafts.json', encDrafts(drafts));
+  await writeJSON('state/.uploaders.json', encUploaders(uploaders));
   await writeJSON('state/uploads.json', uploads);
   await writeJSON('state/tgpub.json', tgpub);
   await writeJSON('state/names.json', names);
