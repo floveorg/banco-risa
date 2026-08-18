@@ -2,9 +2,10 @@
 
 Política de versiones del repo `floveorg/risa`: **v1 = producción**, **v2 = desarrollo**.
 
-> **Estado actual: v1.0.0 cortada** (2026-08-18, «Nick as tag»). El paquete
-> descargable `risa-v1.0.0-nick-as-tag.zip` incluye versión, ciclo de release
-> (`CHANGELOG.md` + `VERSIONING.md`) y el manual de uso (`MANUAL.md`).
+> **Estado actual: v1.0.1 cortada** (2026-08-18, «Nick as tag»). El paquete
+> descargable `risa-v1.0.1-nick-as-tag.zip` incluye versión, ciclo de release
+> (`CHANGELOG.md` + `VERSIONING.md`) y el manual de uso (`MANUAL.md`). La rama
+> de desarrollo `v2-d1` (Cloudflare D1 + Workers) vive aparte.
 
 ## 1. Dos versiones, un solo repo de producción
 

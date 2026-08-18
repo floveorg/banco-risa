@@ -9,6 +9,19 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.1] — 2026-08-18 · pulido de la release
+
+- **Paquete descargable** ahora incluye las imágenes locales que la web
+  referencia por ruta relativa (diagramas, QR y fotos de réplica) y el
+  `.htmlvalidate.json` — la web se ve completa offline.
+- **html-validate limpio**: `.htmlvalidate.json` (regla `prefer-native-element`
+  off, igual que solo) + `aria-label` en los enlaces del modal Mejorar
+  (`unique-landmark`).
+- **Copy actualizada**: subdominio «opt-in (Sí quiero)» en lugar de
+  «automático · sin_claim»; comandos de perfil (`/entrar`, `/mejorar`,
+  `/usuario`, `/pub`) en la lista de features; suite de tests «91 verdes».
+- **README** referencia el manual y el paquete descargable.
+
 ## [v1.0.0] — 2026-08-18 · «Nick as tag»
 
 ### v1 · producción (release v1.0.0)
