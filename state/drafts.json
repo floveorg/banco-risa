@@ -15,7 +15,7 @@
     "fromChatId": "4f503e61c48d57f15fe6",
     "fromMsgId": 164,
     "draftMsgId": 166,
-    "awaitingTitle": false,
+    "awaitingTitle": true,
     "awaitingTags": false,
     "parent": null
   }
