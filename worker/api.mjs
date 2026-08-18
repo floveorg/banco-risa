@@ -92,6 +92,28 @@ export default {
         return json({ ok: true });
       }
 
+      // GET /api/aliases/:key — aliases públicos (+ privados solo si auth).
+      if (base === 'aliases' && rest[0] && method === 'GET') {
+        const rows = await db.prepare('SELECT alias, private FROM aliases WHERE key = ? ORDER BY created_at')
+          .bind(rest[0]).all();
+        const ok = authed(env, request);
+        const aliases = rows.results
+          .filter((a) => !a.private || ok)
+          .map((a) => ({ alias: a.alias, private: !!a.private }));
+        return json({ ok: true, key: rest[0], aliases });
+      }
+
+      // POST /api/aliases — crear alias { key, alias, private? }
+      if (base === 'aliases' && method === 'POST') {
+        if (!authed(env, request)) return err('no autorizado', 401);
+        const b = await request.json().catch(() => ({}));
+        if (!b.key || !b.alias) return err('faltan key/alias');
+        await db.prepare('INSERT OR IGNORE INTO aliases (key, alias, private, created_at) VALUES (?,?,?,?)')
+          .bind(b.key, String(b.alias).slice(0, 40), b.private ? 1 : 0,
+                new Date().toISOString().slice(0, 10)).run();
+        return json({ ok: true });
+      }
+
       // POST /api/claim — identidad: { username, code } → token (dev simplificado:
       // valida el código contra una tabla `codes` o el secret si se comparte).
       if (base === 'claim' && method === 'POST') {

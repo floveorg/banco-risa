@@ -70,21 +70,19 @@ const ACCEPT_KEYS = (id) => ({ inline_keyboard: [[
   { text: '❌ Rechazar', callback_data: 'reject-edit:' + id }
 ]] });
 
-// Identidad: «Usuario telegram» y «Autor» son multiselect; «Anónimo» los anula (radio).
-const DEFAULT_SEL = { tg: false, name: true, anon: false };
+// Identidad (v2): «Autor» elige un alias (draft:aliases); «Anónimo» lo anula.
+// El botón «Usuario telegram» se quita en v2 (se mantiene en la rama v1).
+const DEFAULT_SEL = { alias: '', anon: false };
 const selOf = (d) => d.sel || { ...DEFAULT_SEL };
 function displayName(d) {
   const s = selOf(d);
   if (s.anon) return 'Anónima';
-  const parts = [];
-  if (s.tg) parts.push(d.username ? '@' + d.username : (d.name || 'Anónima'));
-  if (s.name) parts.push(d.name || 'Anónima');
-  return [...new Set(parts)].join(' · ') || 'Anónima';
+  if (s.alias) return s.alias;
+  return d.name || 'Anónima';
 }
 function identityLabel(d) {
   const s = selOf(d);
   if (s.anon) return '🙈 ' + displayName(d);
-  if (s.tg) return '👤 ' + displayName(d);
   return '🙂 ' + displayName(d);
 }
 
@@ -163,17 +161,23 @@ function draftText(d) {
 
 function OPTIONS(d) {
   const s = selOf(d);
-  const mk = (mode, base) => ({
-    text: (s[mode] ? '✓ ' : '') + base,
-    callback_data: 'draft:id:' + mode
-  });
   return { inline_keyboard: [
     [{ text: '✏️ Título', callback_data: 'draft:title' },
      { text: '🏷️ Tags', callback_data: 'draft:tags' }],
-    [mk('tg', '👤 Usuario telegram'), mk('name', '🙂 Autor'), mk('anon', '🙈 Anónimo')],
+    [{ text: (s.alias ? '✓ ' : '') + '🙂 Autor ▾', callback_data: 'draft:aliases' },
+     { text: (s.anon ? '✓ ' : '') + '🙈 Anónimo', callback_data: 'draft:id:anon' }],
     [{ text: '✅ Enviar', callback_data: 'draft:send' }]
   ]};
 }
+// Submenú de aliases del «Autor»: se rellena con los del usuario (D1) o cae
+// al nombre público. «Nuevo alias» pide uno por mensaje (awaitingAlias).
+const ALIAS_KEYS = (aliases) => ({
+  inline_keyboard: [
+    ...aliases.map((a) => [{ text: (a.private ? '🔒 ' : '') + a.alias, callback_data: 'draft:alias:' + a.alias }]),
+    [{ text: '➕ Nuevo alias', callback_data: 'draft:alias-new' },
+     { text: '✖️ Cancelar', callback_data: 'draft:cancel' }]
+  ]
+});
 
 const CANCEL_KEYS = () => ({ inline_keyboard: [[
   { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
@@ -458,11 +462,71 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
     const d = drafts[String(a.chatId)];
     if (!d) return { risas, dirty: false };
     const s = selOf(d);
-    if (a.mode === 'anon') { s.tg = false; s.name = false; s.anon = true; }
-    else if (a.mode === 'tg') { s.tg = !s.tg; s.anon = false; }
-    else if (a.mode === 'name') { s.name = !s.name; s.anon = false; }
+    if (a.mode === 'anon') { s.anon = !s.anon; if (s.anon) s.alias = ''; }
     await bestEffort(tg.answerCallback(a.callbackId, 'Autor: ' + displayName(d)));
     await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
+    return { risas, dirty: true };
+  }
+  if (a.kind === 'draft-aliases') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { risas, dirty: false };
+    await bestEffort(tg.answerCallback(a.callbackId, 'Elige tu alias'));
+    const who = hashId(a.chatId, TG_ID_SECRET);
+    // Alias del autor desde D1 (v2); fallback al nombre público si no hay API.
+    let aliases = [];
+    try {
+      const res = await fetch('https://risa.liberada.net/api/aliases/' + encodeURIComponent(who),
+        { signal: AbortSignal.timeout(2500) });
+      const data = res.ok ? await res.json() : null;
+      if (data && data.ok) aliases = data.aliases || [];
+    } catch (_) {}
+    if (!aliases.length) {
+      const label = d.name || 'Anónima';
+      aliases = [{ alias: label, private: false }];
+    }
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId,
+      '🙂 Elige tu alias:\n\n' + aliases.map((x) => (x.private ? '🔒 ' : '') + x.alias).join('\n'), ALIAS_KEYS(aliases)));
+    return { risas, dirty: true };
+  }
+  if (a.kind === 'draft-alias') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { risas, dirty: false };
+    const s = selOf(d);
+    s.alias = a.mode; s.anon = false;
+    await bestEffort(tg.answerCallback(a.callbackId, 'Autor: ' + a.mode));
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
+    return { risas, dirty: true };
+  }
+  if (a.kind === 'draft-alias-new') {
+    const d = drafts[String(a.chatId)];
+    if (!d) return { risas, dirty: false };
+    d.awaitingAlias = true;
+    await bestEffort(tg.answerCallback(a.callbackId, 'Escribe el nuevo alias'));
+    await bestEffort(tg.sendMessage(a.chatId, '✏️ Escribe tu nuevo alias (público):', CANCEL_KEYS()));
+    return { risas, dirty: true };
+  }
+  if (a.kind === 'draft-alias-new-text') {
+    const key = String(a.chatId);
+    const d = drafts[key];
+    if (!d || !d.awaitingAlias) return { risas, dirty: false };
+    d.awaitingAlias = false;
+    const alias = String(a.text || '').trim().slice(0, 40);
+    if (!alias) {
+      await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, draftText(d), OPTIONS(d)));
+      return { risas, dirty: true };
+    }
+    const s = selOf(d);
+    s.alias = alias; s.anon = false;
+    // Registra el alias en D1 (v2); fallback silencioso si la API no está.
+    const who = hashId(a.chatId, TG_ID_SECRET);
+    try {
+      await fetch('https://risa.liberada.net/api/aliases', {
+        method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer devris' },
+        body: JSON.stringify({ key: who, alias, private: false }),
+        signal: AbortSignal.timeout(2500) });
+    } catch (_) {}
+    await bestEffort(tg.answerCallback(a.callbackId, 'Alias guardado'));
+    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, draftText(d), OPTIONS(d)));
     return { risas, dirty: true };
   }
   if (a.kind === 'draft-cancel') {
@@ -470,6 +534,7 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
     if (!d) return { risas, dirty: false };
     d.awaitingTitle = false;
     d.awaitingTags = false;
+    d.awaitingAlias = false;
     await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
     return { risas, dirty: true };
   }
@@ -1077,11 +1142,13 @@ async function main() {
       Object.entries(queue).filter(([, e]) => e.editing));
     const awaitingSubedit = Object.fromEntries(
       Object.entries(drafts).filter(([, d]) => d.awaitingSubedit));
+    const awaitingAlias = Object.fromEntries(
+      Object.entries(drafts).filter(([, d]) => d.awaitingAlias));
     const updates = await tg.getUpdates(offset, POLL_TIMEOUT);
     const { actions, offset: nextOffset } = parseUpdates(
       updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags,
-                 awaitingDraftParent, awaitingModEdit, awaitingSubedit, uploaderOf: uploaders,
-                 limits: cfg.limits }, offset);
+                 awaitingDraftParent, awaitingModEdit, awaitingSubedit, awaitingAlias,
+                 uploaderOf: uploaders, limits: cfg.limits }, offset);
 
     for (const a of actions) {
       try {

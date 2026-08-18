@@ -196,6 +196,27 @@ test('tags and identity callbacks parse into their actions', () => {
   assert.deepEqual(actions[4], { kind: 'draft-id', chatId: 777, callbackId: 'cb5', draftMsgId: 105, mode: 'anon' });
 });
 
+test('alias callbacks parse (draft:aliases, draft:alias:<name>, draft:alias-new)', () => {
+  const mk = (cb, mid) => ({ update_id: mid, callback_query: { id: 'cb' + mid, data: cb,
+    message: { message_id: 200 + mid, chat: { id: 777, type: 'private' } }, from: { id: 777 } } });
+  const { actions } = parseUpdates([
+    mk('draft:aliases', 1),
+    mk('draft:alias:Marc', 2),
+    mk('draft:alias-new', 3)
+  ], CTX);
+  assert.deepEqual(actions[0], { kind: 'draft-aliases', chatId: 777, callbackId: 'cb1', draftMsgId: 201 });
+  assert.deepEqual(actions[1], { kind: 'draft-alias', chatId: 777, callbackId: 'cb2', draftMsgId: 202, mode: 'Marc' });
+  assert.deepEqual(actions[2], { kind: 'draft-alias-new', chatId: 777, callbackId: 'cb3', draftMsgId: 203 });
+});
+
+test('a private text while awaiting a new alias becomes draft-alias-new-text', () => {
+  const ctx = { modGroupId: -1001234, awaitingAlias: { '777': true } };
+  const updates = [{ update_id: 145, message: { message_id: 4, chat: { id: 777, type: 'private' },
+    text: 'Risalog' } }];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.deepEqual(actions[0], { kind: 'draft-alias-new-text', chatId: 777, text: 'Risalog' });
+});
+
 test('unknown draft callbacks are ignored', () => {
   const updates = [{
     update_id: 6,

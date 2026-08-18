@@ -79,7 +79,13 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           if (act === 'id' && m[2]) {
             actions.push({ kind: 'draft-id', chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id, mode: m[2] });
-          } else if (['title', 'tags', 'tags-done', 'send', 'cancel'].includes(act)) {
+          } else if (act === 'aliases') {
+            actions.push({ kind: 'draft-aliases', chatId, callbackId: cb.id,
+              draftMsgId: cb.message.message_id });
+          } else if (act === 'alias' && m[2]) {
+            actions.push({ kind: 'draft-alias', chatId, callbackId: cb.id,
+              draftMsgId: cb.message.message_id, mode: m[2] });
+          } else if (['title', 'tags', 'tags-done', 'send', 'cancel', 'alias-new'].includes(act)) {
             actions.push({ kind: 'draft-' + act, chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id });
           }
@@ -213,6 +219,8 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           actions.push({ kind: 'draft-title-text', chatId: msg.chat.id, title: (msg.text || '').trim() });
         } else if (ctx.awaitingTags && ctx.awaitingTags[key]) {
           actions.push({ kind: 'draft-tags-text', chatId: msg.chat.id, tagsText: (msg.text || '').trim() });
+        } else if (ctx.awaitingAlias && ctx.awaitingAlias[key]) {
+          actions.push({ kind: 'draft-alias-new-text', chatId: msg.chat.id, text: (msg.text || '').trim() });
         } else if (ctx.awaitingSubedit && ctx.awaitingSubedit[key]) {
           actions.push({ kind: 'subedit-text', chatId: msg.chat.id, text: (msg.text || '').trim() });
         } else {
