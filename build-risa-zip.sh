@@ -22,7 +22,12 @@ mkdir -p "$STAGE/bot" "$STAGE/worker" "$STAGE/.github/workflows"
 
 # ── Web ──────────────────────────────────────────────────────────────────
 cp index.html risa.js config.json risa.json usernames.json CNAME "$STAGE/" 2>/dev/null || true
-# (media/ · seed/ · categorias/ no entran: son contenido y viven en R2)
+# Imágenes LOCALES que index.html referencia por ruta relativa (diagramas,
+# QR y fotos de réplica) — imprescindibles para ver la web offline.
+cp -n *.png *.jpg "$STAGE/" 2>/dev/null || true
+mkdir -p "$STAGE/media"
+cp -n media/replica-*.jpg "$STAGE/media/" 2>/dev/null || true
+# (media/logos · seed/ · categorias/ no entran: son contenido y viven en R2)
 # ── Bot ──────────────────────────────────────────────────────────────────
 cp bot/*.mjs "$STAGE/bot/" 2>/dev/null || true
 cp -r bot/test "$STAGE/bot/test" 2>/dev/null || true
@@ -31,7 +36,7 @@ cp worker/* "$STAGE/worker/" 2>/dev/null || true
 # ── Workflows ────────────────────────────────────────────────────────────
 cp .github/workflows/*.yml "$STAGE/.github/workflows/" 2>/dev/null || true
 # ── Docs ─────────────────────────────────────────────────────────────────
-cp README.md CHANGELOG.md VERSIONING.md MANUAL.md "$STAGE/" 2>/dev/null || true
+cp README.md CHANGELOG.md VERSIONING.md MANUAL.md .htmlvalidate.json "$STAGE/" 2>/dev/null || true
 echo "v${VERSION}" > "$STAGE/VERSION"
 
 # Feed placeholder for the download (the real feed has current content).

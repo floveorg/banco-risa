@@ -866,7 +866,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           <span class="demo-tag">Pasado</span>
           <h3>risa.liberada.net/#/u/&lt;key&gt;</h3>
           <p>Tu página de autor dentro de risa: un enlace largo que solo mostraba tus risas de esta app.</p>
-          <a class="demo-download" href="risa-v1.0.0-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
+          <a class="demo-download" href="risa-v1.0.1-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
         </article>
         <article class="demo-card demo-present">
           <span class="demo-tag">Presente</span>
@@ -1277,7 +1277,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   <li>Paginador del feed</li>
                   <li>Página de autor <code>#/u/&lt;key&gt;</code> con su propio feed</li>
                   <li>Hilos: cadenas de respuesta infinitas (<code>parent</code>) con conectores visuales y etiqueta del autor respondido</li>
-                  <li>Subdominio automático al publicar: <code>username.liberada.net</code> sin_claim (v1 adelanto D21)</li>
+                  <li>Subdominio de autor opt-in: <code>username.liberada.net</code> solo con «Sí, quiero» tras publicar (nunca automático)</li>
                   <li>Perfil agregador genérico: <code>liberada.net/usa/&lt;username&gt;/</code> unifica risas + amas</li>
                   <li>Compartir por WhatsApp, Telegram, e-mail y copiar</li>
                   <li>QR del deep link <code>t.me/RisaLiberadaBot</code> para escanear</li>
@@ -1317,7 +1317,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   <li>Base: <code>/me</code> · <code>/stats</code> · <code>/profile</code> · <code>/status</code> · <code>/queue</code></li>
                   <li>Exploración: <code>/latest</code> · <code>/random</code> · <code>/now</code> · <code>/since</code> · <code>/today</code> · <code>/trending</code></li>
                   <li>Reproducción: <code>/play</code> (recorre el feed, el mismo que la web)</li>
-                  <li>Todo es de solo lectura y reproducción: nada escribe; <code>/name</code> renombra en DM (backfill del histórico en v2)</li>
+                  <li>Perfil: <code>/entrar</code> (miniapp) · <code>/mejorar</code> (novedades) · <code>/name</code> (nombre público) · <code>/usuario</code> (subdominio) · <code>/pub</code> (mostrar @)</li>
+                  <li>Todo es de solo lectura y reproducción: nada escribe; los comandos de perfil mutan solo en DM</li>
                 </ul>
                 <h5 class="feat-area">Moderación y confianza</h5>
                 <ul>
@@ -1368,7 +1369,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                 </ul>
                 <h5 class="feat-area">Calidad y documentación</h5>
                 <ul>
-                  <li>Suite de tests <code>node --test</code>: 75 verdes sobre la lógica del bot y de la web</li>
+                  <li>Suite de tests <code>node --test</code>: 91 verdes sobre la lógica del bot y de la web</li>
                   <li>Ayudantes puros compartidos: <code>risa.js</code> corre igual en la web y en Node</li>
                   <li>Verificación con jsdom sin navegador (harness repetible)</li>
                   <li>Chequeo de sintaxis <code>node --check</code> en todos los archivos</li>
@@ -1405,7 +1406,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <p>Código abierto, sin servidor, sin coste. Clona el repo, lanza tu bot y empieza a publicar risas en una tarde.</p>
             </div>
             <div class="linkrow">
-              <a href="risa-v1.0.0-nick-as-tag.zip" download rel="noopener">⤓ Descargar Risa v1 · Nick as tag</a>
+              <a href="risa-v1.0.1-nick-as-tag.zip" download rel="noopener">⤓ Descargar Risa v1 · Nick as tag</a>
               <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
               <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
             </div>
@@ -1855,7 +1856,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       <li><b>🚀 Más funciones y apps</b> — seguimos sumando apps liberada y perfiles cada vez más tuyos.</li>
     </ul>
     <p class="modal-note">➡️ Tu perfil redirigirá a tus risas allí.</p>
-    <nav class="mejorar-links">
+    <nav class="mejorar-links" aria-label="Enlaces de Mejorar">
       <a href="#tecnologia" data-tab-link="tecnologia">Tecnología</a>
       <a href="#" id="mm-sobre-liberada">Sobre liberada</a>
       <a href="#" id="mm-contactar">Contactar</a>
