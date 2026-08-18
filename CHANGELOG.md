@@ -11,7 +11,7 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 ## [v1.0.3] — 2026-08-18 · **pack v1 congelado**
 
-- **Pack descargable congelado**: `risa-v1.0.3-nick-as-tag.zip` es el paquete
+- **Pack descargable congelado**: `risa103.zip` es el paquete
   definitivo de v1 — todo el circuito «Nick as tag» tal como está en `main`
   (web single-file con **i18n es/en** y tema, miniapp, subdominios opt-in,
   RSS/Atom, CI, a11y axe 0, schema `risa-feed/1`). A partir de aquí, **v1 no

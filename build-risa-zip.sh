@@ -13,7 +13,7 @@ cd "$ROOT"
 
 VERSION="${1:-$(node -e "process.stdout.write(require('./config.json').version)")}"
 VERSION="${VERSION#v}"                     # strip leading v for the filename
-NAME="risa-v${VERSION}-nick-as-tag"
+NAME="risa103"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
