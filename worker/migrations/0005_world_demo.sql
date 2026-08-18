@@ -32,7 +32,7 @@ INSERT OR IGNORE INTO search_fts (item_id, app, title, tags, name) VALUES
 ('w_bebe','risa','Risa de bebé','mundo bebé','Risas del Mundo');
 
 -- Aliases reales de maria: reemplaza los del seed 0003 por los de la demo
--- (La Risa Yoga · Contagiosa · Carcajada · Alias privado).
+-- (La Risa Yoga · Contagiosa · Carcajada · privi).
 DELETE FROM aliases WHERE key = 'maria';
 INSERT OR IGNORE INTO aliases (key, alias, private, created_at) VALUES
 ('maria','La Risa Yoga',0,'2026-08-18'),
