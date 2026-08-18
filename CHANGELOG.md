@@ -9,6 +9,14 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.6] — 2026-08-18 · fix: vídeo-notas circulares no reconocidas
+
+- **Los vídeo-notas («mantener pulsado», círculo) se ignoraban en silencio.**
+  `parseUpdates` solo miraba `msg.voice | msg.audio | msg.video`; un
+  `msg.video_note` caía fuera y el bot no creaba borrador. Ahora se tratan como
+  vídeo (`video: true`), se comprimen a MP4 al publicar y entran en el circuito.
+- Test añadido; `risa103.zip` regenerado.
+
 ## [v1.0.5] — 2026-08-18 · fix: flujo de borrador (título/tags/autor/enviar)
 
 - **El borrador se perdía entre corridas del cron.** `state/drafts.json` y
