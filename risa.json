@@ -2,6 +2,16 @@
   "schema": "risa-feed/1",
   "clips": [
     {
+      "id": "q_823020302",
+      "name": "Guillem",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020302.mp3",
+      "when": "2026-08-18",
+      "t": "Risa Maliciosa",
+      "tags": "maldad, diabolico",
+      "key": "6ba204072940d552585770c717d54ef875a58d7b6727485c56e788d77b296fea",
+      "channelMsgId": 22
+    },
+    {
       "id": "q_823020291",
       "name": "Marc",
       "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020291.mp4",
