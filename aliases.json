@@ -8,7 +8,9 @@
     { "alias": "La Risa Yoga", "private": false },
     { "alias": "Contagiosa", "private": false },
     { "alias": "Carcajada", "private": false },
-    { "alias": "Alias privado", "private": true }
+    { "alias": "Prueba", "private": false },
+    { "alias": "Alias privado", "private": true },
+    { "alias": "Prueba privado", "private": true }
   ],
   "maria-adv": [
     { "alias": "María", "private": false },
