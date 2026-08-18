@@ -167,11 +167,12 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         });
         continue;
       }
-      const media = msg.voice || msg.audio || msg.video;
+      const media = msg.voice || msg.audio || msg.video || msg.video_note;
       if (media && media.file_id) {
         // Un vídeo no se rechaza por los 10 MB: entra hasta el tope de descarga
         // (20 MB) y se comprime a MP4 al publicar para que quepa (marca `video`).
-        const video = !!msg.video;
+        // `video_note` (vídeo circular «mantener pulsado») se trata como vídeo.
+        const video = !!(msg.video || msg.video_note);
         const sizeCap = video ? maxVideoBytes : maxBytes;
         if (media.file_size && media.file_size > sizeCap) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'size' });
