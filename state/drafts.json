@@ -11,7 +11,7 @@
       "rural"
     ],
     "sel": {
-      "tg": false,
+      "tg": true,
       "name": true,
       "anon": false
     },
