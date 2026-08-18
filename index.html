@@ -1889,11 +1889,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="em-title">
     <button class="modal-x" type="button" id="em-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
     <h2 id="em-title"><span class="es" lang="es">Entrar · Mi perfil</span><span class="en" lang="en">Sign in · My profile</span></h2>
-    <p class="modal-sub"><span class="es" lang="es">Accede a tu perfil liberada para ver todas tus risas juntas y editarlo.</span><span class="en" lang="en">Access your liberada profile to see all your laughs together and edit it.</span></p>
+    <p class="modal-sub"><span class="es" lang="es">Accede a tu perfil liberada para ver todas tus risas juntas y editarlo entrando desde la MiniApp de Telegram (envía: <code>/entrar</code> a @RisaLiberadaBot).</span><span class="en" lang="en">Access your liberada profile to see all your laughs together and edit it by entering from the Telegram MiniApp (send <code>/entrar</code> to @RisaLiberadaBot).</span></p>
     <div class="entrar-opts">
       <a class="btn btn-primary" id="em-miniapp" href="#/entrar">📱 <span class="es" lang="es">Abrir mi perfil (miniapp)</span><span class="en" lang="en">Open my profile (miniapp)</span></a>
-      <button type="button" class="btn btn-ghost" id="em-code">🔑 <span class="es" lang="es">Código por el bot</span><span class="en" lang="en">Code from the bot</span></button>
-      <button type="button" class="btn btn-ghost" id="em-email">📧 <span class="es" lang="es">Código por email</span><span class="en" lang="en">Code by email</span></button>
+      <p style="margin:4px 0 0;font-size:.82rem;color:var(--ink-soft)"><span class="es" lang="es">Consigue tu código de sesión por</span><span class="en" lang="en">Get your session code via</span></p>
+      <button type="button" class="btn btn-ghost" id="em-code">🤖 <span class="es" lang="es">Bot</span><span class="en" lang="en">Bot</span></button>
+      <button type="button" class="btn btn-ghost" id="em-email">📧 <span class="es" lang="es">Mail</span><span class="en" lang="en">Mail</span></button>
     </div>
     <p class="modal-note entrar-note" id="em-note" hidden></p>
   </div>
@@ -1904,13 +1905,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mm-title">
     <button class="modal-x" type="button" id="mm-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
     <h2 id="mm-title">✨ <span class="es" lang="es">Mejorar tu risa</span><span class="en" lang="en">Upgrade your laugh</span></h2>
-    <p class="modal-sub"><span class="es" lang="es">Novedades nuevas.</span><span class="en" lang="en">New features.</span></p>
+    <p class="modal-sub"><span class="es" lang="es">Gratis!</span><span class="en" lang="en">Free!</span></p>
     <ul class="mejorar-list">
       <li><b><span class="es" lang="es">🌐 Subdominio de autor</span><span class="en" lang="en">🌐 Author subdomain</span></b> <span class="es" lang="es">— tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</span><span class="en" lang="en">— your profile at <code>&lt;your-name&gt;.liberada.net</code> to share all your laughs with a short link.</span></li>
       <li><b><span class="es" lang="es">✏️ Editar perfil</span><span class="en" lang="en">✏️ Edit profile</span></b> <span class="es" lang="es">— cambia tu nombre público y tu subdominio desde la web o el bot.</span><span class="en" lang="en">— change your public name and your subdomain from the web or the bot.</span></li>
-      <li><b><span class="es" lang="es">🚀 Más funciones y apps</span><span class="en" lang="en">🚀 More features and apps</span></b> <span class="es" lang="es">— seguimos sumando apps liberada y perfiles cada vez más tuyos.</span><span class="en" lang="en">— we keep adding liberada apps and profiles that are more and more yours.</span></li>
+      <li><b><span class="es" lang="es">🚀 Más perfil</span><span class="en" lang="en">🚀 More profile</span></b> <span class="es" lang="es">— listas de favoritos, seguir… y más apps con más profundidad.</span><span class="en" lang="en">— favourite lists, following… and more apps with more depth.</span></li>
     </ul>
-    <p class="modal-note">➡️ <span class="es" lang="es">Tu perfil redirigirá a tus risas allí.</span><span class="en" lang="en">Your profile will redirect to your laughs there.</span></p>
+    <div class="mejorar-actions" style="margin:16px 0 4px">
+      <a class="btn btn-primary" id="mm-activar" href="#/entrar" style="justify-content:center;width:100%;text-decoration:none"><span class="es" lang="es">(Activar)</span><span class="en" lang="en">(Activate)</span></a>
+    </div>
     <nav class="mejorar-links" aria-label="Enlaces de Mejorar" data-aria-es="Enlaces de Mejorar" data-aria-en="Upgrade links">
       <a href="#tecnologia" data-tab-link="tecnologia"><span class="es" lang="es">Tecnología</span><span class="en" lang="en">Tech</span></a>
       <a href="#" id="mm-sobre-liberada"><span class="es" lang="es">Sobre liberada</span><span class="en" lang="en">About liberada</span></a>
@@ -3103,10 +3106,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const emNoteShow=(html)=>{ emNote.innerHTML=html; emNote.hidden=false; };
   document.getElementById('em-miniapp')?.addEventListener('click', ()=>{ closeModal(entrarModal); });
   document.getElementById('em-code')?.addEventListener('click', ()=>{
-    emNoteShow('Escribe <code>/entrar</code> a <a href="'+window.Risa.TELEGRAM_BOT+'" target="_blank" rel="noopener">@RisaLiberadaBot</a>, pulsa «Código por el bot» y luego introduce el código en la miniapp.');
+    emNoteShow('🤖 Consigue tu código de sesión: escribe <code>/entrar</code> a <a href="'+window.Risa.TELEGRAM_BOT+'" target="_blank" rel="noopener">@RisaLiberadaBot</a>, pulsa «Código por el bot» y luego introduce el código en la miniapp.');
   });
   document.getElementById('em-email')?.addEventListener('click', ()=>{
-    emNoteShow('📧 El código por email llegará pronto. Mientras tanto usa «Código por el bot» o abre la miniapp.');
+    emNoteShow('📧 Consigue tu código por mail (próximamente). Mientras tanto usa el Bot o abre la miniapp.');
   });
 
   const mmSobre=document.getElementById('mm-sobre-liberada');
