@@ -9,8 +9,12 @@
   <meta property="og:description" content="Playlists de risas, cultura y comunidad.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://risa.liberada.net">
-  <meta property="og:image" content="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
+  <meta property="og:image" content="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
   <meta name="twitter:card" content="summary">
+  <link rel="alternate" type="application/rss+xml" title="Risa liberada — RSS" href="risa.xml">
+  <link rel="alternate" type="application/atom+xml" title="Risa liberada — Atom" href="atom.xml">
   <link rel="icon" type="image/svg+xml" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +28,7 @@
   --base:#ffe8d4;
   --base-2:#ffdcc0;
   --cream:#fff8ee;
-  --persimmon:#ff5630;
+  --persimmon:#c03610;   /* oscurecido por contraste WCAG AA (texto y blanco sobre él) */
   --marigold:#ffb020;
   --magenta:#f5288e;   /* el riesgo: el chispazo inesperado de la risa */
   --grape:#5b2fa0;
@@ -318,6 +322,8 @@ img{max-width:100%; display:block}
 
 /* ============ CARDS / CONTENT SECTIONS ============ */
 .content-section{padding:52px 0; border-top:2px dashed rgba(42,24,16,.16)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap; border:0}
 /* DEMO · perfil liberada (pasado · presente · futuro) */
 .demo-lead{max-width:52ch; margin:8px auto 0; color:var(--ink-soft); font-size:1.05rem}
 .demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:26px}
@@ -758,6 +764,8 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 <main id="top">
 
+  <h1 class="sr-only">Risa liberada · respira, escucha, disfruta</h1>
+
   <!-- ============ 0 · PÁGINA DE AUTOR (#/u/&lt;key&gt;) ============
        Tag-url automática de cada autor: todo clip publicado lleva la key de su
        autor (hash salado del id de Telegram, nunca en claro) y el bot se la
@@ -765,7 +773,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
        nombre público. La identidad real (authy: claims, varios ids, niveles) se
        construye en v2; aquí solo se certifica que un moderador aceptó la
        publicación del autor. -->
-  <section class="content-section" id="userpage" hidden>
+  <section class="content-section" id="userpage" aria-label="Página de autor" hidden>
     <div class="wrap userpage-wrap">
       <a class="up-back" href="#playlist">← Volver a las risas</a>
       <header class="up-head">
@@ -787,7 +795,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
        ligado a la key del autor en codes.json; con él se identifica quién eres
        y se muestra el perfil con sus risas juntas. Editar (nombre público y
        subdominio) se hace desde el bot: /name y /usuario. -->
-  <section class="content-section" id="entrar-page" hidden>
+  <section class="content-section" id="entrar-page" aria-label="Miniapp de perfil" hidden>
     <div class="wrap entrar-wrap">
       <a class="up-back" href="#playlist">← Volver a las risas</a>
       <header class="up-head">
@@ -809,7 +817,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   </section>
 
   <!-- ============ 1 · RISAS DE LA GENTE ============ -->
-  <section class="content-section" id="gente">
+  <section class="content-section" id="gente" aria-label="Risas de la gente">
     <div class="wrap">
       <div class="gente-grid">
         <div class="tag-col">
@@ -854,7 +862,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   </section>
 
   <!-- ============ 2 · DEMO · TU PERFIL LIBERADA (pasado · presente · futuro) ============ -->
-  <section class="content-section" id="demo">
+  <section class="content-section" id="demo" aria-label="Demo del perfil liberada">
     <div class="wrap">
       <div class="section-head head-center">
         <p class="eyebrow">Tu perfil liberada</p>
@@ -866,7 +874,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
           <span class="demo-tag">Pasado</span>
           <h3>risa.liberada.net/#/u/&lt;key&gt;</h3>
           <p>Tu página de autor dentro de risa: un enlace largo que solo mostraba tus risas de esta app.</p>
-          <a class="demo-download" href="risa-v1.0.1-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
+          <a class="demo-download" href="risa-v1.0.2-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
         </article>
         <article class="demo-card demo-present">
           <span class="demo-tag">Presente</span>
@@ -934,7 +942,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   </section>
 
   <!-- ============ 4 · EXPANDE LA RISA ============ -->
-  <section class="content-section" id="expande">
+  <section class="content-section" id="expande" aria-label="Expande la risa">
     <div class="wrap">
       <div class="share-card">
         <h2>Expande la risa 💛</h2>
@@ -989,7 +997,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
 </nav>
 
-<section class="content-section tab-panel" id="cultura">
+<section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
     <div class="wrap">
       <div class="gente-grid">
         <div class="tag-col">
@@ -1075,7 +1083,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
       </nav>
     </div>
   </section>
-<section class="content-section tab-panel" id="ciencia" hidden>
+<section class="content-section tab-panel" id="ciencia" aria-label="Ciencia de la risa" hidden>
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Ciencia</p>
@@ -1135,7 +1143,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
       </nav>
     </div>
   </section>
-  <section class="content-section tab-panel" id="tecnologia" hidden>
+  <section class="content-section tab-panel" id="tecnologia" aria-label="Tecnología" hidden>
     <div class="wrap">
       <div class="tecnologias">
         <div class="section-head">
@@ -1406,7 +1414,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <p>Código abierto, sin servidor, sin coste. Clona el repo, lanza tu bot y empieza a publicar risas en una tarde.</p>
             </div>
             <div class="linkrow">
-              <a href="risa-v1.0.1-nick-as-tag.zip" download rel="noopener">⤓ Descargar Risa v1 · Nick as tag</a>
+              <a href="risa-v1.0.2-nick-as-tag.zip" download rel="noopener">⤓ Descargar Risa v1 · Nick as tag</a>
               <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
               <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
             </div>
@@ -1658,7 +1666,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       </nav>
     </div>
   </section>
-  <section class="content-section tab-panel" id="espiritualidad" hidden>
+  <section class="content-section tab-panel" id="espiritualidad" aria-label="Espiritualidad" hidden>
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Interior</p>
@@ -1689,7 +1697,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       </nav>
     </div>
   </section>
-  <section class="content-section tab-panel" id="comunidad" hidden>
+  <section class="content-section tab-panel" id="comunidad" aria-label="Comunidad" hidden>
     <div class="wrap">
       <p class="eyebrow">Promotores</p>
       <div class="promo-grid">

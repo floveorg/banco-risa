@@ -1,85 +1,88 @@
-[
-  {
-    "id": "q_823020247",
-    "name": "Marc",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020247.mp3",
-    "when": "2026-08-18",
-    "tags": "render",
-    "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c"
-  },
-  {
-    "id": "q_823020242",
-    "name": "Render",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020242.mp3",
-    "when": "2026-08-18",
-    "t": "Faaaaaaalsaaaaa",
-    "key": "f2f7ebe52eb55a53cc622b85ba2f688d73a25e554e69991b0f41c038a5aeafc5"
-  },
-  {
-    "id": "q_823020164",
-    "name": "Marc",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020164.mp3",
-    "when": "2026-08-17",
-    "t": "Una\n\nRural, baja",
-    "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c"
-  },
-  {
-    "id": "q_823020149",
-    "name": "@marcflove",
-    "key": "marcflove",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020149.mp3",
-    "when": "2026-08-11",
-    "t": "Nosnormal",
-    "tags": "rural, café, etc"
-  },
-  {
-    "id": "q_823020144",
-    "name": "Anónima",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020144.mp3",
-    "when": "2026-08-10",
-    "t": "OpeRRisa",
-    "tags": "OpeRRisa"
-  },
-  {
-    "id": "q_823020125",
-    "name": "Loko Puro",
-    "key": "loko-puro",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020125.mp3",
-    "when": "2026-08-10"
-  },
-  {
-    "id": "q_823020133",
-    "name": "Loko Puro",
-    "key": "loko-puro",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020133.mp3",
-    "when": "2026-08-10"
-  },
-  {
-    "id": "q_823020131",
-    "name": "Marc",
-    "key": "marcflove",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020131.mp3",
-    "when": "2026-08-10"
-  },
-  {
-    "id": "q_823020128",
-    "name": "Marc",
-    "key": "marcflove",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020128.mp3",
-    "when": "2026-08-10"
-  },
-  {
-    "id": "q_823020121",
-    "name": "Loko Puro",
-    "key": "loko-puro",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020121.mp3",
-    "when": "2026-08-10"
-  },
-  {
-    "id": "q_823020113",
-    "name": "Loko Puro",
-    "key": "loko-puro",
-    "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020113.mp3",
-    "when": "2026-08-10"
-  }
-]
+{
+  "schema": "risa-feed/1",
+  "clips": [
+    {
+      "id": "q_823020247",
+      "name": "Marc",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020247.mp3",
+      "when": "2026-08-18",
+      "tags": "render",
+      "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c"
+    },
+    {
+      "id": "q_823020242",
+      "name": "Render",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020242.mp3",
+      "when": "2026-08-18",
+      "t": "Faaaaaaalsaaaaa",
+      "key": "f2f7ebe52eb55a53cc622b85ba2f688d73a25e554e69991b0f41c038a5aeafc5"
+    },
+    {
+      "id": "q_823020164",
+      "name": "Marc",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020164.mp3",
+      "when": "2026-08-17",
+      "t": "Una\n\nRural, baja",
+      "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c"
+    },
+    {
+      "id": "q_823020149",
+      "name": "@marcflove",
+      "key": "marcflove",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020149.mp3",
+      "when": "2026-08-11",
+      "t": "Nosnormal",
+      "tags": "rural, café, etc"
+    },
+    {
+      "id": "q_823020144",
+      "name": "Anónima",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020144.mp3",
+      "when": "2026-08-10",
+      "t": "OpeRRisa",
+      "tags": "OpeRRisa"
+    },
+    {
+      "id": "q_823020125",
+      "name": "Loko Puro",
+      "key": "loko-puro",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020125.mp3",
+      "when": "2026-08-10"
+    },
+    {
+      "id": "q_823020133",
+      "name": "Loko Puro",
+      "key": "loko-puro",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020133.mp3",
+      "when": "2026-08-10"
+    },
+    {
+      "id": "q_823020131",
+      "name": "Marc",
+      "key": "marcflove",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020131.mp3",
+      "when": "2026-08-10"
+    },
+    {
+      "id": "q_823020128",
+      "name": "Marc",
+      "key": "marcflove",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020128.mp3",
+      "when": "2026-08-10"
+    },
+    {
+      "id": "q_823020121",
+      "name": "Loko Puro",
+      "key": "loko-puro",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020121.mp3",
+      "when": "2026-08-10"
+    },
+    {
+      "id": "q_823020113",
+      "name": "Loko Puro",
+      "key": "loko-puro",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020113.mp3",
+      "when": "2026-08-10"
+    }
+  ]
+}

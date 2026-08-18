@@ -22,6 +22,7 @@ mkdir -p "$STAGE/bot" "$STAGE/worker" "$STAGE/.github/workflows"
 
 # ── Web ──────────────────────────────────────────────────────────────────
 cp index.html risa.js config.json risa.json usernames.json CNAME "$STAGE/" 2>/dev/null || true
+cp build-rss.mjs risa.xml atom.xml "$STAGE/" 2>/dev/null || true
 # Imágenes LOCALES que index.html referencia por ruta relativa (diagramas,
 # QR y fotos de réplica) — imprescindibles para ver la web offline.
 cp -n *.png *.jpg "$STAGE/" 2>/dev/null || true

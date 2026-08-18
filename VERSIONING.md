@@ -30,9 +30,14 @@ Política de versiones del repo `floveorg/risa`: **v1 = producción**, **v2 = de
 La regla que hace seguro publicar sin romper nada:
 
 - **`risa.json` es el contrato de datos hacia la web.** La web **nunca exige**
-  campos nuevos: `clipsOf`/`flagsOf` aceptan array u objeto `{flag, clips}`;
-  `buildRisaTracks` rellena defaults (`tags → 'risa libre'`, `tg/key → ''`, título
-  derivado). Un clip viejo sin `key`/`tg`/`authy` se sigue renderizando.
+  campos nuevos: `clipsOf`/`flagsOf` aceptan array u objeto `{schema, clips}`
+  (y `{flag, clips}`); `buildRisaTracks` rellena defaults
+  (`tags → 'risa libre'`, `tg/key → ''`, título derivado). Un clip viejo sin
+  `key`/`tg`/`authy` se sigue renderizando.
+- **Formato del feed: `{ "schema": "risa-feed/1", "clips": […] }`** (v1.0.2).
+  Migración explícita y retrocompatible: la web y el bot leen con `clipsOf`
+  (array u objeto) y el bot escribe siempre el objeto con `schema`. El campo
+  `schema` es informativo (la web lo ignora); `clips` es la lista newest-first.
 - El bot **no quita** campos que la web usa: `name`, `src`, `tags`, `when`, `t`.
   Los campos authy (`key`, `tg`, …) son aditivos y opcionales.
 - `state/` (`offset.txt`, `queue.json`) y `risa.json` viven en el repo: cualquier
