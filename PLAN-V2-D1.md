@@ -127,6 +127,34 @@ respetar eso, no romperlo:
 8. **Moderación intacta en v1.** El grupo de moderadores y el bot no cambian;
    D1 solo añade auditoría opcional (quién aprobó, cuándo).
 
+## 6b. Hilos y navegación profunda (v2-d1)
+
+v1 ya tiene hilos reales: `parent` en `risa.json`, orden depth-first
+(`threadOrder`), conectores visuales y el flujo «reenvía el clip → responde»
+en el bot (`clipByChannelMsg` + `hasAncestor` contra ciclos). v2-d1 lo lleva a
+una **navegación más interactiva y profunda visualmente** sin tocar el esquema:
+
+- **Vista árbol de ramas.** En la página de autor y en la playlist, un clip con
+  respuestas despliega un árbol colapsable: ramas por autor, profundidad visual
+  (indentación + conector), y botón «seguir la rama» que filtra a esa línea.
+- **Modo foco.** Clic en un clip → vista centrada con el contexto del padre
+  (preview), sus respuestas y las de los siguientes: navegación por flechas
+  entre nodos (arriba/abajo), sin salir de la página.
+- **Previews de padre.** En el feed plano, las respuestas muestran un chip
+  «↳ responde a <título>» que abre un mini-preview del padre en el propio
+  reproductor (sin recargar la lista).
+- **Contadores y reacciones en el árbol.** D1 (`activity` + tabla nueva
+  `threads`) agrega cuántas respuestas tiene cada nodo, quién las dio y desde
+  qué app — el árbol pasa a ser «actividad viva», no solo estructura.
+- **Búsqueda dentro de hilos (f1SS).** `search_fts` indexa cada nodo; buscar
+  un título devuelve también la **posición en su hilo** (subir/bajar).
+- **Story / modo lector.** Un hilo completo como tarjeta continua (nodos
+  encadenados con su audio), ideal para «leer» una conversación de risas de
+  principio a fin y compartirla por URL (`#/t/<id-del-hilo>`).
+
+Todo vive **encima** de v1: el feed sigue siendo `risa.json` y el esquema
+`parent` no cambia; D1 solo añade la vista y los contadores.
+
 ## 6. Hoja de ruta sugerida
 
 1. `worker/` + `wrangler.toml` con rutas `/api/*` y D1 binding (worker ya
