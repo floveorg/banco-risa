@@ -75,7 +75,9 @@ export default {
     const entry = usernames[sub];
 
     if (entry && entry.key) {
-      const page = AGGREGATOR_BASE + '/' + encodeURIComponent(sub) + '.html';
+      // Sirve el perfil EN el subdominio (canónico) proxeando usa/<user>/;
+      // la página redirige a su subdominio si se abre por liberada.net/usa/.
+      const page = AGGREGATOR_BASE + '/' + encodeURIComponent(sub) + '/';
       try {
         const res = await fetch(page);
         if (res.ok) {
