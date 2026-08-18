@@ -2431,8 +2431,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const PLUS_CLICKS=11;             // el + añade 5 más, durante 11 toques
   let risas=[];
   // v2-d1 · identidad de dev para D1 (claim desde #/entrar; fail-silent).
-  const devKey=(()=>{ try{ return localStorage.getItem('flove:key')||''; }catch(_){ return ''; } })();
-  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||''; }catch(_){ return ''; } })();
+  const devKey=(()=>{ try{ return localStorage.getItem('flove:key')||'marcflove'; }catch(_){ return 'marcflove'; } })();
+  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||'devrisa'; }catch(_){ return 'devrisa'; } })();
   let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
   let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)

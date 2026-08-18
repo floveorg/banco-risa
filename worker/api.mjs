@@ -15,6 +15,13 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 });
 const err = (msg, status = 400) => json({ ok: false, error: msg }, status);
 
+// Dev-auth: en modo desarrollo (sin CLAIM_SECRET) el bearer 'devrisa' vale,
+// para que el demo de marcflove funcione sin configurar secretos. En
+// producción exige el CLAIM_SECRET real.
+const authed = (env, request) =>
+  request.headers.get('authorization') === 'Bearer ' + (env.CLAIM_SECRET || '')
+  || (!env.CLAIM_SECRET && request.headers.get('authorization') === 'Bearer devrisa');
+
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
   (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -77,8 +84,7 @@ export default {
 
       // POST /api/fav — añadir favorito { key, app, item_id } (dev: Bearer claim-secret)
       if (base === 'fav' && method === 'POST') {
-        if (request.headers.get('authorization') !== 'Bearer ' + env.CLAIM_SECRET)
-          return err('no autorizado', 401);
+        if (!authed(env, request)) return err('no autorizado', 401);
         const b = await request.json().catch(() => ({}));
         if (!b.key || !b.app || !b.item_id) return err('faltan key/app/item_id');
         await db.prepare('INSERT OR REPLACE INTO favs (key, app, item_id, at) VALUES (?,?,?,?)')
@@ -104,8 +110,7 @@ export default {
 
       // POST /api/profile — editar { username, name?, bio?, socials?, email? }
       if (base === 'profile' && method === 'POST') {
-        if (request.headers.get('authorization') !== 'Bearer ' + env.CLAIM_SECRET)
-          return err('no autorizado', 401);
+        if (!authed(env, request)) return err('no autorizado', 401);
         const b = await request.json().catch(() => ({}));
         const user = await db.prepare('SELECT * FROM identities WHERE username = ?')
           .bind(b.username || '').first();
