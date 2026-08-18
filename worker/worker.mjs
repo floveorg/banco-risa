@@ -68,16 +68,23 @@ export default {
       return Response.redirect('https://liberada.net', 302);
     }
 
-    // Unknown subdomain → look up username → aggregator profile
+    // Unknown subdomain → look up username → serve the profile AT the subdomain
+    // (canonical). El perfil aplanado vive en liberada.net/usa/<user>.html y se
+    // sirve aquí sin redirección (evita el bucle con el guard de esa página).
     const usernames = await getUsernames();
     const entry = usernames[sub];
 
     if (entry && entry.key) {
-      // Redirect to aggregator: liberada.net/usa/<username>/
-      return Response.redirect(
-        AGGREGATOR_BASE + '/' + encodeURIComponent(sub) + '/',
-        302
-      );
+      const page = AGGREGATOR_BASE + '/' + encodeURIComponent(sub) + '.html';
+      try {
+        const res = await fetch(page);
+        if (res.ok) {
+          return new Response(await res.text(), {
+            headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300' }
+          });
+        }
+      } catch (_) {}
+      return Response.redirect(page, 302);
     }
 
     // Username not found → main site

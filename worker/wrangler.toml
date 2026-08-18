@@ -2,8 +2,11 @@ name = "liberada-subdomains"
 main = "api.mjs"
 compatibility_date = "2024-01-01"
 
-# Route: intercept all *.liberada.net subdomain requests
-route = { pattern = "*liberada.net/*", zone_name = "liberada.net" }
+# Route: SOLO subdominios (*.liberada.net/*). El apex liberada.net NO se
+# intercepta (si no, el Worker redirigía liberada.net → liberada.net en bucle,
+# que rompía el SSL/certificado de Pages). Usa A/AAAA de GitHub Pages + Pages
+# emite el certificado HTTPS automáticamente.
+route = { pattern = "*.liberada.net/*", zone_name = "liberada.net" }
 
 # v2-d1 · D1 (SQL gestionado) para identidad, actividad, favoritos y búsqueda.
 # Para crear la base y aplicar migraciones:
