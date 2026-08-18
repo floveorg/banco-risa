@@ -820,19 +820,19 @@ body:has(#lang-en:checked) .es{display:none}
        nombre público. La identidad real (authy: claims, varios ids, niveles) se
        construye en v2; aquí solo se certifica que un moderador aceptó la
        publicación del autor. -->
-  <section class="content-section" id="userpage" aria-label="Página de autor" hidden>
+  <section class="content-section" id="userpage" aria-label="Página de autor" data-aria-es="Página de autor" data-aria-en="Author page" hidden>
     <div class="wrap userpage-wrap">
-      <a class="up-back" href="#playlist">← Volver a las risas</a>
+      <a class="up-back" href="#playlist"><span class="es" lang="es">← Volver a las risas</span><span class="en" lang="en">← Back to the laughs</span></a>
       <header class="up-head">
         <span class="up-avatar" id="up-avatar" aria-hidden="true">?</span>
         <div>
-          <h3 id="up-name">Usuario</h3>
+          <h3 id="up-name"><span class="es" lang="es">Usuario</span><span class="en" lang="en">User</span></h3>
         </div>
         <div class="up-actions">
-          <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden>Telegram ↗</a>
+          <a class="up-action-btn up-tg-btn" id="up-tg" href="#" target="_blank" rel="noopener" hidden><span class="es" lang="es">Telegram ↗</span><span class="en" lang="en">Telegram ↗</span></a>
         </div>
       </header>
-      <h4>Mis risas</h4>
+      <h4><span class="es" lang="es">Mis risas</span><span class="en" lang="en">My laughs</span></h4>
       <ul class="up-clips" id="up-clips"></ul>
     </div>
   </section>
@@ -842,47 +842,47 @@ body:has(#lang-en:checked) .es{display:none}
        ligado a la key del autor en codes.json; con él se identifica quién eres
        y se muestra el perfil con sus risas juntas. Editar (nombre público y
        subdominio) se hace desde el bot: /name y /usuario. -->
-  <section class="content-section" id="entrar-page" aria-label="Miniapp de perfil" hidden>
+  <section class="content-section" id="entrar-page" aria-label="Miniapp de perfil" data-aria-es="Miniapp de perfil" data-aria-en="Profile miniapp" hidden>
     <div class="wrap entrar-wrap">
-      <a class="up-back" href="#playlist">← Volver a las risas</a>
+      <a class="up-back" href="#playlist"><span class="es" lang="es">← Volver a las risas</span><span class="en" lang="en">← Back to the laughs</span></a>
       <header class="up-head">
         <span class="up-avatar" aria-hidden="true">🌐</span>
         <div>
-          <h3>Entrar · Mi perfil</h3>
-          <p class="up-sub">Miniapp de risa liberada</p>
+          <h3><span class="es" lang="es">Entrar · Mi perfil</span><span class="en" lang="en">Sign in · My profile</span></h3>
+          <p class="up-sub"><span class="es" lang="es">Miniapp de risa liberada</span><span class="en" lang="en">Risa liberada miniapp</span></p>
         </div>
       </header>
-      <p class="entrar-intro">Introduce el código que te dio el bot — escribe <code>/entrar</code> a
-        <a href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">@RisaLiberadaBot</a> y pulsa «Código por el bot».</p>
+      <p class="entrar-intro"><span class="es" lang="es">Introduce el código que te dio el bot — escribe <code>/entrar</code> a</span><span class="en" lang="en">Enter the code the bot gave you — write <code>/entrar</code> to</span>
+        <a href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">@RisaLiberadaBot</a> <span class="es" lang="es">y pulsa «Código por el bot».</span><span class="en" lang="en">and tap “Code from the bot”.</span></p>
       <div class="en-code-row">
         <input id="en-code" type="text" inputmode="numeric" autocomplete="one-time-code"
-          maxlength="6" placeholder="000000" aria-label="Tu código de 6 dígitos">
-        <button class="btn btn-primary" type="button" id="en-go">Entrar</button>
+          maxlength="6" placeholder="000000" aria-label="Tu código de 6 dígitos" data-aria-es="Tu código de 6 dígitos" data-aria-en="Your 6-digit code">
+        <button class="btn btn-primary" type="button" id="en-go"><span class="es" lang="es">Entrar</span><span class="en" lang="en">Sign in</span></button>
       </div>
       <p id="en-result" role="status"></p>
     </div>
   </section>
 
   <!-- ============ 1 · RISAS DE LA GENTE ============ -->
-  <section class="content-section" id="gente" aria-label="Risas de la gente">
+  <section class="content-section" id="gente" aria-label="Risas de la gente" data-aria-es="Risas de la gente" data-aria-en="People's laughs">
     <div class="wrap">
       <div class="gente-grid">
         <div class="tag-col">
           <div class="tag-search">
-            <input id="tag-search-input" type="search" placeholder="Título, tags, usuario…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas">
-            <button id="tag-search-btn" type="button">Go</button>
+            <input id="tag-search-input" type="search" placeholder="Título, tags, usuario…" data-ph-es="Título, tags, usuario…" data-ph-en="Title, tags, user…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas" data-aria-es="Buscar por etiqueta, título o nombre de las risas" data-aria-en="Search by tag, title or name of the laughs">
+            <button id="tag-search-btn" type="button"><span class="es" lang="es">Go</span><span class="en" lang="en">Go</span></button>
           </div>
-          <div class="tag-space flowing" id="tag-space" role="group" aria-label="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas"></div>
+          <div class="tag-space flowing" id="tag-space" role="group" aria-label="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas" data-aria-es="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas" data-aria-en="Laugh tags: tap a chip to filter the playlist, or Recent to clear all"></div>
         </div>
         <div class="player-col">
           <div class="title-head">
-            <div class="transport" role="group" aria-label="Controles de reproducción">
-              <button class="tr-btn" type="button" id="gente-prev" aria-label="Pista anterior">‹</button>
-              <button class="tr-btn tr-play" type="button" id="gente-play" aria-label="Reproducir">▶</button>
-              <button class="tr-btn" type="button" id="gente-next" aria-label="Pista siguiente">›</button>
+            <div class="transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
+              <button class="tr-btn" type="button" id="gente-prev" aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
+              <button class="tr-btn tr-play" type="button" id="gente-play" aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
+              <button class="tr-btn" type="button" id="gente-next" aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
             </div>
-            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo">
-              <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true" aria-label="Solo audios" title="Solo audios">
+            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
+              <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true" aria-label="Solo audios" title="Solo audios" data-aria-es="Solo audios" data-aria-en="Only audio">
                 <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
               <button type="button" class="mt-btn mt-video" id="mt-video" aria-pressed="false" aria-label="Solo vídeos" title="Solo vídeos">
@@ -894,12 +894,12 @@ body:has(#lang-en:checked) .es{display:none}
             <ul class="tracklist"></ul>
             <div class="paginator" hidden>
               <div class="pg-btns">
-                <button type="button" class="pg-btn pg-prev" aria-label="Página anterior">‹</button>
-                <button type="button" class="chip pg-10" aria-label="Ver 10 más">10+</button>
-                <button type="button" class="chip pg-100" aria-label="Ver 100 más">100</button>
+                <button type="button" class="pg-btn pg-prev" aria-label="Página anterior" data-aria-es="Página anterior" data-aria-en="Previous page">‹</button>
+                <button type="button" class="chip pg-10" aria-label="Ver 10 más" data-aria-es="Ver 10 más" data-aria-en="See 10 more">10+</button>
+                <button type="button" class="chip pg-100" aria-label="Ver 100 más" data-aria-es="Ver 100 más" data-aria-en="See 100 more">100</button>
               </div>
               <span class="pg-label" aria-live="polite"></span>
-              <a class="pg-repo" href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener">Ver todas ↗</a>
+              <a class="pg-repo" href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener"><span class="es" lang="es">Ver todas ↗</span><span class="en" lang="en">See all ↗</span></a>
             </div>
             <audio preload="none"></audio>
           </div>
@@ -909,29 +909,29 @@ body:has(#lang-en:checked) .es{display:none}
   </section>
 
   <!-- ============ 2 · DEMO · TU PERFIL LIBERADA (pasado · presente · futuro) ============ -->
-  <section class="content-section" id="demo" aria-label="Demo del perfil liberada">
+  <section class="content-section" id="demo" aria-label="Demo del perfil liberada" data-aria-es="Demo del perfil liberada" data-aria-en="Liberada profile demo">
     <div class="wrap">
       <div class="section-head head-center">
-        <p class="eyebrow">Tu perfil liberada</p>
-        <h2>Pasado · presente · futuro</h2>
-        <p class="demo-lead">Cómo compartías tus risas, cómo lo haces hoy y hacia dónde va tu perfil.</p>
+        <p class="eyebrow"><span class="es" lang="es">Tu perfil liberada</span><span class="en" lang="en">Your liberada profile</span></p>
+        <h2><span class="es" lang="es">Pasado · presente · futuro</span><span class="en" lang="en">Past · present · future</span></h2>
+        <p class="demo-lead"><span class="es" lang="es">Cómo compartías tus risas, cómo lo haces hoy y hacia dónde va tu perfil.</span><span class="en" lang="en">How you shared your laughs, how you do it today, and where your profile is going.</span></p>
       </div>
       <div class="demo-grid">
         <article class="demo-card demo-past">
-          <span class="demo-tag">Pasado</span>
+          <span class="demo-tag"><span class="es" lang="es">Pasado</span><span class="en" lang="en">Past</span></span>
           <h3>risa.liberada.net/#/u/&lt;key&gt;</h3>
-          <p>Tu página de autor dentro de risa: un enlace largo que solo mostraba tus risas de esta app.</p>
-          <a class="demo-download" href="risa-v1.0.2-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
+          <p><span class="es" lang="es">Tu página de autor dentro de risa: un enlace largo que solo mostraba tus risas de esta app.</span><span class="en" lang="en">Your author page inside risa: a long link that only showed your laughs from this app.</span></p>
+          <a class="demo-download" href="risa-v1.0.2-nick-as-tag.zip" download rel="noopener"><span class="es" lang="es">⤓ Descarga Risa v1 · Nick as tag</span><span class="en" lang="en">⤓ Download Risa v1 · Nick as tag</span></a>
         </article>
         <article class="demo-card demo-present">
-          <span class="demo-tag">Presente</span>
+          <span class="demo-tag"><span class="es" lang="es">Presente</span><span class="en" lang="en">Present</span></span>
           <a class="demo-url" href="https://marcflove.liberada.net" target="_blank" rel="noopener">marcflove.liberada.net</a>
-          <p>Tu subdominio corto, ya activo: redirige a tu perfil agregador con todas tus risas juntas.</p>
+          <p><span class="es" lang="es">Tu subdominio corto, ya activo: redirige a tu perfil agregador con todas tus risas juntas.</span><span class="en" lang="en">Your short subdomain, already live: it redirects to your aggregator profile with all your laughs together.</span></p>
         </article>
         <article class="demo-card demo-future">
-          <span class="demo-tag">Futuro</span>
+          <span class="demo-tag"><span class="es" lang="es">Futuro</span><span class="en" lang="en">Future</span></span>
           <a class="demo-url" href="https://maria.liberada.net" target="_blank" rel="noopener">maria.liberada.net</a>
-          <p>Perfiles con bio extendida, juega y filtra — la actividad de tus otras apps en tu nuevo perfil.</p>
+          <p><span class="es" lang="es">Perfiles con bio extendida, juega y filtra — la actividad de tus otras apps en tu nuevo perfil.</span><span class="en" lang="en">Profiles with an extended bio, play and filter — the activity of your other apps in your new profile.</span></p>
         </article>
       </div>
     </div>
@@ -940,48 +940,48 @@ body:has(#lang-en:checked) .es{display:none}
   <!-- ============ 3 · TÉCNICAS PARA REÍR ============ -->
   <section class="section wrap" id="ejercicios">
     <div class="section-head head-center">
-      <p class="eyebrow">En movimiento</p>
-      <h2>Técnicas para reír</h2>
+      <p class="eyebrow"><span class="es" lang="es">En movimiento</span><span class="en" lang="en">In motion</span></p>
+      <h2><span class="es" lang="es">Técnicas para reír</span><span class="en" lang="en">Laughing techniques</span></h2>
     </div>
     <div class="jgrid">
       <div class="jcol">
         <div class="vslider">
           <figure class="slide">
-            <div class="vph"><span class="vph-soon">Próximamente</span></div>
-            <figcaption><b>Riespira</b>Inhala profundo y suelta la risa con el aire: una pausa que ríe contigo.</figcaption>
+            <div class="vph"><span class="vph-soon"><span class="es" lang="es">Próximamente</span><span class="en" lang="en">Coming soon</span></span></div>
+            <figcaption><b><span class="es" lang="es">Riespira</span><span class="en" lang="en">Rie-breathe</span></b><span class="es" lang="es">Inhala profundo y suelta la risa con el aire: una pausa que ríe contigo.</span><span class="en" lang="en">Breathe deep and let the laugh out with the air: a pause that laughs with you.</span></figcaption>
           </figure>
         </div>
       </div>
-      <div class="slider vslider exercises-big" role="region" data-autoplay="0" aria-roledescription="carrusel" aria-label="Vídeos de técnicas: risa del león, del claxon, del batido, del móvil y silenciosa">
+      <div class="slider vslider exercises-big" role="region" data-autoplay="0" aria-roledescription="carrusel" aria-label="Vídeos de técnicas: risa del león, del claxon, del batido, del móvil y silenciosa" data-aria-es="Vídeos de técnicas: risa del león, del claxon, del batido, del móvil y silenciosa" data-aria-en="Technique videos: lion laugh, horn laugh, shake laugh, phone laugh and silent laugh">
         <div class="slides">
           <figure class="slide" data-dot="🦁" data-dot-label="Risa del león">
-            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del león">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener">Ver vídeo ↗</a></div>
-            <figcaption><b>Risa del león</b>Saca la lengua, abre las manos como garras y ríe con todo el pecho mirando al techo.</figcaption>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del león" data-aria-es="Ver vídeo de la risa del león" data-aria-en="Watch the lion laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
+            <figcaption><b><span class="es" lang="es">Risa del león</span><span class="en" lang="en">Lion laugh</span></b><span class="es" lang="es">Saca la lengua, abre las manos como garras y ríe con todo el pecho mirando al techo.</span><span class="en" lang="en">Stick out your tongue, open your hands like claws and laugh with all your chest looking up.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🚗" data-dot-label="Risa del claxon">
-            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del claxon">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener">Ver vídeo ↗</a></div>
-            <figcaption><b>Risa del claxon</b>Aprieta una nariz imaginaria: «¡pi, pi!» y suelta la carcajada después de cada toque.</figcaption>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del claxon" data-aria-es="Ver vídeo de la risa del claxon" data-aria-en="Watch the horn laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
+            <figcaption><b><span class="es" lang="es">Risa del claxon</span><span class="en" lang="en">Horn laugh</span></b><span class="es" lang="es">Aprieta una nariz imaginaria: «¡pi, pi!» y suelta la carcajada después de cada toque.</span><span class="en" lang="en">Squeeze an imaginary nose: “beep, beep!” and burst out laughing after each honk.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🥤" data-dot-label="Risa del batido">
-            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del batido">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener">Ver vídeo ↗</a></div>
-            <figcaption><b>Risa del batido</b>Mezcla un batido invisible de un vaso a otro diciendo «aeee…» y remátalo riendo.</figcaption>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del batido" data-aria-es="Ver vídeo de la risa del batido" data-aria-en="Watch the shake laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
+            <figcaption><b><span class="es" lang="es">Risa del batido</span><span class="en" lang="en">Shake laugh</span></b><span class="es" lang="es">Mezcla un batido invisible de un vaso a otro diciendo «aeee…» y remátalo riendo.</span><span class="en" lang="en">Mix an invisible shake from one glass to another saying “aeee…” and finish it laughing.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="📱" data-dot-label="Risa del móvil">
-            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del móvil">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener">Ver vídeo ↗</a></div>
-            <figcaption><b>Risa del móvil</b>Contesta un teléfono imaginario y, en vez de hablar, ríete a quien llama.</figcaption>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del móvil" data-aria-es="Ver vídeo de la risa del móvil" data-aria-en="Watch the phone laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
+            <figcaption><b><span class="es" lang="es">Risa del móvil</span><span class="en" lang="en">Phone laugh</span></b><span class="es" lang="es">Contesta un teléfono imaginario y, en vez de hablar, ríete a quien llama.</span><span class="en" lang="en">Answer an imaginary phone and, instead of talking, laugh at the caller.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🤫" data-dot-label="Risa silenciosa">
-            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa silenciosa">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener">Ver vídeo ↗</a></div>
-            <figcaption><b>Risa silenciosa</b>Ríe con toda la cara y el cuerpo pero sin hacer ruido. Es sorprendentemente contagiosa.</figcaption>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa silenciosa" data-aria-es="Ver vídeo de la risa silenciosa" data-aria-en="Watch the silent laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
+            <figcaption><b><span class="es" lang="es">Risa silenciosa</span><span class="en" lang="en">Silent laugh</span></b><span class="es" lang="es">Ríe con toda la cara y el cuerpo pero sin hacer ruido. Es sorprendentemente contagiosa.</span><span class="en" lang="en">Laugh with your whole face and body but no sound. It's surprisingly contagious.</span></figcaption>
           </figure>
         </div>
       </div>
       <div class="vslider servicios">
         <div class="servicios-inner">
-          <p class="eyebrow">Servicios</p>
-          <h3>A tu medida</h3>
-          <p>Contrata a expertos para tus sesiones y/o celebraciones.</p>
-          <button class="btn btn-primary" type="button" id="serv-quiero">Quiero</button>
+          <p class="eyebrow"><span class="es" lang="es">Servicios</span><span class="en" lang="en">Services</span></p>
+          <h3><span class="es" lang="es">A tu medida</span><span class="en" lang="en">Tailor-made</span></h3>
+          <p><span class="es" lang="es">Contrata a expertos para tus sesiones y/o celebraciones.</span><span class="en" lang="en">Hire experts for your sessions and celebrations.</span></p>
+          <button class="btn btn-primary" type="button" id="serv-quiero"><span class="es" lang="es">Quiero</span><span class="en" lang="en">I want it</span></button>
           <p class="serv-mail" id="serv-mail" aria-live="polite" hidden></p>
         </div>
       </div>
@@ -989,45 +989,45 @@ body:has(#lang-en:checked) .es{display:none}
   </section>
 
   <!-- ============ 4 · EXPANDE LA RISA ============ -->
-  <section class="content-section" id="expande" aria-label="Expande la risa">
+  <section class="content-section" id="expande" aria-label="Expande la risa" data-aria-es="Expande la risa" data-aria-en="Spread the laugh">
     <div class="wrap">
       <div class="share-card">
-        <h2>Expande la risa 💛</h2>
-        <p>Comparte esta página.</p>
+        <h2><span class="es" lang="es">Expande la risa 💛</span><span class="en" lang="en">Spread the laugh 💛</span></h2>
+        <p><span class="es" lang="es">Comparte esta página.</span><span class="en" lang="en">Share this page.</span></p>
         <div class="share-alt" id="share-alt">
           <a id="sh-wa">WhatsApp</a>
           <a id="sh-tg">Telegram</a>
-          <button id="sh-otros" type="button">Otros</button>
-          <a id="sh-mail">Correo</a>
-          <button id="sh-copy" type="button">Copiar enlace</button>
+          <button id="sh-otros" type="button"><span class="es" lang="es">Otros</span><span class="en" lang="en">More</span></button>
+          <a id="sh-mail"><span class="es" lang="es">Correo</span><span class="en" lang="en">Email</span></a>
+          <button id="sh-copy" type="button"><span class="es" lang="es">Copiar enlace</span><span class="en" lang="en">Copy link</span></button>
         </div>
         <div class="qr-cell">
-          <img class="qr-img" src="rievolucio-qr.jpg" alt="Código QR de Risa liberada: escanéalo para abrir la web" width="200" height="191">
-          <button class="qr-share" id="qr-share" type="button" aria-label="Compartir el código QR">↗</button>
+          <img class="qr-img" src="rievolucio-qr.jpg" alt="Código QR de Risa liberada: escanéalo para abrir la web" data-alt-es="Código QR de Risa liberada: escanéalo para abrir la web" data-alt-en="Risa liberada QR code: scan it to open the web" width="200" height="191">
+          <button class="qr-share" id="qr-share" type="button" aria-label="Compartir el código QR" data-aria-es="Compartir el código QR" data-aria-en="Share the QR code">↗</button>
         </div>
         <div id="copy-note" aria-live="polite"></div>
         <div class="chan-grid">
             <a class="chan-link chan-big" href="https://t.me/risaliberada" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-              <span>Canal</span>
+              <span class="es" lang="es">Canal</span><span class="en" lang="en">Channel</span>
             </a>
             <a class="chan-link" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-              <span>Publicar</span>
+              <span class="es" lang="es">Publicar</span><span class="en" lang="en">Share</span>
             </a>
             <a class="chan-link" href="https://github.com/floveorg/risa" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a11 11 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.73.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.77 1.04.77 2.1v3.12c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
-              <span>Código</span>
+              <span class="es" lang="es">Código</span><span class="en" lang="en">Code</span>
             </a>
             <div class="chan-propone-row">
               <button class="chan-link" id="chan-propone" type="button" aria-expanded="false">
                 <span class="chan-plus">➕</span>
               </button>
-              <p class="propone-note" id="propone-note" hidden>El que la propone se la come... 😉</p>
+              <p class="propone-note" id="propone-note" hidden><span class="es" lang="es">El que la propone se la come... 😉</span><span class="en" lang="en">The one who proposes it gets to eat it... 😉</span></p>
             </div>
           </div>
         <div class="btn-center montar-row">
-          <button class="btn btn-ghost" id="montar-replica" type="button">🛠️ Montar réplica</button>
+          <button class="btn btn-ghost" id="montar-replica" type="button">🛠️ <span class="es" lang="es">Montar réplica</span><span class="en" lang="en">Build a replica</span></button>
         </div>
       </div>
     </div>
@@ -1052,19 +1052,19 @@ body:has(#lang-en:checked) .es{display:none}
           </div>
           <div class="player-col">
             <div class="title-head">
-              <div class="transport" role="group" aria-label="Controles de reproducción">
-                <button class="tr-btn" type="button" id="world-prev" aria-label="Pista anterior">‹</button>
-                <button class="tr-btn tr-play" type="button" id="world-play" aria-label="Reproducir">▶</button>
-              <button class="tr-btn" type="button" id="world-next" aria-label="Pista siguiente">›</button>
+              <div class="transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
+                <button class="tr-btn" type="button" id="world-prev" aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
+                <button class="tr-btn tr-play" type="button" id="world-play" aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
+              <button class="tr-btn" type="button" id="world-next" aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
             </div>
           </div>
             <div class="player" id="world-player">
               <ul class="tracklist"></ul>
               <div class="paginator" hidden>
                 <div class="pg-btns">
-                  <button type="button" class="pg-btn pg-prev" aria-label="Página anterior">‹</button>
-                  <button type="button" class="chip pg-10" aria-label="Ver 10 más">10+</button>
-                  <button type="button" class="chip pg-100" aria-label="Ver 100 más">100</button>
+                  <button type="button" class="pg-btn pg-prev" aria-label="Página anterior" data-aria-es="Página anterior" data-aria-en="Previous page">‹</button>
+                  <button type="button" class="chip pg-10" aria-label="Ver 10 más" data-aria-es="Ver 10 más" data-aria-en="See 10 more">10+</button>
+                  <button type="button" class="chip pg-100" aria-label="Ver 100 más" data-aria-es="Ver 100 más" data-aria-en="See 100 more">100</button>
                 </div>
                 <span class="pg-label" aria-live="polite"></span>
               </div>
@@ -1805,11 +1805,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <!-- ============ MODAL · COMPARTE TU RISA ============ -->
 <div class="modal-back" id="upload-modal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="um-title">
-    <button class="modal-x" type="button" id="um-close" aria-label="Cerrar">×</button>
-    <h2 id="um-title">Compartir mi risa</h2>
-    <p class="modal-sub">Añádela a la risa. Solo risas, con cariño y en libre. 💛</p>
-    <p class="modal-note">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</p>
-    <a class="btn btn-primary" id="um-telegram" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Abrir Telegram</a>
+    <button class="modal-x" type="button" id="um-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
+    <h2 id="um-title"><span class="es" lang="es">Compartir mi risa</span><span class="en" lang="en">Share my laugh</span></h2>
+    <p class="modal-sub"><span class="es" lang="es">Añádela a la risa. Solo risas, con cariño y en libre. 💛</span><span class="en" lang="en">Add it to the laughs. Only laughs, with love, and free. 💛</span></p>
+    <p class="modal-note"><span class="es" lang="es">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</span><span class="en" lang="en">Send your laugh as a <b>voice note</b> to our Telegram bot. A couple of moderators review it and, if it's in, it plays on the web. By sending it you publish it free, under <b>CC BY-SA 4.0</b>, with the name you choose. 💛</span></p>
+    <a class="btn btn-primary" id="um-telegram" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> <span class="es" lang="es">Abrir Telegram</span><span class="en" lang="en">Open Telegram</span></a>
   </div>
 </div>
 
@@ -1887,13 +1887,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <!-- ============ MODAL · ENTRAR (acceso al perfil) ============ -->
 <div class="modal-back" id="entrar-modal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="em-title">
-    <button class="modal-x" type="button" id="em-close" aria-label="Cerrar">×</button>
-    <h2 id="em-title">Entrar · Mi perfil</h2>
-    <p class="modal-sub">Accede a tu perfil liberada para ver todas tus risas juntas y editarlo.</p>
+    <button class="modal-x" type="button" id="em-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
+    <h2 id="em-title"><span class="es" lang="es">Entrar · Mi perfil</span><span class="en" lang="en">Sign in · My profile</span></h2>
+    <p class="modal-sub"><span class="es" lang="es">Accede a tu perfil liberada para ver todas tus risas juntas y editarlo.</span><span class="en" lang="en">Access your liberada profile to see all your laughs together and edit it.</span></p>
     <div class="entrar-opts">
-      <a class="btn btn-primary" id="em-miniapp" href="#/entrar">📱 Abrir mi perfil (miniapp)</a>
-      <button type="button" class="btn btn-ghost" id="em-code">🔑 Código por el bot</button>
-      <button type="button" class="btn btn-ghost" id="em-email">📧 Código por email</button>
+      <a class="btn btn-primary" id="em-miniapp" href="#/entrar">📱 <span class="es" lang="es">Abrir mi perfil (miniapp)</span><span class="en" lang="en">Open my profile (miniapp)</span></a>
+      <button type="button" class="btn btn-ghost" id="em-code">🔑 <span class="es" lang="es">Código por el bot</span><span class="en" lang="en">Code from the bot</span></button>
+      <button type="button" class="btn btn-ghost" id="em-email">📧 <span class="es" lang="es">Código por email</span><span class="en" lang="en">Code by email</span></button>
     </div>
     <p class="modal-note entrar-note" id="em-note" hidden></p>
   </div>
@@ -1902,19 +1902,19 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <!-- ============ MODAL · MEJORAR (novedades) ============ -->
 <div class="modal-back" id="mejorar-modal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mm-title">
-    <button class="modal-x" type="button" id="mm-close" aria-label="Cerrar">×</button>
-    <h2 id="mm-title">✨ Mejorar tu risa</h2>
-    <p class="modal-sub">Novedades nuevas.</p>
+    <button class="modal-x" type="button" id="mm-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
+    <h2 id="mm-title">✨ <span class="es" lang="es">Mejorar tu risa</span><span class="en" lang="en">Upgrade your laugh</span></h2>
+    <p class="modal-sub"><span class="es" lang="es">Novedades nuevas.</span><span class="en" lang="en">New features.</span></p>
     <ul class="mejorar-list">
-      <li><b>🌐 Subdominio de autor</b> — tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</li>
-      <li><b>✏️ Editar perfil</b> — cambia tu nombre público y tu subdominio desde la web o el bot.</li>
-      <li><b>🚀 Más funciones y apps</b> — seguimos sumando apps liberada y perfiles cada vez más tuyos.</li>
+      <li><b><span class="es" lang="es">🌐 Subdominio de autor</span><span class="en" lang="en">🌐 Author subdomain</span></b> <span class="es" lang="es">— tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</span><span class="en" lang="en">— your profile at <code>&lt;your-name&gt;.liberada.net</code> to share all your laughs with a short link.</span></li>
+      <li><b><span class="es" lang="es">✏️ Editar perfil</span><span class="en" lang="en">✏️ Edit profile</span></b> <span class="es" lang="es">— cambia tu nombre público y tu subdominio desde la web o el bot.</span><span class="en" lang="en">— change your public name and your subdomain from the web or the bot.</span></li>
+      <li><b><span class="es" lang="es">🚀 Más funciones y apps</span><span class="en" lang="en">🚀 More features and apps</span></b> <span class="es" lang="es">— seguimos sumando apps liberada y perfiles cada vez más tuyos.</span><span class="en" lang="en">— we keep adding liberada apps and profiles that are more and more yours.</span></li>
     </ul>
-    <p class="modal-note">➡️ Tu perfil redirigirá a tus risas allí.</p>
-    <nav class="mejorar-links" aria-label="Enlaces de Mejorar">
-      <a href="#tecnologia" data-tab-link="tecnologia">Tecnología</a>
-      <a href="#" id="mm-sobre-liberada">Sobre liberada</a>
-      <a href="#" id="mm-contactar">Contactar</a>
+    <p class="modal-note">➡️ <span class="es" lang="es">Tu perfil redirigirá a tus risas allí.</span><span class="en" lang="en">Your profile will redirect to your laughs there.</span></p>
+    <nav class="mejorar-links" aria-label="Enlaces de Mejorar" data-aria-es="Enlaces de Mejorar" data-aria-en="Upgrade links">
+      <a href="#tecnologia" data-tab-link="tecnologia"><span class="es" lang="es">Tecnología</span><span class="en" lang="en">Tech</span></a>
+      <a href="#" id="mm-sobre-liberada"><span class="es" lang="es">Sobre liberada</span><span class="en" lang="en">About liberada</span></a>
+      <a href="#" id="mm-contactar"><span class="es" lang="es">Contactar</span><span class="en" lang="en">Contact</span></a>
     </nav>
   </div>
 </div>
@@ -1923,7 +1923,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <footer>
   <div class="wrap">
     <button class="credits-toggle" type="button" aria-expanded="false" aria-controls="credits-body">
-      Créditos y licencias <span class="arrow" aria-hidden="true">▾</span>
+      <span class="es" lang="es">Créditos y licencias</span><span class="en" lang="en">Credits and licenses</span> <span class="arrow" aria-hidden="true">▾</span>
     </button>
     <div class="credits-body" id="credits-body" hidden>
       <p>Todos los sonidos e imágenes proceden de Wikimedia Commons y se usan bajo licencias libres. Gracias a quienes los grabaron y los liberaron.</p>
@@ -3042,6 +3042,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
   /* ============ MODAL · SUBIR RISA ============ */
   function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Par es/en en HTML generado por JS (mismo patrón que los spans estáticos).
+  function esTxt(es, en){ return '<span class="es" lang="es">'+esc(es)+'</span><span class="en" lang="en">'+esc(en)+'</span>'; }
   function openModal(m){ m.hidden=false; document.body.style.overflow='hidden'; }
   function closeModal(m){ m.hidden=true; document.body.style.overflow=''; }
 
@@ -3131,15 +3133,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const subUrl='https://'+(sub||key)+'.liberada.net';
       const activate=sub
         ? '<a class="btn btn-primary" href="'+subUrl+'" target="_blank" rel="noopener">(Activar) — '+esc(sub)+'.liberada.net</a>'
-        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">(Activar) en tu próxima publicación</button>';
-      enResult.innerHTML='<b>Hola, '+esc(name)+'</b> — sesión iniciada.<br>'+
-        '👤 Nombre público: <code>'+esc(name)+'</code> — cámbialo con <code>/name TuNombre</code> en el bot.<br>'+
-        '🌐 Subdominio: <code>'+esc(sub||(key.slice(0,20)||'tu-nombre'))+'.liberada.net</code> — cámbialo con <code>/usuario nuevo_nombre</code>.'+
-        '<div class="en-activate"><h4>Activa tu perfil en <code>'+esc(sub||'tunombre')+'.liberada.net</code></h4>'+
-        '<p>Editar, bio extendida, juega y filtra — muestra la actividad de tus otras aplicaciones.</p>'+
+        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">'+esTxt('(Activar) en tu próxima publicación','(Activate) on your next post')+'</button>';
+      enResult.innerHTML='<b>'+esTxt('Hola, ','Hi, ')+esc(name)+'</b> '+esTxt('— sesión iniciada.','— signed in.')+'<br>'+
+        esTxt('👤 Nombre público: ','👤 Public name: ')+'<code>'+esc(name)+'</code> '+esTxt('— cámbialo con','— change it with')+' <code>/name TuNombre</code> '+esTxt('en el bot.','on the bot.')+'<br>'+
+        esTxt('🌐 Subdominio: ','🌐 Subdomain: ')+'<code>'+esc(sub||(key.slice(0,20)||'tu-nombre'))+'.liberada.net</code> '+esTxt('— cámbialo con','— change it with')+' <code>/usuario nuevo_nombre</code>.'+
+        '<div class="en-activate"><h4>'+esTxt('Activa tu perfil en ','Activate your profile at ')+'<code>'+esc(sub||'tunombre')+'.liberada.net</code></h4>'+
+        '<p>'+esTxt('Editar, bio extendida, juega y filtra — muestra la actividad de tus otras aplicaciones.','Edit, extended bio, play and filter — shows the activity of your other apps.')+'</p>'+
         activate+
-        '<p class="en-note">Nota: este enlace redirigirá a tus últimas risas en tu nuevo perfil.</p></div>'+
-        '<br><a class="btn btn-ghost" href="'+page+'">Ver mis risas en risa.liberada.net</a>';
+        '<p class="en-note">'+esTxt('Nota: este enlace redirigirá a tus últimas risas en tu nuevo perfil.','Note: this link will redirect to your latest laughs on your new profile.')+'</p></div>'+
+        '<br><a class="btn btn-ghost" href="'+page+'">'+esTxt('Ver mis risas en risa.liberada.net','See my laughs on risa.liberada.net')+'</a>';
     }).catch(()=>{
       enResult.textContent='No se pudo comprobar el código. Revisa tu conexión e inténtalo otra vez.';
     });
@@ -3464,6 +3466,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     document.querySelectorAll('option[data-en]').forEach(function(o){ if(o.dataset[li]!=null) o.textContent=o.dataset[li]; });
     document.querySelectorAll('[data-ph-en]').forEach(function(el){ var v=el.dataset['ph'+cap(li)]; if(v!=null) el.placeholder=v; });
     document.querySelectorAll('[data-aria-en]').forEach(function(el){ var v=el.dataset['aria'+cap(li)]; if(v!=null) el.setAttribute('aria-label', v); });
+    document.querySelectorAll('[data-alt-en]').forEach(function(el){ var v=el.dataset['alt'+cap(li)]; if(v!=null) el.setAttribute('alt', v); });
     try{ localStorage.setItem(LS, li); }catch(_){}
   }
   function initLang(){
