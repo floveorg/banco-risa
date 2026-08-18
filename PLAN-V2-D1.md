@@ -155,6 +155,30 @@ una **navegación más interactiva y profunda visualmente** sin tocar el esquema
 Todo vive **encima** de v1: el feed sigue siendo `risa.json` y el esquema
 `parent` no cambia; D1 solo añade la vista y los contadores.
 
+## 6c. Webhook real (avisos al instante)
+
+El v1 corre solo con cron (getUpdates cada 5–10 min). v2-d1 añade un **webhook**
+de Telegram en el Workers para los avisos en tiempo real, con el cron como
+**respaldo** (si el webhook falla, el cron sigue vaciando la cola):
+
+- `POST /api/tg` (Webhook handler) — verifica `X-Telegram-Bot-Api-Secret-Token`
+  (mismo secreto en `setWebhook`), procesa updates con la misma
+  `parseUpdates` pura y devuelve acciones al bot que corresponda.
+- `setWebhook` se configura una vez (script `bot/set-webhook.mjs`):
+  `https://risa.liberada.net/api/tg?secret=<token>`; `drop_pending_updates`
+  solo en el primer despliegue.
+- **Avisos al instante**: al aprobarse una risa, el autor recibe el mensaje en
+  segundos (no en el próximo tick); el canal y el grupo de moderación se
+  actualizan igual de rápido.
+- **Rate-limit y cola en D1**: tabla `updates` (update_id, status, at) para
+  idempotencia compartida entre webhook y cron; `update_id` único evita
+  duplicados si ambos procesan a la vez.
+- **Fallback**: si `/api/tg` devuelve error, el cron sigue corriendo; el
+  `offset` del cron y el del webhook comparten la misma cola (nunca procesan
+  el mismo update dos veces).
+- El bot v1 **no cambia**: solo se añade el handler Workers + el script de
+  `setWebhook`. El webhook puede encenderse app a app (risa primero).
+
 ## 6. Hoja de ruta sugerida
 
 1. `worker/` + `wrangler.toml` con rutas `/api/*` y D1 binding (worker ya
