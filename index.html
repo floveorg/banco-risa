@@ -2432,7 +2432,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   let risas=[];
   // v2-d1 · identidad de dev para D1 (claim desde #/entrar; fail-silent).
   const devKey=(()=>{ try{ return localStorage.getItem('flove:key')||'marcflove'; }catch(_){ return 'marcflove'; } })();
-  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||'devrisa'; }catch(_){ return 'devrisa'; } })();
+  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||'devris'; }catch(_){ return 'devris'; } })();
   let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
   let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)
@@ -3167,7 +3167,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         '<p>'+esTxt('Editar, bio extendida, juega y filtra — muestra la actividad de tus otras aplicaciones.','Edit, extended bio, play and filter — shows the activity of your other apps.')+'</p>'+
         activate+
         '<p class="en-note">'+esTxt('Nota: este enlace redirigirá a tus últimas risas en tu nuevo perfil.','Note: this link will redirect to your latest laughs on your new profile.')+'</p></div>'+
-        '<br><a class="btn btn-ghost" href="'+page+'">'+esTxt('Ver mis risas en risa.liberada.net','See my laughs on risa.liberada.net')+'</a>';
+        '<br><a class="btn btn-ghost" href="'+page+'">'+esTxt('Ver mis risas en risa.liberada.net','See my laughs on risa.liberada.net')+'</a>'+
+        (key==='marcflove' ? '<br><a class="btn btn-primary" href="https://liberada.net/usa/marcflove/#auth=devris">'+esTxt('Editar mi perfil','Edit my profile')+'</a>' : '');
     }).catch(()=>{
       enResult.textContent='No se pudo comprobar el código. Revisa tu conexión e inténtalo otra vez.';
     });

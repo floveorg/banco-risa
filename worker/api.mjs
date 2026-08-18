@@ -15,12 +15,12 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 });
 const err = (msg, status = 400) => json({ ok: false, error: msg }, status);
 
-// Dev-auth: en modo desarrollo (sin CLAIM_SECRET) el bearer 'devrisa' vale,
+// Dev-auth: en modo desarrollo (sin CLAIM_SECRET) el bearer 'devris' vale,
 // para que el demo de marcflove funcione sin configurar secretos. En
 // producción exige el CLAIM_SECRET real.
 const authed = (env, request) =>
   request.headers.get('authorization') === 'Bearer ' + (env.CLAIM_SECRET || '')
-  || (!env.CLAIM_SECRET && request.headers.get('authorization') === 'Bearer devrisa');
+  || (!env.CLAIM_SECRET && request.headers.get('authorization') === 'Bearer devris');
 
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
   (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
