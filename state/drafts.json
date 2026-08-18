@@ -18,7 +18,7 @@
     "fromMsgId": 156,
     "draftMsgId": 157,
     "awaitingTitle": false,
-    "awaitingTags": true,
+    "awaitingTags": false,
     "parent": null
   }
 }
