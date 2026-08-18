@@ -71,9 +71,10 @@ test('latestFeed defaults n to 6 and tolerates non-arrays', () => {
   assert.deepEqual(Risa.latestFeed(null), []);
 });
 
-test('clipsOf accepts array (v1) or {flag,clips} object, and defaults to []', () => {
+test('clipsOf accepts array (v1) or {flag,clips}/{schema,clips} object, and defaults to []', () => {
   assert.equal(Risa.clipsOf(SAMPLE), SAMPLE);
   assert.deepEqual(Risa.clipsOf({ flag: { flove: false }, clips: SAMPLE }), SAMPLE);
+  assert.deepEqual(Risa.clipsOf({ schema: 'risa-feed/1', clips: SAMPLE }), SAMPLE);
   assert.deepEqual(Risa.clipsOf({ flag: { flove: false } }), []);
   assert.deepEqual(Risa.clipsOf(null), []);
   assert.deepEqual(Risa.clipsOf(undefined), []);

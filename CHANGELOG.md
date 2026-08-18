@@ -9,6 +9,23 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.2] — 2026-08-18 · a11y · feeds · CI · schema
+
+- **Auditoría axe completa: 0 violaciones** (antes 69). `<h1>` sr-only,
+  `aria-label` en las 10 secciones (regiones), y `--persimmon` oscurecido a
+  `#c03610` por contraste WCAG AA.
+- **RSS/Atom del feed**: `build-rss.mjs` genera `risa.xml` + `atom.xml`
+  (RSS 2.0 y Atom 1.0); el bot los regenera al publicar y se enlazan en el
+  `<head>` de la web.
+- **og:image PNG real**: `media/logos/15-guino.png` (512×512, renderizado del
+  mark SVG) en vez del SVG que varía según plataforma.
+- **CI de tests en cada push/PR**: `.github/workflows/test.yml` corre
+  `node --test`, `node --check` y `html-validate` (gate automático, no solo en
+  release).
+- **Schema explícito en `risa.json`**: formato `{ "schema": "risa-feed/1",
+  "clips": […] }`, retrocompatible (la web y el bot leen con `clipsOf`; el bot
+  escribe siempre el objeto). Migración documentada en `VERSIONING.md`.
+
 ## [v1.0.1] — 2026-08-18 · pulido de la release
 
 - **Paquete descargable** ahora incluye las imágenes locales que la web

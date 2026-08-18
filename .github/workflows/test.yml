@@ -1,0 +1,26 @@
+name: test
+on:
+  push:
+    branches: [main, v2-d1]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: test
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Lógica del bot y de la web (node --test)
+        run: node --test bot/test/*.test.mjs test/*.test.mjs
+      - name: Sintaxis (node --check)
+        run: |
+          for f in bot/*.mjs worker/*.mjs risa.js build-rss.mjs; do node --check "$f"; done
+      - name: Validez de la web (html-validate)
+        run: npx --yes html-validate index.html
+      - name: Feed RSS/Atom generable
+        run: node build-rss.mjs

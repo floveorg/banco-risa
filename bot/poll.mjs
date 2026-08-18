@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  parseUpdates, risaEntry, prependClip, identityOf, hashId, MAX_FILE_BYTES,
+  parseUpdates, risaEntry, prependClip, identityOf, hashId, MAX_FILE_BYTES, clipsOf,
   latestClips, clipsOfAuthor, clipsToday, clipsSince, randomClip,
   tagTrend, authorStats, searchClips, inlineResult,
   hasAncestor, clipByChannelMsg
@@ -12,6 +12,7 @@ import {
 import { pageUrlOf } from './pages.mjs';
 import { Telegram } from './telegram.mjs';
 import { uploadAudio, uploadMedia } from './r2.mjs';
+import { buildFeeds } from '../build-rss.mjs';
 
 // Salt for the obfuscated Telegram-id hash. Each deployer sets their own; the
 // default keeps the hash one-way (never reversible) but sharing it across
@@ -27,6 +28,12 @@ const readJSON = async (rel, fallback) => {
 };
 const writeJSON = (rel, v) => writeFile(p(rel), JSON.stringify(v, null, 2) + '\n');
 const isoToday = () => new Date().toISOString().slice(0, 10);
+// Escribe risa.json (formato `{ schema, clips }` explícito y retrocompatible)
+// y regenera los feeds RSS/Atom del feed en el mismo paso.
+const persistFeed = async (risas, cfg) => {
+  await writeJSON('risa.json', { schema: 'risa-feed/1', clips: risas });
+  await bestEffort(buildFeeds(risas, cfg));
+};
 
 const WELCOME_TEXT = 'Comparte tu risa con todos aquí.\n\n' +
   'Audios o vídeos de máx. 1 min, 10 MB, 5 al día. Graba y envía el tuyo: elige visibilidad, descríbelo y pulsa Enviar. Un moderador lo revisa y, si entra, lo publicamos en @risaliberada y en risa.liberada.net 💛';
@@ -1007,7 +1014,7 @@ async function commitState() {
   const { stdout } = await run('git', ['status', '--porcelain']);
   if (!stdout.trim()) return;
   const who = ['-c', 'user.name=risa bot', '-c', 'user.email=bot@users.noreply.github.com'];
-  await run('git', [...who, 'add', 'risa.json', 'usernames.json', 'state/']);
+  await run('git', [...who, 'add', 'risa.json', 'usernames.json', 'risa.xml', 'atom.xml', 'state/']);
   await run('git', [...who, 'commit', '-m', 'risa: publish/moderate (automated)']);
   const token = process.env.GITHUB_TOKEN;
   const remote = token
@@ -1043,7 +1050,7 @@ async function main() {
   let suboffer = await readJSON('state/suboffer.json', {});
   let codes = await readJSON('state/codes.json', {});
   let usernames = await readJSON('usernames.json', {});
-  let risas = await readJSON('risa.json', []);
+  let risas = clipsOf(await readJSON('risa.json', []));
 
   const startedAt = Date.now();
   while (Date.now() - startedAt < LOOP_MAX_MS) {
@@ -1080,7 +1087,7 @@ async function main() {
           await writeJSON('state/suboffer.json', suboffer);
           await writeJSON('state/codes.json', codes);
           await writeJSON('usernames.json', usernames);
-          await writeJSON('risa.json', risas);
+          await persistFeed(risas, cfg);
           await bestEffort(commitState());
         }
       } catch (err) {
@@ -1106,7 +1113,7 @@ async function main() {
   await writeJSON('state/suboffer.json', suboffer);
   await writeJSON('state/codes.json', codes);
   await writeJSON('usernames.json', usernames);
-  await writeJSON('risa.json', risas);
+  await persistFeed(risas, cfg);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');
   await bestEffort(commitState());
 }
