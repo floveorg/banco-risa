@@ -9,6 +9,19 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.3] — 2026-08-18 · **pack v1 congelado**
+
+- **Pack descargable congelado**: `risa-v1.0.3-nick-as-tag.zip` es el paquete
+  definitivo de v1 — todo el circuito «Nick as tag» tal como está en `main`
+  (web single-file con **i18n es/en** y tema, miniapp, subdominios opt-in,
+  RSS/Atom, CI, a11y axe 0, schema `risa-feed/1`). A partir de aquí, **v1 no
+  cambia su espíritu**: un solo perfil como tag (`#/u/<key>`), nada de
+  identidad/claims — eso vive en `v2-d1`.
+- Las actualizaciones futuras de la descarga v1 serán **fixes o mejoras no
+  fundamentales** (texto, UX, a11y, accesibilidad) que no toquen el núcleo;
+  cada una corta su propia release `v1.0.x` y regenera el pack con
+  `./build-risa-zip.sh`.
+
 ## [v1.0.2] — 2026-08-18 · a11y · feeds · CI · schema
 
 - **Auditoría axe completa: 0 violaciones** (antes 69). `<h1>` sr-only,
