@@ -5,13 +5,13 @@ Formato [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) ·
 versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 [VERSIONING.md](VERSIONING.md).
 
-> **v1 todavía no se ha publicado.** Está en polish: la release se corta cuando
-> el circuito web + Telegram quede afinado. Este registro acumula los cambios
-> bajo `[Unreleased]` hasta entonces.
+> **v1.0.0 cortada.** «Nick as tag»: tu nickname se convierte en tu etiqueta
+> (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
+> El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
-## [Unreleased] — v1 en polish · v2/v3 en desarrollo
+## [v1.0.0] — 2026-08-18 · «Nick as tag»
 
-### v1 · producción (en polish, release sin cortar)
+### v1 · producción (release v1.0.0)
 
 #### Añadido
 

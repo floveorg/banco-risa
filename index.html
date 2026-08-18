@@ -312,6 +312,27 @@ img{max-width:100%; display:block}
 
 /* ============ CARDS / CONTENT SECTIONS ============ */
 .content-section{padding:52px 0; border-top:2px dashed rgba(42,24,16,.16)}
+/* DEMO · perfil liberada (pasado · presente · futuro) */
+.demo-lead{max-width:52ch; margin:8px auto 0; color:var(--ink-soft); font-size:1.05rem}
+.demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:26px}
+@media(max-width:760px){.demo-grid{grid-template-columns:1fr}}
+.demo-card{border:2.5px solid var(--ink); border-radius:18px; padding:22px; background:var(--cream);
+  box-shadow:6px 6px 0 rgba(42,24,16,.14); text-align:left}
+.demo-card p{margin:0; color:var(--ink-soft); line-height:1.55; font-size:.95rem}
+.demo-tag{display:inline-block; font-family:var(--mono); font-size:.7rem; letter-spacing:.08em;
+  text-transform:uppercase; padding:2px 10px; border-radius:999px; background:var(--marigold);
+  color:var(--ink); font-weight:700; margin-bottom:10px}
+.demo-url{display:block; font-family:var(--mono); font-weight:700; color:var(--grape);
+  margin-bottom:8px; word-break:break-all; text-decoration:none; border-bottom:2px solid transparent}
+.demo-url:hover{color:var(--persimmon); border-bottom-color:var(--marigold)}
+.demo-past{background:var(--base); opacity:.85}
+.demo-past .demo-tag{background:#ddd; color:var(--ink)}
+.demo-future{border-style:dashed}
+.demo-future .demo-tag{background:var(--grape); color:#fff}
+.demo-download{display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:8px 16px;
+  border:2px solid var(--ink); border-radius:999px; background:var(--ink); color:#fff;
+  font-size:.8rem; font-weight:700; text-decoration:none; transition:all .15s}
+.demo-download:hover{transform:translateY(-1px); background:var(--grape); border-color:var(--grape)}
 .cs-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center}
 .cs-grid.flip{grid-template-columns:.9fr 1.1fr}
 .cs-grid.flip .cs-media, .cs-grid.flip > .slider{order:-1}
@@ -822,6 +843,35 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
             <audio preload="none"></audio>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · DEMO · TU PERFIL LIBERADA (pasado · presente · futuro) ============ -->
+  <section class="content-section" id="demo">
+    <div class="wrap">
+      <div class="section-head head-center">
+        <p class="eyebrow">Tu perfil liberada</p>
+        <h2>Pasado · presente · futuro</h2>
+        <p class="demo-lead">Cómo compartías tus risas, cómo lo haces hoy y hacia dónde va tu perfil.</p>
+      </div>
+      <div class="demo-grid">
+        <article class="demo-card demo-past">
+          <span class="demo-tag">Pasado</span>
+          <h3>risa.liberada.net/#/u/&lt;key&gt;</h3>
+          <p>Tu página de autor dentro de risa: un enlace largo que solo mostraba tus risas de esta app.</p>
+          <a class="demo-download" href="risa-v1.0.0-nick-as-tag.zip" download rel="noopener">⤓ Descarga Risa v1 · Nick as tag</a>
+        </article>
+        <article class="demo-card demo-present">
+          <span class="demo-tag">Presente</span>
+          <a class="demo-url" href="https://marcflove.liberada.net" target="_blank" rel="noopener">marcflove.liberada.net</a>
+          <p>Tu subdominio corto, ya activo: redirige a tu perfil agregador con todas tus risas juntas.</p>
+        </article>
+        <article class="demo-card demo-future">
+          <span class="demo-tag">Futuro</span>
+          <a class="demo-url" href="https://maria.liberada.net" target="_blank" rel="noopener">maria.liberada.net</a>
+          <p>Perfiles con bio extendida, juega y filtra — la actividad de tus otras apps en tu nuevo perfil.</p>
+        </article>
       </div>
     </div>
   </section>
@@ -2301,9 +2351,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     isTagOn: tag=>selected.has(tag)
   });
   const space=document.getElementById('tag-space');
-  const TAG_START=3;                // etiquetas flotando al empezar el flujo
-  const TAG_BATCH=3;                // cuántas añade el + en cada toque
-  const PLUS_CLICKS=3;              // el + añade 3 más, durante 3 toques
+  // Máx. de etiquetas flotantes ×5 (antes 12 → ahora 60 = TAG_START + PLUS_CLICKS·TAG_BATCH).
+  const TAG_START=5;                // etiquetas flotando al empezar el flujo
+  const TAG_BATCH=5;                // cuántas añade el + en cada toque
+  const PLUS_CLICKS=11;             // el + añade 5 más, durante 11 toques
   let risas=[];
   let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde

@@ -2,8 +2,9 @@
 
 Política de versiones del repo `floveorg/risa`: **v1 = producción**, **v2 = desarrollo**.
 
-> **Estado actual: todavía NO hay ninguna release cortada.** v1 sigue en polish;
-> la primera release (v1.0.0) se corta siguiendo §4 cuando el circuito quede afinado.
+> **Estado actual: v1.0.0 cortada** (2026-08-18, «Nick as tag»). El paquete
+> descargable `risa-v1.0.0-nick-as-tag.zip` incluye versión, ciclo de release
+> (`CHANGELOG.md` + `VERSIONING.md`) y el manual de uso (`MANUAL.md`).
 
 ## 1. Dos versiones, un solo repo de producción
 
