@@ -5,7 +5,7 @@
     "name": "Guillem",
     "username": "Guillem_ev",
     "video": false,
-    "title": "",
+    "title": "Risa Maliciosa",
     "tags": [],
     "sel": {
       "tg": false,
@@ -15,7 +15,7 @@
     "fromChatId": "4f503e61c48d57f15fe6",
     "fromMsgId": 164,
     "draftMsgId": 166,
-    "awaitingTitle": true,
+    "awaitingTitle": false,
     "awaitingTags": false,
     "parent": null
   }
