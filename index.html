@@ -732,6 +732,45 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important; scroll-behavior:auto !important}
 }
+
+/* ============ TEMA (§13.14) · flove:theme + prefers-color-scheme ============ */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#f4e8d8; --ink-soft:#e6d6c2; --base:#24170f; --base-2:#2f1f13;
+    --cream:#2b1d11; --persimmon:#ff7d52; --marigold:#ffb020; --magenta:#ff5fa8;
+    --grape:#b18aff; --azure:#6aa9ff; --mint:#37d6ab; --shadow:rgba(0,0,0,.45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#f4e8d8; --ink-soft:#e6d6c2; --base:#24170f; --base-2:#2f1f13;
+  --cream:#2b1d11; --persimmon:#ff7d52; --marigold:#ffb020; --magenta:#ff5fa8;
+  --grape:#b18aff; --azure:#6aa9ff; --mint:#37d6ab; --shadow:rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+.theme-btn{width:40px; height:40px; border:2px solid var(--ink); border-radius:50%; background:var(--base);
+  color:var(--ink); font-size:1.1rem; cursor:pointer; display:inline-flex; align-items:center;
+  justify-content:center; transition:transform .15s}
+.theme-btn:hover{transform:rotate(30deg)}
+
+/* ============ TRANSLATY · motor i18n (es por defecto + en) ============ */
+.en{display:none}                                  /* vista por defecto = .es (risa es ES primero) */
+body:has(#lang-es:checked) .es{display:inline}
+body:has(#lang-en:checked) .en{display:inline}
+body:has(#lang-en:checked) .es{display:none}
+.lang{display:inline-block; position:relative}
+.lang>summary{list-style:none; cursor:pointer; width:40px; height:40px; border:2px solid var(--ink);
+  border-radius:50%; background:var(--base); color:var(--ink); display:inline-flex; align-items:center;
+  justify-content:center; font-size:1.2rem; line-height:1; -webkit-user-select:none; user-select:none}
+.lang>summary::-webkit-details-marker{display:none}
+.lang[open]>summary{background:var(--marigold)}
+.lang-opts{position:absolute; right:0; z-index:60; margin-top:6px; display:flex; flex-wrap:wrap; gap:6px;
+  background:var(--cream); border:2px solid var(--ink); border-radius:12px; padding:6px;
+  box-shadow:6px 6px 0 var(--shadow)}
+.lang input{position:absolute; opacity:0; pointer-events:none}
+.lang label{cursor:pointer; padding:0 12px; min-height:38px; display:inline-flex; align-items:center;
+  border:2px solid var(--ink); border-radius:11px; white-space:nowrap; color:var(--ink); background:var(--base)}
+.lang input:checked + label{background:var(--ink); color:var(--base); font-weight:700}
 </style>
 </head>
 <body>
@@ -744,20 +783,28 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
         <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg" alt="" width="34" height="34">
         <span>Risa liberada</span>
       </a>
-      <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal">
-        <a href="#top">Inicio</a>
-        <button type="button" id="dd-sobre">Sobre nos</button>
-        <button type="button" id="dd-entrar">Entrar</button>
+      <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal" data-aria-es="Menú principal" data-aria-en="Main menu">
+        <a href="#top"><span class="es" lang="es">Inicio</span><span class="en" lang="en">Home</span></a>
+        <button type="button" id="dd-sobre"><span class="es" lang="es">Sobre nos</span><span class="en" lang="en">About us</span></button>
+        <button type="button" id="dd-entrar"><span class="es" lang="es">Entrar</span><span class="en" lang="en">Sign in</span></button>
         <div class="dd-sep"></div>
-        <button type="button" id="dd-mejorar" aria-expanded="false">Mejorar ▾</button>
+        <button type="button" id="dd-mejorar" aria-expanded="false"><span class="es" lang="es">Mejorar ▾</span><span class="en" lang="en">Upgrade ▾</span></button>
       </nav>
     </div>
     <div class="brand-group">
-      <button class="btn btn-ghost benefits-btn" type="button" id="benefits-btn" aria-label="Descubrir los beneficios de reír">
-        Porque
+      <button class="btn btn-ghost benefits-btn" type="button" id="benefits-btn" aria-label="Descubrir los beneficios de reír" data-aria-es="Descubrir los beneficios de reír" data-aria-en="Discover the benefits of laughing">
+        <span class="es" lang="es">Porque</span><span class="en" lang="en">Because</span>
         <img class="btn-anim" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/07-descorche-anim-lanza.svg" alt="" aria-hidden="true" width="30" height="30">
       </button>
-      <button class="btn btn-primary" type="button" id="open-upload">Publicar risa</button>
+      <button class="btn btn-primary" type="button" id="open-upload"><span class="es" lang="es">Publicar risa</span><span class="en" lang="en">Share a laugh</span></button>
+      <details class="lang">
+        <summary class="worldball" title="Idioma" aria-label="Idioma" data-aria-es="Idioma" data-aria-en="Language">🌐</summary>
+        <div class="lang-opts">
+          <input type="radio" name="lang" id="lang-es" checked><label for="lang-es">Español</label>
+          <input type="radio" name="lang" id="lang-en"><label for="lang-en">English</label>
+        </div>
+      </details>
+      <button class="theme-btn" type="button" id="theme-btn" title="Tema" aria-label="Tema claro/oscuro" data-aria-es="Tema claro/oscuro" data-aria-en="Light/dark theme">◐</button>
     </div>
   </div>
 </header>
@@ -990,11 +1037,11 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 <!-- ============ BARRAS INFERIORES · ESPIRITUALIDAD · CULTURA · CIENCIA · COMUNIDAD ============ -->
 <nav class="tab-bar" aria-label="Secciones de espiritualidad, comunidad, cultura, ciencia y tecnología">
-  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
-  <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
-  <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
-  <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false"><span class="es" lang="es">Interior</span><span class="en" lang="en">Inner</span></button>
+  <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false"><span class="es" lang="es">Común</span><span class="en" lang="en">Community</span></button>
+  <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
+  <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
+  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -3399,6 +3446,48 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     document.querySelectorAll('#ejercicios, #expande, .tab-panel, .slider-framed').forEach(el=>el.hidden=true);
   }
 
+})();
+</script>
+
+<script>
+/* translaty engine + theme switcher (flove:lang / flove:theme). */
+(function(){
+  var LS='flove:lang', LS_OLD='translaty-lang';
+  var cap=function(s){ return s.charAt(0).toUpperCase()+s.slice(1); };
+  var radios=function(){ return Array.prototype.slice.call(document.querySelectorAll('input[name="lang"]')); };
+  var curLang=function(){ var r=radios().find(function(x){ return x.checked; }); return r ? r.id.replace('lang-','') : 'es'; };
+  var stored=function(){ try{ return localStorage.getItem(LS)||localStorage.getItem(LS_OLD); }catch(_){ return null; } };
+  var urlLang=function(){ try{ return new URLSearchParams(location.search).get('lang'); }catch(_){ return null; } };
+  function applyLang(){
+    var li=curLang();
+    document.documentElement.lang=li;
+    document.querySelectorAll('option[data-en]').forEach(function(o){ if(o.dataset[li]!=null) o.textContent=o.dataset[li]; });
+    document.querySelectorAll('[data-ph-en]').forEach(function(el){ var v=el.dataset['ph'+cap(li)]; if(v!=null) el.placeholder=v; });
+    document.querySelectorAll('[data-aria-en]').forEach(function(el){ var v=el.dataset['aria'+cap(li)]; if(v!=null) el.setAttribute('aria-label', v); });
+    try{ localStorage.setItem(LS, li); }catch(_){}
+  }
+  function initLang(){
+    var want=urlLang()||stored();
+    if(want){ var r=document.getElementById('lang-'+want); if(r) r.checked=true; }
+    radios().forEach(function(r){ r.addEventListener('change', function(){ applyLang(); var d=document.querySelector('details.lang'); if(d) d.open=false; }); });
+    applyLang();
+  }
+  /* theme (§13.14) */
+  var KEY='flove:theme', btn=document.getElementById('theme-btn'), root=document.documentElement;
+  function applyTheme(){
+    if(root.getAttribute('data-theme')) return;
+    if(matchMedia('(prefers-color-scheme: dark)').matches) root.setAttribute('data-theme','dark');
+  }
+  function initTheme(){
+    try{ var s=localStorage.getItem(KEY); if(s) root.setAttribute('data-theme', s); else applyTheme(); }catch(_){ applyTheme(); }
+    if(btn) btn.addEventListener('click', function(){
+      var next=root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try{ localStorage.setItem(KEY, next); }catch(_){}
+    });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', function(){ initLang(); initTheme(); }); }
+  else { initLang(); initTheme(); }
 })();
 </script>
 </body>
