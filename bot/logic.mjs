@@ -265,6 +265,13 @@ export function prependClip(risas, entry) {
   return [entry, ...(Array.isArray(risas) ? risas : [])];
 }
 
+// Extracción del feed: risa.json puede ser array (v1) u objeto {schema,clips}.
+// Mismo contrato que `clipsOf` de risa.js, aquí puro para el bot.
+export function clipsOf(risa) {
+  if (Array.isArray(risa)) return risa;
+  return (risa && Array.isArray(risa.clips)) ? risa.clips : [];
+}
+
 // ---- Consultas de solo lectura (comandos cmd-* del bot; sin I/O) ----
 
 // Últimos n publicados (nuevos primero).

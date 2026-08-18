@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseUpdates, decisionOf, hashId, identityOf, risaEntry, MAX_VIDEO_BYTES,
+import { parseUpdates, decisionOf, hashId, identityOf, risaEntry, MAX_VIDEO_BYTES, clipsOf,
          latestClips, clipsOfAuthor, clipsToday, clipsSince,
          randomClip, tagTrend, authorStats, searchClips, inlineResult } from '../logic.mjs';
 
@@ -25,6 +25,13 @@ test('identityOf: ①+② obfuscates the id (idHash only)', () => {
 test('identityOf: solo ① keeps the id direct', () => {
   const got = identityOf({ tg: true, name: false, anon: false }, 777, 's');
   assert.deepEqual(got, { idDirect: '777' });
+});
+
+test('clipsOf extracts array or {schema,clips} (bot feed contract)', () => {
+  assert.deepEqual(clipsOf([{ id: 'a' }]), [{ id: 'a' }]);
+  assert.deepEqual(clipsOf({ schema: 'risa-feed/1', clips: [{ id: 'a' }] }), [{ id: 'a' }]);
+  assert.deepEqual(clipsOf({ schema: 'risa-feed/1' }), []);
+  assert.deepEqual(clipsOf(null), []);
 });
 
 test('identityOf: ③ anónimo and ② name-only store nothing', () => {

@@ -9,6 +9,18 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.4] — 2026-08-18 · fix crítico: el bot no respondía
+
+- **El bot @RisaLiberadaBot no procesaba mensajes.** Desde v1.0.2,
+  `bot/poll.mjs` importaba `clipsOf` de `./logic.mjs`, que **no lo exportaba**
+  (vive en `risa.js`) → el bot moría al arrancar (`SyntaxError`) y el cron de
+  Actions fallaba en cada tick: nadie respondía y las updates quedaban
+  pendientes.
+- **Fix**: `clipsOf` (extracción array u `{schema,clips}` del feed) añadido a
+  `logic.mjs` con su test. El bot vuelve a procesar: verificado localmente
+  (procesó la update pendiente y avanzó el offset).
+- `risa103.zip` regenerado con el fix.
+
 ## [v1.0.3] — 2026-08-18 · **pack v1 congelado**
 
 - **Pack descargable congelado**: `risa103.zip` es el paquete
