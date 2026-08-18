@@ -6,7 +6,9 @@
     "username": "marcflove",
     "video": false,
     "title": "Surreal",
-    "tags": [],
+    "tags": [
+      "corto"
+    ],
     "sel": {
       "tg": false,
       "name": true,
