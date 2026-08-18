@@ -5,7 +5,7 @@
     "name": "Marc",
     "username": "marcflove",
     "video": false,
-    "title": "",
+    "title": "Surreal",
     "tags": [],
     "sel": {
       "tg": false,
@@ -15,7 +15,7 @@
     "fromChatId": "4c593a61c68f50fc51ef",
     "fromMsgId": 136,
     "draftMsgId": 137,
-    "awaitingTitle": true,
+    "awaitingTitle": false,
     "awaitingTags": false,
     "parent": null
   }
