@@ -1,1 +1,22 @@
-{}
+{
+  "4f503e61c48d57f15fe6": {
+    "id": "q_823020302",
+    "fileId": "AwACAgQAAxkBAAOkaoTHwJlU7kcmf6jBVeNKOL07Cw4AAv0fAAITOiFQpn30NWjHSmg9BA",
+    "name": "Guillem",
+    "username": "Guillem_ev",
+    "video": false,
+    "title": "",
+    "tags": [],
+    "sel": {
+      "tg": false,
+      "name": true,
+      "anon": false
+    },
+    "fromChatId": "4f503e61c48d57f15fe6",
+    "fromMsgId": 164,
+    "draftMsgId": 166,
+    "awaitingTitle": false,
+    "awaitingTags": false,
+    "parent": null
+  }
+}
