@@ -6,7 +6,9 @@
     "username": "marcflove",
     "video": true,
     "title": "Aahh",
-    "tags": [],
+    "tags": [
+      "rural"
+    ],
     "sel": {
       "tg": false,
       "name": true,
