@@ -6,6 +6,14 @@ sigue corriendo en el cron de Actions y R2 sigue sirviendo los audios. Lo que
 añade v2-d1 es un **SQL local gestionado (D1) + endpoints (Workers)** para lo
 que un feed estático no puede: cuentas, búsqueda, actividad y edición.
 
+> **Estado de la infra (native settings):** `worker/wrangler.toml` con binding
+> D1 (`DB`), `worker/migrations/0001_initial.sql` (esquema + seed marcflove
+> simple · maria avanzada), `worker/api.mjs` (API D1 + fallback al Worker de
+> subdominios) y `worker/README.md` (pasos nativos: d1 create, execute, secrets,
+> deploy). La web (`index.html`) mantiene su navegación y suma, en v2-d1,
+> búsqueda fina vía `/api/search` y favoritos a un feed real vía `/api/fav`
+> (fail-silent cuando la API no está).
+
 Regla de oro heredada de v1: **`risa.json` es la verdad de lectura de la web;**
 D1 es el nuevo canónico de escritura y `risa.json` queda como read-model que el
 Workers regenera. Si D1/Workers se apaga, v1 sigue sirviendo (base de

@@ -2016,8 +2016,19 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     btn.setAttribute('aria-pressed', on?'true':'false');
     btn.textContent = on?'★':'☆';
     btn.setAttribute('aria-label', on?'Quitar de favoritas':'Marcar como favorita');
+    btn.setAttribute('data-aria-es', on?'Quitar de favoritas':'Marcar como favorita');
+    btn.setAttribute('data-aria-en', on?'Remove from favourites':'Mark as favourite');
     btn.classList.remove('jump'); void btn.offsetWidth; btn.classList.add('jump');
     saveFavs();
+    // v2-d1 · favoritos a un feed real (D1) si hay claim de identidad (fail-silent).
+    if(devKey && on){
+      const clip = (risas||[]).find(c=>c.src===src);
+      if(clip){
+        fetch('/api/fav',{method:'POST',headers:{'content-type':'application/json',
+          authorization:'Bearer '+devClaim},body:JSON.stringify({key:devKey,app:'risa',item_id:clip.id}),
+          signal:AbortSignal.timeout(3000)}).catch(()=>{});
+      }
+    }
     if(favFilter) updateGentePlaylist();      // si el filtro de favoritas está activo, refresca la lista
     if(worldFavFilter) updateWorldPlaylist();
   }
@@ -2419,6 +2430,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const TAG_BATCH=5;                // cuántas añade el + en cada toque
   const PLUS_CLICKS=11;             // el + añade 5 más, durante 11 toques
   let risas=[];
+  // v2-d1 · identidad de dev para D1 (claim desde #/entrar; fail-silent).
+  const devKey=(()=>{ try{ return localStorage.getItem('flove:key')||''; }catch(_){ return ''; } })();
+  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||''; }catch(_){ return ''; } })();
   let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
   let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
   let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)
@@ -2732,6 +2746,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(exactN){ addFloating(nameOf(exactN)); tagSearchInput.value=''; return; }
     const partialN=allTracks.find(t=>nameOf(t).toLowerCase().includes(q));
     if(partialN){ addFloating(nameOf(partialN)); tagSearchInput.value=''; return; }
+    // v2-d1 · búsqueda fina en D1 (f1SS) cuando la API responde: añade los
+    // títulos coincidentes como chips flotantes (fail-silent si no hay red).
+    fetch('/api/search?q='+encodeURIComponent(raw),{cache:'no-store',signal:AbortSignal.timeout(2500)})
+      .then(r=>r.ok?r.json():null)
+      .then(d=>{
+        if(!d || !d.results || !d.results.length) return;
+        d.results.slice(0,4).forEach(res=>{
+          if(res && res.title) addFloating(res.title);
+        });
+        tagSearchInput.value='';
+      })
+      .catch(()=>{});
   }
 
   tagSearchBtn.addEventListener('click', doTagSearch);
