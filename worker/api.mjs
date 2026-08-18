@@ -46,7 +46,7 @@ export default {
         const favs = await db.prepare(
           'SELECT app, item_id, at FROM favs WHERE key = ? ORDER BY at DESC').bind(user.key).all();
         return json({
-          ok: true, username: user.username, name: user.name,
+          ok: true, key: user.key, username: user.username, name: user.name,
           bio: user.bio, email: user.email, socials: JSON.parse(user.socials || '[]'),
           recover: JSON.parse(user.recover || '[]'), tier: user.tier, claimed_at: user.claimed_at,
           activity: act.results, favorites: favs.results

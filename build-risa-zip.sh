@@ -13,7 +13,8 @@ cd "$ROOT"
 
 VERSION="${1:-$(node -e "process.stdout.write(require('./config.json').version)")}"
 VERSION="${VERSION#v}"                     # strip leading v for the filename
-NAME="risa-v${VERSION}-nick-as-tag"
+# Pack congelado v1: nombre fijo `risa103.zip` (independiente de la versión).
+NAME="risa103"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 

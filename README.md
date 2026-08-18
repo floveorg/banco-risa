@@ -50,4 +50,4 @@ License of published clips: **CC BY-SA 4.0**.
 - **v1 = production** (this repo, frozen except fixes) · **v2 = development** (flove central: authy, lovy, `central/users/`).
 - Releases: `CHANGELOG.md` + tag `v1.x.y` — see [VERSIONING.md](VERSIONING.md) for the scheme, backwards-compat contract and release logics.
 - Manual de uso del entorno real (web, bot, miniapp, privacidad): [MANUAL.md](MANUAL.md).
-- Paquete descargable v1 («Nick as tag»): `risa-v1.0.0-nick-as-tag.zip` (regenerable con `./build-risa-zip.sh`).
+- Paquete descargable v1 («Nick as tag»): `risa103.zip` (regenerable con `./build-risa-zip.sh`).

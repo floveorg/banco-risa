@@ -44,7 +44,12 @@ npx wrangler deploy
 
 `migrations/0001_initial.sql` crea: `identities` · `activity` · `favs` ·
 `threads` · `updates` · `pending_updates` · `search_fts` (FTS5), y siembra
-`marcflove` (demo simple) y `maria` (demo avanzada) con actividad cruzada.
+`marcflove` y `maria`.
 
-Para migraciones nuevas: `worker/migrations/0002_<nombre>.sql` y
+`migrations/0002_advanced.sql` sube **marcflove a `advanced`** (bio extendida,
+email, 3 redes, recuperación bot+email, favoritos y hilo) — las features
+avanzadas de maria quedan disponibles para **todos** los usuarios (nuevos y
+existentes).
+
+Para migraciones nuevas: `worker/migrations/0003_<nombre>.sql` y
 `npx wrangler d1 execute risa-d1 --remote --file=…`.
