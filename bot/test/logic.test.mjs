@@ -135,6 +135,16 @@ test('a vídeo over 10 MB is drafted (it will be compressed on publish), over 20
   assert.deepEqual(huge[0], { kind: 'draft-invalid', chatId: 777, reason: 'size' });
 });
 
+test('a video_note (circular video) becomes a video draft too', () => {
+  const updates = [{ update_id: 140, message: { message_id: 9, chat: { id: 777, type: 'private' },
+    from: { first_name: 'Marta' }, video_note: { file_id: 'VN', duration: 8, file_size: 512 * 1024 } } }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 1);
+  assert.equal(actions[0].kind, 'draft');
+  assert.equal(actions[0].video, true);
+  assert.equal(actions[0].fileId, 'VN');
+});
+
 test('risaEntry carries the video mark for the web filter', () => {
   const plain = risaEntry({ id: 'b_1', name: 'A', src: 'https://x/a.mp3', when: '2026-01-01' });
   assert.equal(plain.video, undefined);
