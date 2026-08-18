@@ -6,7 +6,9 @@
     "username": "Guillem_ev",
     "video": false,
     "title": "Risa Maliciosa",
-    "tags": [],
+    "tags": [
+      "maldad"
+    ],
     "sel": {
       "tg": false,
       "name": true,
