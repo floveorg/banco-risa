@@ -272,6 +272,28 @@ export function clipsOf(risa) {
   return (risa && Array.isArray(risa.clips)) ? risa.clips : [];
 }
 
+// Ofuscación reversible de ids de chat para persistirlos en el repo sin
+// exponerlos en claro (drafts.json, .uploaders.json). Reversible solo con
+// TG_ID_SECRET; sin el secret el hex es ininteligible (nunca el id directo).
+function chatKey(secret) {
+  return createHash('sha256').update(String(secret) + ':chat-id').digest();
+}
+export function encChatId(id, secret = '') {
+  const key = chatKey(secret);
+  const s = String(id);
+  let out = '';
+  for (let i = 0; i < s.length; i++) out += String.fromCharCode(s.charCodeAt(i) ^ key[i % key.length]);
+  return Buffer.from(out, 'binary').toString('hex');
+}
+export function decChatId(hex, secret = '') {
+  if (!hex) return hex;
+  const key = chatKey(secret);
+  const s = Buffer.from(String(hex), 'hex').toString('binary');
+  let out = '';
+  for (let i = 0; i < s.length; i++) out += String.fromCharCode(s.charCodeAt(i) ^ key[i % key.length]);
+  return out;
+}
+
 // ---- Consultas de solo lectura (comandos cmd-* del bot; sin I/O) ----
 
 // Últimos n publicados (nuevos primero).

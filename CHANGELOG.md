@@ -9,6 +9,19 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.5] — 2026-08-18 · fix: flujo de borrador (título/tags/autor/enviar)
+
+- **El borrador se perdía entre corridas del cron.** `state/drafts.json` y
+  `state/.uploaders.json` estaban en `.gitignore`: cada ejecución de Actions
+  arrancaba sin borradores, así que al pulsar «Enviar», «Autor»… no se
+  encontraba el borrador (botones muertos) y los textos de título/tags caían en
+  la bienvenida.
+- **Fix**: esos dos ficheros se persisten ahora en el repo con los **ids de
+  chat ofuscados** (`encChatId`/`decChatId`: XOR con clave derivada de
+  `TG_ID_SECRET`, reversible solo con el secret — nunca en claro), y el cron
+  los conserva entre corridas. El flujo completo subir→editar→enviar funciona.
+- Tests `encChatId/decChatId` añadidos; `risa103.zip` regenerado.
+
 ## [v1.0.4] — 2026-08-18 · fix crítico: el bot no respondía
 
 - **El bot @RisaLiberadaBot no procesaba mensajes.** Desde v1.0.2,
