@@ -5,9 +5,10 @@
     { "alias": "Risalog", "private": true }
   ],
   "maria": [
-    { "alias": "María", "private": false },
     { "alias": "La Risa Yoga", "private": false },
-    { "alias": "Demo Privada", "private": true }
+    { "alias": "Contagiosa", "private": false },
+    { "alias": "Carcajada", "private": false },
+    { "alias": "Alias privado", "private": true }
   ],
   "maria-adv": [
     { "alias": "María", "private": false },

@@ -30,3 +30,12 @@ INSERT OR IGNORE INTO search_fts (item_id, app, title, tags, name) VALUES
 ('w_carcajadon','risa','Carcajadón','carcajada epica','Carcajada Suelta'),
 ('w_paris','risa','Rire (París)','mundo francés','Risas del Mundo'),
 ('w_bebe','risa','Risa de bebé','mundo bebé','Risas del Mundo');
+
+-- Aliases reales de maria: reemplaza los del seed 0003 por los de la demo
+-- (La Risa Yoga · Contagiosa · Carcajada · Alias privado).
+DELETE FROM aliases WHERE key = 'maria';
+INSERT OR IGNORE INTO aliases (key, alias, private, created_at) VALUES
+('maria','La Risa Yoga',0,'2026-08-18'),
+('maria','Contagiosa',0,'2026-08-18'),
+('maria','Carcajada',0,'2026-08-18'),
+('maria','Alias privado',1,'2026-08-18');
