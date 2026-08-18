@@ -1,0 +1,17 @@
+{
+  "marcflove": [
+    { "alias": "Marc", "private": false },
+    { "alias": "Marcflove", "private": false },
+    { "alias": "Risalog", "private": true }
+  ],
+  "maria": [
+    { "alias": "María", "private": false },
+    { "alias": "La Risa Yoga", "private": false },
+    { "alias": "Demo Privada", "private": true }
+  ],
+  "maria-adv": [
+    { "alias": "María", "private": false },
+    { "alias": "Adv", "private": false },
+    { "alias": "PoC Privado", "private": true }
+  ]
+}
