@@ -270,13 +270,11 @@ img{max-width:100%; display:block}
 .thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape)}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
 .thread-count{font-size:.5rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
+.thread-toggle-line{width:100%;padding-top:2px;line-height:1}
+.clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
-.quick-tags{display:flex;gap:4px;flex-wrap:wrap;padding:0 2px 6px}
-.quick-tag{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--persimmon);cursor:pointer;
-  background:none;border:1px solid var(--grape);border-radius:999px;padding:2px 8px}
-.quick-tag[aria-pressed="true"]{background:var(--marigold);border-color:var(--ink);color:var(--ink)}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
@@ -2109,7 +2107,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
     let rootCount=0;
     let treeChildren=new Map();
-    let expanded=new Set();   // ids de clips con sus respuestas desplegadas
+    let expanded=new Set();    // ids de clips con sus respuestas desplegadas
+    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas desplegadas
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2133,37 +2132,51 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             ? '<a class="orig" href="'+t.orig+'" target="_blank" rel="noopener">'+(t.origLabel||'original')+' ↗</a>'
             : '<a class="orig" href="'+t.link+'" target="_blank" rel="noopener">escuchar original ↗</a>');
       const src=t.src||'';
-      const titleKey=String(t.t||'').trim().toLowerCase();
-      const titleHtml = opts.titlesAsTags
-        ? '<button type="button" class="clip-title" data-title="'+esc(titleKey)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(titleKey))?'true':'false')+'">'+esc(t.t)+'</button>'
-        : '<span class="tt">'+esc(t.t)+'</span>';
-      const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
-      const replyBtn=(t.clip&&t.clip.id)
-        ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" data-tags="'+esc(String(t.tags||''))+'" title="Responder" aria-label="Responder a este clip">+</button>'
+      const cid=t.clip&&t.clip.id;
+      const tagStr=String(t.tags||'');
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpenSet.has(cid)?'true':'false')+'" aria-label="'+(tagsOpenSet.has(cid)?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // etiquetas: visibles solo si el título las ha desplegado
+      let tagsHtml='';
+      if(cid && tagsOpenSet.has(cid)){
+        tagsHtml=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean)
+          .map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
+      }
+      const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
+      const replyBtn=cid
+        ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
       const depth = t.depth || 0;
-      const cid=t.clip&&t.clip.id;
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
-      let arrowHtml='';
+      // línea bajo el título (borde inferior): flecha de anidado + n respuestas
+      let toggleLine='';
       if(kids.length){
         const isExp=expanded.has(cid);
         const cnt=countNested(kids);
-        arrowHtml='<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(isExp?'true':'false')+'" aria-label="'+(isExp?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
-          '<span class="thread-arrow">'+(isExp?'⏷':'⏵')+'</span>'+
-          (isExp?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
-          '</button>';
+        toggleLine='<div class="thread-toggle-line" style="padding-left:'+(36+depth*20)+'px">'+
+          '<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(isExp?'true':'false')+'" aria-label="'+(isExp?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
+            '<span class="thread-arrow">'+(isExp?'⏷':'⏵')+'</span>'+
+            (isExp?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
+          '</button></div>';
       }
       const clipMeta =
-        arrowHtml+
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
-      if(depth > 0){
-        li.className='clip-reply-row';
-        li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+clipMeta+'</div>';
+        '<span class="ti">'+titleHtml+tagsHtml+byline+'</span>'+orig+replyBtn;
+      const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
+      if(depth > 0) li.className='clip-reply-row';
+      if(toggleLine){
+        li.style.flexDirection='column';
+        li.innerHTML=row+toggleLine;
       } else {
-        li.innerHTML='<div class="thread-item">'+clipMeta+'</div>';
+        li.innerHTML=row;
       }
-      if(arrowHtml){
+      if(cid && tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean).length){
+        li.querySelector('.clip-title').addEventListener('click', function(e){
+          e.stopPropagation();
+          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          render();
+        });
+      }
+      if(toggleLine){
         li.querySelector('[data-toggle]').addEventListener('click', function(e){
           e.stopPropagation();
           if(expanded.has(cid)) expanded.delete(cid); else expanded.add(cid);
@@ -2326,33 +2339,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       var menu=document.createElement('div');
       menu.className='quick-menu';
       menu.setAttribute('role','menu');
-      // 0) etiquetas del clip (arriba)
-      var tags=(btn.dataset.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
-      if(tags.length){
-        var tagRow=document.createElement('div');
-        tagRow.className='quick-tags';
-        tagRow.setAttribute('role','group');
-        tagRow.setAttribute('aria-label','Etiquetas');
-        tags.forEach(function(tg){
-          var key=tg.toLowerCase();
-          var tb=document.createElement('button');
-          tb.type='button';
-          tb.className='quick-tag';
-          tb.textContent=tg;
-          tb.setAttribute('aria-pressed', selected.has(key)?'true':'false');
-          tb.addEventListener('click', function(e){
-            e.stopPropagation();
-            toggleTag(key, tb);
-            closeQuick();
-          });
-          tagRow.appendChild(tb);
-        });
-        menu.appendChild(tagRow);
-      }
-      // 1) Contestar
+      // 1) Contestar (envía una nota de voz)
       var reply=document.createElement('button');
       reply.type='button'; reply.className='quick-opt'; reply.setAttribute('role','menuitem');
-      reply.textContent='✏️ Contestar';
+      reply.textContent='🎙️ Contestar';
       reply.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); openReplyModal(btn); });
       menu.appendChild(reply);
       // 2) reacciones rápidas (solo emojis)
@@ -2697,8 +2687,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(b){ toggleTag(b.dataset.tg, b); return; }
     const c=e.target.closest('.clip-tag');
     if(c){ toggleTag(c.dataset.tag, c); return; }
-    const tl=e.target.closest('.clip-title');
-    if(tl){ toggleTag(tl.dataset.title, tl); return; }
   });
 
   let recienteOn=true;
