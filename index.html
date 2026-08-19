@@ -2168,12 +2168,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
       // Clips de vídeo: audio normal + enlace «Video» que expande y autorreproduce.
+      // En la vista «solo vídeos» (audioOff+videoOn) la caja aparece abierta y el
+      // vídeo suena en mute (autoplay requiere silencio) para verse en directo.
       const isVideoClip = !!(t.isVideo && src);
+      const videosOnly = !!(videoOn && !audioOn);
       const videoBtn = isVideoClip
-        ? '<button type="button" class="clip-video-btn" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">Video</button>'
+        ? '<button type="button" class="clip-video-btn'+(videosOnly?' on':'')+'" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">'+(videosOnly?'Cerrar':'Video')+'</button>'
         : '';
       const videoBox = isVideoClip
-        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden><video src="'+esc(src)+'" controls playsinline webkit-playsinline preload="none"></video></div>'
+        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'"'+(videosOnly?'':' hidden')+'>'+
+          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline'+(videosOnly?' autoplay muted':' preload="none"')+'></video></div>'
         : '';
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
