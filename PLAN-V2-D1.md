@@ -198,3 +198,47 @@ de Telegram en el Workers para los avisos en tiempo real, con el cron como
 5. f1SS: `search_fts` + `GET /api/search`; conectar el input de búsqueda.
 6. `POST /api/ingest` llamado por el cron del bot tras cada publicación.
 7. Favoritos en la nube y actividad cruzada en los perfiles agregadores.
+
+## 7. Comunidad en D1 (0007) — seguir · reacciones · escuchas · avisos · respuestas
+
+Migración `0007_community.sql` + endpoints `/api/*` (nativos en D1):
+
+| Tabla | Uso | Endpoint |
+|---|---|---|
+| `follows(follower,target,at)` | seguir/dejar de seguir | `GET /api/follows/:key` · `POST /api/follows` |
+| `reactions(app,item_id,reaction,at)` | reacción rápida con emoji (pública) | `POST /api/reactions` |
+| `plays(app,item_id,at)` | 1 fila por reproducción → trending | `POST /api/plays` (fire-and-forget) |
+| `notifications` + `notify_prefs` | avisos de respuestas/seguidores + preferencia | `GET /api/notifications/:key` · `POST /api/notify-pref` |
+| `replies(parent,item_id,content)` | respuesta rápida de la web (quick) | `POST /api/replies` |
+
+Principios:
+- **Reacciones/escuchas son públicas y best-effort**: la web las manda con
+  timeout corto y fail-silent; nunca bloquean la navegación. Sin identidad
+  obligatoria (bajo riesgo de spam, mitigable con rate-limit de Cloudflare).
+- **El feed sigue siendo estático** (`risa.json`): D1 nunca reemplaza la
+  lectura del feed, solo añade la capa de comunidad.
+
+## 8. Principios de bajo consumo (cuota crítica de Cloudflare)
+
+La cuota gratuita de Workers es **100k peticiones/día** (y 10 ms de CPU por
+request). Normas para no agotarla:
+
+1. **El app nunca pasa por el Worker.** `risa.liberada.net` (HTML, `risa.js`,
+   `risa.json`, media) se sirve en **grey (DNS-only)** desde GitHub Pages. El
+   Worker solo ve `api.liberada.net/*` y los subdominios de usuario.
+2. **API en subdominio propio**: `api.liberada.net` (proxied). Separar el API
+   del sitio hace que navegar por la web = 0 peticiones de Worker.
+3. **Perfiles baratos**: el Worker **302-redirige** `<user>.liberada.net` →
+   `liberada.net/usa/<user>/` (µs de CPU) en vez de buscar+y servir el HTML.
+   Solo hace fetch-and-serve para usuarios sin carpeta estática.
+4. **Cache en el borde**: `Cache-Control` + Cache API en GETs de lectura
+   (`/api/search`, `/api/users`, `/api/aliases`) y en los perfiles servidos.
+   Reintentos idénticos se resuelven desde el edge.
+5. **Menos round-trips del cliente**: un solo `GET /api/profile/:user`
+   (identidad+actividad+aliases); leer `usernames.json`/`risa.json` estáticos
+   primero y solo llamar al API para lo dinámico.
+6. **D1 con cabeza**: cachear lecturas, agrupar escrituras; no duplicar el
+   feed en `activity` (el feed vive en `risa.json`). D1 gratuito: 5M filas
+   leídas/día, 100k escritas/día.
+7. **Monitor**: revisar el gráfico de requests/día y poner una alerta de uso
+   al ~80% de las 100k.

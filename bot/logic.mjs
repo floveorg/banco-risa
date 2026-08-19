@@ -205,7 +205,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
       } else if (msg.text) {
         // /name y /pub mutan tu identidad; el resto son consultas de solo lectura
         // (cmd-*: el bot responde, no cambia estado).
-        const cmd = /^\/(name|pub|entrar|mejorar|usuario|me|stats|profile|status|queue|latest|random|now|since|today|trending|play)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
+        const cmd = /^\/(name|pub|entrar|mejorar|usuario|me|stats|profile|perfil|notify|status|queue|latest|random|now|since|today|trending|play)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
         if (cmd) {
           const c = cmd[1].toLowerCase();
           if (c === 'name') {

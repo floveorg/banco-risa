@@ -264,6 +264,31 @@ const SUBOFFER_KEYS = () => ({ inline_keyboard: [[
   { text: '🤔 No sé', callback_data: 'suboffer:maybe' },
   { text: '🚫 No, seguro', callback_data: 'suboffer:never' }
 ]] });
+// Confirmación de publicación: UN solo mensaje (confirma + oferta de
+// subdominio integrada + pista de /perfil), sin dobles envíos.
+function publishedConfirmation(q, cfg, usernames, suboffer) {
+  const lines = ['✅ ¡Tu risa ya está publicada!'];
+  if (q.title) lines.push('✏️ ' + q.title);
+  if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
+  lines.push('🙂 ' + (q.name || 'Anónima'));
+  lines.push('🔗 Todas tus risas juntas: ' + pageUrlOf(q.uploader, cfg.webUrl));
+  const who = q.uploader;
+  const so = suboffer[who];
+  const showEdit = !(so && so.status === 'never');
+  const mine = subOf(usernames, who);
+  if (so && so.status === 'yes' && mine) {
+    lines.push('🌐 Tu enlace: ' + subdomainUrl(cfg, mine));
+  } else if (showEdit) {
+    lines.push('🌐 Activa gratis: ' + subdomainUrl(cfg, candidateUsernameOf(q, usernames)) + ' · Editar');
+  }
+  lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
+  lines.push('📌 Envía /perfil para ver más opciones');
+  const keys = showEdit
+    ? { inline_keyboard: [[{ text: '✏️ Editar subdominio', callback_data: 'subedit' }]] } : undefined;
+  const wantsOffer = !so || so.status === 'maybe';
+  return { text: lines.join('\n'), keys, wantsOffer };
+}
+
 const SUBEDIT_TEXT = '✏️ Escribe el nombre de tu subdominio:\n\n' +
   'Entre 3 y 20 letras, números o guiones bajos (sin acentos). Te quedará así:\n' +
   '<nombre>.liberada.net';
@@ -331,6 +356,8 @@ async function setupBotPresence(tg, cfg) {
     { command: 'name', description: 'Tu nombre público' },
     { command: 'pub', description: 'Mostrar tu @ en la web' },
     { command: 'me', description: 'Tu página de autor' },
+    { command: 'perfil', description: 'Tus opciones de perfil' },
+    { command: 'notify', description: 'Avisos de respuestas: /notify on|off' },
     { command: 'latest', description: 'Últimas risas' },
     { command: 'random', description: 'Una risa al azar' },
     { command: 'trending', description: 'Etiquetas con más risas' }
@@ -395,7 +422,7 @@ async function publishClip(tg, cfg, q, id, risas, names, tgpub) {
 
 // Apply one action. Every handler is idempotent (safe when updates re-deliver after
 // an offset rollback). Returns { risas, dirty } — dirty tells the caller to persist+commit.
-async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads, tgpub, names, suboffer, codes, usernames) {
+async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads, tgpub, names, suboffer, codes, usernames, clipOwners, notifyprefs) {
   const limits = cfg.limits || {};
   if (a.kind === 'draft') {
     const key = String(a.chatId);
@@ -754,41 +781,26 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
     const upChatId = uploaders[a.id];
     if (upChatId) {
-      const lines = ['✅ ¡Tu risa ya está publicada!'];
-      if (q.title) lines.push('✏️ ' + q.title);
-      if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
-      lines.push('🙂 ' + (q.name || 'Anónima'));
-      lines.push('🔗 Puedes encontrar todas tus risas juntas en este enlace: ' + pageUrlOf(q.uploader, cfg.webUrl));
-      const who = q.uploader;
-      const so = suboffer[who];
-      const showEdit = !(so && so.status === 'never');
-      const mine = subOf(usernames, who);
-      if (so && so.status === 'yes' && mine) {
-        lines.push('🌐 Tu enlace: ' + subdomainUrl(cfg, mine));
-      } else if (showEdit) {
-        lines.push('🌐 Activa gratis: ' + subdomainUrl(cfg, candidateUsernameOf(q, usernames)) + ' · Editar');
+      clipOwners[q.id] = upChatId;   // para avisar al autor si alguien responde
+      const conf = publishedConfirmation(q, cfg, usernames, suboffer);
+      if (conf.wantsOffer) {
+        conf.keys = conf.keys
+          ? { inline_keyboard: conf.keys.inline_keyboard.concat(SUBOFFER_KEYS().inline_keyboard) }
+          : SUBOFFER_KEYS();
       }
-      lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
-      const keys = showEdit
-        ? { inline_keyboard: [[{ text: '✏️ Editar subdominio', callback_data: 'subedit' }]] } : undefined;
-      await bestEffort(tg.sendMessage(upChatId, lines.join('\n'), keys));
-      // Oferta opt-in del subdominio: la primera vez y tras cada «No sé».
-      if (!so || so.status === 'maybe') {
-        await bestEffort(tg.sendMessage(upChatId,
-          SUBOFFER_TEXT(cfg, candidateUsernameOf(q, usernames)), SUBOFFER_KEYS()));
-      }
+      await bestEffort(tg.sendMessage(upChatId, conf.text, conf.keys));
       delete uploaders[a.id];
-      // Notify original author if this is a reply
+      // Aviso al autor original si esto es una respuesta (si no lo ha desactivado).
       if (q.parent) {
         const parentClip = risas.find(e => e.id === q.parent);
-        if (parentClip && parentClip.key) {
-          const parentUploader = uploaders[parentClip.id];
-          if (parentUploader && parentUploader !== upChatId) {
-            await bestEffort(tg.sendMessage(parentUploader,
-              '💬 ¡Alguien respondió a tu risa!\n\n' +
-              '↳ ' + (q.title || '—') + ' · ' + (q.name || 'Anónima') + '\n' +
-              '🔗 ' + pageUrlOf(q.uploader, cfg.webUrl)));
-          }
+        const parentChatId = clipOwners[q.parent];
+        if (parentClip && parentChatId && parentChatId !== upChatId &&
+            notifyprefs[parentClip.key] !== false) {
+          await bestEffort(tg.sendMessage(parentChatId,
+            '💬 ¡Alguien respondió a tu risa!\n\n' +
+            '↳ ' + (q.title || '—') + ' · ' + (q.name || 'Anónima') + '\n' +
+            '🔗 ' + pageUrlOf(q.uploader, cfg.webUrl) + '\n' +
+            '🚫 Para apagar estos avisos: /notify off'));
         }
       }
     }
@@ -888,29 +900,14 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
     await bestEffort(tg.editCaption(cfg.modGroupId, q.modMsgId, '✅ Publicado'));
     const upChatId = uploaders[a.id];
     if (upChatId) {
-      const lines = ['✅ ¡Tu risa ya está publicada!'];
-      if (q.title) lines.push('✏️ ' + q.title);
-      if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
-      lines.push('🙂 ' + (q.name || 'Anónima'));
-      lines.push('🔗 Puedes encontrar todas tus risas juntas en este enlace: ' + pageUrlOf(q.uploader, cfg.webUrl));
-      const who = q.uploader;
-      const so = suboffer[who];
-      const showEdit = !(so && so.status === 'never');
-      const mine = subOf(usernames, who);
-      if (so && so.status === 'yes' && mine) {
-        lines.push('🌐 Tu enlace: ' + subdomainUrl(cfg, mine));
-      } else if (showEdit) {
-        lines.push('🌐 Activa gratis: ' + subdomainUrl(cfg, candidateUsernameOf(q, usernames)) + ' · Editar');
+      clipOwners[q.id] = upChatId;   // para avisar al autor si alguien responde
+      const conf = publishedConfirmation(q, cfg, usernames, suboffer);
+      if (conf.wantsOffer) {
+        conf.keys = conf.keys
+          ? { inline_keyboard: conf.keys.inline_keyboard.concat(SUBOFFER_KEYS().inline_keyboard) }
+          : SUBOFFER_KEYS();
       }
-      lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
-      const keys = showEdit
-        ? { inline_keyboard: [[{ text: '✏️ Editar subdominio', callback_data: 'subedit' }]] } : undefined;
-      await bestEffort(tg.sendMessage(upChatId, lines.join('\n'), keys));
-      // Oferta opt-in del subdominio: la primera vez y tras cada «No sé».
-      if (!so || so.status === 'maybe') {
-        await bestEffort(tg.sendMessage(upChatId,
-          SUBOFFER_TEXT(cfg, candidateUsernameOf(q, usernames)), SUBOFFER_KEYS()));
-      }
+      await bestEffort(tg.sendMessage(upChatId, conf.text, conf.keys));
       delete uploaders[a.id];
     }
     return { risas, dirty: true };
@@ -959,6 +956,37 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
         '🙂 ' + (names[key] || 'Anónima') + '\n' +
         '📀 Publicadas: ' + authorStats(risas, queue, key).published));
     }
+    return { risas, dirty: false };
+  }
+  if (a.kind === 'cmd-perfil') {
+    const key = hashId(a.chatId, TG_ID_SECRET);
+    const st = authorStats(risas, queue, key);
+    const sub = subOf(usernames, key);
+    const notifyOn = notifyprefs[key] !== false;
+    await bestEffort(tg.sendMessage(a.chatId,
+      '👤 Tu perfil en risa liberada\n\n' +
+      '🙂 Nombre: ' + (names[key] || 'Anónima') + ' — cámbialo con /name\n' +
+      '🌐 Subdominio: ' + (sub ? subdomainUrl(cfg, sub) : 'sin activar — /mejorar o /usuario') + '\n' +
+      '💬 Avisos de respuestas: ' + (notifyOn ? 'ON' : 'OFF') + ' — /notify on|off\n' +
+      '📀 Publicadas: ' + st.published + ' · ⏳ En moderación: ' + st.pending + '\n' +
+      '🔗 Tu página: ' + pageUrlOf(key, cfg.webUrl)));
+    return { risas, dirty: false };
+  }
+  if (a.kind === 'cmd-notify') {
+    const key = hashId(a.chatId, TG_ID_SECRET);
+    const arg = String(a.arg || '').toLowerCase();
+    if (arg === 'on' || arg === 'off') {
+      notifyprefs[key] = arg === 'on';
+      await bestEffort(tg.sendMessage(a.chatId,
+        arg === 'on'
+          ? '🔔 Avisos de respuestas activados.'
+          : '🔕 Avisos de respuestas desactivados.'));
+      return { risas, dirty: true };
+    }
+    const on = notifyprefs[key] !== false;
+    await bestEffort(tg.sendMessage(a.chatId,
+      '💬 Avisos de respuestas: ' + (on ? 'ON' : 'OFF') + '\n' +
+      'Uso: /notify on  ·  /notify off'));
     return { risas, dirty: false };
   }
   if (a.kind === 'cmd-stats') {
@@ -1125,6 +1153,9 @@ async function main() {
   let names = await readJSON('state/names.json', {});
   let suboffer = await readJSON('state/suboffer.json', {});
   let codes = await readJSON('state/codes.json', {});
+  let clipOwners = await readJSON('state/clipowners.json', {});
+  let notifyprefs = await readJSON('state/notifyprefs.json', {});
+  clipOwners = Object.fromEntries(Object.entries(clipOwners).map(([id, c]) => [id, decChatId(c, TG_ID_SECRET)]));
   let usernames = await readJSON('usernames.json', {});
   let risas = clipsOf(await readJSON('risa.json', []));
 
@@ -1153,7 +1184,7 @@ async function main() {
     for (const a of actions) {
       try {
         const r = await handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads, tgpub, names,
-                                     suboffer, codes, usernames);
+                                     suboffer, codes, usernames, clipOwners, notifyprefs);
         risas = r.risas;
         if (r.dirty) {
           await writeJSON('state/queue.json', queue);
@@ -1164,6 +1195,8 @@ async function main() {
           await writeJSON('state/names.json', names);
           await writeJSON('state/suboffer.json', suboffer);
           await writeJSON('state/codes.json', codes);
+          await writeJSON('state/clipowners.json', encUploaders(clipOwners));
+          await writeJSON('state/notifyprefs.json', notifyprefs);
           await writeJSON('usernames.json', usernames);
           await persistFeed(risas, cfg);
           await bestEffort(commitState());
@@ -1190,6 +1223,8 @@ async function main() {
   await writeJSON('state/names.json', names);
   await writeJSON('state/suboffer.json', suboffer);
   await writeJSON('state/codes.json', codes);
+  await writeJSON('state/clipowners.json', encUploaders(clipOwners));
+  await writeJSON('state/notifyprefs.json', notifyprefs);
   await writeJSON('usernames.json', usernames);
   await persistFeed(risas, cfg);
   await writeFile(p('state/offset.txt'), String(offset) + '\n');

@@ -183,6 +183,82 @@ export default {
         return json({ ok: true, queued: true });
       }
 
+      // GET /api/follows/:key — siguiendo y seguidores de un perfil
+      if (base === 'follows' && rest[0] && method === 'GET') {
+        const following = await db.prepare(
+          'SELECT target, at FROM follows WHERE follower = ? ORDER BY at DESC').bind(rest[0]).all();
+        const followers = await db.prepare(
+          'SELECT follower, at FROM follows WHERE target = ? ORDER BY at DESC').bind(rest[0]).all();
+        return json({ ok: true, key: rest[0], following: following.results, followers: followers.results });
+      }
+
+      // POST /api/follows — { key, target } seguir/dejar de seguir (toggle)
+      if (base === 'follows' && method === 'POST') {
+        if (!authed(env, request)) return err('no autorizado', 401);
+        const b = await request.json().catch(() => ({}));
+        if (!b.key || !b.target || b.key === b.target) return err('faltan key/target');
+        const existing = await db.prepare(
+          'SELECT 1 FROM follows WHERE follower = ? AND target = ?').bind(b.key, b.target).first();
+        if (existing) {
+          await db.prepare('DELETE FROM follows WHERE follower = ? AND target = ?')
+            .bind(b.key, b.target).run();
+          return json({ ok: true, following: false });
+        }
+        await db.prepare('INSERT OR IGNORE INTO follows (follower, target, at) VALUES (?,?,?)')
+          .bind(b.key, b.target, new Date().toISOString().slice(0, 10)).run();
+        return json({ ok: true, following: true });
+      }
+
+      // POST /api/reactions — { app, item_id, reaction } emoji rápido (público, best-effort)
+      if (base === 'reactions' && method === 'POST') {
+        const b = await request.json().catch(() => ({}));
+        if (!b.app || !b.item_id || !b.reaction) return err('faltan app/item_id/reaction');
+        await db.prepare('INSERT OR IGNORE INTO reactions (app, item_id, reaction, at) VALUES (?,?,?,?)')
+          .bind(b.app, b.item_id, String(b.reaction).slice(0, 8),
+                new Date().toISOString().slice(0, 10)).run();
+        return json({ ok: true });
+      }
+
+      // POST /api/plays — { app, item_id } reproducción (público, best-effort)
+      if (base === 'plays' && method === 'POST') {
+        const b = await request.json().catch(() => ({}));
+        if (!b.app || !b.item_id) return err('faltan app/item_id');
+        const at = new Date().toISOString().slice(0, 10);
+        await db.prepare('INSERT OR IGNORE INTO plays (app, item_id, at) VALUES (?,?,?)')
+          .bind(b.app, b.item_id, at).run();
+        return json({ ok: true });
+      }
+
+      // GET /api/notifications/:key — avisos sin leer (respuestas, seguidores)
+      if (base === 'notifications' && rest[0] && method === 'GET') {
+        const rows = await db.prepare(
+          'SELECT id, kind, ref, at FROM notifications WHERE key = ? ORDER BY at DESC LIMIT 20')
+          .bind(rest[0]).all();
+        return json({ ok: true, key: rest[0], notifications: rows.results });
+      }
+
+      // POST /api/notify-pref — { key, replies: 0|1 } activar/desactivar avisos
+      if (base === 'notify-pref' && method === 'POST') {
+        if (!authed(env, request)) return err('no autorizado', 401);
+        const b = await request.json().catch(() => ({}));
+        if (!b.key) return err('falta key');
+        await db.prepare('INSERT OR REPLACE INTO notify_prefs (key, replies) VALUES (?,?)')
+          .bind(b.key, b.replies ? 1 : 0).run();
+        return json({ ok: true, replies: !!b.replies });
+      }
+
+      // POST /api/replies — { app, parent, content, name? } respuesta rápida de la web
+      if (base === 'replies' && method === 'POST') {
+        const b = await request.json().catch(() => ({}));
+        if (!b.app || !b.parent || !b.content) return err('faltan app/parent/content');
+        const itemId = 'rq_' + Math.random().toString(36).slice(2, 10);
+        await db.prepare(
+          'INSERT OR IGNORE INTO replies (app, parent, item_id, kind, content, name, at) VALUES (?,?,?,?,?,?,?)')
+          .bind(b.app, b.parent, itemId, 'quick', String(b.content).slice(0, 80),
+                String(b.name || 'Anónima').slice(0, 40), new Date().toISOString().slice(0, 10)).run();
+        return json({ ok: true, item_id: itemId });
+      }
+
       return err('ruta no encontrada', 404);
     }
 

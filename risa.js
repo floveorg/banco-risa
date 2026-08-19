@@ -101,6 +101,7 @@
     RISA_URL:  'https://risa.liberada.net/risa.json',
     AMA_URL:   'https://ama.liberada.net/ama.json',
     USERS_URL: 'https://risa.liberada.net/usernames.json',
+    API_URL:   'https://api.liberada.net/api',   // comunidad D1 (fail-silent si no está)
     CODES_URL: 'https://risa.liberada.net/codes.json',
     NAMES_URL: 'https://risa.liberada.net/state/names.json',
     AGGREGATOR_BASE: 'https://liberada.net/usa',

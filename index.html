@@ -249,6 +249,17 @@ img{max-width:100%; display:block}
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.85rem; line-height:1; font-weight:700; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .reply-btn:hover{transform:translateY(-2px) scale(1.05); background:var(--magenta)}
+.quick-menu{position:fixed;z-index:60;background:var(--cream);border:2px solid var(--ink);border-radius:12px;
+  padding:6px;box-shadow:4px 4px 0 rgba(42,24,16,.18);display:grid;gap:4px;min-width:150px}
+.quick-opt{padding:8px 12px;border:none;background:none;cursor:pointer;text-align:left;font-size:.85rem;
+  font-weight:700;color:var(--ink);border-radius:8px;display:flex;align-items:center;gap:6px}
+.quick-opt:hover{background:#fff}
+.quick-emojis{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:6px}
+.quick-emoji{flex:1 1 auto;min-width:30px;padding:6px 4px;border:none;background:none;cursor:pointer;
+  font-size:1.15rem;border-radius:8px;transition:transform .1s}
+.quick-emoji:hover{background:#fff;transform:scale(1.15)}
+.quick-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:8px 16px;border-radius:999px;font-size:.85rem;font-weight:700;z-index:70;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
@@ -2094,6 +2105,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         const li=document.createElement('li');
         const isDL=!!t.src;
         li.dataset.src=t.src||'';
+        li.dataset.id=(t.clip&&t.clip.id)||'';
         const tags=tagsOf?tagsOf(t):'';
         const byline = opts.metaHTML
           ? opts.metaHTML(t)
@@ -2125,7 +2137,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
         const shareBtn=isDL?'<button type="button" class="share-btn" data-clip="'+esc(clipUrl)+'" title="Compartir" aria-label="Compartir">↗</button>':'';
         const replyBtn=(t.clip&&t.clip.id)
-          ? '<button type="button" class="reply-btn" data-reply="'+esc(clipUrl)+'" data-title="'+esc(t.t||'esta risa')+'" title="Responder" aria-label="Responder a este clip">+</button>'
+          ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" title="Responder" aria-label="Responder a este clip">+</button>'
           : '';
         const depth = t.depth || 0;
         const clip = t.clip || {};
@@ -2252,15 +2264,86 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       }
       const r=e.target.closest('.reply-btn');
       if(r){
-        const title=r.dataset.title||'esta risa';
-        const tEs=document.getElementById('rm-clip-title');
-        const tEn=document.getElementById('rm-clip-title-en');
-        if(tEs) tEs.textContent='Responder a «'+title+'»';
-        if(tEn) tEn.textContent='Replying to "'+title+'"';
-        openModal(document.getElementById('reply-modal'));
+        showQuickMenu(r);
         return;
       }
     });
+
+    /* ── Respuesta rápida: menú con «Contestar» primero + emojis ─────────── */
+    var QUICK_REACTIONS=['🤣','😂','😄','❤️','👏','😹'];
+    var quickMenu=null;
+    function closeQuick(){ if(quickMenu){ quickMenu.remove(); quickMenu=null; } document.removeEventListener('click', closeQuick); }
+    function showQuickMenu(btn){
+      closeQuick();
+      var menu=document.createElement('div');
+      menu.className='quick-menu';
+      menu.setAttribute('role','menu');
+      menu.innerHTML=
+        '<button type="button" class="quick-opt quick-reply" role="menuitem">✏️ Contestar</button>'+
+        '<div class="quick-emojis" role="group" aria-label="Reacción rápida">'+
+          QUICK_REACTIONS.map(function(e){ return '<button type="button" class="quick-emoji" data-e="'+e+'" role="menuitem">'+e+'</button>'; }).join('')+
+        '</div>';
+      var r=btn.getBoundingClientRect();
+      menu.style.left=Math.min(r.right-40, Math.max(8, window.innerWidth-220))+'px';
+      menu.style.top=(r.bottom+6)+'px';
+      document.body.appendChild(menu);
+      quickMenu=menu;
+      menu.querySelector('.quick-reply').addEventListener('click', function(e){
+        e.stopPropagation();
+        closeQuick();
+        openReplyModal(btn);
+      });
+      menu.querySelectorAll('.quick-emoji').forEach(function(b){
+        b.addEventListener('click', function(e){
+          e.stopPropagation();
+          var em=b.dataset.e;
+          closeQuick();
+          sendReaction(btn, em);
+        });
+      });
+      document.addEventListener('click', closeQuick);
+    }
+    function openReplyModal(btn){
+      var title=btn.dataset.title||'esta risa';
+      var tEs=document.getElementById('rm-clip-title');
+      var tEn=document.getElementById('rm-clip-title-en');
+      if(tEs) tEs.textContent='Responder a «'+title+'»';
+      if(tEn) tEn.textContent='Replying to "'+title+'"';
+      openModal(document.getElementById('reply-modal'));
+    }
+    function sendReaction(btn, reaction){
+      var id=btn.dataset.id;
+      try {
+        fetch((window.Risa&&window.Risa.API_URL||'https://api.liberada.net/api')+'/reactions', {
+          method:'POST', headers:{'content-type':'application/json'},
+          body:JSON.stringify({ app:'risa', item_id:id, reaction:reaction }),
+          signal:AbortSignal.timeout(2500)
+        }).catch(function(){});
+      } catch(_){}
+      var pop=document.createElement('div');
+      pop.className='quick-toast';
+      pop.textContent=reaction+' · ¡gracias!';
+      pop.setAttribute('role','status');
+      document.body.appendChild(pop);
+      setTimeout(function(){ pop.remove(); }, 1200);
+    }
+
+    /* ── Escuchas → /api/plays (best-effort, para trending) ──────────────── */
+    document.addEventListener('play', function(e){
+      var a=e.target;
+      if(!a || !a.src) return;
+      var src=a.currentSrc||a.src;
+      var li=src && document.querySelector('.tracklist li[data-src="'+CSS.escape(src)+'"]');
+      var id=li && li.dataset && li.dataset.id;
+      if(!id) return;
+      try {
+        fetch((window.Risa&&window.Risa.API_URL||'https://api.liberada.net/api')+'/plays', {
+          method:'POST', headers:{'content-type':'application/json'},
+          body:JSON.stringify({ app:'risa', item_id:id }),
+          signal:AbortSignal.timeout(2500)
+        }).catch(function(){});
+      } catch(_){}
+    }, true);
 
     audio.addEventListener('ended', ()=>{
       const list=playable();
@@ -2449,7 +2532,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     prevBtn: document.getElementById('gente-prev'),
     nextBtn: document.getElementById('gente-next'),
     iconOnly: true,
-    pageSize: 4,
+    pageSize: 10,
     alwaysPage: true,
     repo: 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/',
     metaHTML: clipMeta,
