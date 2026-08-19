@@ -275,6 +275,7 @@ img{max-width:100%; display:block}
 .tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--marigold);color:var(--ink);
   border:2px solid var(--ink);display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:1rem;line-height:1}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
+.title-plus{font-size:.8em;color:var(--persimmon);font-weight:700;margin-right:3px}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
@@ -2147,7 +2148,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
       const tagsLvl=cid?(tagsLevels.get(cid)||0):0;
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Abrir más etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      const plusGlyph=(cid && tagArr.length && tagsLvl===0)?'<span class="title-plus" aria-hidden="true">＋</span>':'';
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Abrir más etiquetas':'Mostrar etiquetas')+'">'+plusGlyph+esc(t.t)+'</button>';
       // Nube de etiquetas: crece un 10% más hacia abajo por cada clic; el − la pliega.
       let cloud='';
       if(cid && tagArr.length){
@@ -2989,17 +2991,32 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
   updateGentePlaylist(); // estado inicial (risas vacío) hasta que llegue risas.json
 
-  fetch(window.Risa.RISA_URL, {cache:'no-store'})
-    .then(r=>r.ok?r.json():[])
-    .then(data=>{
-      risas=window.Risa.clipsOf(data);
-      feedError=false;
-      floveAllowed=window.Risa.flagsOf(data).flove!==false;   // J47: el feed toglea el addon
-      updateGentePlaylist();
-      buildTagChips();   // por defecto las etiquetas flotan
-      renderUserPage();  // si llegamos con #/u/<key>, la página de autor ya tiene feed
-    })
-    .catch(()=>{ risas=[]; feedError=true; updateGentePlaylist(); buildTagChips(); });
+  // Carga el feed con reintento; feedError solo se marca si risa.json NO llega.
+  // Un fallo de render no debe disfrazarse de «no se pudieron cargar las risas».
+  function loadFeed(attempt){
+    fetch(window.Risa.RISA_URL, {cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{
+        if(!data){ throw new Error('risa.json no disponible'); }
+        risas=window.Risa.clipsOf(data);
+        feedError=false;
+        floveAllowed=window.Risa.flagsOf(data).flove!==false;   // J47: el feed toglea el addon
+        try {
+          updateGentePlaylist();
+          buildTagChips();   // por defecto las etiquetas flotan
+          renderUserPage();  // si llegamos con #/u/<key>, la página de autor ya tiene feed
+        } catch (err) { console.error('render feed:', err); }
+      })
+      .catch(()=>{
+        if(attempt < 2){
+          setTimeout(()=>loadFeed(attempt+1), 800);   // reintento corto (red/latencia)
+        } else {
+          risas=[]; feedError=true;
+          try { updateGentePlaylist(); buildTagChips(); } catch(_) {}
+        }
+      });
+  }
+  loadFeed(0);
 
   /* ===== flove.json · llamada mínima y vacía (nota documentativa) =====
      v1 no consume el contrato de flove: la página de autor se sirve con la key
