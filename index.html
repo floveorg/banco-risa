@@ -2219,6 +2219,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           render();
         });
       }
+      // En «solo vídeos», reproduce explícitamente cada vídeo abierto (muted).
+      if(videosOnly && isVideoClip){
+        const box0=li.querySelector('[data-videobox]');
+        const vid0=box0 && box0.querySelector('video');
+        if(vid0) vid0.play().catch(function(){});
+      }
       const vbtn=li.querySelector('[data-clipvideo]');
       if(vbtn){
         vbtn.addEventListener('click', function(e){
