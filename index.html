@@ -258,10 +258,11 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.75rem; line-height:1; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .share-btn:hover{transform:translateY(-2px); background:rgba(0,0,0,.08)}
-.reply-btn{flex:0 0 auto; width:27px; height:27px; border-radius:50%; background:var(--marigold); color:var(--ink);
+.reply-btn{flex:0 0 auto; width:27px; height:27px; border-radius:50%; background:transparent; color:var(--ink);
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.85rem; line-height:1; font-weight:700; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
-.reply-btn:hover{transform:translateY(-2px) scale(1.05); background:#ff9d5c}
+.reply-btn:hover{transform:translateY(-2px) scale(1.05)}
+.reply-btn.on{background:var(--marigold)}   /* amarillo mientras su menú está abierto */
 .react-chip{flex:0 0 auto; display:inline-flex; align-items:center; gap:3px; border:0;
   background:var(--cream); border-radius:999px; padding:1px 8px 2px; cursor:pointer; font-family:var(--body);
   font-size:.7rem; line-height:1; transform:translateY(5px); position:relative; transition:background .12s}
@@ -272,10 +273,12 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   padding:6px; box-shadow:4px 4px 0 rgba(42,24,16,.18); min-width:220px; max-width:340px; display:grid; gap:2px}
 .react-pop-row{display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:7px 10px; border:0; outline:none;
   background:none; cursor:pointer; border-radius:9px; font-family:var(--body); font-size:.84rem; color:var(--ink)}
-.react-pop-row:hover{background:#fff}
-.react-pop-row[aria-pressed="true"]{background:var(--marigold)}
-.react-pop-emoji{font-size:1.1rem; line-height:1}
-.react-pop-row[aria-pressed="true"] .react-pop-emoji{font-size:1.65rem}   /* el emoji elegido un 50% mayor */
+.react-pop-row:hover{background:none}
+.react-pop-row[aria-pressed="true"]{background:none}
+.react-pop-emoji{font-size:1.1rem; line-height:1; display:inline-block; transition:transform .15s ease}
+.react-pop-row:hover .react-pop-emoji{transform:scale(1.2); animation:emoji-bob .35s ease-in-out infinite alternate}   /* se mueve y crece 20% */
+.react-pop-row[aria-pressed="true"] .react-pop-emoji{transform:scale(1.5)}   /* al elegirlo crece hasta 50% */
+@keyframes emoji-bob{from{transform:scale(1.15) translateY(0)}to{transform:scale(1.25) translateY(-3px)}}
 .react-pop-count{font-weight:800; min-width:1.3em}
 .react-pop-users{color:var(--ink-soft); font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .react-pop-sep{text-align:center; color:var(--ink-soft); opacity:.4; font-size:.7rem; line-height:1; padding:2px 0}
