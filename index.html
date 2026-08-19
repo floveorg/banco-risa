@@ -265,11 +265,11 @@ img{max-width:100%; display:block}
   display:grid;place-items:center;cursor:pointer;font-size:.9rem;line-height:1;text-decoration:none;transition:transform .1s}
 .quick-act:hover{transform:translateY(-1px)}
 .quick-act.on{color:var(--marigold)}
-.thread-toggle{padding:2px 12px;border-bottom:1px solid #eee}
-.thread-toggle-btn{background:none;border:none;cursor:pointer;color:var(--grape);font-weight:700;font-size:.8rem;
-  font-family:var(--mono);padding:4px 6px;display:flex;align-items:center;gap:6px}
-.thread-toggle-btn:hover{text-decoration:underline}
-.thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center}
+.thread-arrow-btn{background:none;border:none;cursor:pointer;padding:2px 2px;flex:0 0 auto;
+  display:inline-flex;align-items:center;gap:4px}
+.thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape)}
+.thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
+.thread-count{font-size:.5rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
@@ -483,9 +483,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 /* ============ FEED · RISAS DE LA GENTE ============ */
 .feed{display:grid; gap:12px; align-content:start; max-height:420px; overflow-y:auto; padding:4px; margin:-4px}
 .feed li{position:relative}
-.thread-item{position:relative}
-.thread-item::before{content:''; position:absolute; left:-14px; top:0; bottom:0; width:2px; background:var(--grape); opacity:.35; border-radius:1px}
-.thread-item::after{content:''; position:absolute; left:-14px; top:18px; width:14px; height:2px; background:var(--grape); opacity:.35; border-radius:1px}
+.thread-item{position:relative;display:flex;align-items:center;gap:10px;width:100%}
 .thread-parent-label{font-family:var(--mono); font-size:.68rem; color:var(--grape); font-weight:700; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .feed-item{display:flex; align-items:center; gap:12px; text-align:left;
   background:var(--cream); border:2.5px solid var(--ink); border-radius:18px; padding:12px 14px;
@@ -2144,14 +2142,33 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" data-tags="'+esc(String(t.tags||''))+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
       const depth = t.depth || 0;
+      const cid=t.clip&&t.clip.id;
+      const kids=cid ? (treeChildren.get(cid)||[]) : [];
+      let arrowHtml='';
+      if(kids.length){
+        const isExp=expanded.has(cid);
+        const cnt=countNested(kids);
+        arrowHtml='<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(isExp?'true':'false')+'" aria-label="'+(isExp?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
+          '<span class="thread-arrow">'+(isExp?'⏷':'⏵')+'</span>'+
+          (isExp?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
+          '</button>';
+      }
       const clipMeta =
+        arrowHtml+
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
         '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
       if(depth > 0){
         li.className='clip-reply-row';
         li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+clipMeta+'</div>';
       } else {
-        li.innerHTML=clipMeta;
+        li.innerHTML='<div class="thread-item">'+clipMeta+'</div>';
+      }
+      if(arrowHtml){
+        li.querySelector('[data-toggle]').addEventListener('click', function(e){
+          e.stopPropagation();
+          if(expanded.has(cid)) expanded.delete(cid); else expanded.add(cid);
+          render();
+        });
       }
       if(isDL){
         li.style.cursor='pointer';
@@ -2165,31 +2182,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     function renderNode(t, depth){
       trackList.appendChild(buildLi(t));
       const id=t.clip&&t.clip.id;
-      const kids=treeChildren.get(id)||[];
-      if(!kids.length) return;
-      const isExp=expanded.has(id);
-      const c=countNested(kids);
-      const tg=document.createElement('li');
-      tg.className='thread-toggle';
-      tg.style.paddingLeft=(16+depth*20)+'px';
-      const btn=document.createElement('button');
-      btn.type='button';
-      btn.className='thread-toggle-btn';
-      const arrow=document.createElement('span');
-      arrow.className='thread-arrow';
-      arrow.textContent=isExp?'⏷':'⏵';
-      arrow.setAttribute('aria-hidden','true');
-      btn.appendChild(arrow);
-      if(!isExp) btn.appendChild(document.createTextNode(' '+c+(c===1?' respuesta':' respuestas')));
-      btn.setAttribute('aria-expanded', isExp?'true':'false');
-      btn.setAttribute('aria-label', isExp?'Colapsar respuestas':'Mostrar '+c+' respuestas');
-      btn.addEventListener('click',()=>{
-        if(isExp) expanded.delete(id); else expanded.add(id);
-        render();
-      });
-      tg.appendChild(btn);
-      trackList.appendChild(tg);
-      if(isExp) kids.forEach((k)=>renderNode(k, depth+1));
+      if(id && expanded.has(id)){
+        (treeChildren.get(id)||[]).forEach((k)=>renderNode(k, depth+1));
+      }
     }
 
     function render(){
