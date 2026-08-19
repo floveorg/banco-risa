@@ -279,6 +279,11 @@ img{max-width:100%; display:block}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
+.clip-video-btn{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:3px 10px;
+  border:1.5px solid var(--persimmon);border-radius:999px;background:var(--persimmon);color:#fff;cursor:pointer;line-height:1.4}
+.clip-video-btn.on{background:none;color:var(--persimmon)}
+.clip-video-box{width:100%;padding:6px 0 2px}
+.clip-video-box video{width:100%;max-height:260px;border-radius:10px;background:#000;display:block}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row.reply-first{margin-top:-36px}   /* solo el primero se alinea con la flecha */
@@ -2120,6 +2125,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
+    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (título)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2145,10 +2151,25 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const src=t.src||'';
       const cid=t.clip&&t.clip.id;
       const depth = t.depth || 0;
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
+      // El título muestra/oculta las etiquetas de este clip (en línea).
+      const tagsOpen=!!cid && tagsOpenSet.has(cid);
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      let chips='';
+      if(tagsOpen){
+        chips=String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean)
+          .map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
+      }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
+        : '';
+      // Clips de vídeo: audio normal + enlace «Video» que expande y autorreproduce.
+      const isVideoClip = !!(t.isVideo && src);
+      const videoBtn = isVideoClip
+        ? '<button type="button" class="clip-video-btn" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">Video</button>'
+        : '';
+      const videoBox = isVideoClip
+        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden><video src="'+esc(src)+'" controls playsinline preload="none"></video></div>'
         : '';
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
@@ -2163,22 +2184,51 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       }
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+videoBtn+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
       if(toggleLine){
         // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
         li.className='tgl'+(depth>0?' clip-reply-row':'');
         li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+row+'</div>'+toggleLine;
+        li.innerHTML='<div class="clip-card">'+row+videoBox+'</div>'+toggleLine;
       } else {
         if(depth > 0) li.className='clip-reply-row';
-        li.innerHTML=row;
+        if(videoBox){ li.style.flexDirection='column'; li.innerHTML=row+videoBox; }
+        else li.innerHTML=row;
+      }
+      if(cid && String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean).length){
+        li.querySelector('.clip-title').addEventListener('click', function(e){
+          e.stopPropagation();
+          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          render();
+        });
       }
       if(toggleLine){
         li.querySelector('[data-toggle]').addEventListener('click', function(e){
           e.stopPropagation();
           if(expanded.has(cid)) expanded.delete(cid); else expanded.add(cid);
           render();
+        });
+      }
+      const vbtn=li.querySelector('[data-clipvideo]');
+      if(vbtn){
+        vbtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          const box=li.querySelector('[data-videobox]');
+          if(!box) return;
+          const vid=box.querySelector('video');
+          if(box.hidden){
+            box.hidden=false;
+            if(vid) vid.play().catch(function(){});
+            vbtn.classList.add('on');
+            vbtn.textContent='Cerrar';
+            setTimeout(function(){ box.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+          } else {
+            box.hidden=true;
+            if(vid) vid.pause();
+            vbtn.classList.remove('on');
+            vbtn.textContent='Video';
+          }
         });
       }
       if(isDL){
