@@ -292,7 +292,7 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem;
   position:relative;z-index:1}
-.tracklist li.clip-reply-row.reply-first{margin-top:-10px}   /* el primer hijo sube 10px, pegado a la flecha, sin solape del título */
+.tracklist li.clip-reply-row.reply-first{margin-top:-16px}   /* el primer hijo sube y queda pegado a la flecha, sin solape del título */
 .tracklist li.clip-reply-row .tag.dl{width:24px;height:24px;font-size:.75rem}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
 .tracklist li.tgl{background:none;border:none;border-radius:0;padding:0;gap:2px}
@@ -2166,6 +2166,21 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     botUrl: window.Risa.TELEGRAM_BOT,
     reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia'],
     onReply: function (t) { openReplyModal(t); },
+    onReaction: function (t, emoji) {
+      var id = t && t.clip && t.clip.id;
+      try {
+        fetch((window.Risa && window.Risa.API_URL || 'https://api.liberada.net/api') + '/reactions', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ app: 'risa', item_id: id, reaction: emoji })
+        }).catch(function () {});
+      } catch (_) {}
+      var pop = document.createElement('div');
+      pop.className = 'quick-toast';
+      pop.textContent = emoji + ' · ¡gracias!';
+      pop.setAttribute('role', 'status');
+      document.body.appendChild(pop);
+      setTimeout(function () { pop.remove(); }, 1200);
+    },
     sections: [
       {
         tagSpaceId: 'tag-space',
