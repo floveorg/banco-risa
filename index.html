@@ -164,8 +164,6 @@ img{max-width:100%; display:block}
   display:grid; place-items:center; font-size:.85rem; flex:0 0 auto; box-shadow:0 2px 0 rgba(42,24,16,.25)}
 .tracklist li.active .tag.dl{background:var(--magenta)}
 .tag.link{background:transparent; border:1.5px solid var(--grape); color:var(--grape)}
-.tracklist a.orig{color:var(--grape); text-decoration:none; font-weight:600; font-size:.82rem; white-space:nowrap}
-.tracklist a.orig:hover{text-decoration:underline}
 .tracklist .ti{display:flex; flex-wrap:wrap; align-items:baseline; column-gap:7px; row-gap:1px; min-width:0}
 .tracklist .tt{font-weight:600; white-space:nowrap}
 .tracklist .ttags{font-family:var(--mono); font-size:.68rem; color:var(--persimmon); font-weight:700; white-space:nowrap}
@@ -292,7 +290,7 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem;
   position:relative;z-index:1}
-.tracklist li.clip-reply-row.reply-first{margin-top:-16px}   /* el primer hijo sube y queda pegado a la flecha, sin solape del título */
+.tracklist li.clip-reply-row.reply-first{margin-top:-22px}   /* el primer hijo queda pegado a la flecha (reducción completa) */
 .tracklist li.clip-reply-row .tag.dl{width:24px;height:24px;font-size:.75rem}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
 .tracklist li.tgl{background:none;border:none;border-radius:0;padding:0;gap:2px}
