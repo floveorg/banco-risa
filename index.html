@@ -639,14 +639,15 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 /* ============ BARRAS INFERIORES · CULTURA · CIENCIA · COMUNIDAD ============ */
 .tab-panel[hidden]{display:none}
-.tab-bar{display:flex; gap:8px; max-width:var(--maxw); margin:34px auto 0; padding:0 22px}
+.tab-bar{display:flex; gap:0; max-width:var(--maxw); margin:34px auto 0; padding:0 22px;
+  border-bottom:3px solid var(--ink)}
 .tab-bar .tab-btn{flex:1; font-family:var(--disp); font-weight:700; font-size:1.02rem; color:var(--ink);
-  background:var(--cream); border:2.5px solid var(--ink); border-radius:999px; padding:12px 8px;
-  cursor:pointer; box-shadow:0 3px 0 rgba(42,24,16,.14); transition:transform .12s, background .12s}
-.tab-bar .tab-btn:hover{transform:translateY(-2px)}
-.tab-bar .tab-btn[aria-pressed="true"]{background:var(--marigold)}
-@media(max-width:560px){.tab-bar .tab-btn{font-size:.92rem; padding:10px 6px}}
-.tab-bar.tab-bar-foot{margin:38px 0 4px; padding:0; max-width:none}
+  background:none; border:none; border-bottom:4px solid transparent; padding:12px 8px; margin:0;
+  cursor:pointer; transition:color .12s, border-color .12s}
+.tab-bar .tab-btn:hover{color:var(--persimmon)}
+.tab-bar .tab-btn[aria-pressed="true"]{border-bottom-color:var(--magenta); font-weight:800}
+@media(max-width:560px){.tab-bar .tab-btn{font-size:.92rem; padding:10px 4px}}
+.tab-bar.tab-bar-foot{margin:38px 0 4px; padding:0; max-width:none; border-bottom-width:2px}
 
 /* ============ CULTURA · RISAS DEL MUNDO + CHISTES EN COLUMNA ============ */
 .world-row{display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:22px; margin-top:24px; align-items:stretch}
@@ -1101,6 +1102,7 @@ body:has(#lang-en:checked) .es{display:none}
   <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false"><span class="es" lang="es">Común</span><span class="en" lang="en">Community</span></button>
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
+  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -1184,7 +1186,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1243,7 +1245,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1765,7 +1767,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1795,7 +1797,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1851,7 +1853,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
