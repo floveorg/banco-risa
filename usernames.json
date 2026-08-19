@@ -13,5 +13,30 @@
     "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c",
     "name": "Anónima",
     "claimedAt": "2026-08-18"
+  },
+  "ana": {
+    "key": "ana",
+    "name": "Ana Pérez",
+    "claimedAt": "2026-08-18"
+  },
+  "carlos": {
+    "key": "carlos",
+    "name": "Carlos Ruiz",
+    "claimedAt": "2026-08-18"
+  },
+  "laura": {
+    "key": "laura",
+    "name": "Laura Díaz",
+    "claimedAt": "2026-08-18"
+  },
+  "pedro": {
+    "key": "pedro",
+    "name": "Pedro López",
+    "claimedAt": "2026-08-18"
+  },
+  "sofia": {
+    "key": "sofia",
+    "name": "Sofía Torres",
+    "claimedAt": "2026-08-18"
   }
 }

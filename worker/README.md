@@ -26,6 +26,25 @@ npx wrangler secret put CLAIM_SECRET          # firma de tokens de claim (dev)
 npx wrangler deploy
 ```
 
+## Subdominios automáticos (nuevos usuarios)
+
+El bucle es automático, sin crear archivos por persona:
+
+1. **Acción disparada**: el autor dice «Sí» a la oferta de subdominio (opt-in
+   del bot) o usa `/entrar` → `claimUsername()` escribe `usernames.json`.
+2. **Persistencia**: el bot hace commit + push de `usernames.json` (mismo paso
+   que publica `risa.json`).
+3. **DNS** (una vez): o bien `*.liberada.net → floveorg.github.io` (comodín en
+   el registrar; GitHub Pages sirve este mismo repo en cualquier subdominio y el
+   `index.html` raíz redirige por host al perfil), o bien la zona en Cloudflare
+   con este Worker (ruta `*.liberada.net/*`).
+4. **Perfil**: el Worker sirve la plantilla genérica de perfil para cualquier
+   username registrado — la página resuelve el usuario desde el `Host`
+   (`<user>.liberada.net`) y carga sus risas del feed. No necesita carpeta.
+
+El registro de `usernames.json` es la única fuente: quien está ahí tiene su
+subdominio vivo en cuanto el DNS resuelve.
+
 ## Endpoints
 
 | Método y ruta | Qué hace | Nota |

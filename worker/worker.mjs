@@ -75,17 +75,24 @@ export default {
     const entry = usernames[sub];
 
     if (entry && entry.key) {
-      // Sirve el perfil EN el subdominio (canónico) proxeando usa/<user>/;
-      // la página redirige a su subdominio si se abre por liberada.net/usa/.
+      // Sirve el perfil EN el subdominio (canónico) proxeando usa/<user>/.
+      // Si el usuario aún no tiene carpeta propia (nuevo claim automático vía
+      // bot → usernames.json), sirve la plantilla genérica de perfil: esa página
+      // resuelve el username desde el Host (<user>.liberada.net) y carga sus
+      // risas del feed, así TODO usuario con subdominio registrado funciona sin
+      // crear archivos por persona.
       const page = AGGREGATOR_BASE + '/' + encodeURIComponent(sub) + '/';
-      try {
-        const res = await fetch(page);
-        if (res.ok) {
-          return new Response(await res.text(), {
-            headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300' }
-          });
-        }
-      } catch (_) {}
+      const generic = AGGREGATOR_BASE + '/marcflove/';
+      for (const candidate of [page, generic]) {
+        try {
+          const res = await fetch(candidate);
+          if (res.ok) {
+            return new Response(await res.text(), {
+              headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300' }
+            });
+          }
+        } catch (_) {}
+      }
       return Response.redirect(page, 302);
     }
 

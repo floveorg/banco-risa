@@ -1961,49 +1961,49 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   "use strict";
 
   /* ============ DATOS DE PLAYLISTS ============ */
-  const A = 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/seed/audio/';
+  const A = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
   const P = 'https://commons.wikimedia.org/wiki/File:';
   const playlists = [
     { id:'contagiosa', emoji:'😄', name:'Risa contagiosa', desc:'Multitudes riendo',
       tracks:[
-        {t:'Risa de multitud', src:A+'multitud-risa.mp3', by:'lonemonk · CC BY 3.0', orig:P+'72842_lonemonk_approx-800-laugh-1.wav'},
-        {t:'Solo risas', src:A+'multitud-solo.mp3', by:'lonemonk · CC BY 3.0', orig:P+'72843_lonemonk_approx-800-laughter-only-1.wav'},
-        {t:'Risas y aplausos', src:A+'multitud-risa-aplauso.mp3', by:'lonemonk · CC BY 3.0', orig:P+'72844_lonemonk_approx-800-laughter-and-clapter-1.wav'},
-        {t:'Grupo pequeño', src:A+'grupo-pequeno.mp3', by:'CC BY 3.0', orig:P+'Small_group_laughter.ogg'},
-        {t:'Gente riendo', src:A+'gente-riendo.mp3', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
+        {t:'Risa de multitud', src:A+'72842_lonemonk_approx-800-laugh-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72842_lonemonk_approx-800-laugh-1.wav'},
+        {t:'Solo risas', src:A+'72843_lonemonk_approx-800-laughter-only-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72843_lonemonk_approx-800-laughter-only-1.wav'},
+        {t:'Risas y aplausos', src:A+'72844_lonemonk_approx-800-laughter-and-clapter-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72844_lonemonk_approx-800-laughter-and-clapter-1.wav'},
+        {t:'Grupo pequeño', src:A+'Small_group_laughter.ogg', by:'CC BY 3.0', orig:P+'Small_group_laughter.ogg'},
+        {t:'Gente riendo', src:A+'Menschen-Lachen.ogg', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
       ]},
     { id:'carcajada', emoji:'🤣', name:'Carcajada suelta', desc:'Risa de vientre',
       tracks:[
-        {t:'Carcajada', src:A+'carcajada-solo.mp3', by:'CC BY-SA 4.0', orig:P+'Laugh.wav'},
-        {t:'Carcajadón', src:A+'carcajadon.mp3', by:'Dominio público', orig:P+'Laughter.ogg'},
-        {t:'Risa corta', src:A+'risa-corta-pd.mp3', by:'Dominio público', orig:P+'En-us-laugh.ogg'},
-        {t:'Risotada (EE. UU.)', src:A+'guffaw-us.mp3', by:'CC BY-SA 3.0', orig:P+'En-us-guffaw.ogg'},
-        {t:'Risotada (Australia)', src:A+'guffaw-au.mp3', by:'CC BY-SA 4.0', orig:P+'En-au-guffaw.ogg'},
+        {t:'Carcajada', src:A+'Laugh.wav', by:'CC BY-SA 4.0', orig:P+'Laugh.wav'},
+        {t:'Carcajadón', src:A+'Laughter.ogg', by:'Dominio público', orig:P+'Laughter.ogg'},
+        {t:'Risa corta', src:A+'En-us-laugh.ogg', by:'Dominio público', orig:P+'En-us-laugh.ogg'},
+        {t:'Risotada (EE. UU.)', src:A+'En-us-guffaw.ogg', by:'CC BY-SA 3.0', orig:P+'En-us-guffaw.ogg'},
+        {t:'Risotada (Australia)', src:A+'En-au-guffaw.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-guffaw.ogg'},
       ]},
     { id:'picara', emoji:'😈', name:'Pícara y malvada', desc:'Risa traviesa',
       tracks:[
-        {t:'Risa malvada', src:A+'risa-malvada.mp3', by:'CC BY-SA 3.0', orig:P+'Evil_laugh_2.oga'},
-        {t:'Risa malvada (CC0)', src:A+'malvada-cc0.mp3', by:'CC0', orig:P+'Evil_laugh.ogg'},
-        {t:'Carcajada diabólica', src:A+'malvada-pd.mp3', by:'Dominio público', orig:P+'Evil_laughter.ogg'},
-        {t:'Risa de loco', src:A+'risa-loca.mp3', by:'CC BY 3.0', orig:P+'Insane_laughter_man_reverb.ogg'},
-        {t:'Risa de bestia', src:A+'risa-bestia.mp3', by:'Dominio público', orig:P+'Beast_laughter.ogg'},
+        {t:'Risa malvada', src:A+'Evil_laugh_2.oga', by:'CC BY-SA 3.0', orig:P+'Evil_laugh_2.oga'},
+        {t:'Risa malvada (CC0)', src:A+'Evil_laugh.ogg', by:'CC0', orig:P+'Evil_laugh.ogg'},
+        {t:'Carcajada diabólica', src:A+'Evil_laughter.ogg', by:'Dominio público', orig:P+'Evil_laughter.ogg'},
+        {t:'Risa de loco', src:A+'Insane_laughter_man_reverb.ogg', by:'CC BY 3.0', orig:P+'Insane_laughter_man_reverb.ogg'},
+        {t:'Risa de bestia', src:A+'Beast_laughter.ogg', by:'Dominio público', orig:P+'Beast_laughter.ogg'},
       ]},
     { id:'risita', emoji:'😅', name:'Risita nerviosa', desc:'Risa contenida, giggle',
       tracks:[
-        {t:'Risa «lol»', src:A+'risa-lol.mp3', by:'CC BY-SA 4.0', orig:P+'Man_saying_lol.oga'},
-        {t:'Risita (giggle juice)', src:A+'giggle-juice.mp3', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_juice.ogg'},
-        {t:'Risita (giggle berries)', src:A+'giggle-berries.mp3', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_berries.ogg'},
-        {t:'Risa disimulada', src:A+'risa-chuckle.mp3', by:'CC BY-SA 3.0', orig:P+'En-us-laughter.ogg'},
-        {t:'Risita entre dientes', src:A+'risita-ochi.mp3', by:'CC BY-SA 4.0', orig:P+'Laughter-Ochi.oga'},
-        {t:'Risa contenida (cackle)', src:A+'cackle.mp3', by:'CC BY-SA 4.0', orig:P+'En-au-cackle-bladder.ogg'},
+        {t:'Risa «lol»', src:A+'Man_saying_lol.oga', by:'CC BY-SA 4.0', orig:P+'Man_saying_lol.oga'},
+        {t:'Risita (giggle juice)', src:A+'En-au-giggle_juice.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_juice.ogg'},
+        {t:'Risita (giggle berries)', src:A+'En-au-giggle_berries.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_berries.ogg'},
+        {t:'Risa disimulada', src:A+'En-us-laughter.ogg', by:'CC BY-SA 3.0', orig:P+'En-us-laughter.ogg'},
+        {t:'Risita entre dientes', src:A+'Laughter-Ochi.oga', by:'CC BY-SA 4.0', orig:P+'Laughter-Ochi.oga'},
+        {t:'Risa contenida (cackle)', src:A+'En-au-cackle-bladder.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-cackle-bladder.ogg'},
       ]},
     { id:'mundo', emoji:'🌍', name:'Risas del mundo', desc:'Reír en varios idiomas',
       tracks:[
-        {t:'Risa (Alemania)', src:A+'gente-riendo.mp3', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
-        {t:'Rire (París, Francia)', src:A+'rire-paris.mp3', by:'CC BY-SA 2.0 fr', orig:P+'Fr-Rire-fr-Paris.ogg'},
-        {t:'Rire (Quebec)', src:A+'rire-quebec.mp3', by:'CC BY-SA 3.0', orig:P+'Qc-rire.ogg'},
-        {t:'Risa de bebé (Francia, 9 meses)', src:A+'bebe-frances.mp3', by:'CC BY-SA 4.0', orig:P+'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg'},
-        {t:'Risa de bebé', src:A+'bebe-risa.mp3', by:'CC BY 3.0', orig:P+'Baby_Laugh.ogg'},
+        {t:'Risa (Alemania)', src:A+'Menschen-Lachen.ogg', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
+        {t:'Rire (París, Francia)', src:A+'Fr-Rire-fr-Paris.ogg', by:'CC BY-SA 2.0 fr', orig:P+'Fr-Rire-fr-Paris.ogg'},
+        {t:'Rire (Quebec)', src:A+'Qc-rire.ogg', by:'CC BY-SA 3.0', orig:P+'Qc-rire.ogg'},
+        {t:'Risa de bebé (Francia, 9 meses)', src:A+'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg', by:'CC BY-SA 4.0', orig:P+'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg'},
+        {t:'Risa de bebé', src:A+'Baby_Laugh.ogg', by:'CC BY 3.0', orig:P+'Baby_Laugh.ogg'},
         {t:'Ja-ja en amazigh (ⵃⴰⵃⴰ)', link:P+'Zgh_shi_%E1%B8%A5a%E1%B8%A5a_%E2%B5%83%E2%B4%B0%E2%B5%83%E2%B4%B0.oga', by:'CC BY-SA 4.0'},
       ]},
   ];
@@ -3246,7 +3246,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     });
     // En el carrusel de chistes, pasar al siguiente chiste suena una risa.
     if(sl.classList.contains('jslider')){
-      const laugh=new Audio(A+'risa-corta-pd.mp3');
+      const laugh=new Audio(A+'En-us-laugh.ogg');
       laugh.preload='none';
       const sfx=()=>{ if(reduce) return; laugh.currentTime=0; laugh.play().catch(()=>{}); };
       next.addEventListener('click', sfx);

@@ -9,6 +9,31 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.0.7] — 2026-08-18 · usuarios reales (imaginarios) + cadenas + subdominios
+
+- **Cinco usuarios de la comunidad (demos con nombre español)** sustituyen a los
+  demos de juguete (`contagiosa` · `carcajada` · `mundo`): **Ana Pérez**, **Carlos
+  Ruiz**, **Laura Díaz**, **Pedro López** y **Sofía Torres**. Cada uno tiene perfil
+  agregador propio (`liberada.net/usa/<user>/`), bio, redes y aliases públicos.
+  Se retira la etiqueta «Demo 😄» de esos perfiles.
+- **Clips de «Risas del mundo» subidos como respuestas en cadenas del feed.**
+  14 clips de Commons se añaden a `risa.json` con `parent` sobre clips reales
+  (Risa Maliciosa · Aahh · Surreal · Nosnormal), formando 4 hilos anidados de
+  hasta 3 niveles. El feed las muestra indentadas y la pestaña Cadenas de cada
+  perfil pinta el hilo completo en el que participa (los ajenos se ven atenuados).
+- **Audio de las playlists reparado**: los ficheros `risa/seed/audio/*` nunca se
+  subieron a R2 (404). Todas las playlists (contagiosa · carcajada · pícara ·
+  risita · mundo) y el perfil de maria ahora apuntan a las fuentes con licencia
+  en Wikimedia Commons (`Special:FilePath/…`), reproducibles sin espejo R2.
+- **Subdominios automáticos**: la plantilla de perfil resuelve el usuario desde
+  el `Host` (`<user>.liberada.net`) además del path, y el Worker sirve la
+  plantilla genérica para cualquier username de `usernames.json` sin carpeta
+  propia — el opt-in del bot (Sí al subdominio) ya activa el enlace de autor.
+- **maria/marcflove**: se quita el salto forzoso a `<user>.liberada.net` (que
+  caía en página de error sin DNS); el `index.html` raíz de liberada.net
+  redirige ahora cualquier subdominio CNAMEado al perfil del usuario.
+- `risa.json` + `risa.xml`/`atom.xml` regenerados (28 clips).
+
 ## [v1.0.6] — 2026-08-18 · fix: vídeo-notas circulares no reconocidas
 
 - **Los vídeo-notas («mantener pulsado», círculo) se ignoraban en silencio.**

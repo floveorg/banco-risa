@@ -51,6 +51,146 @@
       "key": "f2f7ebe52eb55a53cc622b85ba2f688d73a25e554e69991b0f41c038a5aeafc5"
     },
     {
+      "id": "w_ana_grupo",
+      "name": "Ana Pérez",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Small_group_laughter.ogg",
+      "when": "2026-08-18",
+      "t": "Grupo pequeño",
+      "tags": "yoga, grupo, serena",
+      "key": "ana",
+      "parent": "q_823020302"
+    },
+    {
+      "id": "w_laura_bebe",
+      "name": "Laura Díaz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Baby_Laugh.ogg",
+      "when": "2026-08-18",
+      "t": "Risa de bebé",
+      "tags": "arte, bebé, alegría",
+      "key": "laura",
+      "parent": "w_ana_grupo"
+    },
+    {
+      "id": "w_carlos_paris",
+      "name": "Carlos Ruiz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Fr-Rire-fr-Paris.ogg",
+      "when": "2026-08-18",
+      "t": "Rire (París)",
+      "tags": "música, francés, París",
+      "key": "carlos",
+      "parent": "q_823020291"
+    },
+    {
+      "id": "w_carlos_quebec",
+      "name": "Carlos Ruiz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Qc-rire.ogg",
+      "when": "2026-08-18",
+      "t": "Rire (Quebec)",
+      "tags": "música, francés, Quebec",
+      "key": "carlos",
+      "parent": "w_carlos_paris"
+    },
+    {
+      "id": "w_sofia_risotada",
+      "name": "Sofía Torres",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/En-us-guffaw.ogg",
+      "when": "2026-08-18",
+      "t": "Risotada",
+      "tags": "baile, risotada",
+      "key": "sofia",
+      "parent": "q_823020291"
+    },
+    {
+      "id": "w_pedro_multitud",
+      "name": "Pedro López",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/72842_lonemonk_approx-800-laugh-1.wav",
+      "when": "2026-08-18",
+      "t": "Risa de multitud",
+      "tags": "deporte, multitud, energía",
+      "key": "pedro",
+      "parent": "w_sofia_risotada"
+    },
+    {
+      "id": "w_pedro_solo",
+      "name": "Pedro López",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/72843_lonemonk_approx-800-laughter-only-1.wav",
+      "when": "2026-08-18",
+      "t": "Solo risas",
+      "tags": "deporte, multitud",
+      "key": "pedro",
+      "parent": "w_pedro_multitud"
+    },
+    {
+      "id": "w_sofia_carcajadon",
+      "name": "Sofía Torres",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Laughter.ogg",
+      "when": "2026-08-18",
+      "t": "Carcajadón",
+      "tags": "baile, épica",
+      "key": "sofia",
+      "parent": "q_823020265"
+    },
+    {
+      "id": "w_ana_alemania",
+      "name": "Ana Pérez",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Menschen-Lachen.ogg",
+      "when": "2026-08-18",
+      "t": "Risa (Alemania)",
+      "tags": "yoga, mundo, tranquila",
+      "key": "ana",
+      "parent": "q_823020265"
+    },
+    {
+      "id": "w_laura_bebefra",
+      "name": "Laura Díaz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg",
+      "when": "2026-08-18",
+      "t": "Risa de bebé (Francia)",
+      "tags": "arte, bebé, francés",
+      "key": "laura",
+      "parent": "w_ana_alemania"
+    },
+    {
+      "id": "w_pedro_aplausos",
+      "name": "Pedro López",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/72844_lonemonk_approx-800-laughter-and-clapter-1.wav",
+      "when": "2026-08-18",
+      "t": "Risas y aplausos",
+      "tags": "deporte, aplausos",
+      "key": "pedro",
+      "parent": "q_823020265"
+    },
+    {
+      "id": "w_sofia_carcajada",
+      "name": "Sofía Torres",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Laugh.wav",
+      "when": "2026-08-18",
+      "t": "Carcajada",
+      "tags": "baile, vientre",
+      "key": "sofia",
+      "parent": "q_823020265"
+    },
+    {
+      "id": "w_carlos_corta",
+      "name": "Carlos Ruiz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/En-us-laugh.ogg",
+      "when": "2026-08-18",
+      "t": "Risa corta",
+      "tags": "música, corta",
+      "key": "carlos",
+      "parent": "q_823020149"
+    },
+    {
+      "id": "w_laura_lol",
+      "name": "Laura Díaz",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Man_saying_lol.oga",
+      "when": "2026-08-18",
+      "t": "Risa «lol»",
+      "tags": "arte, risa, corta",
+      "key": "laura",
+      "parent": "q_823020149"
+    },
+    {
       "id": "q_823020164",
       "name": "Marc",
       "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/banco-risa/q_823020164.mp3",

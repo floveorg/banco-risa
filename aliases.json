@@ -15,5 +15,25 @@
     { "alias": "María", "private": false },
     { "alias": "Adv", "private": false },
     { "alias": "PoC Privado", "private": true }
+  ],
+  "ana": [
+    { "alias": "Ana", "private": false },
+    { "alias": "Risa Yoga", "private": false }
+  ],
+  "carlos": [
+    { "alias": "Carlos", "private": false },
+    { "alias": "Rire", "private": false }
+  ],
+  "laura": [
+    { "alias": "Laura", "private": false },
+    { "alias": "Arte y risa", "private": false }
+  ],
+  "pedro": [
+    { "alias": "Pedro", "private": false },
+    { "alias": "Km de risa", "private": false }
+  ],
+  "sofia": [
+    { "alias": "Sofía", "private": false },
+    { "alias": "Baile y risa", "private": false }
   ]
 }
