@@ -13,8 +13,9 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 **Hito: risa/index deja el monolito y se construye sobre `central/shared/code`**
 (`flove-feed` · `flove-tags` · `flove-player` · `flove-bottom-nav` ·
-`flove-sound` · `flove-app`). La versión anterior queda congelada como **v2.0.0**
-(descarga `risa-v2.zip`).
+`flove-sound` · `flove-app`). La versión anterior queda congelada como **v2.0.0**;
+la descarga canónica es **`risa2.zip`** (siempre la última Risa 2.x.x, cortadas
+futuras `risa2.0.1`, `risa2.1.3`, …).
 
 - **Index nuevo sobre las libs centrales**: el driver `FloveApp` (antes
   `risa-app.js`) vive ahora en `central/shared/code/js/flove-app.js`; GENTE y
@@ -31,12 +32,17 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
   ahí los clips subidos por el bot.
 - **Tags contenidas**: las chips flotantes ya no derivan hacia el borde de la
   playlist (rango de deriva acotado en `flove-tags`).
+- **En las listas, el enlace «original»** aparece tras las etiquetas y lleva a
+  la url del clip.
+- **Descarga `risa2.zip`**: empaqueta la última Risa 2.x.x con las libs
+  centrales incluidas (rutas relativas `central/shared/code/…`), lista para
+  abrir sin checkout de flove.
 
-## [v2.0.0] — 2026-08-19 · versión anterior congelada (descarga `risa-v2.zip`)
+## [v2.0.0] — 2026-08-19 · versión anterior congelada
 
 La versión previa al hito Calling libs: `index.html` monolítico (todo inline,
 sin libs centrales), playlists scrapped de Commons, menú de logo presente.
-Congelada para descargar como **v2 (2.0.0)**.
+Congelada como punto de partida del changelog 2.x (véase el README).
 
 ## [v1.1.0] — 2026-08-19 · hito: navegación de contenidos en la web
 
