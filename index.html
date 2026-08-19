@@ -34,6 +34,9 @@
   --grape:#5b2fa0;
   --azure:#1d6fe0;
   --mint:#12b28a;
+  --red-btn:#c84320;   /* rojo de botones: 30% menos intenso que --persimmon */
+  --mag-btn:#ab1c63;   /* magenta de botones: 30% menos intenso */
+  --checked:#c84320;   /* color unificado de los estados marcados (topbar + 1ª sección) */
   --shadow:rgba(58,26,10,.16);
   --r:22px;
   --maxw:1080px;
@@ -78,7 +81,7 @@ img{max-width:100%; display:block}
   background:var(--cream); color:var(--ink); border-radius:50%; display:grid; place-items:center; cursor:pointer;
   box-shadow:0 2px 0 rgba(42,24,16,.15); padding:0; line-height:1}
 .topbar .topbar-transport .tr-btn:hover{background:var(--marigold); transform:translateY(-1px)}
-.topbar .topbar-transport .tr-play{background:var(--persimmon); color:#fff; width:42px; height:42px; font-size:1rem}
+.topbar .topbar-transport .tr-play{background:var(--red-btn); color:#fff; width:42px; height:42px; font-size:1rem}
 .topbar .topbar-transport .tr-play.playing{color:#000}
 @media(max-width:720px){.topbar .topbar-transport{order:5; width:100%; justify-content:center; padding:6px 0 2px}}
 .topbar .btn{padding:9px 16px; font-size:.92rem; box-shadow:0 4px 0 rgba(42,24,16,.18)}
@@ -104,10 +107,10 @@ img{max-width:100%; display:block}
   padding:14px 24px; border-radius:999px; text-decoration:none; display:inline-flex; align-items:center; gap:.5em;
   transition:transform .12s ease, box-shadow .12s ease; box-shadow:0 6px 0 rgba(42,24,16,.18)}
 .btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(42,24,16,.18)}
-.btn-primary{background:var(--persimmon); color:#fff}
+.btn-primary{background:var(--red-btn); color:#fff}
 .btn-primary:hover{transform:translateY(-2px)}
 .btn-ghost{background:var(--cream); color:var(--ink); box-shadow:0 6px 0 rgba(42,24,16,.12)}
-.btn-mag{background:var(--magenta); color:#fff}
+.btn-mag{background:var(--mag-btn); color:#fff}
 .btn-grape{background:var(--grape); color:#fff}
 .btn .btn-anim{width:1.7em; height:1.7em; margin:-.4em -.5em -.4em 0; pointer-events:none}
 /* botón Porque: posiciona las burbujas que salen de él (en la barra y en Ciencia) */
@@ -169,7 +172,7 @@ img{max-width:100%; display:block}
 .tracklist .tag.dl,.tracklist .fav-star,.tracklist .reply-btn,.tracklist .react-chip,.tracklist .clip-video-btn{align-self:center}
 .tracklist .by{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:45%}
 .tracklist .tag{font-family:var(--mono); font-size:.66rem; padding:2px 8px; border-radius:999px; white-space:nowrap}
-.tag.dl{width:31px; height:31px; padding:1px 0 0 2px; border-radius:50%; background:var(--persimmon); color:#fff;
+.tag.dl{width:31px; height:31px; padding:1px 0 0 2px; border-radius:50%; background:var(--red-btn); color:#fff;
   display:grid; place-items:center; font-size:.85rem; flex:0 0 auto; box-shadow:0 2px 0 rgba(42,24,16,.25)}
 .tracklist li.tgl .clip-card .tag.dl{transform:translateY(-7px); width:34px; height:34px}   /* play del padre: 5-10px arriba, 10% mayor, centrado con el fondo */
 .tracklist li.active .tag.dl{background:var(--magenta)}
@@ -188,6 +191,7 @@ img{max-width:100%; display:block}
 .pg-btn:hover{background:var(--marigold)}
 .pg-btn[hidden]{display:none}
 .pg-label{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--persimmon)}
+.chip.pg-10[aria-pressed="true"],.chip.pg-100[aria-pressed="true"]{background:var(--checked); color:#fff}
 .pg-label[hidden]{display:none}
 .pg-repo{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--grape);
   text-decoration:none; border-bottom:2px solid var(--marigold); padding-bottom:2px}
@@ -262,12 +266,12 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.85rem; line-height:1; font-weight:700; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .reply-btn:hover{transform:translateY(-2px) scale(1.05)}
-.reply-btn.on{background:var(--marigold)}   /* amarillo mientras su menú está abierto */
+.reply-btn.on{background:var(--checked); color:#fff}
 .react-chip{flex:0 0 auto; display:inline-flex; align-items:center; gap:3px; border:0;
   background:var(--cream); border-radius:999px; padding:1px 8px 2px; cursor:pointer; font-family:var(--body);
   font-size:.7rem; line-height:1; transform:translateY(5px); position:relative; transition:background .12s}
-.react-chip:hover{background:var(--marigold)}
-.react-emoji{font-size:.8rem; line-height:1; display:inline-block; transition:transform .15s ease}
+.react-chip:hover{background:none}
+.react-emoji{font-size:.96rem; line-height:1; display:inline-block; transition:transform .15s ease}
 .react-chip:hover .react-emoji{transform:scale(1.2); animation:emoji-bob .35s ease-in-out infinite alternate}   /* el emoji por defecto también se mueve y crece */
 .react-count{font-weight:800; color:var(--ink-soft)}
 .react-pop{position:fixed; z-index:400; background:var(--cream); border:2px solid var(--ink); border-radius:14px;
@@ -276,7 +280,7 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   background:none; cursor:pointer; border-radius:9px; font-family:var(--body); font-size:.84rem; color:var(--ink)}
 .react-pop-row:hover{background:none}
 .react-pop-row[aria-pressed="true"]{background:none}
-.react-pop-emoji{font-size:1.1rem; line-height:1; display:inline-block; transition:transform .15s ease}
+.react-pop-emoji{font-size:1.32rem; line-height:1; display:inline-block; transition:transform .15s ease}
 .react-pop-row:hover .react-pop-emoji{transform:scale(1.2); animation:emoji-bob .35s ease-in-out infinite alternate}   /* se mueve y crece 20% */
 .react-pop-row[aria-pressed="true"] .react-pop-emoji{transform:scale(1.4)}   /* al elegirlo crece hasta 40% (máx, −20%) */
 @keyframes emoji-bob{from{transform:scale(1.12) translateY(0)}to{transform:scale(1.2) translateY(-3px)}}
@@ -387,8 +391,8 @@ a.react-user:hover{text-decoration:underline}
   display:grid; place-items:center; line-height:0; cursor:pointer; padding:9px;
   font-family:var(--disp); font-weight:700; white-space:nowrap}
 .mt-btn:hover{transform:translateY(-2px)}
-.mt-btn[aria-pressed="true"].mt-audio{background:var(--marigold)}
-.mt-btn[aria-pressed="true"].mt-video{background:var(--grape); color:#fff}
+.mt-btn[aria-pressed="true"].mt-audio{background:var(--checked); color:#fff}
+.mt-btn[aria-pressed="true"].mt-video{background:var(--checked); color:#fff}
 
 /* transport (izquierda) + toggles audio/vídeo (derecha) · una fila en la columna derecha; el buscador vive en la columna izquierda, centrado arriba */
 .tag-col{display:flex; flex-direction:column; gap:14px; min-width:0; align-items:center}
@@ -405,7 +409,7 @@ a.react-user:hover{text-decoration:underline}
  .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
 .transport .tr-btn:not(.tr-play){visibility:hidden}   /* ‹ › solo al reproducir, mantienen su sitio */
 .transport.playing .tr-btn:not(.tr-play){visibility:visible}
- .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.05rem; width:52px; height:52px}
+ .tr-btn.tr-play{background:var(--red-btn); color:#fff; font-size:1.05rem; width:52px; height:52px}
 .tr-btn.tr-play.playing{color:#000}   /* pausa en negro, centrada */
 @media(max-width:560px){.title-head{flex-wrap:wrap}}
 
