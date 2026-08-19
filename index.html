@@ -252,6 +252,21 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.85rem; line-height:1; font-weight:700; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .reply-btn:hover{transform:translateY(-2px) scale(1.05); background:var(--magenta)}
+.react-chip{flex:0 0 auto; display:inline-flex; align-items:center; gap:3px; border:1.5px solid rgba(42,24,16,.18);
+  background:var(--cream); border-radius:999px; padding:1px 8px 2px; cursor:pointer; font-family:var(--body);
+  font-size:.7rem; line-height:1; transform:translateY(5px); position:relative; transition:background .12s}
+.react-chip:hover{background:var(--marigold)}
+.react-emoji{font-size:.8rem; line-height:1}
+.react-count{font-weight:800; color:var(--ink-soft)}
+.react-pop{position:fixed; z-index:400; background:var(--cream); border:2px solid var(--ink); border-radius:14px;
+  padding:6px; box-shadow:4px 4px 0 rgba(42,24,16,.18); min-width:220px; max-width:340px; display:grid; gap:2px}
+.react-pop-row{display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:7px 10px; border:none;
+  background:none; cursor:pointer; border-radius:9px; font-family:var(--body); font-size:.84rem; color:var(--ink)}
+.react-pop-row:hover{background:#fff}
+.react-pop-row[aria-pressed="true"]{background:var(--marigold)}
+.react-pop-emoji{font-size:1.1rem; line-height:1}
+.react-pop-count{font-weight:800; min-width:1.3em}
+.react-pop-users{color:var(--ink-soft); font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .quick-menu{position:fixed;z-index:60;background:var(--cream);border:2px solid var(--ink);border-radius:12px;
   padding:6px;box-shadow:4px 4px 0 rgba(42,24,16,.18);display:grid;gap:4px;min-width:150px}
 .quick-opt{padding:8px 12px;border:none;background:none;cursor:pointer;text-align:left;font-size:.85rem;
@@ -2155,6 +2170,25 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     });
   });
 
+  /* ── Demo: reacciones de muestra del círculo (la API/feed las proveerá en v2).
+     player.react(cid, emoji, userId, name) siembra el desglose del chip. ── */
+  function seedReactions() {
+    var DEMO = [
+      ['ana', 'Ana Pérez'], ['sofia', 'Sofía Torres'], ['marcflove', 'Marc'],
+      ['laura', 'Laura Díaz'], ['pedro', 'Pedro López'], ['carlos', 'Carlos Ruiz']
+    ];
+    var clips = (app.risas || []).filter(function (c) { return c && c.id; });
+    clips.forEach(function (c, i) {
+      var a = DEMO[i % DEMO.length], b = DEMO[(i + 2) % DEMO.length], d = DEMO[(i + 4) % DEMO.length];
+      app.sections.forEach(function (s) {
+        if (!s.player || !s.player.react) return;
+        s.player.react(c.id, '🤣', a[0], a[1]);
+        s.player.react(c.id, '😂', b[0], b[1]);
+        if (i % 3 === 0) s.player.react(c.id, '❤️', d[0], d[1]);
+      });
+    });
+    app.sections.forEach(function (s) { if (s.player && s.player.render) s.player.render(); });
+  }
   /* ── GENTE + MUNDO: dos secciones, el mismo driver ── */
   var app = window.FloveApp.init({
     app: 'Risa liberada',
@@ -2164,6 +2198,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     botUrl: window.Risa.TELEGRAM_BOT,
     reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia'],
     onReply: function (t) { openReplyModal(t); },
+    onFeed: seedReactions,
     onReaction: function (t, emoji) {
       var id = t && t.clip && t.clip.id;
       try {
