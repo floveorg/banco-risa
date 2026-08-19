@@ -334,7 +334,7 @@ function tagsKeys() {
 // Answering the callback is cosmetic — never let it block the real work.
 const bestEffort = (promise) => promise.catch((err) => console.error('non-fatal:', err.message));
 
-const LOOP_MAX_MS = 55 * 60 * 1000;   // one workflow run covers most of the hour
+const LOOP_MAX_MS = 8 * 60 * 1000;    // < cron (10 min) para que cada run cierre y publique antes de que la siguiente la cancele
 const POLL_TIMEOUT = 25;              // seconds of long polling per getUpdates
 
 // Presencia estable del bot: descripción, menú de comandos y descripción de
