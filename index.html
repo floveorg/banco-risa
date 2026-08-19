@@ -79,6 +79,7 @@ img{max-width:100%; display:block}
   box-shadow:0 2px 0 rgba(42,24,16,.15); padding:0; line-height:1}
 .topbar .topbar-transport .tr-btn:hover{background:var(--marigold); transform:translateY(-1px)}
 .topbar .topbar-transport .tr-play{background:var(--persimmon); color:#fff; width:42px; height:42px; font-size:1rem}
+.topbar .topbar-transport .tr-play.playing{color:#000}
 @media(max-width:720px){.topbar .topbar-transport{order:5; width:100%; justify-content:center; padding:6px 0 2px}}
 .topbar .btn{padding:9px 16px; font-size:.92rem; box-shadow:0 4px 0 rgba(42,24,16,.18)}
 .topbar .btn .btn-anim{width:1.5em; height:1.5em; margin:-.35em -.45em -.35em 0}
@@ -398,6 +399,7 @@ a.react-user:hover{text-decoration:underline}
    display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
  .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
  .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.05rem; width:52px; height:52px}
+.tr-btn.tr-play.playing{color:#000}   /* pausa en negro, centrada */
 @media(max-width:560px){.title-head{flex-wrap:wrap}}
 
 /* ============ BURBUJAS DE BENEFICIOS ============ */
@@ -886,6 +888,7 @@ body:has(#lang-en:checked) .es{display:none}
       </a>
       <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal" data-aria-es="Menú principal" data-aria-en="Main menu">
         <a href="#top"><span class="es" lang="es">Inicio</span><span class="en" lang="en">Home</span></a>
+        <button type="button" class="benefits-btn" id="dd-porque" data-bubbles="right"><span class="es" lang="es">Porque</span><span class="en" lang="en">Because</span></button>
         <button type="button" id="dd-sobre"><span class="es" lang="es">Sobre nos</span><span class="en" lang="en">About us</span></button>
         <button type="button" id="dd-entrar"><span class="es" lang="es">Entrar</span><span class="en" lang="en">Sign in</span></button>
         <div class="dd-sep"></div>
@@ -909,10 +912,6 @@ body:has(#lang-en:checked) .es{display:none}
       </nav>
     </div>
     <div class="brand-group">
-      <button class="btn btn-ghost benefits-btn" type="button" id="benefits-btn" aria-label="Descubrir los beneficios de reír" data-aria-es="Descubrir los beneficios de reír" data-aria-en="Discover the benefits of laughing">
-        <span class="es" lang="es">Porque</span><span class="en" lang="en">Because</span>
-        <img class="btn-anim" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/07-descorche-anim-lanza.svg" alt="" aria-hidden="true" width="30" height="30">
-      </button>
       <button class="btn btn-primary" type="button" id="open-upload"><span class="es" lang="es">Publicar risa</span><span class="en" lang="en">Share a laugh</span></button>
         <div class="transport topbar-transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
           <button class="tr-btn" type="button" id="gente-prev" data-prev aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
@@ -2342,6 +2341,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     ddBtn.addEventListener('click', function (e) { e.preventDefault(); setDD(!dd.classList.contains('open')); });
     document.addEventListener('click', function (e) { if (!dd.contains(e.target) && !ddBtn.contains(e.target)) setDD(false); });
     function ddAct(id, fn) { var b = document.getElementById(id); if (b) b.addEventListener('click', function () { setDD(false); fn(); }); }
+    ddAct('dd-porque', function () { /* el efecto lo dispara .benefits-btn (burbujas a la derecha) */ });
     ddAct('dd-entrar', function () { var p = document.getElementById('entrar-page'); if (p) p.hidden = !p.hidden; });
     ddAct('dd-mejorar', function () { showTab('tecnologia'); document.getElementById('expande').scrollIntoView({ behavior: 'smooth' }); });
     ddAct('dd-sobre-liberada', function () { window.open('https://liberada.net', '_blank', 'noopener'); });
@@ -2405,11 +2405,86 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 
-  /* ── BENEFICIOS · lleva a la sección ── */
-  var benefits = document.getElementById('benefits-btn');
-  if (benefits) benefits.addEventListener('click', function () {
-    var b = document.getElementById('ciencia-benefits');
-    if (b) b.scrollIntoView({ behavior: 'smooth' });
+  /* ── BENEFICIOS · «Porque»: burbujas de beneficios. El del menú las
+     lanza hacia la derecha (data-bubbles=right); Ciencia hacia abajo. ── */
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var benefitPool = [
+    'Libera <b>endorfinas</b> y baja el estrés al instante.',
+    'Relaja los músculos hasta <b>45 minutos</b> después.',
+    'Da un empujón a tu <b>sistema inmunitario</b>.',
+    'Mejora la <b>oxigenación</b> de la sangre.',
+    'Ayuda a <b>bajar la tensión</b> arterial.',
+    'Es un <b>ejercicio abdominal</b> suave y gratis.',
+    'Sube tu <b>tolerancia al dolor</b>.',
+    'Refuerza los <b>vínculos</b> con quien te rodea.',
+    'Espanta la <b>ansiedad</b> y mejora el humor.',
+    'Te ancla en el <b>aquí y ahora</b>.',
+    'Quema unas <b>10 calorías</b> por minuto de carcajada.',
+    'Entrena el <b>diafragma</b> y mejora la respiración.',
+    'Favorece un <b>sueño profundo</b> al final del día.',
+    'Estimula la <b>circulación</b> como un mini cardio.',
+    'La alegría se asocia a <b>vivir más</b> años.',
+    'Llena el cerebro de <b>dopamina</b>, la molécula del placer.',
+    'Contagia: es la emoción <b>más viral</b> que existe.',
+    'Mejora la <b>memoria y la concentración</b> justo después.',
+    'Cuida el corazón: la carcajada <b>ensancha las arterias</b>.',
+    'Te recuerda que <b>jugar</b> también es cosa de mayores.'
+  ];
+  var pool = benefitPool.slice();
+  var benefitsBtns = Array.prototype.slice.call(document.querySelectorAll('.benefits-btn'));
+  var beneAudio = new Audio();
+  var beneIdx = -1;
+  var bubbles = new Set();
+  function stopBene() { try { beneAudio.pause(); beneAudio.currentTime = 0; } catch (_) {} }
+  function nextGenteClip() {
+    var list = (app.risas || []).filter(function (c) { return c && c.src; });
+    if (!list.length) return;
+    beneIdx = (beneIdx < 0) ? 0 : (beneIdx + 1) % list.length;
+    beneAudio.src = list[beneIdx].src;
+    beneAudio.play().catch(function () {});
+  }
+  function spawnBubble(text, k, anchor, dir) {
+    var bub = document.createElement('div');
+    bub.className = 'bubble';
+    bub.innerHTML = text;
+    bub.setAttribute('role', 'status');
+    var r = anchor.getBoundingClientRect();
+    var x, y;
+    if (dir === 'right') {
+      x = r.right + 14 + k * 96;
+      if (x > window.innerWidth - 244) x = window.innerWidth - 244 - k * 96;
+      y = r.top + 8;
+    } else {
+      x = Math.min(Math.max(r.left, 14), window.innerWidth - 244);
+      y = r.bottom + 12 + k * 96;
+      if (y > window.innerHeight - 140) y = window.innerHeight - 140 - k * 96;
+    }
+    bub.style.left = x + 'px'; bub.style.top = y + 'px';
+    document.body.appendChild(bub);
+    bubbles.add(bub);
+    function dismiss() {
+      if (!bub.isConnected) return;
+      bub.remove();
+      bubbles.delete(bub);
+      if (!bubbles.size) stopBene();
+    }
+    bub.addEventListener('click', dismiss);
+    setTimeout(dismiss, 5200);
+  }
+  function popBenefit(k, anchor, dir) {
+    if (!pool.length) return;
+    var idx = Math.floor(Math.random() * pool.length);
+    var text = pool.splice(idx, 1)[0];
+    spawnBubble('<b>Reír</b> ' + text.charAt(0).toLowerCase() + text.slice(1), k, anchor, dir);
+  }
+  benefitsBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var dir = btn.dataset.bubbles === 'right' ? 'right' : 'down';
+      nextGenteClip();
+      popBenefit(0, btn, dir);
+      if (!reduce) setTimeout(function () { popBenefit(1, btn, dir); }, 1000);
+      else popBenefit(1, btn, dir);
+    });
   });
 
   /* ── copy-prompt ── */
