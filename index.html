@@ -267,6 +267,14 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .react-pop-emoji{font-size:1.1rem; line-height:1}
 .react-pop-count{font-weight:800; min-width:1.3em}
 .react-pop-users{color:var(--ink-soft); font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.react-pop-sep{text-align:center; color:var(--ink-soft); opacity:.4; font-size:.7rem; line-height:1; padding:2px 0}
+a.react-user{color:var(--grape); text-decoration:none; font-weight:600}
+a.react-user:hover{text-decoration:underline}
+.reaction-list{list-style:none; margin:0; padding:0; display:grid; gap:10px; max-width:var(--maxw)}
+.reaction-item{display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--cream); border:2px solid rgba(42,24,16,.08); border-radius:14px; padding:10px 14px}
+.reaction-title{font-family:var(--disp); font-weight:700; font-size:.95rem; min-width:0}
+.react-chip-static{display:inline-flex; align-items:center; gap:6px; border:1.5px solid rgba(42,24,16,.18); background:#fff; border-radius:999px; padding:3px 10px; font-size:.78rem; white-space:nowrap}
+.rr-users{color:var(--ink-soft); font-size:.72rem}
 .quick-menu{position:fixed;z-index:60;background:var(--cream);border:2px solid var(--ink);border-radius:12px;
   padding:6px;box-shadow:4px 4px 0 rgba(42,24,16,.18);display:grid;gap:4px;min-width:150px}
 .quick-opt{padding:8px 12px;border:none;background:none;cursor:pointer;text-align:left;font-size:.85rem;
@@ -1104,6 +1112,7 @@ body:has(#lang-en:checked) .es{display:none}
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
   <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
+  <button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false"><span class="es" lang="es">Reacciones</span><span class="en" lang="en">Reactions</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -1189,7 +1198,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1248,7 +1257,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1841,7 +1850,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1871,7 +1880,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1927,10 +1936,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
+  <section class="content-section tab-panel" id="reacciones" aria-label="Reacciones" hidden>
+    <div class="wrap"><p class="feed-empty">…</p></div>
+  </section>
+
 
 <!-- ============ MODAL · COMPARTE TU RISA ============ -->
 <div class="modal-back" id="upload-modal" hidden>
@@ -2170,24 +2183,69 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     });
   });
 
-  /* ── Demo: reacciones de muestra del círculo (la API/feed las proveerá en v2).
-     player.react(cid, emoji, userId, name) siembra el desglose del chip. ── */
+  /* ── Reacciones REALES del círculo demo (maria + perfiles). Cada persona
+     tiene su emoji por defecto y reacciona a los clips que no son suyos; la
+     API/feed autenticada (Telegram) las proveerá en v2. Solo se renderizan
+     contadores y perfiles con sesión (currentSelf). ── */
+  var REACTORS = [
+    { key: 'maria',     name: 'María Demostración', emoji: '❤️' },
+    { key: 'ana',       name: 'Ana Pérez',          emoji: '😄' },
+    { key: 'sofia',     name: 'Sofía Torres',       emoji: '🤣' },
+    { key: 'pedro',     name: 'Pedro López',        emoji: '😂' },
+    { key: 'laura',     name: 'Laura Díaz',         emoji: '👏' },
+    { key: 'carlos',    name: 'Carlos Ruiz',        emoji: '😹' },
+    { key: 'marcflove', name: 'Marc',               emoji: '❤️' }
+  ];
+  function currentSelf() {
+    try {
+      var s = JSON.parse(localStorage.getItem('flove:self') || 'null');
+      return (s && s.id) ? s : null;
+    } catch (e) { return null; }
+  }
   function seedReactions() {
-    var DEMO = [
-      ['ana', 'Ana Pérez'], ['sofia', 'Sofía Torres'], ['marcflove', 'Marc'],
-      ['laura', 'Laura Díaz'], ['pedro', 'Pedro López'], ['carlos', 'Carlos Ruiz']
-    ];
     var clips = (app.risas || []).filter(function (c) { return c && c.id; });
-    clips.forEach(function (c, i) {
-      var a = DEMO[i % DEMO.length], b = DEMO[(i + 2) % DEMO.length], d = DEMO[(i + 4) % DEMO.length];
-      app.sections.forEach(function (s) {
-        if (!s.player || !s.player.react) return;
-        s.player.react(c.id, '🤣', a[0], a[1]);
-        s.player.react(c.id, '😂', b[0], b[1]);
-        if (i % 3 === 0) s.player.react(c.id, '❤️', d[0], d[1]);
+    clips.forEach(function (c) {
+      var author = String(c.key || '').trim();
+      REACTORS.forEach(function (u) {
+        if (u.key === author) return;                 // el autor no se reacciona a sí mismo
+        app.sections.forEach(function (s) {
+          if (s.player && s.player.react) s.player.react(c.id, u.emoji, u.key, u.name);
+        });
       });
     });
     app.sections.forEach(function (s) { if (s.player && s.player.render) s.player.render(); });
+    renderReactionsTab();
+  }
+  function renderReactionsTab() {
+    var panel = document.getElementById('reacciones');
+    if (!panel) return;
+    if (!currentSelf()) {
+      panel.innerHTML = '<div class="wrap"><div class="section-head head-center"><p class="eyebrow">Reacciones</p>' +
+        '<h2><span class="es" lang="es">Reacciones de la gente</span><span class="en" lang="en">People\'s reactions</span></h2>' +
+        '<p class="feed-empty"><span class="es" lang="es">Inicia sesión con Telegram para ver y dejar reacciones.</span><span class="en" lang="en">Sign in with Telegram to see and leave reactions.</span></p></div></div>';
+      return;
+    }
+    var items = [];
+    (app.risas || []).forEach(function (c) {
+      if (!c || !c.id) return;
+      var m = null;
+      app.sections.forEach(function (s) { if (!m && s.player && s.player.getReactions) m = s.player.getReactions().get(c.id) || null; });
+      if (!m || !m.size) return;
+      var chips = [];
+      m.forEach(function (uids, emoji) {
+        var names = Array.from(uids).map(function (uid) {
+          var r = REACTORS.find(function (x) { return x.key === uid; });
+          return { uid: uid, name: r ? r.name : uid };
+        });
+        chips.push('<span class="react-chip-static">' + emoji + ' ' + uids.size +
+          ' <span class="rr-users">' + names.map(function (n) { return '<a class="react-user" href="#/u/' + encodeURIComponent(n.uid) + '">' + F.esc(n.name) + '</a>'; }).join(', ') + '</span></span>');
+      });
+      items.push('<li class="reaction-item"><div class="reaction-title">' + F.esc(c.t || c.name || '') + '</div>' + chips.join(' ') + '</li>');
+    });
+    panel.innerHTML = '<div class="wrap"><div class="section-head head-center"><p class="eyebrow">Reacciones</p>' +
+      '<h2><span class="es" lang="es">Reacciones de la gente</span><span class="en" lang="en">People\'s reactions</span></h2>' +
+      (items.length ? '<ul class="reaction-list">' + items.join('') + '</ul>' : '<p class="feed-empty">Aún no hay reacciones.</p>') +
+      '</div></div>';
   }
   /* ── GENTE + MUNDO: dos secciones, el mismo driver ── */
   var app = window.FloveApp.init({
@@ -2196,7 +2254,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     clipsOf: window.Risa.clipsOf,
     favKey: 'risa-liberada-favs',
     botUrl: window.Risa.TELEGRAM_BOT,
-    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia'],
+    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones'],
+    self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
     onFeed: seedReactions,
     onReaction: function (t, emoji) {
@@ -2259,6 +2318,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   function showTab(name) {
     tabBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === name)); });
     Array.prototype.slice.call(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.hidden = p.id !== name; });
+    if (name === 'reacciones') renderReactionsTab();
   }
   tabBtns.forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); }); });
   showTab('cultura');
