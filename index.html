@@ -269,8 +269,8 @@ img{max-width:100%; display:block}
   display:inline-flex;align-items:center;gap:4px}
 .thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape)}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
-.thread-count{font-size:.5rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
-.thread-toggle-line{width:100%;line-height:1;margin-top:-22px;position:relative;z-index:1}
+.thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
+.thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .tags-cloud{overflow:hidden;transition:max-height .35s ease;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
 .tags-chips{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tags-plus,.tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;
@@ -2174,7 +2174,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         toggleLine='<div class="thread-toggle-line" style="padding-left:'+(12+depth*20)+'px">'+
           '<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(expanded.has(cid)?'true':'false')+'" aria-label="'+(expanded.has(cid)?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
             '<span class="thread-arrow">↳</span>'+
-            (expanded.has(cid)?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
+            (expanded.has(cid)?'':'<span class="thread-count">'+cnt+'</span>')+
           '</button></div>';
       }
       const clipMeta =
