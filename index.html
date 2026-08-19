@@ -551,6 +551,10 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .entrar-opts .btn{justify-content:center; width:100%; text-decoration:none; text-align:center}
 .entrar-opts .btn-ghost{width:100%; border:2.5px solid var(--ink); background:var(--base)}
 .entrar-note{margin:0}
+.entrar-e-note{margin:4px 0 0;font-size:.82rem;color:var(--ink-soft)}
+.mejorar-cta{font-size:.9rem;color:var(--ink-soft);margin:0 0 12px}
+.mejorar-actions{margin:16px 0 4px}
+.mejorar-activar{justify-content:center;width:100%;text-decoration:none}
 .mejorar-list{margin:0 0 16px; padding-left:20px; line-height:1.55; color:var(--ink-soft)}
 .mejorar-list b{color:var(--ink)}
 .mejorar-list code{font-family:var(--mono); font-size:.85em; background:var(--base); padding:1px 6px; border-radius:8px}
@@ -1962,7 +1966,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <p class="modal-sub"><span class="es" lang="es">Accede a tu perfil liberada para ver todas tus risas juntas. Edítalo desde su botón de Editar allí si entras.</span><span class="en" lang="en">Access your liberada profile to see all your laughs together. Edit it from its Edit button there if you enter.</span></p>
     <div class="entrar-opts">
       <a class="btn btn-primary" id="em-miniapp" href="#/entrar">📱 <span class="es" lang="es">Abrir mi perfil (miniapp)</span><span class="en" lang="en">Open my profile (miniapp)</span></a>
-      <p style="margin:4px 0 0;font-size:.82rem;color:var(--ink-soft)"><span class="es" lang="es">E:</span><span class="en" lang="en">E:</span></p>
+      <p class="entrar-e-note"><span class="es" lang="es">E:</span><span class="en" lang="en">E:</span></p>
       <button type="button" class="btn btn-ghost" id="em-code">🤖 <span class="es" lang="es">Bot</span><span class="en" lang="en">Bot</span></button>
       <button type="button" class="btn btn-ghost" id="em-email">📧 <span class="es" lang="es">Mail</span><span class="en" lang="en">Mail</span></button>
     </div>
@@ -1976,14 +1980,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <button class="modal-x" type="button" id="mm-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
     <h2 id="mm-title">✨ <span class="es" lang="es">Mejorar tu risa</span><span class="en" lang="en">Upgrade your laugh</span></h2>
     <p class="modal-sub"><span class="es" lang="es">Gratis!</span><span class="en" lang="en">Free!</span></p>
-    <p class="mejorar-cta" style="font-size:.9rem;color:var(--ink-soft);margin:0 0 12px"><span class="es" lang="es">Ven aquí desde tu miniapp en Telegram o dale a Activar y sigue los 2 pasos siguientes (fácil).</span><span class="en" lang="en">Come here from your Telegram miniapp or tap Activate and follow the next 2 easy steps.</span></p>
+    <p class="mejorar-cta"><span class="es" lang="es">Ven aquí desde tu miniapp en Telegram o dale a Activar y sigue los 2 pasos siguientes (fácil).</span><span class="en" lang="en">Come here from your Telegram miniapp or tap Activate and follow the next 2 easy steps.</span></p>
     <ul class="mejorar-list">
       <li><b><span class="es" lang="es">🌐 Subdominio de autor</span><span class="en" lang="en">🌐 Author subdomain</span></b> <span class="es" lang="es">— tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</span><span class="en" lang="en">— your profile at <code>&lt;your-name&gt;.liberada.net</code> to share all your laughs with a short link.</span></li>
       <li><b><span class="es" lang="es">🚀 Más perfil</span><span class="en" lang="en">🚀 More profile</span></b> <span class="es" lang="es">— listas de favoritos, seguir… y más apps con más profundidad.</span><span class="en" lang="en">— favourite lists, following… and more apps with more depth.</span></li>
       <li><b><span class="es" lang="es">✏️ Editar perfil</span><span class="en" lang="en">✏️ Edit profile</span></b> <span class="es" lang="es">— cambia tu nombre público y tu subdominio desde la web o el bot.</span><span class="en" lang="en">— change your public name and your subdomain from the web or the bot.</span></li>
     </ul>
-    <div class="mejorar-actions" style="margin:16px 0 4px">
-      <a class="btn btn-primary" id="mm-activar" href="#/entrar" style="justify-content:center;width:100%;text-decoration:none"><span class="es" lang="es">Activar</span><span class="en" lang="en">Activate</span></a>
+    <div class="mejorar-actions">
+      <a class="btn btn-primary mejorar-activar" id="mm-activar" href="#/entrar"><span class="es" lang="es">Activar</span><span class="en" lang="en">Activate</span></a>
     </div>
 
   </div>
