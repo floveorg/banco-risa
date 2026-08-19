@@ -9,6 +9,27 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v1.1.0] — 2026-08-19 · hito: navegación de contenidos en la web
+
+**Hito de frontend: la web es ahora un navegador de contenidos** (hilos,
+vídeo, deep links y tabs), no una lista plana de audios.
+
+- **Hilos como sección de comentarios**: respuestas anidadas con profundidad,
+  colapsadas por defecto con contador, flecha `↳` grande que expande/colapsa, y
+  reproducción en profundidad (una respuesta suena antes que su hermano).
+- **Vídeo de primera clase**: `Aahh` (mp4) se muestra y reproduce en su zona del
+  clip, con enlace «Video/Cerrar», proporción natural (sin barras), abierto por
+  defecto sin autoplay, y al terminar la playlist continúa con el siguiente clip.
+  Los sub-clips se comportan igual que los padres (título→etiquetas, autor→perfil).
+- **Deep links por clip** `#/c/<id>` con resaltado en el hilo; las tarjetas de
+  «Cadenas» de los perfiles enlazan al clip original.
+- **Tabs planos** (Ohm · Común · Cultura · Ciencia · Tech) sin scroll lateral;
+  Tech recuperada como pestaña; idioma/tema en el menú.
+- **Bot**: pie de canal «en respuesta a» con enlace al original; `/perfil` y
+  `/notify on|off`; confirmación de subida en un solo mensaje.
+- **Comunidad nativa D1** (0007): follows · reacciones · plays · avisos ·
+  respuestas rápidas (endpoints `/api/*` listos para desplegar).
+
 ## [v1.0.7] — 2026-08-18 · usuarios reales (imaginarios) + cadenas + subdominios
 
 - **Cinco usuarios de la comunidad (demos con nombre español)** sustituyen a los
