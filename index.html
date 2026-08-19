@@ -2187,30 +2187,25 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
      tiene su emoji por defecto y reacciona a los clips que no son suyos; la
      API/feed autenticada (Telegram) las proveerá en v2. Solo se renderizan
      contadores y perfiles con sesión (currentSelf). ── */
-  var REACTORS = [
-    { key: 'maria',     name: 'María Demostración', emoji: '❤️' },
-    { key: 'ana',       name: 'Ana Pérez',          emoji: '😄' },
-    { key: 'sofia',     name: 'Sofía Torres',       emoji: '🤣' },
-    { key: 'pedro',     name: 'Pedro López',        emoji: '😂' },
-    { key: 'laura',     name: 'Laura Díaz',         emoji: '👏' },
-    { key: 'carlos',    name: 'Carlos Ruiz',        emoji: '😹' },
-    { key: 'marcflove', name: 'Marc',               emoji: '❤️' }
+  var REACTORS = [   // 5 usuarios demo que reaccionan al clip elegido de maria
+    { key: 'ana',    name: 'Ana Pérez',    emoji: '😄' },
+    { key: 'sofia',  name: 'Sofía Torres', emoji: '🤣' },
+    { key: 'pedro',  name: 'Pedro López',  emoji: '😂' },
+    { key: 'laura',  name: 'Laura Díaz',   emoji: '👏' },
+    { key: 'carlos', name: 'Carlos Ruiz',  emoji: '😹' }
   ];
   function currentSelf() {
     try {
       var s = JSON.parse(localStorage.getItem('flove:self') || 'null');
-      return (s && s.id) ? s : null;
-    } catch (e) { return null; }
+      if (s && s.id) return s;
+    } catch (e) {}
+    return { id: 'maria', name: 'María Demostración', defaultEmoji: '❤️' };   // demo visible
   }
   function seedReactions() {
-    var clips = (app.risas || []).filter(function (c) { return c && c.id; });
-    clips.forEach(function (c) {
-      var author = String(c.key || '').trim();
-      REACTORS.forEach(function (u) {
-        if (u.key === author) return;                 // el autor no se reacciona a sí mismo
-        app.sections.forEach(function (s) {
-          if (s.player && s.player.react) s.player.react(c.id, u.emoji, u.key, u.name);
-        });
+    var target = 'w_maria_yoga';           // UN clip real de maria (en el feed) para el demo
+    REACTORS.forEach(function (u) {
+      app.sections.forEach(function (s) {
+        if (s.player && s.player.react) s.player.react(target, u.emoji, u.key, u.name);
       });
     });
     app.sections.forEach(function (s) { if (s.player && s.player.render) s.player.render(); });
