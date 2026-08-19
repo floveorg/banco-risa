@@ -272,10 +272,13 @@ img{max-width:100%; display:block}
 .thread-count{font-size:.5rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-15px;position:relative;z-index:1}
 .tags-cloud{overflow:hidden;transition:max-height .35s ease;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
-.tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--marigold);color:var(--ink);
-  border:2px solid var(--ink);display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:1rem;line-height:1}
+.tags-chips{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tags-plus,.tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;
+  cursor:pointer;font-weight:700;font-size:1rem;line-height:1;border:2px solid var(--ink);transition:transform .1s}
+.tags-plus{background:var(--persimmon);color:#fff}
+.tags-minus{background:var(--marigold);color:var(--ink)}
+.tags-plus:hover,.tags-minus:hover{transform:scale(1.12)}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
-.title-plus{font-size:.8em;color:var(--persimmon);font-weight:700;margin-right:3px}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
@@ -2145,24 +2148,24 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             : '<a class="orig" href="'+t.link+'" target="_blank" rel="noopener">escuchar original ↗</a>');
       const src=t.src||'';
       const cid=t.clip&&t.clip.id;
+      const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
       const tagsLvl=cid?(tagsLevels.get(cid)||0):0;
-      const plusGlyph=(cid && tagArr.length && tagsLvl===0)?'<span class="title-plus" aria-hidden="true">＋</span>':'';
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Abrir más etiquetas':'Mostrar etiquetas')+'">'+plusGlyph+esc(t.t)+'</button>';
-      // Nube de etiquetas: crece un 10% más hacia abajo por cada clic; el − la pliega.
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // Nube de etiquetas con su propio signo ＋: cada clic crece 10% más abajo; − pliega.
       let cloud='';
       if(cid && tagArr.length){
         cloud='<div class="tags-cloud" data-cloud="'+esc(cid)+'" style="margin-left:'+((depth>0?30:36)+depth*20)+'px">'+
+          '<button type="button" class="tags-plus" data-tagsplus="'+esc(cid)+'" title="Más etiquetas (10% más)" aria-label="Más etiquetas">＋</button>'+
           (tagsLvl>0?'<button type="button" class="tags-minus" data-tagsminus="'+esc(cid)+'" title="Plegar etiquetas" aria-label="Plegar etiquetas">−</button>':'')+
-          tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
+          '<span class="tags-chips" data-chips>'+tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+'</span>'+
           '</div>';
       }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
-      const depth = t.depth || 0;
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
       let toggleLine='';
@@ -2191,18 +2194,22 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       if(cloud){
         const cld=li.querySelector('[data-cloud]');
         if(cld){
-          const full=cld.scrollHeight||0;
-          const h=tagsLvl>0 ? Math.max(Math.round(full*(tagsLvl/10)), 22) : 0; // ≥1 línea visible
-          cld.style.maxHeight = h+'px';
+          const chipsEl=cld.querySelector('[data-chips]');
+          const chipsH=chipsEl?(chipsEl.scrollHeight||0):0;
+          const ctrlH=Math.max(0, (cld.scrollHeight||0)-chipsH);
+          const h=ctrlH+Math.round(chipsH*(tagsLvl/10)); // controles siempre visibles + 10%/nivel de chips
+          cld.style.maxHeight=h+'px';
         }
       }
       if(cid && tagArr.length){
-        li.querySelector('.clip-title').addEventListener('click', function(e){
+        const grow=function(e){
           e.stopPropagation();
           const lvl=(tagsLevels.get(cid)||0)+1;
           tagsLevels.set(cid, lvl>10?0:lvl);
           render();
-        });
+        };
+        li.querySelector('.clip-title').addEventListener('click', grow);
+        li.querySelector('[data-tagsplus]').addEventListener('click', grow);
         const minus=li.querySelector('[data-tagsminus]');
         if(minus) minus.addEventListener('click', function(e){
           e.stopPropagation();
