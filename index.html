@@ -150,7 +150,13 @@ img{max-width:100%; display:block}
 .tracklist{list-style:none; margin:0; padding:0; display:grid; gap:6px}
 .tracklist li{display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:14px;
   background:var(--cream); border:2px solid rgba(42,24,16,.08); font-size:.9rem}
-.tracklist li.active{background:rgba(255,176,32,.28); border-color:var(--marigold)}
+@keyframes clipGlow{0%,100%{background:rgba(255,176,32,.18); box-shadow:inset 0 0 0 2px rgba(255,176,32,.25)}
+  50%{background:rgba(255,176,32,.4); box-shadow:inset 0 0 0 2px var(--marigold)}}
+.tracklist li.active{background:rgba(255,176,32,.28); border-color:var(--marigold);
+  animation:clipGlow 2.6s ease-in-out infinite}
+.tracklist li.tgl.active .clip-card{background:rgba(255,176,32,.28);border-color:var(--marigold);
+  animation:clipGlow 2.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){ .tracklist li.active,.tracklist li.tgl.active .clip-card{animation:none} }
 .tracklist .ti{flex:1}
 .tracklist .by{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:45%}
 .tracklist .tag{font-family:var(--mono); font-size:.66rem; padding:2px 8px; border-radius:999px; white-space:nowrap}
@@ -273,7 +279,8 @@ img{max-width:100%; display:block}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
-.tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem;margin-top:-36px}
+.tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
+.tracklist li.clip-reply-row.reply-first{margin-top:-36px}   /* solo el primero se alinea con la flecha */
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
 .tracklist li.tgl{background:none;border:none;border-radius:0;padding:0;gap:2px}
@@ -533,9 +540,6 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .mejorar-list{margin:0 0 16px; padding-left:20px; line-height:1.55; color:var(--ink-soft)}
 .mejorar-list b{color:var(--ink)}
 .mejorar-list code{font-family:var(--mono); font-size:.85em; background:var(--base); padding:1px 6px; border-radius:8px}
-.mejorar-links{display:grid; gap:2px; margin-top:10px; border-top:2px dashed rgba(42,24,16,.18); padding-top:10px}
-.mejorar-links a{color:var(--ink); text-decoration:none; padding:8px 4px; border-radius:10px; font-size:.95rem}
-.mejorar-links a:hover{background:var(--marigold)}
 /* miniapp #/entrar */
 .entrar-wrap{max-width:560px}
 .entrar-intro{color:var(--ink-soft); line-height:1.55; margin:14px 0}
@@ -826,6 +830,10 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" id="dd-entrar"><span class="es" lang="es">Entrar</span><span class="en" lang="en">Sign in</span></button>
         <div class="dd-sep"></div>
         <button type="button" id="dd-mejorar" aria-expanded="false"><span class="es" lang="es">Mejorar ▾</span><span class="en" lang="en">Upgrade ▾</span></button>
+        <div class="dd-sep"></div>
+        <button type="button" data-tab-link="tecnologia"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
+        <button type="button" id="dd-sobre-liberada"><span class="es" lang="es">Sobre liberada</span><span class="en" lang="en">About liberada</span></button>
+        <button type="button" id="dd-contactar"><span class="es" lang="es">Contact</span><span class="en" lang="en">Contact</span></button>
       </nav>
     </div>
     <div class="brand-group">
@@ -1075,11 +1083,10 @@ body:has(#lang-en:checked) .es{display:none}
 
 <!-- ============ BARRAS INFERIORES · ESPIRITUALIDAD · CULTURA · CIENCIA · COMUNIDAD ============ -->
 <nav class="tab-bar" aria-label="Secciones de espiritualidad, comunidad, cultura, ciencia y tecnología">
-  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false"><span class="es" lang="es">Interior</span><span class="en" lang="en">Inner</span></button>
+  <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false"><span class="es" lang="es">Ohm</span><span class="en" lang="en">Ohm</span></button>
   <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false"><span class="es" lang="es">Común</span><span class="en" lang="en">Community</span></button>
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
-  <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -1160,11 +1167,10 @@ body:has(#lang-en:checked) .es{display:none}
           </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Cultura">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1220,11 +1226,10 @@ body:has(#lang-en:checked) .es{display:none}
         </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ciencia">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1743,18 +1748,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         </div>
       </div>
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Tech">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="true">Tech</button>
       </nav>
     </div>
   </section>
   <section class="content-section tab-panel" id="espiritualidad" aria-label="Espiritualidad" hidden>
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Interior</p>
+        <p class="eyebrow">Ohm</p>
         <h2>Una risa que conecta</h2>
         <p>La carcajada no pide traducción: se entiende antes que las palabras. Esta sección es una introducción a la risa como puente — una pausa compartida que nos acerca a quienes ríen con nosotros y a lo que nos hace humanos.</p>
       </div>
@@ -1773,12 +1777,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <span class="play">▶</span><span><b>Archivo de vídeos de risa</b><small>Wikimedia Commons · libre</small></span></a>
         </div>
       </div>
-      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Interior">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Interior</button>
+      <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Ohm">
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1831,11 +1834,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     </div>
     <div class="wrap">
       <nav class="tab-bar tab-bar-foot" aria-label="Ir a otra sección desde Común">
-        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Interior</button>
+        <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
         <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button>
-        <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1964,11 +1966,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <div class="mejorar-actions" style="margin:16px 0 4px">
       <a class="btn btn-primary" id="mm-activar" href="#/entrar" style="justify-content:center;width:100%;text-decoration:none"><span class="es" lang="es">(Activar)</span><span class="en" lang="en">(Activate)</span></a>
     </div>
-    <nav class="mejorar-links" aria-label="Enlaces de Mejorar" data-aria-es="Enlaces de Mejorar" data-aria-en="Upgrade links">
-      <a href="#tecnologia" data-tab-link="tecnologia"><span class="es" lang="es">Tecnología</span><span class="en" lang="en">Tech</span></a>
-      <a href="#" id="mm-sobre-liberada"><span class="es" lang="es">Sobre liberada</span><span class="en" lang="en">About liberada</span></a>
-      <a href="#" id="mm-contactar"><span class="es" lang="es">Contactar</span><span class="en" lang="en">Contact</span></a>
-    </nav>
+
   </div>
 </div>
 
@@ -2200,11 +2198,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       return li;
     }
 
-    function renderNode(t, depth){
-      trackList.appendChild(buildLi(t));
+    function renderNode(t, depth, first){
+      const li=buildLi(t);
+      if(first && depth>0) li.classList.add('reply-first');   // solo el 1º se sube a la fila de la flecha
+      trackList.appendChild(li);
       const id=t.clip&&t.clip.id;
       if(id && expanded.has(id)){
-        (treeChildren.get(id)||[]).forEach((k)=>renderNode(k, depth+1));
+        (treeChildren.get(id)||[]).forEach((k, idx)=>renderNode(k, depth+1, idx===0));
       }
     }
 
@@ -3655,6 +3655,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       brandLogo.setAttribute('aria-expanded','false');
       showTab('tecnologia',true);
     });
+    const ddSobreLib=document.getElementById('dd-sobre-liberada');
+    if(ddSobreLib) ddSobreLib.addEventListener('click',()=>{ closeDD(); window.open('https://liberada.net','_blank','noopener'); });
+    const ddContactar=document.getElementById('dd-contactar');
+    if(ddContactar) ddContactar.addEventListener('click',()=>{ closeDD(); window.location='mailto:risa@liberada.net'; });
   }
 
   /* ============ USERNAME PLAYLIST NAME ============ */
