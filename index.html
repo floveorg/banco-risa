@@ -2131,6 +2131,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
     let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (título)
+    let videosOpen=new Set();  // ids de clips con su vídeo abierto (no lo pliega la flecha)
+    let videoState=new Map();  // cid → {time, playing} para restaurar tras re-render
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2171,12 +2173,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       // Clips de vídeo: audio normal + enlace «Video» que expande (sin autoplay).
       // La caja nace oculta; la vista «solo vídeos» la abre después del render.
       const isVideoClip = !!(t.isVideo && src);
+      const videoOpen = isVideoClip && cid && videosOpen.has(cid);
       const videoBtn = isVideoClip
-        ? '<button type="button" class="clip-video-btn" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">Video</button>'
+        ? '<button type="button" class="clip-video-btn'+(videoOpen?' on':'')+'" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">'+(videoOpen?'Cerrar':'Video')+'</button>'
         : '';
       const videoBox = isVideoClip
-        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden>'+
-          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline preload="none"></video></div>'
+        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'"'+(videoOpen?'':' hidden')+'>'+
+          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline'+(videoOpen?' preload="auto"':' preload="none"')+' data-cid="'+esc(cid||'')+'" data-open="'+(videoOpen?'1':'0')+'"></video></div>'
         : '';
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
@@ -2236,6 +2239,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             });
           }
           if(box.hidden){
+            if(cid) videosOpen.add(cid);
             box.hidden=false;
             if(vid) vid.play().catch(function(){});
             vbtn.classList.add('on');
@@ -2243,12 +2247,22 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             // Mantén el clip (y su botón Video/Cerrar) a la vista.
             setTimeout(function(){ li.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
           } else {
+            if(cid) videosOpen.delete(cid);
             box.hidden=true;
             if(vid) vid.pause();
             vbtn.classList.remove('on');
             vbtn.textContent='Video';
           }
         });
+      }
+      if(videoOpen && cid){
+        // Restaura posición/reproducción del vídeo tras un re-render (p. ej. flecha).
+        const vidR=li.querySelector('video');
+        if(vidR){
+          const st=videoState.get(cid);
+          if(st && st.time>0) vidR.currentTime=st.time;
+          if(st && st.playing) vidR.play().catch(function(){});
+        }
       }
       if(isDL){
         li.style.cursor='pointer';
@@ -2270,6 +2284,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     }
 
     function render(){
+      // Guarda el estado de los vídeos abiertos antes de reconstruir.
+      trackList.querySelectorAll('video[data-open="1"]').forEach(function(v){
+        const cid=v.dataset.cid;
+        if(cid) videoState.set(cid, { time: v.currentTime||0, playing: !v.paused });
+      });
       trackList.innerHTML='';
       const byId=new Map();
       tracks.forEach((t)=>{ if(t.clip&&t.clip.id) byId.set(t.clip.id,t); });
