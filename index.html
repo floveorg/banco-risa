@@ -1337,6 +1337,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <img src="risaliberada-v1-flow.svg" alt="Flujo de risa liberada (liberada v1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
               <figcaption>Flujo liberada v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
+            <figure>
+              <img src="risaliberada-v1-subdomain.svg" alt="Flujo del subdominio: ensureUsername resuelve la key ya cogida con sufijo determinista (_2, _3…) y el renombre con error si está tomada; desde el perfil se crean aliases (POST /api/aliases)" loading="lazy">
+              <figcaption>Subdominio · keys ya cogidas y aliases: de la aprobación del clip al perfil, con la resolución de conflictos y la creación de aliases <a href="risaliberada-v1-subdomain.png" download>descargar PNG ↗</a></figcaption>
+            </figure>
             <h4>Las piezas</h4>
             <ol>
               <li><b>Repositorio público</b> — código, feed <code>risa.json</code> y la web, todo en un solo repo.</li>
@@ -1482,17 +1486,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   <li>Addons por flag: se activan desde la interfaz sin romper lo publicado</li>
                   <li>Feed agregable: puede sumar risas de otros bots (vídeo incluido)</li>
                   <li>Guardarraíles del contrato: las claves desconocidas de <code>flove.json</code> se ignoran</li>
-                </ul>
-                <h5 class="feat-area">Identidad · conflictos de key y aliases</h5>
-                <ul>
-                  <li>La key de autor deriva de tu nombre público: minúsculas sin acentos, <code>_</code> por separadores, 3–20 caracteres y al menos una letra</li>
-                  <li>Solo chocan los nombres públicos: anónimo y hash salado nunca generan conflicto</li>
-                  <li>Key ya tomada al publicar: se resuelve sola con sufijo determinista <code>_2</code>, <code>_3</code>… — nunca se roba la key de otro</li>
-                  <li>Si la key ya es tuya, se devuelve la misma (idempotente, sin duplicados en <code>usernames.json</code>)</li>
-                  <li>Renombre manual (<code>/usuario</code>): si el nombre lo usa otro → «Ese nombre ya está tomado.» y eliges otra (sin sufijo automático)</li>
-                  <li>Aliases: nombres alternativos que apuntan a tu key (mismo autor), públicos o privados</li>
-                  <li>Crear alias: <code>POST /api/aliases</code> con tu token y flag <code>private</code> — <code>INSERT OR IGNORE</code>, no pisa los existentes</li>
-                  <li>Leer aliases: <code>GET /api/aliases/:key</code> — los privados solo con tu auth</li>
                 </ul>
                 <h5 class="feat-area">Integración con flove</h5>
                 <ul>
