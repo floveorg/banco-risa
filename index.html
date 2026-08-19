@@ -279,7 +279,9 @@ img{max-width:100%; display:block}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
 .tag-chip{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;cursor:pointer;border-radius:999px;
-  padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;margin-left:2px}
+  padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;
+  margin-left:2px;box-shadow:0 2px 0 rgba(42,24,16,.18);transition:transform .1s}
+.tag-chip:hover{transform:translateY(-1px)}
 .tag-grow{background:var(--persimmon);color:#fff}
 .tag-shrink{background:var(--marigold);color:var(--ink)}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
@@ -2123,6 +2125,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
+    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (el título las abre)
     let tagsExtra=new Map();   // id → etiquetas extra mostradas (tras el ＋; − resetea)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
@@ -2151,12 +2154,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
-      // Etiquetas SIEMPRE abiertas en continuación, delante del nombre. Muestran
-      // una cantidad mínima por defecto; el chip ＋ añade más y el − (tras el
-      // primer ＋) resetea a esa cantidad inicial.
+      const tagsOpen=!!cid && tagsOpenSet.has(cid);
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // Etiquetas del clip: plegadas por defecto; el título las despliega.
+      // Muestran una cantidad mínima; el chip flotante ＋ añade más y hace
+      // aparecer el − flotante, que resetea a la cantidad inicial.
       let chips='';
-      if(cid && tagArr.length){
+      if(tagsOpen && tagArr.length){
         const extra=tagsExtra.get(cid)||0;
         const shown=Math.min(tagArr.length, 3+extra);
         const hasHidden=shown<tagArr.length;
@@ -2193,6 +2197,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         li.innerHTML=row;
       }
       if(cid && tagArr.length){
+        li.querySelector('.clip-title').addEventListener('click', function(e){
+          e.stopPropagation();
+          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          render();
+        });
         const growBtn=li.querySelector('[data-taggrow]');
         if(growBtn) growBtn.addEventListener('click', function(e){
           e.stopPropagation();
