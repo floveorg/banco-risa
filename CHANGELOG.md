@@ -9,6 +9,35 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v2.1.0] — 2026-08-19 · hito: Calling libs (rama `v2-central`)
+
+**Hito: risa/index deja el monolito y se construye sobre `central/shared/code`**
+(`flove-feed` · `flove-tags` · `flove-player` · `flove-bottom-nav` ·
+`flove-sound` · `flove-app`). La versión anterior queda congelada como **v2.0.0**
+(descarga `risa-v2.zip`).
+
+- **Index nuevo sobre las libs centrales**: el driver `FloveApp` (antes
+  `risa-app.js`) vive ahora en `central/shared/code/js/flove-app.js`; GENTE y
+  RISAS DEL MUNDO llaman al mismo código.
+- **Menú del logo reparado**: el dropdown `#brand-dd` abría/cerraba `hidden`
+  pero el CSS solo reacciona a `.open`; ahora `setDD()` conmuta `.open` +
+  `aria-expanded`.
+- **Media toggle acumulativo**: audio y vídeo son checks independientes (ambos →
+  todo, ninguno → todo); y arreglado el bug que vaciaba la playlist: `select()`
+  alimenta `allTracks` para que el filtro media trabaje sobre lo seleccionado.
+- **Risas del mundo vuelve a la playlist curada**: se readjunta el scrapped de
+  Wikimedia Commons (contagiosa · carcajada · pícara · risita · mundo) tal cual
+  estaba en liberada v1, vía `sc.clips` (fuente propia de la sección); fuera de
+  ahí los clips subidos por el bot.
+- **Tags contenidas**: las chips flotantes ya no derivan hacia el borde de la
+  playlist (rango de deriva acotado en `flove-tags`).
+
+## [v2.0.0] — 2026-08-19 · versión anterior congelada (descarga `risa-v2.zip`)
+
+La versión previa al hito Calling libs: `index.html` monolítico (todo inline,
+sin libs centrales), playlists scrapped de Commons, menú de logo presente.
+Congelada para descargar como **v2 (2.0.0)**.
+
 ## [v1.1.0] — 2026-08-19 · hito: navegación de contenidos en la web
 
 **Hito de frontend: la web es ahora un navegador de contenidos** (hilos,
