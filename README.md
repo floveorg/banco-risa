@@ -47,7 +47,25 @@ License of published clips: **CC BY-SA 4.0**.
 
 ## Versioning
 
-- **v1 = production** (this repo, frozen except fixes) · **v2 = development** (flove central: authy, lovy, `central/users/`).
-- Releases: `CHANGELOG.md` + tag `v1.x.y` — see [VERSIONING.md](VERSIONING.md) for the scheme, backwards-compat contract and release logics.
+- **Risa 2.x** = la versión actual. `risa2.zip` es la descarga que **siempre trae la última Risa 2.x.x**; las cortadas concretas se nombran `risa2.<x.y>.zip` (risa2.0.1, risa2.1.3, …).
+- **v1 = production** (esta generación anterior, congelada) · **v2-central** (rama) = la web se construye sobre `central/shared/code`.
+- Releases: `CHANGELOG.md` + tag `v2.x.y` — ver [VERSIONING.md](VERSIONING.md).
 - Manual de uso del entorno real (web, bot, miniapp, privacidad): [MANUAL.md](MANUAL.md).
-- Paquete descargable v1 («Nick as tag»): `risa103.zip` (regenerable con `./build-risa-zip.sh`).
+- Paquete descargable: **`risa2.zip`** (regenerable con `./build-risa-zip.sh`).
+
+## Changelog
+
+### Risa 2.1.0 · hito «Calling libs» (rama `v2-central`)
+
+- `risa/index` abandona el monolito y llama a las libs centrales (`central/shared/code`: flove-feed · flove-tags · flove-player · flove-bottom-nav · flove-sound · flove-app).
+- Menú del logo reparado (el dropdown abre de verdad al pulsar el logo).
+- Media toggle acumulativo audio/vídeo (checks independientes; ya no desaparece la playlist).
+- «Risas del mundo» vuelve a la playlist curada (scrapped de Wikimedia Commons); fuera los clips subidos por el bot.
+- En las listas, el enlace «original» aparece tras las etiquetas y lleva a la url del clip.
+- Tags flotantes contenidas en su columna (sin invadir la playlist).
+- Descarga: `risa2.zip` = última Risa 2.x.x.
+
+### Risa 2.0.0 · versión anterior congelada
+
+- `index.html` monolítico (todo inline, sin libs centrales), playlists scrapped de Commons, menú de logo presente.
+- Congelada como punto de partida del changelog 2.x y de la descarga v2.
