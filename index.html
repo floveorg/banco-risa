@@ -2219,11 +2219,21 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           render();
         });
       }
-      // En «solo vídeos», reproduce explícitamente cada vídeo abierto (muted).
+      // En «solo vídeos», reproduce cada vídeo abierto (muted). Se aplaza un tick
+      // para que el elemento esté en el DOM y se reintenta al cargar datos.
       if(videosOnly && isVideoClip){
         const box0=li.querySelector('[data-videobox]');
         const vid0=box0 && box0.querySelector('video');
-        if(vid0) vid0.play().catch(function(){});
+        if(vid0){
+          vid0.muted=true;
+          vid0.preload='auto';
+          setTimeout(function(){
+            const p=vid0.play();
+            if(p && p.catch) p.catch(function(){
+              vid0.addEventListener('canplay', function(){ vid0.play().catch(function(){}); }, {once:true});
+            });
+          }, 0);
+        }
       }
       const vbtn=li.querySelector('[data-clipvideo]');
       if(vbtn){
