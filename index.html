@@ -271,13 +271,7 @@ img{max-width:100%; display:block}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
-.tags-cloud{overflow:hidden;transition:max-height .35s ease;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
-.tags-chips{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
-.tags-plus,.tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;
-  cursor:pointer;font-weight:700;font-size:1rem;line-height:1;border:2px solid var(--ink);transition:transform .1s}
-.tags-plus{background:var(--persimmon);color:#fff}
-.tags-minus{background:var(--marigold);color:var(--ink)}
-.tags-plus:hover,.tags-minus:hover{transform:scale(1.12)}
+.clip-tag{vertical-align:middle}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem;margin-top:-36px}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
@@ -2123,7 +2117,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsLevels=new Map();  // id → nivel de despliegue de la nube de etiquetas (0..10)
+    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (en línea)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2151,17 +2145,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const tagsLvl=cid?(tagsLevels.get(cid)||0):0;
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // Nube de etiquetas con su propio signo ＋: cada clic crece 10% más abajo; − pliega.
-      let cloud='';
-      if(cid && tagArr.length){
-        cloud='<div class="tags-cloud" data-cloud="'+esc(cid)+'" style="margin-left:'+((depth>0?30:36)+depth*20)+'px">'+
-          '<button type="button" class="tags-plus" data-tagsplus="'+esc(cid)+'" title="Más etiquetas (10% más)" aria-label="Más etiquetas">＋</button>'+
-          (tagsLvl>0?'<button type="button" class="tags-minus" data-tagsminus="'+esc(cid)+'" title="Plegar etiquetas" aria-label="Plegar etiquetas">−</button>':'')+
-          '<span class="tags-chips" data-chips>'+tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+'</span>'+
-          '</div>';
-      }
+      const tagsOpen=!!cid && tagsOpenSet.has(cid);
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // Etiquetas en continuación, delante del nombre (las abre el título)
+      const chips=tagsOpen ? tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('') : '';
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
@@ -2179,45 +2166,21 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       }
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
-      const cardInner=row+cloud;
       if(toggleLine){
         // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
         li.className='tgl'+(depth>0?' clip-reply-row':'');
         li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+cardInner+'</div>'+toggleLine;
+        li.innerHTML='<div class="clip-card">'+row+'</div>'+toggleLine;
       } else {
         if(depth > 0) li.className='clip-reply-row';
-        li.innerHTML=cardInner;
-      }
-      if(cloud){
-        const cld=li.querySelector('[data-cloud]');
-        if(cld){
-          const chipsEl=cld.querySelector('[data-chips]');
-          const chipsH=chipsEl?(chipsEl.scrollHeight||0):0;
-          const ctrlH=Math.max(0, (cld.scrollHeight||0)-chipsH);
-          const h=ctrlH+Math.round(chipsH*(tagsLvl/10)); // controles siempre visibles + 10%/nivel de chips
-          cld.style.maxHeight=h+'px';
-        }
+        li.innerHTML=row;
       }
       if(cid && tagArr.length){
-        const grow=function(e){
-          e.stopPropagation();
-          const lvl=(tagsLevels.get(cid)||0)+1;
-          tagsLevels.set(cid, lvl>10?0:lvl);
-          render();
-        };
         li.querySelector('.clip-title').addEventListener('click', function(e){
           e.stopPropagation();
-          tagsLevels.set(cid, (tagsLevels.get(cid)||0)>0 ? 0 : 10);   // expandir/plegar
-          render();
-        });
-        li.querySelector('[data-tagsplus]').addEventListener('click', grow);
-        const minus=li.querySelector('[data-tagsminus]');
-        if(minus) minus.addEventListener('click', function(e){
-          e.stopPropagation();
-          tagsLevels.set(cid,0);
+          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
           render();
         });
       }
@@ -2783,10 +2746,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if(favFilter) list=list.filter(t=>favs.has(t.src));
     if(audioOn && !videoOn) list=list.filter(t=>!t.isVideo);      // solo audios
     else if(!audioOn && videoOn) list=list.filter(t=>t.isVideo);  // solo vídeos
-    // Apply thread ordering: replies appear below their parent with depth info
+    // Orden en profundidad: una respuesta suena ANTES que el siguiente hermano.
+    const byId=new Map();
+    list.forEach(t=>{ if(t.clip&&t.clip.id) byId.set(t.clip.id,t); });
     const threaded=window.Risa.threadOrder(list.map(t=>t.clip||{}));
-    const depthMap=new Map(threaded.map(t=>[t.clip.id, t.depth]));
-    return list.map(t=>Object.assign({}, t, { depth: depthMap.get((t.clip||{}).id)||0 }));
+    const out=[];
+    threaded.forEach(o=>{
+      const tr=o.clip && byId.get(o.clip.id);
+      if(tr) out.push(Object.assign({}, tr, { depth:o.depth }));
+    });
+    return out;
   }
 
   function updateGentePlaylist(){
