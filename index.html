@@ -165,9 +165,10 @@ img{max-width:100%; display:block}
   animation:clipGlow 2.6s ease-in-out infinite}
 @media (prefers-reduced-motion: reduce){ .tracklist li.active,.tracklist li.tgl.active .clip-card{animation:none} }
 .tracklist .ti{flex:1}
+.tracklist .tag.dl,.tracklist .fav-star,.tracklist .reply-btn,.tracklist .react-chip,.tracklist .clip-video-btn{align-self:center}
 .tracklist .by{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:45%}
 .tracklist .tag{font-family:var(--mono); font-size:.66rem; padding:2px 8px; border-radius:999px; white-space:nowrap}
-.tag.dl{width:31px; height:31px; padding:0; border-radius:50%; background:var(--persimmon); color:#fff;
+.tag.dl{width:31px; height:31px; padding:1px 0 0 2px; border-radius:50%; background:var(--persimmon); color:#fff;
   display:grid; place-items:center; font-size:.85rem; flex:0 0 auto; box-shadow:0 2px 0 rgba(42,24,16,.25)}
 .tracklist li.tgl .clip-card .tag.dl{transform:translateY(-7px); width:34px; height:34px}   /* play del padre: 5-10px arriba, 10% mayor, centrado con el fondo */
 .tracklist li.active .tag.dl{background:var(--magenta)}
@@ -260,7 +261,7 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   border:2px solid var(--ink); display:grid; place-items:center; cursor:pointer;
   font-size:.85rem; line-height:1; font-weight:700; box-shadow:0 1px 0 rgba(42,24,16,.2); transition:transform .12s, background .12s}
 .reply-btn:hover{transform:translateY(-2px) scale(1.05); background:#ff9d5c}
-.react-chip{flex:0 0 auto; display:inline-flex; align-items:center; gap:3px; border:1.5px solid rgba(42,24,16,.18);
+.react-chip{flex:0 0 auto; display:inline-flex; align-items:center; gap:3px; border:0;
   background:var(--cream); border-radius:999px; padding:1px 8px 2px; cursor:pointer; font-family:var(--body);
   font-size:.7rem; line-height:1; transform:translateY(5px); position:relative; transition:background .12s}
 .react-chip:hover{background:var(--marigold)}
@@ -268,11 +269,12 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .react-count{font-weight:800; color:var(--ink-soft)}
 .react-pop{position:fixed; z-index:400; background:var(--cream); border:2px solid var(--ink); border-radius:14px;
   padding:6px; box-shadow:4px 4px 0 rgba(42,24,16,.18); min-width:220px; max-width:340px; display:grid; gap:2px}
-.react-pop-row{display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:7px 10px; border:none;
+.react-pop-row{display:flex; align-items:center; gap:8px; width:100%; text-align:left; padding:7px 10px; border:0; outline:none;
   background:none; cursor:pointer; border-radius:9px; font-family:var(--body); font-size:.84rem; color:var(--ink)}
 .react-pop-row:hover{background:#fff}
 .react-pop-row[aria-pressed="true"]{background:var(--marigold)}
 .react-pop-emoji{font-size:1.1rem; line-height:1}
+.react-pop-row[aria-pressed="true"] .react-pop-emoji{font-size:1.65rem}   /* el emoji elegido un 50% mayor */
 .react-pop-count{font-weight:800; min-width:1.3em}
 .react-pop-users{color:var(--ink-soft); font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .react-pop-sep{text-align:center; color:var(--ink-soft); opacity:.4; font-size:.7rem; line-height:1; padding:2px 0}
