@@ -1331,7 +1331,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <p>El flujo completo, paso a paso:</p>
             <figure>
               <img src="risaliberada-v1-thread.svg" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
-              <figcaption>Flujo v1: de la nota de voz a la web y al canal</figcaption>
+              <figcaption>Flujo v1 · hilo: de la nota de voz a la web y al canal</figcaption>
+            </figure>
+            <figure>
+              <img src="risaliberada-v1-flow.svg" alt="Flujo de risa liberada (versión 1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
+              <figcaption>Flujo v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <h4>Las piezas</h4>
             <ol>
@@ -1737,6 +1741,19 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                 <text x="20" y="420" class="k2small">Claim + perfil responden a «¿cómo edito mi perfil en v2?»: reclamas desde la web (confirmando por DM) y desde tu página ya editas, ocultas y borras.</text>
               </svg>
               <figcaption>Extensión lineal: la línea de v1 (subir → moderar → publicar) se prolonga hacia abajo con las novedades de v2 que potencian cada etapa.</figcaption>
+            </figure>
+            <h4>Diagramas de referencia — v2 (D1) y subdominio · SVG/PNG</h4>
+            <figure>
+              <img src="flove-v2-flow.svg" alt="Flujo v2: capa D1 encima de v1 — Worker /api/*, Cloudflare D1 (follows, reacciones, plays, avisos, cadenas), hilos, authy y subdominios" loading="lazy">
+              <figcaption>Flujo v2: la capa D1 encima del circuito v1 — Worker /api/* · D1 · hilos · authy · subdominios <a href="flove-v2-flow.png" download>descargar PNG ↗</a></figcaption>
+            </figure>
+            <figure>
+              <img src="risa-v2-subdomain-request.svg" alt="Hilo del Service Worker al pedir un perfil de subdominio: el SW consulta /api/subdomain al Worker, que pregunta a D1 si existe el perfil" loading="lazy">
+              <figcaption>Service Worker · pedir el perfil de subdominio <a href="risa-v2-subdomain-request.png" download>descargar PNG ↗</a></figcaption>
+            </figure>
+            <figure>
+              <img src="risa-v2-subdomain-create.svg" alt="Hilo del Service Worker al crear un perfil de subdominio: claim + nonce por authy, confirmación por DM y alta en D1" loading="lazy">
+              <figcaption>Service Worker · crear el perfil de subdominio <a href="risa-v2-subdomain-create.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure class="circuit-fig">
               <svg viewBox="0 0 760 430" role="img" aria-label="Circuito entre los tres json: flove.json, el pariente, facilita y enriquece a risa.json y lovy.json, sus hermanas; Lovy agrega risas como subcampo de uno de sus cinco campos">
