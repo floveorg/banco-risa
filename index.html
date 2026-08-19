@@ -278,6 +278,11 @@ img{max-width:100%; display:block}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
+.tag-chip{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;cursor:pointer;border-radius:999px;
+  padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;margin-left:2px}
+.tag-grow{background:var(--persimmon);color:#fff}
+.tag-shrink{background:var(--marigold);color:var(--ink)}
+.dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row.reply-first{margin-top:-36px}   /* solo el primero se alinea con la flecha */
@@ -834,6 +839,17 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" data-tab-link="tecnologia"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
         <button type="button" id="dd-sobre-liberada"><span class="es" lang="es">Sobre liberada</span><span class="en" lang="en">About liberada</span></button>
         <button type="button" id="dd-contactar"><span class="es" lang="es">Contact</span><span class="en" lang="en">Contact</span></button>
+        <div class="dd-sep"></div>
+        <div class="dd-utils">
+          <details class="lang">
+            <summary class="worldball" title="Idioma" aria-label="Idioma" data-aria-es="Idioma" data-aria-en="Language">🌐</summary>
+            <div class="lang-opts">
+              <input type="radio" name="lang" id="lang-es" checked><label for="lang-es">Español</label>
+              <input type="radio" name="lang" id="lang-en"><label for="lang-en">English</label>
+            </div>
+          </details>
+          <button class="theme-btn" type="button" id="theme-btn" title="Tema" aria-label="Tema claro/oscuro" data-aria-es="Tema claro/oscuro" data-aria-en="Light/dark theme">◐</button>
+        </div>
       </nav>
     </div>
     <div class="brand-group">
@@ -842,14 +858,6 @@ body:has(#lang-en:checked) .es{display:none}
         <img class="btn-anim" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/07-descorche-anim-lanza.svg" alt="" aria-hidden="true" width="30" height="30">
       </button>
       <button class="btn btn-primary" type="button" id="open-upload"><span class="es" lang="es">Publicar risa</span><span class="en" lang="en">Share a laugh</span></button>
-      <details class="lang">
-        <summary class="worldball" title="Idioma" aria-label="Idioma" data-aria-es="Idioma" data-aria-en="Language">🌐</summary>
-        <div class="lang-opts">
-          <input type="radio" name="lang" id="lang-es" checked><label for="lang-es">Español</label>
-          <input type="radio" name="lang" id="lang-en"><label for="lang-en">English</label>
-        </div>
-      </details>
-      <button class="theme-btn" type="button" id="theme-btn" title="Tema" aria-label="Tema claro/oscuro" data-aria-es="Tema claro/oscuro" data-aria-en="Light/dark theme">◐</button>
     </div>
   </div>
 </header>
@@ -1960,11 +1968,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <p class="mejorar-cta" style="font-size:.9rem;color:var(--ink-soft);margin:0 0 12px"><span class="es" lang="es">Ven aquí desde tu miniapp en Telegram o dale a Activar y sigue los 2 pasos siguientes (fácil).</span><span class="en" lang="en">Come here from your Telegram miniapp or tap Activate and follow the next 2 easy steps.</span></p>
     <ul class="mejorar-list">
       <li><b><span class="es" lang="es">🌐 Subdominio de autor</span><span class="en" lang="en">🌐 Author subdomain</span></b> <span class="es" lang="es">— tu perfil en <code>&lt;tu-nombre&gt;.liberada.net</code> para compartir todas tus risas con un enlace corto.</span><span class="en" lang="en">— your profile at <code>&lt;your-name&gt;.liberada.net</code> to share all your laughs with a short link.</span></li>
-      <li><b><span class="es" lang="es">✏️ Editar perfil</span><span class="en" lang="en">✏️ Edit profile</span></b> <span class="es" lang="es">— cambia tu nombre público y tu subdominio desde la web o el bot.</span><span class="en" lang="en">— change your public name and your subdomain from the web or the bot.</span></li>
       <li><b><span class="es" lang="es">🚀 Más perfil</span><span class="en" lang="en">🚀 More profile</span></b> <span class="es" lang="es">— listas de favoritos, seguir… y más apps con más profundidad.</span><span class="en" lang="en">— favourite lists, following… and more apps with more depth.</span></li>
+      <li><b><span class="es" lang="es">✏️ Editar perfil</span><span class="en" lang="en">✏️ Edit profile</span></b> <span class="es" lang="es">— cambia tu nombre público y tu subdominio desde la web o el bot.</span><span class="en" lang="en">— change your public name and your subdomain from the web or the bot.</span></li>
     </ul>
     <div class="mejorar-actions" style="margin:16px 0 4px">
-      <a class="btn btn-primary" id="mm-activar" href="#/entrar" style="justify-content:center;width:100%;text-decoration:none"><span class="es" lang="es">(Activar)</span><span class="en" lang="en">(Activate)</span></a>
+      <a class="btn btn-primary" id="mm-activar" href="#/entrar" style="justify-content:center;width:100%;text-decoration:none"><span class="es" lang="es">Activar</span><span class="en" lang="en">Activate</span></a>
     </div>
 
   </div>
@@ -2116,6 +2124,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
     let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (en línea)
+    let tagsExtra=new Map();   // id → etiquetas extra mostradas (tras el ＋; − resetea)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2145,8 +2154,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
       const tagsOpen=!!cid && tagsOpenSet.has(cid);
       const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // Etiquetas en continuación, delante del nombre (las abre el título)
-      const chips=tagsOpen ? tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('') : '';
+      // Etiquetas en continuación, delante del nombre. Muestran una cantidad
+      // por defecto; el chip ＋ añade más y el − (tras el primer ＋) resetea.
+      let chips='';
+      if(tagsOpen){
+        const extra=cid?(tagsExtra.get(cid)||0):0;
+        const shown=Math.min(tagArr.length, 3+extra);
+        const hasHidden=shown<tagArr.length;
+        chips=tagArr.slice(0, shown).map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
+        if(hasHidden) chips+='<button type="button" class="tag-chip tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas">＋</button>';
+        if(extra>0) chips+='<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar a la cantidad inicial">−</button>';
+      }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
@@ -2179,6 +2197,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         li.querySelector('.clip-title').addEventListener('click', function(e){
           e.stopPropagation();
           if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          render();
+        });
+        const growBtn=li.querySelector('[data-taggrow]');
+        if(growBtn) growBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          tagsExtra.set(cid,(tagsExtra.get(cid)||0)+3);
+          render();
+        });
+        const shrinkBtn=li.querySelector('[data-tagshrink]');
+        if(shrinkBtn) shrinkBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          tagsExtra.set(cid,0);   // vuelve a la cantidad por defecto
           render();
         });
       }
@@ -3385,8 +3415,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const page=location.origin+location.pathname+'#/u/'+encodeURIComponent(key);
       const subUrl='https://'+(sub||key)+'.liberada.net';
       const activate=sub
-        ? '<a class="btn btn-primary" href="'+subUrl+'" target="_blank" rel="noopener">(Activar) — '+esc(sub)+'.liberada.net</a>'
-        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">'+esTxt('(Activar) en tu próxima publicación','(Activate) on your next post')+'</button>';
+        ? '<a class="btn btn-primary" href="'+subUrl+'" target="_blank" rel="noopener">Activar — '+esc(sub)+'.liberada.net</a>'
+        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">'+esTxt('Activar en tu próxima publicación','Activate on your next post')+'</button>';
       enResult.innerHTML='<b>'+esTxt('Hola, ','Hi, ')+esc(name)+'</b> '+esTxt('— sesión iniciada.','— signed in.')+'<br>'+
         esTxt('👤 Nombre público: ','👤 Public name: ')+'<code>'+esc(name)+'</code> '+esTxt('— cámbialo con','— change it with')+' <code>/name TuNombre</code> '+esTxt('en el bot.','on the bot.')+'<br>'+
         esTxt('🌐 Subdominio: ','🌐 Subdomain: ')+'<code>'+esc(sub||(key.slice(0,20)||'tu-nombre'))+'.liberada.net</code> '+esTxt('— cámbialo con','— change it with')+' <code>/usuario nuevo_nombre</code>.'+
