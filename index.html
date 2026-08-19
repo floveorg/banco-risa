@@ -278,6 +278,8 @@ img{max-width:100%; display:block}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
+.tags-area{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;vertical-align:middle;
+  overflow:hidden;transition:max-height .35s ease;max-height:0}
 .tag-chip{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;cursor:pointer;border-radius:999px;
   padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;
   margin-left:2px;box-shadow:0 2px 0 rgba(42,24,16,.18);transition:transform .1s}
@@ -2125,8 +2127,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (el título las abre)
-    let tagsExtra=new Map();   // id → etiquetas extra mostradas (tras el ＋; − resetea)
+    let tagsLevel=new Map();   // id → nivel de la nube de etiquetas (0 plegada · 1 mínimo · 10 todas)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2154,19 +2155,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const tagsOpen=!!cid && tagsOpenSet.has(cid);
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // Etiquetas del clip: plegadas por defecto; el título las despliega.
-      // Muestran una cantidad mínima; el chip flotante ＋ añade más y hace
-      // aparecer el − flotante, que resetea a la cantidad inicial.
+      const tagsLvl=cid?(tagsLevel.get(cid)||0):0;   // 0 = plegadas · 1 = mínimo · 10 = todas
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // Etiquetas del clip: plegadas por defecto; el título las despliega en un
+      // área flotante que crece un 10% hacia abajo por cada ＋. El − (que aparece
+      // tras el primer ＋) resetea al tamaño inicial.
       let chips='';
-      if(tagsOpen && tagArr.length){
-        const extra=tagsExtra.get(cid)||0;
-        const shown=Math.min(tagArr.length, 3+extra);
-        const hasHidden=shown<tagArr.length;
-        chips=tagArr.slice(0, shown).map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
-        if(hasHidden) chips+='<button type="button" class="tag-chip tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas">＋</button>';
-        if(extra>0) chips+='<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar a la cantidad inicial">−</button>';
+      if(tagsLvl>0 && tagArr.length){
+        chips='<span class="tags-area" data-tagsarea="'+esc(cid)+'">'+
+          tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
+          (tagsLvl<10?'<button type="button" class="tag-chip tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas (10% más)">＋</button>':'')+
+          (tagsLvl>1?'<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar al tamaño inicial">−</button>':'')+
+          '</span>';
       }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
@@ -2196,22 +2196,29 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         if(depth > 0) li.className='clip-reply-row';
         li.innerHTML=row;
       }
+      if(chips){
+        const area=li.querySelector('[data-tagsarea]');
+        if(area){
+          const full=area.scrollHeight||0;
+          area.style.maxHeight=Math.max(22, Math.round(full*(tagsLvl/10)))+'px';   // 10% por nivel
+        }
+      }
       if(cid && tagArr.length){
         li.querySelector('.clip-title').addEventListener('click', function(e){
           e.stopPropagation();
-          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          tagsLevel.set(cid, (tagsLevel.get(cid)||0)>0 ? 0 : 1);   // plegar / mínimo
           render();
         });
         const growBtn=li.querySelector('[data-taggrow]');
         if(growBtn) growBtn.addEventListener('click', function(e){
           e.stopPropagation();
-          tagsExtra.set(cid,(tagsExtra.get(cid)||0)+3);
+          tagsLevel.set(cid, Math.min(10,(tagsLevel.get(cid)||0)+1));   // +10% hacia abajo
           render();
         });
         const shrinkBtn=li.querySelector('[data-tagshrink]');
         if(shrinkBtn) shrinkBtn.addEventListener('click', function(e){
           e.stopPropagation();
-          tagsExtra.set(cid,0);   // vuelve a la cantidad por defecto
+          tagsLevel.set(cid,1);   // resetea al tamaño inicial
           render();
         });
       }
