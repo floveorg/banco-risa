@@ -417,6 +417,13 @@ img{max-width:100%; display:block}
   border-bottom:2px solid var(--marigold); padding-bottom:2px}
 .linkrow a:hover{color:var(--persimmon)}
 .linkrow a.x2{font-size:1.6rem; line-height:1.2}
+.standards-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; margin-top:18px}
+.std-card{display:block; padding:14px; border:2px solid var(--ink); border-radius:16px; background:var(--cream);
+  color:var(--ink); text-decoration:none; box-shadow:3px 3px 0 rgba(42,24,16,.12); transition:transform .12s}
+.std-card:hover{transform:translateY(-2px)}
+.std-card h4{font-size:.95rem; margin-bottom:4px}
+.std-card p{font-size:.82rem; color:var(--ink-soft); margin:0; line-height:1.45}
+.std-card code{font-family:var(--mono); font-size:.8em}
 .hack-row{margin-top:44px}
 
 /* tres secciones de la página de comunidad, ahora como barras inferiores */
@@ -1238,8 +1245,8 @@ body:has(#lang-en:checked) .es{display:none}
         </div>
         <div class="tech-grid">
           <article class="tech-card">
-            <h4>Cloudflare R2</h4>
-            <p>Almacenamiento de objetos gratuito (10 GB). Cada audio se guarda como <code>risa/b_*.mp3</code> y se sirve con URL pública.</p>
+            <h4>Cloudflare R2 · D1 · SW</h4>
+            <p>Almacenamiento de objetos gratuito (10 GB) para audios con URL pública; <b>D1</b> (SQL) para la comunidad — follows, reacciones, escuchas y avisos — y un <b>service worker</b> para servir la web offline y con precarga.</p>
           </article>
           <article class="tech-card">
             <h4>GitHub Pages</h4>
@@ -1530,6 +1537,27 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <a href="risa103.zip" download rel="noopener">⤓ Descargar Risa v1 · Nick as tag</a>
               <a href="https://github.com/floveorg/risa" target="_blank" rel="noopener">floveorg/risa ↗</a>
               <a href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">Estándar del circuito ↗</a>
+            </div>
+            <div class="standards-row">
+              <a class="std-card" href="https://flove.org/development/standards/risaliberada/risaliberada.md" target="_blank" rel="noopener">
+                <h4>📘 Estándar RisaLiberada v1</h4>
+                <p>El circuito completo: bot, moderación, publicación, identidad y privacidad.</p>
+              </a>
+              <a class="std-card" href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">
+                <h4>🚀 Plan v2</h4>
+                <p>La extensión lineal de v1: perfiles, D1, cadenas y más.</p>
+              </a>
+              <a class="std-card" href="https://liberada.net/usa/" target="_blank" rel="noopener">
+                <h4>🌐 Subdominios .liberada.net</h4>
+                <p>Cómo activar <code>&lt;tu&gt;.liberada.net</code> y el perfil agregador.</p>
+              </a>
+            </div>
+            <div class="slider" role="region" data-autoplay="5000" aria-roledescription="carrusel" aria-label="Tiers de perfil: básico, básico completo y completo">
+              <div class="slides">
+                <figure class="slide"><img src="media/basic.jpg" alt="Perfil básico" loading="lazy"><figcaption>Basic</figcaption></figure>
+                <figure class="slide"><img src="media/full-basic.jpg" alt="Perfil básico completo" loading="lazy"><figcaption>Basic · Full</figcaption></figure>
+                <figure class="slide"><img src="media/full.jpg" alt="Perfil completo" loading="lazy"><figcaption>Full</figcaption></figure>
+              </div>
             </div>
           </div>
           <div class="rtab-panel" id="futuro" hidden>
