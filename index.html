@@ -270,7 +270,10 @@ img{max-width:100%; display:block}
 .thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape)}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
 .thread-count{font-size:.5rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
-.thread-toggle-line{width:100%;padding-top:2px;line-height:1}
+.thread-toggle-line{width:100%;line-height:1;margin-top:-15px;position:relative;z-index:1}
+.tags-cloud{overflow:hidden;transition:max-height .35s ease;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
+.tags-minus{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--marigold);color:var(--ink);
+  border:2px solid var(--ink);display:grid;place-items:center;cursor:pointer;font-weight:700;font-size:1rem;line-height:1}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
@@ -2116,7 +2119,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas desplegadas
+    let tagsLevels=new Map();  // id → nivel de despliegue de la nube de etiquetas (0..10)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2142,12 +2145,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const src=t.src||'';
       const cid=t.clip&&t.clip.id;
       const tagStr=String(t.tags||'');
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpenSet.has(cid)?'true':'false')+'" aria-label="'+(tagsOpenSet.has(cid)?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // etiquetas: visibles solo si el título las ha desplegado
-      let tagsHtml='';
-      if(cid && tagsOpenSet.has(cid)){
-        tagsHtml=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean)
-          .map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
+      const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
+      const tagsLvl=cid?(tagsLevels.get(cid)||0):0;
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Abrir más etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
+      // Nube de etiquetas: crece un 10% más hacia abajo por cada clic; el − la pliega.
+      let cloud='';
+      if(cid && tagArr.length){
+        cloud='<div class="tags-cloud" data-cloud="'+esc(cid)+'" style="margin-left:'+((depth>0?30:36)+depth*20)+'px">'+
+          (tagsLvl>0?'<button type="button" class="tags-minus" data-tagsminus="'+esc(cid)+'" title="Plegar etiquetas" aria-label="Plegar etiquetas">−</button>':'')+
+          tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
+          '</div>';
       }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
@@ -2155,34 +2162,49 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         : '';
       const depth = t.depth || 0;
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
-      // Línea bajo el borde de la tarjeta (fuera de su fondo): flecha ↳ + n respuestas
+      // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
       let toggleLine='';
       if(kids.length){
-        const isExp=expanded.has(cid);
         const cnt=countNested(kids);
-        toggleLine='<div class="thread-toggle-line" style="padding-left:'+((depth>0?42:48)+depth*20)+'px">'+
-          '<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(isExp?'true':'false')+'" aria-label="'+(isExp?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
-            '<span class="thread-arrow">'+(isExp?'⌄':'↳')+'</span>'+
-            (isExp?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
+        toggleLine='<div class="thread-toggle-line" style="padding-left:'+(12+depth*20)+'px">'+
+          '<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(expanded.has(cid)?'true':'false')+'" aria-label="'+(expanded.has(cid)?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
+            '<span class="thread-arrow">↳</span>'+
+            (expanded.has(cid)?'':'<span class="thread-count">'+cnt+(cnt===1?' respuesta':' respuestas')+'</span>')+
           '</button></div>';
       }
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+tagsHtml+byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
+      const cardInner=row+cloud;
       if(toggleLine){
         // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
         li.className='tgl'+(depth>0?' clip-reply-row':'');
         li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+row+'</div>'+toggleLine;
+        li.innerHTML='<div class="clip-card">'+cardInner+'</div>'+toggleLine;
       } else {
         if(depth > 0) li.className='clip-reply-row';
-        li.innerHTML=row;
+        li.innerHTML=cardInner;
       }
-      if(cid && tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean).length){
+      if(cloud){
+        const cld=li.querySelector('[data-cloud]');
+        if(cld){
+          const full=cld.scrollHeight||0;
+          const h=tagsLvl>0 ? Math.max(Math.round(full*(tagsLvl/10)), 22) : 0; // ≥1 línea visible
+          cld.style.maxHeight = h+'px';
+        }
+      }
+      if(cid && tagArr.length){
         li.querySelector('.clip-title').addEventListener('click', function(e){
           e.stopPropagation();
-          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
+          const lvl=(tagsLevels.get(cid)||0)+1;
+          tagsLevels.set(cid, lvl>10?0:lvl);
+          render();
+        });
+        const minus=li.querySelector('[data-tagsminus]');
+        if(minus) minus.addEventListener('click', function(e){
+          e.stopPropagation();
+          tagsLevels.set(cid,0);
           render();
         });
       }
