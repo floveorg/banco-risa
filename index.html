@@ -2155,18 +2155,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const tagsLvl=cid?(tagsLevel.get(cid)||0):0;   // 0 = plegadas · 1 = mínimo · 10 = todas
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsLvl>0?'true':'false')+'" aria-label="'+(tagsLvl>0?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // Etiquetas del clip: plegadas por defecto; el título las despliega en un
-      // área flotante que crece un 10% hacia abajo por cada ＋. El − (que aparece
-      // tras el primer ＋) resetea al tamaño inicial.
+      const tagsLvl=cid?(tagsLevel.get(cid)||1):1;   // 1 = tamaño inicial · 10 = todas
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
+      // Área flotante de etiquetas (siempre visible, sin tocar el título): crece
+      // un 10% hacia abajo por cada ＋. Los chips ＋/− van FUERA del área recortada
+      // para que siempre se vean y se puedan pulsar; el − aparece tras el primer ＋.
       let chips='';
-      if(tagsLvl>0 && tagArr.length){
+      if(cid && tagArr.length){
         chips='<span class="tags-area" data-tagsarea="'+esc(cid)+'">'+
           tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
+          '</span>'+
           (tagsLvl<10?'<button type="button" class="tag-chip tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas (10% más)">＋</button>':'')+
-          (tagsLvl>1?'<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar al tamaño inicial">−</button>':'')+
-          '</span>';
+          (tagsLvl>1?'<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar al tamaño inicial">−</button>':'');
       }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
@@ -2204,15 +2204,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         }
       }
       if(cid && tagArr.length){
-        li.querySelector('.clip-title').addEventListener('click', function(e){
-          e.stopPropagation();
-          tagsLevel.set(cid, (tagsLevel.get(cid)||0)>0 ? 0 : 1);   // plegar / mínimo
-          render();
-        });
         const growBtn=li.querySelector('[data-taggrow]');
         if(growBtn) growBtn.addEventListener('click', function(e){
           e.stopPropagation();
-          tagsLevel.set(cid, Math.min(10,(tagsLevel.get(cid)||0)+1));   // +10% hacia abajo
+          tagsLevel.set(cid, Math.min(10,(tagsLevel.get(cid)||1)+1));   // +10% hacia abajo
           render();
         });
         const shrinkBtn=li.querySelector('[data-tagshrink]');
