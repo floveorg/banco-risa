@@ -400,7 +400,19 @@ async function publishClip(tg, cfg, q, id, risas, names, tgpub) {
     const who = q.uploader;
     const name = (who && names && names[who]) || q.name || 'Anónima';
     const tgLink = (who && tgpub && tgpub[who] && tgpub[who].ok) ? tgpub[who].username : undefined;
-    const caption = [q.title, tagsHash(q.tags), name].filter(Boolean).join(' · ');
+    let caption = [q.title, tagsHash(q.tags), name].filter(Boolean).join(' · ');
+    // Si es una respuesta, el pie del canal indica a qué clip responde, con
+    // enlace al original (mensaje del canal si existe, si no la URL web).
+    if (q.parent) {
+      const parentClip = risas.find((e) => e.id === q.parent);
+      if (parentClip) {
+        const ch = String(cfg.channel || '').replace(/^@/, '');
+        const parentLink = (parentClip.channelMsgId && ch)
+          ? ('https://t.me/' + ch + '/' + parentClip.channelMsgId)
+          : ('https://risa.liberada.net/#/c/' + encodeURIComponent(parentClip.id));
+        caption += '\n↳ En respuesta a «' + (parentClip.t || parentClip.name || 'esta risa') + '» — ' + parentLink;
+      }
+    }
     if (q.video) {
       posted = await tg.sendVideoByUrl(cfg.channel, src, caption);
     } else {

@@ -284,6 +284,9 @@ img{max-width:100%; display:block}
 .clip-video-btn.on{background:none;color:var(--persimmon)}
 .clip-video-box{width:100%;padding:6px 0 2px}
 .clip-video-box video{width:100%;max-height:260px;border-radius:10px;background:#000;display:block}
+@keyframes clipFlash{0%,55%{background:rgba(255,176,32,.42)}100%{background:transparent}}
+.tracklist li.clip-flash{animation:clipFlash 3.4s ease forwards}
+.tracklist li.tgl.clip-flash .clip-card{animation:clipFlash 3.4s ease forwards}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
 .tracklist li.clip-reply-row.reply-first{margin-top:-36px}   /* solo el primero se alinea con la flecha */
@@ -2159,7 +2162,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         chips=String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean)
           .map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
       }
-      const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
+      const clipUrl='https://risa.liberada.net/#/c/'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
@@ -3040,6 +3043,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           updateGentePlaylist();
           buildTagChips();   // por defecto las etiquetas flotan
           renderUserPage();  // si llegamos con #/u/<key>, la página de autor ya tiene feed
+          highlightClip(clipHashId());   // deep link #/c/<id>: resalta el clip en el hilo
         } catch (err) { console.error('render feed:', err); }
       })
       .catch(()=>{
@@ -3052,6 +3056,27 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       });
   }
   loadFeed(0);
+
+  /* ============ DEEP LINK POR CLIP · #/c/<id> ============ */
+  function clipHashId(){
+    const m=/^#\/c\/(.+)$/.exec(location.hash||'');
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  function highlightClip(id){
+    if(!id) return;
+    setTimeout(()=>{
+      const li=document.querySelector('#gente-player li[data-id="'+CSS.escape(id)+'"]');
+      if(li){
+        li.classList.add('clip-flash');
+        li.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(()=>li.classList.remove('clip-flash'), 3400);
+      }
+    }, 150);
+  }
+  window.addEventListener('hashchange', ()=>{
+    const id=clipHashId();
+    if(id) highlightClip(id);
+  });
 
   /* ===== flove.json · llamada mínima y vacía (nota documentativa) =====
      v1 no consume el contrato de flove: la página de autor se sirve con la key
