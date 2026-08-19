@@ -71,7 +71,7 @@ img{max-width:100%; display:block}
   background:rgba(255,232,212,.72); border-bottom:2px solid rgba(42,24,16,.08)}
 .topbar .wrap{display:flex; align-items:center; justify-content:center; gap:12px; height:60px}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
-.brand-logo{width:34px; height:34px; flex:0 0 auto}
+.brand-logo{width:44px; height:44px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
@@ -86,7 +86,7 @@ img{max-width:100%; display:block}
 @media(max-width:720px){
   .topbar .wrap{height:auto; min-height:56px; padding:8px 14px; flex-wrap:wrap; gap:8px}
   .brand{font-size:1.05rem}
-  .brand-logo{width:28px; height:28px}
+  .brand-logo{width:36px; height:36px}
   .brand-group{gap:6px}
   .topbar .btn{padding:7px 12px; font-size:.8rem}
 }
@@ -399,6 +399,8 @@ a.react-user:hover{text-decoration:underline}
    color:var(--ink); font-family:var(--disp); font-size:1rem; line-height:1; cursor:pointer;
    display:grid; place-items:center; box-shadow:0 2px 0 rgba(42,24,16,.3); transition:transform .12s}
  .tr-btn:hover{transform:translateY(-2px); background:var(--marigold)}
+.transport .tr-btn:not(.tr-play){visibility:hidden}   /* ‹ › solo al reproducir, mantienen su sitio */
+.transport.playing .tr-btn:not(.tr-play){visibility:visible}
  .tr-btn.tr-play{background:var(--persimmon); color:#fff; font-size:1.05rem; width:52px; height:52px}
 .tr-btn.tr-play.playing{color:#000}   /* pausa en negro, centrada */
 @media(max-width:560px){.title-head{flex-wrap:wrap}}
@@ -884,7 +886,7 @@ body:has(#lang-en:checked) .es{display:none}
   <div class="wrap">
     <div class="brand-wrap">
       <a class="brand" id="brand-logo" href="#top" role="button" aria-expanded="false" aria-controls="brand-dd">
-        <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg" alt="" width="34" height="34">
+        <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino-anim-guina.svg" alt="" width="44" height="44" onerror="this.onerror=null;this.src='https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg'">
         
       </a>
       <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal" data-aria-es="Menú principal" data-aria-en="Main menu">
