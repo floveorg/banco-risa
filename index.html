@@ -1292,9 +1292,9 @@ body:has(#lang-en:checked) .es{display:none}
   </section>
         <div class="replica" id="replica">
           <nav class="rtab-bar" aria-label="Versiones de la réplica">
-            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Pasado</button>
-            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Presente</button>
-            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Futuro</button>
+            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Liberada v1</button>
+            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Liberada v2</button>
+            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Flove v3</button>
           </nav>
           <div class="rtab-panel" id="pasado">
             <details class="collapsed">
@@ -1330,12 +1330,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </details>
             <p>El flujo completo, paso a paso:</p>
             <figure>
-              <img src="risaliberada-v1-thread.svg" alt="Diagrama de secuencia del flujo de risa liberada (versión 1): de la nota de voz al canal y la web" loading="lazy">
-              <figcaption>Flujo v1 · hilo: de la nota de voz a la web y al canal</figcaption>
+              <img src="risaliberada-v1-thread.svg" alt="Diagrama de secuencia del flujo de risa liberada (liberada v1): de la nota de voz al canal y la web" loading="lazy">
+              <figcaption>Flujo liberada v1 · hilo: de la nota de voz a la web y al canal</figcaption>
             </figure>
             <figure>
-              <img src="risaliberada-v1-flow.svg" alt="Flujo de risa liberada (versión 1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
-              <figcaption>Flujo v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
+              <img src="risaliberada-v1-flow.svg" alt="Flujo de risa liberada (liberada v1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
+              <figcaption>Flujo liberada v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <h4>Las piezas</h4>
             <ol>
@@ -1549,8 +1549,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                 <p>El circuito completo: bot, moderación, publicación, identidad y privacidad.</p>
               </a>
               <a class="std-card" href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">
-                <h4>🚀 Plan v2</h4>
-                <p>La extensión lineal de v1: perfiles, D1, cadenas y más.</p>
+                <h4>🚀 Plan liberada v2</h4>
+                <p>La extensión lineal de liberada v1: perfiles, D1, cadenas y más.</p>
               </a>
               <a class="std-card" href="https://liberada.net/usa/" target="_blank" rel="noopener">
                 <h4>🌐 Subdominios .liberada.net</h4>
@@ -1567,7 +1567,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           </div>
           <div class="rtab-panel" id="futuro" hidden>
             <p class="rtab-intro">El desarrollo continua con estas mejoras (añade al plan si no están ya):</p>
-            <h4>Mejoras que propone la v2</h4>
+            <h4>Mejoras que propone liberada v2</h4>
             <ul>
               <li><b>Perfiles más sólidos y extendidos.</b> SQL via Service Workers de Cloudflare: datos locales rápidos, sin servidor propio, con sync offline.</li>
               <li><b>Autenticación y protección de cuenta.</b> Recoveries: mail, OAuth, browsy, nety… la identidad se respalda y recupera.</li>
@@ -1576,10 +1576,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
               <li><b>Cadenas enriquecidas.</b> Risas encadenadas con contexto: respuestas, hilos, historias.</li>
               <li><b>Comandos avanzados.</b> Más control desde el bot: gestionar, buscar, filtrar, ordenar.</li>
             </ul>
-            <h4>v2, extensión lineal de v1 — dos esquemas</h4>
-            <p>v2 no se instala al lado de v1: <b>se enciende encima</b>. Cada novedad aterriza sobre la etapa de v1 que potencia, y la web sigue leyendo el mismo <code>risa.json</code>.</p>
+            <h4>liberada v2, extensión lineal de liberada v1 — dos esquemas</h4>
+            <p>liberada v2 no se instala al lado de liberada v1: <b>se enciende encima</b>. Cada novedad aterriza sobre la etapa de liberada v1 que potencia, y la web sigue leyendo el mismo <code>risa.json</code>.</p>
             <figure class="circuit-fig">
-              <svg viewBox="0 0 760 372" role="img" aria-label="v2 como superposición de v1 (ya en marcha): el circuito v1 (Persona → RisaLiberadaBot con cron → moderadores → Cloudflare R2 → risa.json → canal → web) sigue como base y respaldo; encima, v2 añade — Cloudflare D1 (follows, reacciones, escuchas, avisos), Worker /api/* (identidad, actividad, aliases, búsqueda), subdominios &lt;user&gt;.liberada.net y cadenas de respuestas con deep links">
+              <svg viewBox="0 0 760 372" role="img" aria-label="liberada v2 como superposición de liberada v1 (ya en marcha): el circuito liberada v1 (Persona → RisaLiberadaBot con cron → moderadores → Cloudflare R2 → risa.json → canal → web) sigue como base y respaldo; encima, liberada v2 añade — Cloudflare D1 (follows, reacciones, escuchas, avisos), Worker /api/* (identidad, actividad, aliases, búsqueda), subdominios &lt;user&gt;.liberada.net y cadenas de respuestas con deep links">
                 <defs>
                   <marker id="v2a" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
                     <path d="M0 0 L8 3.5 L0 7 Z" fill="#b57100"/>
@@ -1598,8 +1598,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   .v1b{fill:#f6efe2; stroke:#8a7a68; stroke-width:1.6; rx:14}
                   .v2b{fill:#fff3d6; stroke:#b57100; stroke-width:2.5; rx:16}
                 </style>
-                <text x="18" y="18" class="v2mono">v2 · ya en marcha — se enciende encima de v1 (aditivo, no sustituto)</text>
-                <text x="18" y="240" class="v2small" font-weight="700">v1 · el circuito de siempre — sigue corriendo como base y respaldo</text>
+                <text x="18" y="18" class="v2mono">liberada v2 · ya en marcha — se enciende encima de liberada v1 (aditivo, no sustituto)</text>
+                <text x="18" y="240" class="v2small" font-weight="700">liberada v1 · el circuito de siempre — sigue corriendo como base y respaldo</text>
                 <rect class="v2b" x="18" y="26" width="172" height="56"/>
                 <text x="104" y="50" text-anchor="middle" class="v2mono" font-size="13">Cloudflare D1</text>
                 <text x="104" y="70" text-anchor="middle" class="v2small">SQL comunidad · follows · reacciones · plays · avisos</text>
@@ -1645,13 +1645,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                 <text x="687" y="278" text-anchor="middle" class="v2body" font-weight="700">Web</text>
                 <text x="687" y="296" text-anchor="middle" class="v2small">fetch risa.json</text>
                 <text x="687" y="311" text-anchor="middle" class="v2small">playlist · chips · palabra</text>
-                <text x="18" y="342" class="v2small">Las flechas de v2 aterrizan sobre la etapa de v1 que potencian. La web sigue leyendo risa.json; los datos de</text>
-                <text x="18" y="358" class="v2small">comunidad (follows, reacciones, avisos) viven en D1. v1 queda como base: si v2 se apaga, el circuito no se interrumpe.</text>
+                <text x="18" y="342" class="v2small">Las flechas de liberada v2 aterrizan sobre la etapa de liberada v1 que potencian. La web sigue leyendo risa.json; los datos de</text>
+                <text x="18" y="358" class="v2small">comunidad (follows, reacciones, avisos) viven en D1. liberada v1 queda como base: si v2 se apaga, el circuito no se interrumpe.</text>
               </svg>
-              <figcaption>Superposición (ya en marcha): v2 se enciende encima del circuito v1 (capa inferior) — D1, Worker, subdominios y cadenas — y aterriza sobre la etapa que potencia; v1 queda como base y respaldo.</figcaption>
+              <figcaption>Superposición (ya en marcha): liberada v2 se enciende encima del circuito liberada v1 (capa inferior) — D1, Worker, subdominios y cadenas — y aterriza sobre la etapa que potencia; liberada v1 queda como base y respaldo.</figcaption>
             </figure>
             <figure class="circuit-fig">
-              <svg viewBox="0 0 760 430" role="img" aria-label="v2 como extensión lineal del circuito v1: la línea de v1 (subir → moderar → publicar) se extiende por debajo con las novedades — claim de identidad (reclamar tu palabra), tu perfil en lol key (editar, ocultar, borrar, renombrar, favoritos) y tiempo real (webhooks, aviso al autor, rate-limit)">
+              <svg viewBox="0 0 760 430" role="img" aria-label="liberada v2 como extensión lineal del circuito liberada v1: la línea de liberada v1 (subir → moderar → publicar) se extiende por debajo con las novedades — claim de identidad (reclamar tu palabra), tu perfil en lol key (editar, ocultar, borrar, renombrar, favoritos) y tiempo real (cron, aviso al autor, rate-limit)">
                 <defs>
                   <marker id="k2a" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
                     <path d="M0 0 L8 3.5 L0 7 Z" fill="#b57100"/>
@@ -1671,7 +1671,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                   .k2vbox{fill:#fff3d6; stroke:#b57100; stroke-width:1.6; rx:12}
                   .k2end{fill:#ffe9b0; stroke:#b57100; stroke-width:2; rx:12}
                 </style>
-                <text x="20" y="20" class="k2small" font-weight="700">v1 · el circuito en una línea — lo que ya hace</text>
+                <text x="20" y="20" class="k2small" font-weight="700">liberada v1 · el circuito en una línea — lo que ya hace</text>
                 <rect class="k2gbox" x="20" y="30" width="230" height="52"/>
                 <text x="135" y="52" text-anchor="middle" class="k2body" font-weight="700">1 · Subir</text>
                 <text x="135" y="71" text-anchor="middle" class="k2small">Telegram · palabra · tags</text>
@@ -1737,15 +1737,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
                 <path class="k2v" d="M 625 302 L 625 310"/>
                 <rect class="k2end" x="520" y="312" width="210" height="28"/>
                 <text x="625" y="331" text-anchor="middle" class="k2small" font-weight="700">la web no cambia: sigue leyendo risa.json</text>
-                <text x="20" y="404" class="k2small">Cada columna extiende hacia abajo la etapa de v1 que tiene encima. v1 queda de base: apagar v2 = volver al circuito de siempre.</text>
-                <text x="20" y="420" class="k2small">Claim + perfil responden a «¿cómo edito mi perfil en v2?»: reclamas desde la web (confirmando por DM) y desde tu página ya editas, ocultas y borras.</text>
+                <text x="20" y="404" class="k2small">Cada columna extiende hacia abajo la etapa de liberada v1 que tiene encima. liberada v1 queda de base: apagar liberada v2 = volver al circuito de siempre.</text>
+                <text x="20" y="420" class="k2small">Claim + perfil responden a «¿cómo edito mi perfil en liberada v2?»: reclamas desde la web (confirmando por DM) y desde tu página ya editas, ocultas y borras.</text>
               </svg>
-              <figcaption>Extensión lineal: la línea de v1 (subir → moderar → publicar) se prolonga hacia abajo con las novedades de v2 que potencian cada etapa.</figcaption>
+              <figcaption>Extensión lineal: la línea de liberada v1 (subir → moderar → publicar) se prolonga hacia abajo con las novedades de liberada v2 que potencian cada etapa.</figcaption>
             </figure>
-            <h4>Diagramas de referencia — v2 (D1) y subdominio · SVG/PNG</h4>
+            <h4>Diagramas de referencia — liberada v2 (D1) y subdominio · SVG/PNG</h4>
             <figure>
-              <img src="flove-v2-flow.svg" alt="Flujo v2: capa D1 encima de v1 — Worker /api/*, Cloudflare D1 (follows, reacciones, plays, avisos, cadenas), hilos, authy y subdominios" loading="lazy">
-              <figcaption>Flujo v2: la capa D1 encima del circuito v1 — Worker /api/* · D1 · hilos · authy · subdominios <a href="flove-v2-flow.png" download>descargar PNG ↗</a></figcaption>
+              <img src="liberada-v2-flow.svg" alt="Flujo liberada v2: capa D1 encima de liberada v1 — Worker /api/*, Cloudflare D1 (follows, reacciones, plays, avisos, cadenas), hilos, authy y subdominios" loading="lazy">
+              <figcaption>Flujo liberada v2: la capa D1 encima del circuito liberada v1 — Worker /api/* · D1 · hilos · authy · subdominios <a href="liberada-v2-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure>
               <img src="risa-v2-subdomain-request.svg" alt="Hilo del Service Worker al pedir un perfil de subdominio: el SW consulta /api/subdomain al Worker, que pregunta a D1 si existe el perfil" loading="lazy">
@@ -1806,13 +1806,14 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             <h4>Planes</h4>
             <p>El detalle completo vive en los planes del estándar y del repo:</p>
             <ul class="plan-links">
-              <li><a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">risa v2 — plan histórico (Railway + libSQL) · el v2 real corre en Cloudflare D1 ↗</a></li>
+              <li><a href="https://flove.org/development/standards/risaliberada/plan-v2.md" target="_blank" rel="noopener">liberada v2 — plan histórico (Railway + libSQL) · el v2 real corre en Cloudflare D1 ↗</a></li>
+              <li><b>Lo que viene después: flove v3</b> — la app-paraguas que unirá risa, lovy y ama bajo una sola identidad.</li>
             </ul>
           </div>
           <nav class="rtab-bar" aria-label="Versiones de la réplica (final de la sección)">
-            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Pasado</button>
-            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Presente</button>
-            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Futuro</button>
+            <button type="button" class="rtab-btn" data-tab="pasado" aria-pressed="false">Liberada v1</button>
+            <button type="button" class="rtab-btn" data-tab="presente" aria-pressed="true">Liberada v2</button>
+            <button type="button" class="rtab-btn" data-tab="futuro" aria-pressed="false">Flove v3</button>
           </nav>
         </div>
       </div>
