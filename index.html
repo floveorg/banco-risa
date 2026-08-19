@@ -2172,7 +2172,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         ? '<button type="button" class="clip-video-btn" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">Video</button>'
         : '';
       const videoBox = isVideoClip
-        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden><video src="'+esc(src)+'" controls playsinline preload="none"></video></div>'
+        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden><video src="'+esc(src)+'" controls playsinline webkit-playsinline preload="none"></video></div>'
         : '';
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
@@ -2190,10 +2190,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+videoBtn+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
       if(toggleLine){
-        // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
+        // tarjeta aparte (con su fondo) y la flecha fuera; el vídeo se extiende
+        // ocupando el espacio inferior del clip (fuera de la tarjeta).
         li.className='tgl'+(depth>0?' clip-reply-row':'');
         li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+row+videoBox+'</div>'+toggleLine;
+        li.innerHTML='<div class="clip-card">'+row+'</div>'+toggleLine+videoBox;
       } else {
         if(depth > 0) li.className='clip-reply-row';
         if(videoBox){ li.style.flexDirection='column'; li.innerHTML=row+videoBox; }
@@ -2225,7 +2226,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             if(vid) vid.play().catch(function(){});
             vbtn.classList.add('on');
             vbtn.textContent='Cerrar';
-            setTimeout(function(){ box.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+            // Mantén el clip (y su botón Video/Cerrar) a la vista.
+            setTimeout(function(){ li.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
           } else {
             box.hidden=true;
             if(vid) vid.pause();
