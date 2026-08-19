@@ -2167,17 +2167,15 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
-      // Clips de vídeo: audio normal + enlace «Video» que expande y autorreproduce.
-      // En la vista «solo vídeos» (audioOff+videoOn) la caja aparece abierta y el
-      // vídeo suena en mute (autoplay requiere silencio) para verse en directo.
+      // Clips de vídeo: audio normal + enlace «Video» que expande (sin autoplay).
+      // La caja nace oculta; la vista «solo vídeos» la abre después del render.
       const isVideoClip = !!(t.isVideo && src);
-      const videosOnly = !!(videoOn && !audioOn);
       const videoBtn = isVideoClip
-        ? '<button type="button" class="clip-video-btn'+(videosOnly?' on':'')+'" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">'+(videosOnly?'Cerrar':'Video')+'</button>'
+        ? '<button type="button" class="clip-video-btn" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">Video</button>'
         : '';
       const videoBox = isVideoClip
-        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'"'+(videosOnly?'':' hidden')+'>'+
-          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline'+(videosOnly?' autoplay muted':' preload="none"')+'></video></div>'
+        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'" hidden>'+
+          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline preload="none"></video></div>'
         : '';
       const kids=cid ? (treeChildren.get(cid)||[]) : [];
       // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
@@ -2218,22 +2216,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
           if(expanded.has(cid)) expanded.delete(cid); else expanded.add(cid);
           render();
         });
-      }
-      // En «solo vídeos», reproduce cada vídeo abierto (muted). Se aplaza un tick
-      // para que el elemento esté en el DOM y se reintenta al cargar datos.
-      if(videosOnly && isVideoClip){
-        const box0=li.querySelector('[data-videobox]');
-        const vid0=box0 && box0.querySelector('video');
-        if(vid0){
-          vid0.muted=true;
-          vid0.preload='auto';
-          setTimeout(function(){
-            const p=vid0.play();
-            if(p && p.catch) p.catch(function(){
-              vid0.addEventListener('canplay', function(){ vid0.play().catch(function(){}); }, {once:true});
-            });
-          }, 0);
-        }
       }
       const vbtn=li.querySelector('[data-clipvideo]');
       if(vbtn){
@@ -2836,6 +2818,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       favFilter?esTxt('Mis risas favoritas ⭐','My favourite laughs ⭐'):esTxt('Risas de la gente 😹','People\u2019s laughs 😹'), t=>t.tags,
       favFilter?esTxt('Aún no has marcado ninguna risa con la estrella ⭐','You haven\u2019t starred any laugh yet ⭐')
         :(mediaEmpty || (sel?esTxt('Ninguna risa lleva esas etiquetas 😅','No laugh has those tags 😅'):esTxt('Aún no hay risas en el feed · sé la primera 💛','No laughs in the feed yet · be the first 💛'))));
+    applyVideosOnlyOpen();   // vista «solo vídeos»: abre los vídeos (sin autoplay)
+  }
+
+  function applyVideosOnlyOpen(){
+    if(!(videoOn && !audioOn)) return;
+    const pl=document.getElementById('gente-player');
+    (pl?pl.querySelectorAll('[data-videobox]'):[]).forEach(box=>{
+      box.hidden=false;
+      const btn=box.closest('li')&&box.closest('li').querySelector('[data-clipvideo]');
+      if(btn){ btn.classList.add('on'); btn.textContent='Cerrar'; }
+    });
   }
 
   function tagStats(){
