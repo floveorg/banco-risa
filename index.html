@@ -273,9 +273,11 @@ img{max-width:100%; display:block}
 .quick-act.on{color:var(--marigold)}
 .thread-arrow-btn{background:none;border:none;cursor:pointer;padding:2px 2px;flex:0 0 auto;
   display:inline-flex;align-items:center;gap:4px}
-.thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape)}
+.thread-arrow-btn .thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center;color:var(--grape);
+  font-weight:900;-webkit-text-stroke:0.6px currentColor}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
-.thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
+.thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap;
+  display:inline-block;transform:translateY(5px)}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:5}
 .clip-tag{vertical-align:middle}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
@@ -508,7 +510,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 /* ============ FEED · RISAS DE LA GENTE ============ */
 .feed{display:grid; gap:12px; align-content:start; max-height:420px; overflow-y:auto; padding:4px; margin:-4px}
 .feed li{position:relative}
-.thread-item{position:relative;display:flex;align-items:center;gap:10px;width:100%}
+.thread-item{position:relative;display:flex;align-items:center;gap:10px;width:100%;transform:translateY(5px)}
 .thread-parent-label{font-family:var(--mono); font-size:.68rem; color:var(--grape); font-weight:700; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .feed-item{display:flex; align-items:center; gap:12px; text-align:left;
   background:var(--cream); border:2.5px solid var(--ink); border-radius:18px; padding:12px 14px;
