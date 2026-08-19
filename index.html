@@ -2163,14 +2163,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const src=t.src||'';
       const cid=t.clip&&t.clip.id;
       const depth = t.depth || 0;
+      const tagArr=String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
       // El título muestra/oculta las etiquetas de este clip (en línea).
       const tagsOpen=!!cid && tagsOpenSet.has(cid);
       const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      let chips='';
-      if(tagsOpen){
-        chips=String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean)
-          .map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
-      }
+      const chips=tagsOpen ? tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('') : '';
       const clipUrl='https://risa.liberada.net/#/c/'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
@@ -2212,7 +2209,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         if(videoBox){ li.style.flexDirection='column'; li.innerHTML=row+videoBox; }
         else li.innerHTML=row;
       }
-      if(cid && String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean).length){
+      if(cid && tagArr.length){
         li.querySelector('.clip-title').addEventListener('click', function(e){
           e.stopPropagation();
           if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
@@ -2858,17 +2855,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       favFilter?esTxt('Mis risas favoritas ⭐','My favourite laughs ⭐'):esTxt('Risas de la gente 😹','People\u2019s laughs 😹'), t=>t.tags,
       favFilter?esTxt('Aún no has marcado ninguna risa con la estrella ⭐','You haven\u2019t starred any laugh yet ⭐')
         :(mediaEmpty || (sel?esTxt('Ninguna risa lleva esas etiquetas 😅','No laugh has those tags 😅'):esTxt('Aún no hay risas en el feed · sé la primera 💛','No laughs in the feed yet · be the first 💛'))));
-    applyVideosOnlyOpen();   // vista «solo vídeos»: abre los vídeos (sin autoplay)
-  }
-
-  function applyVideosOnlyOpen(){
-    if(!(videoOn && !audioOn)) return;
-    const pl=document.getElementById('gente-player');
-    (pl?pl.querySelectorAll('[data-videobox]'):[]).forEach(box=>{
-      box.hidden=false;
-      const btn=box.closest('li')&&box.closest('li').querySelector('[data-clipvideo]');
-      if(btn){ btn.classList.add('on'); btn.textContent='Cerrar'; }
-    });
   }
 
   function tagStats(){
