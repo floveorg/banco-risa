@@ -278,12 +278,16 @@ img{max-width:100%; display:block}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
-.tags-area{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;vertical-align:middle;
-  overflow:hidden;transition:max-height .35s ease;max-height:0}
+.tags-cloud{position:relative;display:inline-flex;vertical-align:middle;margin-right:10px}
+.tags-area{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;overflow:hidden;
+  transition:max-height .35s ease;max-height:0}
 .tag-chip{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;cursor:pointer;border-radius:999px;
   padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;
-  margin-left:2px;box-shadow:0 2px 0 rgba(42,24,16,.18);transition:transform .1s}
+  box-shadow:0 2px 0 rgba(42,24,16,.18);transition:transform .1s}
 .tag-chip:hover{transform:translateY(-1px)}
+.tags-float{position:absolute;top:-9px;z-index:3;box-shadow:0 2px 0 rgba(42,24,16,.25),0 0 0 3px var(--paper)}
+.tags-float.tag-grow{right:-4px;background:var(--persimmon);color:#fff}
+.tags-float.tag-shrink{right:22px;background:var(--marigold);color:var(--ink)}
 .tag-grow{background:var(--persimmon);color:#fff}
 .tag-shrink{background:var(--marigold);color:var(--ink)}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
@@ -2157,16 +2161,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
       const tagsLvl=cid?(tagsLevel.get(cid)||1):1;   // 1 = tamaño inicial · 10 = todas
       const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
-      // Área flotante de etiquetas (siempre visible, sin tocar el título): crece
-      // un 10% hacia abajo por cada ＋. Los chips ＋/− van FUERA del área recortada
-      // para que siempre se vean y se puedan pulsar; el − aparece tras el primer ＋.
+      // Nube flotante de etiquetas a la izquierda (la fila queda limpia: solo el
+      // '+' de la derecha). Los chips ＋/− flotan en su esquina, siempre visibles.
       let chips='';
       if(cid && tagArr.length){
-        chips='<span class="tags-area" data-tagsarea="'+esc(cid)+'">'+
-          tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
+        chips='<span class="tags-cloud">'+
+          '<span class="tags-area" data-tagsarea="'+esc(cid)+'">'+
+            tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
           '</span>'+
-          (tagsLvl<10?'<button type="button" class="tag-chip tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas (10% más)">＋</button>':'')+
-          (tagsLvl>1?'<button type="button" class="tag-chip tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar al tamaño inicial">−</button>':'');
+          (tagsLvl<10?'<button type="button" class="tag-chip tags-float tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas (10% más)">＋</button>':'')+
+          (tagsLvl>1?'<button type="button" class="tag-chip tags-float tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar la nube">−</button>':'')+
+          '</span>';
       }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
@@ -2185,7 +2190,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       }
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+chips+titleHtml+byline+'</span>'+orig+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
       if(toggleLine){
         // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
