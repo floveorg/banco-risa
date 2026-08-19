@@ -68,7 +68,7 @@ img{max-width:100%; display:block}
 
 /* ============ TOPBAR ============ */
 .topbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(9px);
-  background:rgba(255,232,212,.72); border-bottom:2px solid rgba(42,24,16,.08)}
+  background:rgba(255,232,212,.72);}
 .topbar .wrap{display:flex; align-items:center; justify-content:center; gap:12px; height:60px}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:44px; height:44px; flex:0 0 auto}
@@ -267,7 +267,8 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
   background:var(--cream); border-radius:999px; padding:1px 8px 2px; cursor:pointer; font-family:var(--body);
   font-size:.7rem; line-height:1; transform:translateY(5px); position:relative; transition:background .12s}
 .react-chip:hover{background:var(--marigold)}
-.react-emoji{font-size:.8rem; line-height:1}
+.react-emoji{font-size:.8rem; line-height:1; display:inline-block; transition:transform .15s ease}
+.react-chip:hover .react-emoji{transform:scale(1.2); animation:emoji-bob .35s ease-in-out infinite alternate}   /* el emoji por defecto también se mueve y crece */
 .react-count{font-weight:800; color:var(--ink-soft)}
 .react-pop{position:fixed; z-index:400; background:var(--cream); border:2px solid var(--ink); border-radius:14px;
   padding:6px; box-shadow:4px 4px 0 rgba(42,24,16,.18); min-width:220px; max-width:340px; display:grid; gap:2px}
@@ -277,8 +278,8 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .react-pop-row[aria-pressed="true"]{background:none}
 .react-pop-emoji{font-size:1.1rem; line-height:1; display:inline-block; transition:transform .15s ease}
 .react-pop-row:hover .react-pop-emoji{transform:scale(1.2); animation:emoji-bob .35s ease-in-out infinite alternate}   /* se mueve y crece 20% */
-.react-pop-row[aria-pressed="true"] .react-pop-emoji{transform:scale(1.5)}   /* al elegirlo crece hasta 50% */
-@keyframes emoji-bob{from{transform:scale(1.15) translateY(0)}to{transform:scale(1.25) translateY(-3px)}}
+.react-pop-row[aria-pressed="true"] .react-pop-emoji{transform:scale(1.4)}   /* al elegirlo crece hasta 40% (máx, −20%) */
+@keyframes emoji-bob{from{transform:scale(1.12) translateY(0)}to{transform:scale(1.2) translateY(-3px)}}
 .react-pop-count{font-weight:800; min-width:1.3em}
 .react-pop-users{color:var(--ink-soft); font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .react-pop-sep{text-align:center; color:var(--ink-soft); opacity:.4; font-size:.7rem; line-height:1; padding:2px 0}
