@@ -283,7 +283,7 @@ img{max-width:100%; display:block}
   border:1.5px solid var(--persimmon);border-radius:999px;background:var(--persimmon);color:#fff;cursor:pointer;line-height:1.4}
 .clip-video-btn.on{background:none;color:var(--persimmon)}
 .clip-video-box{width:100%;padding:6px 0 2px;overflow:hidden;flex:0 0 auto;position:relative;z-index:0}
-.clip-video-box video{width:100%;max-height:130px;border-radius:10px;background:#000;display:block}
+.clip-video-box video{width:100%;height:auto;display:block;border-radius:10px;background:#000}
 @keyframes clipFlash{0%,55%{background:rgba(255,176,32,.42)}100%{background:transparent}}
 .tracklist li.clip-flash{animation:clipFlash 3.4s ease forwards}
 .tracklist li.tgl.clip-flash .clip-card{animation:clipFlash 3.4s ease forwards}
@@ -2197,11 +2197,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+videoBtn+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
       if(toggleLine){
-        // tarjeta aparte (con su fondo) y la flecha fuera; el vídeo se extiende
-        // ocupando el espacio inferior del clip (fuera de la tarjeta).
+        // tarjeta aparte; el vídeo, al mostrarse, va POR ENCIMA de la flecha y
+        // de los comentarios (flecha y comentarios quedan debajo del vídeo).
         li.className='tgl'+(depth>0?' clip-reply-row':'');
         li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+row+'</div>'+toggleLine+videoBox;
+        li.innerHTML='<div class="clip-card">'+row+'</div>'+videoBox+toggleLine;
       } else {
         if(depth > 0) li.className='clip-reply-row';
         if(videoBox){ li.style.flexDirection='column'; li.innerHTML=row+videoBox; }
