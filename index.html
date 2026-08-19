@@ -13,13 +13,13 @@
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
   <meta name="twitter:card" content="summary">
-  <link rel="alternate" type="application/rss+xml" title="Risa liberada — RSS" href="risa.xml">
-  <link rel="alternate" type="application/atom+xml" title="Risa liberada — Atom" href="atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Risa liberada — RSS" href="https://risa.liberada.net/risa.xml">
+  <link rel="alternate" type="application/atom+xml" title="Risa liberada — Atom" href="https://risa.liberada.net/atom.xml">
   <link rel="icon" type="image/svg+xml" href="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../appy/flove.css">
+<link rel="stylesheet" href="../../../central/shared/code/css/flove.css">
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -840,8 +840,9 @@ body:has(#lang-en:checked) .es{display:none}
   border:2px solid var(--ink); border-radius:11px; white-space:nowrap; color:var(--ink); background:var(--base)}
 .lang input:checked + label{background:var(--ink); color:var(--base); font-weight:700}
 </style>
+<link rel="stylesheet" href="../../../central/shared/code/css/flove-bottom-nav.css">
 </head>
-<body>
+<body class="has-bottom-nav">
 
 <!-- ============ TOPBAR ============ -->
 <header class="topbar">
@@ -871,6 +872,7 @@ body:has(#lang-en:checked) .es{display:none}
             </div>
           </details>
           <button class="theme-btn" type="button" id="theme-btn" title="Tema" aria-label="Tema claro/oscuro" data-aria-es="Tema claro/oscuro" data-aria-en="Light/dark theme">◐</button>
+          <button class="theme-btn" type="button" id="sound-btn" data-sound-force aria-pressed="true" title="Sonido" aria-label="Sonido">🔊</button>
         </div>
       </nav>
     </div>
@@ -952,15 +954,15 @@ body:has(#lang-en:checked) .es{display:none}
         <div class="player-col">
           <div class="title-head">
             <div class="transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
-              <button class="tr-btn" type="button" id="gente-prev" aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
-              <button class="tr-btn tr-play" type="button" id="gente-play" aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
-              <button class="tr-btn" type="button" id="gente-next" aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
+              <button class="tr-btn" type="button" id="gente-prev" data-prev aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
+              <button class="tr-btn tr-play" type="button" id="gente-play" data-play aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
+              <button class="tr-btn" type="button" id="gente-next" data-next aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
             </div>
             <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
-              <button type="button" class="mt-btn mt-audio" id="mt-audio" aria-pressed="true" aria-label="Solo audios" title="Solo audios" data-aria-es="Solo audios" data-aria-en="Only audio">
+              <button type="button" class="mt-btn mt-audio" id="mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
                 <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
-              <button type="button" class="mt-btn mt-video" id="mt-video" aria-pressed="false" aria-label="Solo vídeos" title="Solo vídeos">
+              <button type="button" class="mt-btn mt-video" id="mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
                 <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
               </button>
             </div>
@@ -1101,11 +1103,12 @@ body:has(#lang-en:checked) .es{display:none}
           <div class="player-col">
             <div class="title-head">
               <div class="transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
-                <button class="tr-btn" type="button" id="world-prev" aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
-                <button class="tr-btn tr-play" type="button" id="world-play" aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
-              <button class="tr-btn" type="button" id="world-next" aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
+                <button class="tr-btn" type="button" id="world-prev" data-prev aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
+                <button class="tr-btn tr-play" type="button" id="world-play" data-play aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
+                <button class="tr-btn" type="button" id="world-next" data-next aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
+              </div>
+              <div id="world-media-toggle" class="media-toggle-host" role="group" aria-label="Tipo de risas del mundo"></div>
             </div>
-          </div>
             <div class="player" id="world-player">
               <ul class="tracklist"></ul>
               <div class="paginator" hidden>
@@ -1115,6 +1118,7 @@ body:has(#lang-en:checked) .es{display:none}
                   <button type="button" class="chip pg-100" aria-label="Ver 100 más" data-aria-es="Ver 100 más" data-aria-en="See 100 more">100</button>
                 </div>
                 <span class="pg-label" aria-live="polite"></span>
+                <a class="pg-repo" href="https://risa.liberada.net/risa.json" target="_blank" rel="noopener"><span class="es" lang="es">Ver todas ↗</span><span class="en" lang="en">See all ↗</span></a>
               </div>
               <audio preload="none"></audio>
             </div>
@@ -1330,16 +1334,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </details>
             <p>El flujo completo, paso a paso:</p>
             <figure>
-              <img src="risaliberada-v1-thread.svg" alt="Diagrama de secuencia del flujo de risa liberada (liberada v1): de la nota de voz al canal y la web" loading="lazy">
+              <img src="https://risa.liberada.net/risaliberada-v1-thread.svg" alt="Diagrama de secuencia del flujo de risa liberada (liberada v1): de la nota de voz al canal y la web" loading="lazy">
               <figcaption>Flujo liberada v1 · hilo: de la nota de voz a la web y al canal</figcaption>
             </figure>
             <figure>
-              <img src="risaliberada-v1-flow.svg" alt="Flujo de risa liberada (liberada v1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
-              <figcaption>Flujo liberada v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
+              <img src="https://risa.liberada.net/risaliberada-v1-flow.svg" alt="Flujo de risa liberada (liberada v1) en una vista: persona → bot → moderadores → R2 → risa.json → canal y web, más el subdominio" loading="lazy">
+              <figcaption>Flujo liberada v1 · panorama: persona · bot · moderación · R2 · risa.json · canal · web (+ subdominio) <a href="https://risa.liberada.net/risaliberada-v1-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure>
-              <img src="risaliberada-v1-subdomain.svg" alt="Flujo del subdominio: ensureUsername resuelve la key ya cogida con sufijo determinista (_2, _3…) y el renombre con error si está tomada; desde el perfil se crean aliases (POST /api/aliases)" loading="lazy">
-              <figcaption>Subdominio · keys ya cogidas y aliases: de la aprobación del clip al perfil, con la resolución de conflictos y la creación de aliases <a href="risaliberada-v1-subdomain.png" download>descargar PNG ↗</a></figcaption>
+              <img src="https://risa.liberada.net/risaliberada-v1-subdomain.svg" alt="Flujo del subdominio: ensureUsername resuelve la key ya cogida con sufijo determinista (_2, _3…) y el renombre con error si está tomada; desde el perfil se crean aliases (POST /api/aliases)" loading="lazy">
+              <figcaption>Subdominio · keys ya cogidas y aliases: de la aprobación del clip al perfil, con la resolución de conflictos y la creación de aliases <a href="https://risa.liberada.net/risaliberada-v1-subdomain.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <h4>Las piezas</h4>
             <ol>
@@ -1748,16 +1752,16 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
             </figure>
             <h4>Diagramas de referencia — liberada v2 (D1) y subdominio · SVG/PNG</h4>
             <figure>
-              <img src="liberada-v2-flow.svg" alt="Flujo liberada v2: capa D1 encima de liberada v1 — Worker /api/*, Cloudflare D1 (follows, reacciones, plays, avisos, cadenas), hilos, authy y subdominios" loading="lazy">
-              <figcaption>Flujo liberada v2: la capa D1 encima del circuito liberada v1 — Worker /api/* · D1 · hilos · authy · subdominios <a href="liberada-v2-flow.png" download>descargar PNG ↗</a></figcaption>
+              <img src="https://risa.liberada.net/liberada-v2-flow.svg" alt="Flujo liberada v2: capa D1 encima de liberada v1 — Worker /api/*, Cloudflare D1 (follows, reacciones, plays, avisos, cadenas), hilos, authy y subdominios" loading="lazy">
+              <figcaption>Flujo liberada v2: la capa D1 encima del circuito liberada v1 — Worker /api/* · D1 · hilos · authy · subdominios <a href="https://risa.liberada.net/liberada-v2-flow.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure>
-              <img src="risa-v2-subdomain-request.svg" alt="Hilo del Service Worker al pedir un perfil de subdominio: el SW consulta /api/subdomain al Worker, que pregunta a D1 si existe el perfil" loading="lazy">
-              <figcaption>Service Worker · pedir el perfil de subdominio <a href="risa-v2-subdomain-request.png" download>descargar PNG ↗</a></figcaption>
+              <img src="https://risa.liberada.net/risa-v2-subdomain-request.svg" alt="Hilo del Service Worker al pedir un perfil de subdominio: el SW consulta /api/subdomain al Worker, que pregunta a D1 si existe el perfil" loading="lazy">
+              <figcaption>Service Worker · pedir el perfil de subdominio <a href="https://risa.liberada.net/risa-v2-subdomain-request.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure>
-              <img src="risa-v2-subdomain-create.svg" alt="Hilo del Service Worker al crear un perfil de subdominio: claim + nonce por authy, confirmación por DM y alta en D1" loading="lazy">
-              <figcaption>Service Worker · crear el perfil de subdominio <a href="risa-v2-subdomain-create.png" download>descargar PNG ↗</a></figcaption>
+              <img src="https://risa.liberada.net/risa-v2-subdomain-create.svg" alt="Hilo del Service Worker al crear un perfil de subdominio: claim + nonce por authy, confirmación por DM y alta en D1" loading="lazy">
+              <figcaption>Service Worker · crear el perfil de subdominio <a href="https://risa.liberada.net/risa-v2-subdomain-create.png" download>descargar PNG ↗</a></figcaption>
             </figure>
             <figure class="circuit-fig">
               <svg viewBox="0 0 760 430" role="img" aria-label="Circuito entre los tres json: flove.json, el pariente, facilita y enriquece a risa.json y lovy.json, sus hermanas; Lovy agrega risas como subcampo de uno de sus cinco campos">
@@ -2076,1815 +2080,228 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 </footer>
 
 <script src="risa.js"></script>
-<script>
-(function(){
-  "use strict";
+<script src="../../../central/shared/code/js/flove-feed.js"></script>
+<script src="../../../central/shared/code/js/flove-tags.js"></script>
+<script src="../../../central/shared/code/js/flove-player.js"></script>
+<script src="../../../central/shared/code/js/flove-bottom-nav.js"></script>
+<script src="../../../central/shared/code/js/flove-sound.js"></script>
+<script src="../../../central/shared/code/js/flove-app.js"></script><script>
+/* ============================================================
+   risa-fork · risa/index con las etiquetas flotantes y la playlist
+   (y los hilos) abstraídas en central/shared/code. RISAS DE LA
+   GENTE y RISAS DEL MUNDO llaman al MISMO código (FloveApp.section),
+   solo cambia el contenido: su tags-space, su reproductor, su
+   media-toggle (audio/vídeo) y su filtro/título.
+   ============================================================ */
+(function () {
+  'use strict';
+  var F = window.floveFeed;
+  var S = window.floveSound;
 
-  /* ============ DATOS DE PLAYLISTS ============ */
-  const A = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
-  const P = 'https://commons.wikimedia.org/wiki/File:';
-  const playlists = [
-    { id:'contagiosa', emoji:'😄', name:'Risa contagiosa', desc:'Multitudes riendo',
-      tracks:[
-        {t:'Risa de multitud', src:A+'72842_lonemonk_approx-800-laugh-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72842_lonemonk_approx-800-laugh-1.wav'},
-        {t:'Solo risas', src:A+'72843_lonemonk_approx-800-laughter-only-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72843_lonemonk_approx-800-laughter-only-1.wav'},
-        {t:'Risas y aplausos', src:A+'72844_lonemonk_approx-800-laughter-and-clapter-1.wav', by:'lonemonk · CC BY 3.0', orig:P+'72844_lonemonk_approx-800-laughter-and-clapter-1.wav'},
-        {t:'Grupo pequeño', src:A+'Small_group_laughter.ogg', by:'CC BY 3.0', orig:P+'Small_group_laughter.ogg'},
-        {t:'Gente riendo', src:A+'Menschen-Lachen.ogg', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
-      ]},
-    { id:'carcajada', emoji:'🤣', name:'Carcajada suelta', desc:'Risa de vientre',
-      tracks:[
-        {t:'Carcajada', src:A+'Laugh.wav', by:'CC BY-SA 4.0', orig:P+'Laugh.wav'},
-        {t:'Carcajadón', src:A+'Laughter.ogg', by:'Dominio público', orig:P+'Laughter.ogg'},
-        {t:'Risa corta', src:A+'En-us-laugh.ogg', by:'Dominio público', orig:P+'En-us-laugh.ogg'},
-        {t:'Risotada (EE. UU.)', src:A+'En-us-guffaw.ogg', by:'CC BY-SA 3.0', orig:P+'En-us-guffaw.ogg'},
-        {t:'Risotada (Australia)', src:A+'En-au-guffaw.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-guffaw.ogg'},
-      ]},
-    { id:'picara', emoji:'😈', name:'Pícara y malvada', desc:'Risa traviesa',
-      tracks:[
-        {t:'Risa malvada', src:A+'Evil_laugh_2.oga', by:'CC BY-SA 3.0', orig:P+'Evil_laugh_2.oga'},
-        {t:'Risa malvada (CC0)', src:A+'Evil_laugh.ogg', by:'CC0', orig:P+'Evil_laugh.ogg'},
-        {t:'Carcajada diabólica', src:A+'Evil_laughter.ogg', by:'Dominio público', orig:P+'Evil_laughter.ogg'},
-        {t:'Risa de loco', src:A+'Insane_laughter_man_reverb.ogg', by:'CC BY 3.0', orig:P+'Insane_laughter_man_reverb.ogg'},
-        {t:'Risa de bestia', src:A+'Beast_laughter.ogg', by:'Dominio público', orig:P+'Beast_laughter.ogg'},
-      ]},
-    { id:'risita', emoji:'😅', name:'Risita nerviosa', desc:'Risa contenida, giggle',
-      tracks:[
-        {t:'Risa «lol»', src:A+'Man_saying_lol.oga', by:'CC BY-SA 4.0', orig:P+'Man_saying_lol.oga'},
-        {t:'Risita (giggle juice)', src:A+'En-au-giggle_juice.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_juice.ogg'},
-        {t:'Risita (giggle berries)', src:A+'En-au-giggle_berries.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-giggle_berries.ogg'},
-        {t:'Risa disimulada', src:A+'En-us-laughter.ogg', by:'CC BY-SA 3.0', orig:P+'En-us-laughter.ogg'},
-        {t:'Risita entre dientes', src:A+'Laughter-Ochi.oga', by:'CC BY-SA 4.0', orig:P+'Laughter-Ochi.oga'},
-        {t:'Risa contenida (cackle)', src:A+'En-au-cackle-bladder.ogg', by:'CC BY-SA 4.0', orig:P+'En-au-cackle-bladder.ogg'},
-      ]},
-    { id:'mundo', emoji:'🌍', name:'Risas del mundo', desc:'Reír en varios idiomas',
-      tracks:[
-        {t:'Risa (Alemania)', src:A+'Menschen-Lachen.ogg', by:'CC BY-SA 4.0', orig:P+'Menschen-Lachen.ogg'},
-        {t:'Rire (París, Francia)', src:A+'Fr-Rire-fr-Paris.ogg', by:'CC BY-SA 2.0 fr', orig:P+'Fr-Rire-fr-Paris.ogg'},
-        {t:'Rire (Quebec)', src:A+'Qc-rire.ogg', by:'CC BY-SA 3.0', orig:P+'Qc-rire.ogg'},
-        {t:'Risa de bebé (Francia, 9 meses)', src:A+'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg', by:'CC BY-SA 4.0', orig:P+'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg'},
-        {t:'Risa de bebé', src:A+'Baby_Laugh.ogg', by:'CC BY 3.0', orig:P+'Baby_Laugh.ogg'},
-        {t:'Ja-ja en amazigh (ⵃⴰⵃⴰ)', link:P+'Zgh_shi_%E1%B8%A5a%E1%B8%A5a_%E2%B5%83%E2%B4%B0%E2%B5%83%E2%B4%B0.oga', by:'CC BY-SA 4.0'},
-      ]},
+  /* ── botón de sonido abstraído (junto al theme switcher) ── */
+  if (S) S.initSoundBtn(document.getElementById('sound-btn'), { preview: 'ui:confirm' });
+
+  /* ── RISAS DEL MUNDO · playlist curada (scrapped de Wikimedia Commons,
+     tal cual en liberada v1): audios/vídeos reales, NO clips del bot.
+     La sección usa esta fuente propia vía sc.clips. ── */
+  var CW = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
+  var CP = 'https://commons.wikimedia.org/wiki/File:';
+  var WORLD_CATS = [
+    ['w', 'Risa contagiosa', [
+      ['Risa de multitud', '72842_lonemonk_approx-800-laugh-1.wav', 'lonemonk · CC BY 3.0'],
+      ['Solo risas', '72843_lonemonk_approx-800-laughter-only-1.wav', 'lonemonk · CC BY 3.0'],
+      ['Risas y aplausos', '72844_lonemonk_approx-800-laughter-and-clapter-1.wav', 'lonemonk · CC BY 3.0'],
+      ['Grupo pequeño', 'Small_group_laughter.ogg', 'CC BY 3.0'],
+      ['Gente riendo', 'Menschen-Lachen.ogg', 'CC BY-SA 4.0']
+    ]],
+    ['c', 'Carcajada suelta', [
+      ['Carcajada', 'Laugh.wav', 'CC BY-SA 4.0'],
+      ['Carcajadón', 'Laughter.ogg', 'Dominio público'],
+      ['Risa corta', 'En-us-laugh.ogg', 'Dominio público'],
+      ['Risotada (EE. UU.)', 'En-us-guffaw.ogg', 'CC BY-SA 3.0'],
+      ['Risotada (Australia)', 'En-au-guffaw.ogg', 'CC BY-SA 4.0']
+    ]],
+    ['p', 'Pícara y malvada', [
+      ['Risa malvada', 'Evil_laugh_2.oga', 'CC BY-SA 3.0'],
+      ['Risa malvada (CC0)', 'Evil_laugh.ogg', 'CC0'],
+      ['Carcajada diabólica', 'Evil_laughter.ogg', 'Dominio público'],
+      ['Risa de loco', 'Insane_laughter_man_reverb.ogg', 'CC BY 3.0'],
+      ['Risa de bestia', 'Beast_laughter.ogg', 'Dominio público']
+    ]],
+    ['r', 'Risita nerviosa', [
+      ['Risa «lol»', 'Man_saying_lol.oga', 'CC BY-SA 4.0'],
+      ['Risita (giggle juice)', 'En-au-giggle_juice.ogg', 'CC BY-SA 4.0'],
+      ['Risita (giggle berries)', 'En-au-giggle_berries.ogg', 'CC BY-SA 4.0'],
+      ['Risa disimulada', 'En-us-laughter.ogg', 'CC BY-SA 3.0'],
+      ['Risita entre dientes', 'Laughter-Ochi.oga', 'CC BY-SA 4.0'],
+      ['Risa contenida (cackle)', 'En-au-cackle-bladder.ogg', 'CC BY-SA 4.0']
+    ]],
+    ['m', 'Risas del mundo', [
+      ['Risa (Alemania)', 'Menschen-Lachen.ogg', 'CC BY-SA 4.0'],
+      ['Rire (París, Francia)', 'Fr-Rire-fr-Paris.ogg', 'CC BY-SA 2.0 fr'],
+      ['Rire (Quebec)', 'Qc-rire.ogg', 'CC BY-SA 3.0'],
+      ['Risa de bebé (Francia, 9 meses)', 'Rire_de_b%C3%A9b%C3%A9_de_9_mois.ogg', 'CC BY-SA 4.0'],
+      ['Risa de bebé', 'Baby_Laugh.ogg', 'CC BY 3.0']
+    ]]
   ];
-
-  /* ============ FAVORITAS (estrella, compartida por las dos playlists) ============ */
-  const favKey='risa-liberada-favs';
-  let favs=new Set();
-  try{ JSON.parse(localStorage.getItem(favKey)||'[]').forEach(s=>favs.add(s)); }catch(e){}
-  function saveFavs(){ try{ localStorage.setItem(favKey, JSON.stringify([...favs])); }catch(e){} }
-  function toggleFav(src, btn){
-    if(!src) return;
-    const on=!favs.has(src);
-    if(on) favs.add(src); else favs.delete(src);
-    btn.classList.toggle('on', on);
-    btn.setAttribute('aria-pressed', on?'true':'false');
-    btn.textContent = on?'★':'☆';
-    btn.setAttribute('aria-label', on?'Quitar de favoritas':'Marcar como favorita');
-    btn.setAttribute('data-aria-es', on?'Quitar de favoritas':'Marcar como favorita');
-    btn.setAttribute('data-aria-en', on?'Remove from favourites':'Mark as favourite');
-    btn.classList.remove('jump'); void btn.offsetWidth; btn.classList.add('jump');
-    saveFavs();
-    // v2-d1 · favoritos a un feed real (D1) si hay claim de identidad (fail-silent).
-    if(devKey && on){
-      const clip = (risas||[]).find(c=>c.src===src);
-      if(clip){
-        fetch('/api/fav',{method:'POST',headers:{'content-type':'application/json',
-          authorization:'Bearer '+devClaim},body:JSON.stringify({key:devKey,app:'risa',item_id:clip.id}),
-          signal:AbortSignal.timeout(3000)}).catch(()=>{});
-      }
-    }
-    if(favFilter) updateGentePlaylist();      // si el filtro de favoritas está activo, refresca la lista
-    if(worldFavFilter) updateWorldPlaylist();
-  }
-
-  /* ============ REPRODUCTOR GENÉRICO (factory, 2 instancias) ============ */
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function createPlayer(root, opts){
-    opts=opts||{};
-    const audio = root.querySelector('audio');
-    if(audio) audio.addEventListener('play', ()=>{ trackList.querySelectorAll('video').forEach(v=>{ try{ v.pause(); }catch(_){} }); });
-    const nowPl = opts.nowPl || root.querySelector('.plname');
-    const nowTrack = opts.nowTrack || root.querySelector('.track');
-    const trackList = root.querySelector('.tracklist');
-    const playBtn = opts.playBtn || root.querySelector('.play-btn');
-    const prevBtn = opts.prevBtn || null;
-    const nextBtn = opts.nextBtn || null;
-    const iconOnly = opts.iconOnly || false;
-    let tracks=[], tagsOf=null, emptyMsg='Aún no hay pistas todavía 💛';
-    let ti=0, playing=false;
-    let page=0, size=opts.pageSize||0;
-    let bulk=false;
-    const alwaysPage=!!opts.alwaysPage;
-    const pagRoot=root.querySelector('.paginator')||null;
-    const pgPrev=pagRoot?pagRoot.querySelector('.pg-prev'):null;
-    const pgChip10=pagRoot?pagRoot.querySelector('.pg-10'):null;
-    const pgChip100=pagRoot?pagRoot.querySelector('.pg-100'):null;
-    const pgLabel=pagRoot?pagRoot.querySelector('.pg-label'):null;
-    const pgRepo=pagRoot?pagRoot.querySelector('.pg-repo'):null;
-    const repoURL=opts.repo||'';
-
-    function playable(){ return tracks.filter(t=>t.src); }
-
-    let rootCount=0;
-    let treeChildren=new Map();
-    let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (título)
-    let videosClosed=new Set(); // ids de clips con su vídeo cerrado (por defecto abierto)
-    let videoState=new Map();   // cid → {time, playing} para restaurar tras re-render
-
-    function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
-
-    function countNested(kids){
-      let n=kids.length;
-      kids.forEach((k)=>{ const c=treeChildren.get(k.clip.id); if(c) n+=countNested(c); });
-      return n;
-    }
-
-    function buildLi(t){
-      const li=document.createElement('li');
-      const isDL=!!t.src;
-      li.dataset.src=t.src||'';
-      li.dataset.id=(t.clip&&t.clip.id)||'';
-      const byline = opts.metaHTML
-        ? opts.metaHTML(t)
-        : '<span class="by">'+esc(t.by)+'</span>';
-      const orig = opts.metaHTML
-        ? ''
-        : (isDL
-            ? '<a class="orig" href="'+t.orig+'" target="_blank" rel="noopener">'+(t.origLabel||'original')+' ↗</a>'
-            : '<a class="orig" href="'+t.link+'" target="_blank" rel="noopener">escuchar original ↗</a>');
-      const src=t.src||'';
-      const cid=t.clip&&t.clip.id;
-      const depth = t.depth || 0;
-      const tagArr=String(t.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
-      // El título muestra/oculta las etiquetas de este clip (en línea).
-      const tagsOpen=!!cid && tagsOpenSet.has(cid);
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      const chips=tagsOpen ? tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('') : '';
-      const clipUrl='https://risa.liberada.net/#/c/'+encodeURIComponent(cid||'');
-      const replyBtn=cid
-        ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
-        : '';
-      // Clips de vídeo: audio normal + enlace «Video» que expande (sin autoplay).
-      // La caja nace oculta; la vista «solo vídeos» la abre después del render.
-      const isVideoClip = !!(t.isVideo && src);
-      const videoOpen = isVideoClip && cid && !videosClosed.has(cid);   // abierto por defecto
-      const videoBtn = isVideoClip
-        ? '<button type="button" class="clip-video-btn'+(videoOpen?' on':'')+'" data-clipvideo="'+esc(cid||'')+'" title="Ver vídeo" aria-label="Ver vídeo">'+(videoOpen?'Cerrar':'Video')+'</button>'
-        : '';
-      const videoBox = isVideoClip
-        ? '<div class="clip-video-box" data-videobox="'+esc(cid||'')+'"'+(videoOpen?'':' hidden')+'>'+
-          '<video src="'+esc(src)+'" controls playsinline webkit-playsinline'+(videoOpen?' preload="auto"':' preload="none"')+' data-cid="'+esc(cid||'')+'" data-open="'+(videoOpen?'1':'0')+'"></video></div>'
-        : '';
-      const kids=cid ? (treeChildren.get(cid)||[]) : [];
-      // Flecha fija ↳ bajo el botón de play, partiendo del borde de la tarjeta
-      let toggleLine='';
-      if(kids.length){
-        const cnt=countNested(kids);
-        toggleLine='<div class="thread-toggle-line'+(depth>0?' sub-arrow':'')+'" style="padding-left:'+(12+depth*20)+'px">'+
-          '<button type="button" class="thread-arrow-btn" data-toggle="'+esc(cid)+'" aria-expanded="'+(expanded.has(cid)?'true':'false')+'" aria-label="'+(expanded.has(cid)?'Colapsar respuestas':'Mostrar '+cnt+' respuestas')+'">'+
-            '<span class="thread-arrow">↳</span>'+
-            (expanded.has(cid)?'':'<span class="thread-count">'+cnt+'</span>')+
-          '</button></div>';
-      }
-      const clipMeta =
-        '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+chips+byline+'</span>'+orig+videoBtn+replyBtn;
-      const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
-      if(toggleLine){
-        // tarjeta aparte; el vídeo, al mostrarse, va POR ENCIMA de la flecha y
-        // de los comentarios (flecha y comentarios quedan debajo del vídeo).
-        li.className='tgl'+(depth>0?' clip-reply-row':'');
-        li.style.flexDirection='column';
-        li.innerHTML='<div class="clip-card">'+row+'</div>'+videoBox+toggleLine;
-      } else {
-        if(depth > 0) li.className='clip-reply-row';
-        if(videoBox){ li.style.flexDirection='column'; li.innerHTML=row+videoBox; }
-        else li.innerHTML=row;
-      }
-      if(cid && tagArr.length){
-        li.querySelector('.clip-title').addEventListener('click', function(e){
-          e.stopPropagation();
-          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
-          render();
-        });
-      }
-      if(toggleLine){
-        li.querySelector('[data-toggle]').addEventListener('click', function(e){
-          e.stopPropagation();
-          if(expanded.has(cid)) expanded.delete(cid); else expanded.add(cid);
-          render();
-        });
-      }
-      const vbtn=li.querySelector('[data-clipvideo]');
-      if(vbtn){
-        vbtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          const box=li.querySelector('[data-videobox]');
-          if(!box) return;
-          const vid=box.querySelector('video');
-          if(vid && !vid.dataset.wired){
-            vid.dataset.wired='1';
-            // El vídeo pausa el audio y fija la posición de la playlist en ESTE
-            // clip; al terminar, la playlist sigue con el próximo del hilo.
-            vid.addEventListener('play', function(){
-              if(audio) audio.pause();
-              const idx=playable().findIndex(function(tr){ return tr.clip && tr.clip.id === cid; });
-              if(idx>=0){ ti=idx; setPlaying(true); highlight(); }
-            });
-            vid.addEventListener('ended', function(){
-              const list=playable();
-              if(ti < list.length-1){ ti++; startTrack(); }
-              else { ti=0; setPlaying(false); }
-            });
-          }
-          if(box.hidden){
-            if(cid) videosClosed.delete(cid);
-            box.hidden=false;
-            if(vid) vid.play().catch(function(){});
-            vbtn.classList.add('on');
-            vbtn.textContent='Cerrar';
-            // Mantén el clip (y su botón Video/Cerrar) a la vista.
-            setTimeout(function(){ li.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
-          } else {
-            if(cid) videosClosed.add(cid);
-            box.hidden=true;
-            if(vid) vid.pause();
-            vbtn.classList.remove('on');
-            vbtn.textContent='Video';
-          }
-        });
-      }
-      if(videoOpen && cid){
-        // Restaura posición/reproducción del vídeo tras un re-render (p. ej. flecha).
-        const vidR=li.querySelector('video');
-        if(vidR){
-          const st=videoState.get(cid);
-          if(st && st.time>0) vidR.currentTime=st.time;
-          if(st && st.playing) vidR.play().catch(function(){});
-        }
-      }
-      if(isDL){
-        li.style.cursor='pointer';
-        li.addEventListener('click',(e)=>{ if(e.target.closest('a')||e.target.closest('button'))return;
-          if(playing && t.src===audio.src){ audio.pause(); setPlaying(false); return; }
-          const list=playable(); ti=list.indexOf(t); startTrack(); });
-      }
-      return li;
-    }
-
-    function renderNode(t, depth, first){
-      const li=buildLi(t);
-      if(first && depth>0) li.classList.add('reply-first');   // solo el 1º se sube a la fila de la flecha
-      trackList.appendChild(li);
-      const id=t.clip&&t.clip.id;
-      if(id && expanded.has(id)){
-        (treeChildren.get(id)||[]).forEach((k, idx)=>renderNode(k, depth+1, idx===0));
-      }
-    }
-
-    function render(){
-      // Guarda el estado de los vídeos abiertos antes de reconstruir.
-      trackList.querySelectorAll('video[data-open="1"]').forEach(function(v){
-        const cid=v.dataset.cid;
-        if(cid) videoState.set(cid, { time: v.currentTime||0, playing: !v.paused });
-      });
-      trackList.innerHTML='';
-      const byId=new Map();
-      tracks.forEach((t)=>{ if(t.clip&&t.clip.id) byId.set(t.clip.id,t); });
-      treeChildren=new Map();
-      tracks.forEach((t)=>{
-        const p=t.clip&&t.clip.parent;
-        if(p&&byId.has(p)){
-          if(!treeChildren.has(p)) treeChildren.set(p,[]);
-          treeChildren.get(p).push(t);
-        }
-      });
-      const roots=tracks.filter((t)=>!(t.clip&&t.clip.parent&&byId.has(t.clip.parent)));
-      rootCount=roots.length;
-      if(page>pageCount()-1) page=pageCount()-1;
-      const pageRoots=size ? roots.slice(page*size,(page+1)*size) : roots;
-      pageRoots.forEach((r)=>renderNode(r, 0));
-      highlight();
-      renderPaginator();
-    }
-
-    function renderPaginator(){
-      if(!pagRoot) return;
-      pagRoot.hidden=!(size>0 && tracks.length>0);
-      if(pagRoot.hidden) return;
-      const pages=pageCount();
-      const showNav=pages>1;
-      const atStart=page===0, atEnd=page>=pages-1;
-      if(pgChip100) pgChip100.setAttribute('aria-pressed', bulk?'true':'false');
-      if(pgPrev) pgPrev.hidden=!(showNav && !atStart);
-      if(pgLabel){
-        pgLabel.hidden=!showNav;
-        if(showNav) pgLabel.textContent=(page+1)+' / '+pages;
-      }
-      if(pgChip10) pgChip10.hidden=!(alwaysPage || (showNav && !atEnd));
-      if(pgChip100) pgChip100.hidden=!(alwaysPage || (showNav && (atStart || atEnd)));
-      if(pgRepo){
-        pgRepo.hidden=!(showNav && repoURL && atEnd);
-        if(!pgRepo.hidden) pgRepo.href=repoURL;
-      }
-    }
-
-    function highlight(){
-      const active=playable()[ti];
-      [...trackList.children].forEach(li=>{
-        li.classList.toggle('active', playing && active && li.dataset.src===active.src);
-      });
-    }
-
-    function setPlaying(v){
-      playing=v;
-      root.classList.toggle('playing', v);
-      if(playBtn){
-        playBtn.textContent = v ? (iconOnly?'⏸':'⏸ Todas') : (iconOnly?'▶':'▶ Todas');
-        playBtn.setAttribute('aria-label', v?'Pausar':'Reproducir');
-      }
-      if(!v) highlight();
-    }
-
-    function startTrack(){
-      const list=playable();
-      if(!list.length){ if(nowTrack) nowTrack.innerHTML=esTxt('Esta playlist solo tiene enlaces ↗','This playlist only has links ↗'); return; }
-      if(ti>=list.length) ti=0;
-      if(size && Math.floor(ti/size)!==page){ page=Math.floor(ti/size); render(); }
-      const t=list[ti];
-      audio.src=t.src;
-      audio.play().then(()=>{ setPlaying(true); if(nowTrack) nowTrack.innerHTML='▶ '+esc(t.t); highlight(); })
-        .catch(()=>{ if(nowTrack) nowTrack.innerHTML=esTxt('No se pudo reproducir ','Could not play ')+esc(t.t); });
-    }
-
-    function select(newTracks, newName, tags, empty){
-      tracks=newTracks; tagsOf=tags||null; emptyMsg=empty||esTxt('Aún no hay pistas todavía 💛','No tracks yet 💛'); ti=0; page=0; bulk=false; size=opts.pageSize||0;
-      if(playing){ audio.pause(); setPlaying(false); }
-      if(nowPl) nowPl.innerHTML=newName;
-      render();
-      const n=playable().length;
-      if(nowTrack) nowTrack.innerHTML = n
-        ? n+(n===1?esTxt(' pista lista · pulsa play',' track ready · press play'):esTxt(' pistas listas · pulsa play',' tracks ready · press play'))
-        : emptyMsg;
-    }
-
-    playBtn.addEventListener('click', ()=>{
-      if(playing){ audio.pause(); setPlaying(false); }
-      else { if(audio.src){ audio.play().then(()=>setPlaying(true)); } else startTrack(); }
-    });
-
-    if(prevBtn) prevBtn.addEventListener('click', ()=>{
-      const list=playable();
-      if(!list.length) return;
-      ti=(ti-1+list.length)%list.length;
-      startTrack();
-    });
-    if(nextBtn) nextBtn.addEventListener('click', ()=>{
-      const list=playable();
-      if(!list.length) return;
-      ti=(ti+1)%list.length;
-      startTrack();
-    });
-    if(pgPrev) pgPrev.addEventListener('click', ()=>{ if(page>0){ page--; render(); } });
-    if(pgChip10) pgChip10.addEventListener('click', ()=>{ if(page<pageCount()-1){ page++; render(); } });
-    if(pgChip100) pgChip100.addEventListener('click', ()=>{
-      if(!bulk){ bulk=true; size=100; page=0; }
-      else if(page<pageCount()-1){ page++; }
-      render();
-    });
-
-    trackList.addEventListener('click',(e)=>{
-      const b=e.target.closest('.fav-star');
-      if(b){ toggleFav(b.dataset.src, b); return; }
-      const s=e.target.closest('.share-btn');
-      if(s){
-        const url=s.dataset.clip;
-        const text='Escucha esta risa 😂';
-        if(navigator.share){ navigator.share({title:'Risa liberada', text, url}).catch(()=>{}); }
-        else{ window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','noopener'); }
-        return;
-      }
-      const r=e.target.closest('.reply-btn');
-      if(r){
-        showQuickMenu(r);
-        return;
-      }
-    });
-
-    /* ── Respuesta rápida: menú con «Contestar» primero + emojis ─────────── */
-    var QUICK_REACTIONS=['🤣','😂','😄','❤️','👏','😹'];
-    var quickMenu=null;
-    function closeQuick(){ if(quickMenu){ quickMenu.remove(); quickMenu=null; } document.removeEventListener('click', closeQuick); }
-    function shareClip(url){
-      if(!url) return;
-      var text='Escucha esta risa 😂';
-      if(navigator.share){ navigator.share({title:'Risa liberada', text: text, url: url}).catch(function(){}); }
-      else{ window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','noopener'); }
-    }
-    function showQuickMenu(btn){
-      closeQuick();
-      var menu=document.createElement('div');
-      menu.className='quick-menu';
-      menu.setAttribute('role','menu');
-      // 1) Contestar (envía una nota de voz)
-      var reply=document.createElement('button');
-      reply.type='button'; reply.className='quick-opt'; reply.setAttribute('role','menuitem');
-      reply.textContent='🎙️ Contestar';
-      reply.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); openReplyModal(btn); });
-      menu.appendChild(reply);
-      // 2) reacciones rápidas (solo emojis)
-      var em=document.createElement('div'); em.className='quick-emojis'; em.setAttribute('role','group'); em.setAttribute('aria-label','Reacción rápida');
-      QUICK_REACTIONS.forEach(function(ev){
-        var b=document.createElement('button'); b.type='button'; b.className='quick-emoji'; b.setAttribute('role','menuitem'); b.textContent=ev;
-        b.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); sendReaction(btn, ev); });
-        em.appendChild(b);
-      });
-      menu.appendChild(em);
-      // 3) fila de acciones: favorita · descargar · compartir (centrada)
-      var row=document.createElement('div'); row.className='quick-actions'; row.setAttribute('role','group'); row.setAttribute('aria-label','Acciones');
-      var src=btn.dataset.src||'';
-      var favOn=!!src && favs.has(src);
-      var star=document.createElement('button'); star.type='button'; star.className='quick-act'+(favOn?' on':''); star.title='Favorita'; star.setAttribute('aria-label','Marcar como favorita'); star.textContent=favOn?'★':'☆';
-      star.addEventListener('click', function(e){ e.stopPropagation(); toggleFav(src, star); });
-      row.appendChild(star);
-      if(src){
-        var dl=document.createElement('a'); dl.className='quick-act'; dl.href=src; dl.download=src.split('/').pop(); dl.title='Descargar'; dl.setAttribute('aria-label','Descargar'); dl.textContent='↓';
-        dl.addEventListener('click', function(e){ e.stopPropagation(); });
-        row.appendChild(dl);
-      }
-      var share=document.createElement('button'); share.type='button'; share.className='quick-act'; share.title='Compartir'; share.setAttribute('aria-label','Compartir'); share.textContent='↗';
-      share.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); shareClip(btn.dataset.clip); });
-      row.appendChild(share);
-      menu.appendChild(row);
-      // posicionar
-      var r=btn.getBoundingClientRect();
-      menu.style.left=Math.min(r.right-40, Math.max(8, window.innerWidth-220))+'px';
-      menu.style.top=(r.bottom+6)+'px';
-      document.body.appendChild(menu);
-      quickMenu=menu;
-      // El listener se añade en el siguiente tick para no cerrar el menú con el
-      // mismo clic que lo abrió (burbuja del evento hasta document).
-      setTimeout(function(){ document.addEventListener('click', closeQuick); }, 0);
-    }
-    function openReplyModal(btn){
-      var title=btn.dataset.title||'esta risa';
-      var tEs=document.getElementById('rm-clip-title');
-      var tEn=document.getElementById('rm-clip-title-en');
-      if(tEs) tEs.textContent='Responder a «'+title+'»';
-      if(tEn) tEn.textContent='Replying to "'+title+'"';
-      openModal(document.getElementById('reply-modal'));
-    }
-    function sendReaction(btn, reaction){
-      var id=btn.dataset.id;
-      try {
-        fetch((window.Risa&&window.Risa.API_URL||'https://api.liberada.net/api')+'/reactions', {
-          method:'POST', headers:{'content-type':'application/json'},
-          body:JSON.stringify({ app:'risa', item_id:id, reaction:reaction }),
-          signal:AbortSignal.timeout(2500)
-        }).catch(function(){});
-      } catch(_){}
-      var pop=document.createElement('div');
-      pop.className='quick-toast';
-      pop.textContent=reaction+' · ¡gracias!';
-      pop.setAttribute('role','status');
-      document.body.appendChild(pop);
-      setTimeout(function(){ pop.remove(); }, 1200);
-    }
-
-    /* ── Escuchas → /api/plays (best-effort, para trending) ──────────────── */
-    document.addEventListener('play', function(e){
-      var a=e.target;
-      if(!a || !a.src) return;
-      var src=a.currentSrc||a.src;
-      var li=src && document.querySelector('.tracklist li[data-src="'+CSS.escape(src)+'"]');
-      var id=li && li.dataset && li.dataset.id;
-      if(!id) return;
-      try {
-        fetch((window.Risa&&window.Risa.API_URL||'https://api.liberada.net/api')+'/plays', {
-          method:'POST', headers:{'content-type':'application/json'},
-          body:JSON.stringify({ app:'risa', item_id:id }),
-          signal:AbortSignal.timeout(2500)
-        }).catch(function(){});
-      } catch(_){}
-    }, true);
-
-    audio.addEventListener('ended', ()=>{
-      const list=playable();
-      ti++;
-      if(ti<list.length){ startTrack(); }
-      else { ti=0; setPlaying(false); if(nowTrack) nowTrack.textContent='Fin de la playlist · dale otra vuelta 🔁'; }
-    });
-
-    function playSrc(src){
-      const list=playable();
-      const i=list.findIndex(t=>t.src===src);
-      if(i>=0){ ti=i; startTrack(); }
-    }
-
-    return { select, playSrc };
-  }
-
-  /* ============ RISAS DEL MUNDO · chips de categorías (icono + keyword) ============ */
-  const worldPlayer=createPlayer(document.getElementById('world-player'), {
-    playBtn: document.getElementById('world-play'),
-    prevBtn: document.getElementById('world-prev'),
-    nextBtn: document.getElementById('world-next'),
-    iconOnly: true,
-    pageSize: 10
-  });
-  const worldSpace=document.getElementById('world-tag-space');
-  const worldSelected=new Set();
-  const worldRaf={id:null};
-  let worldFavFilter=false;
-
-  const worldFavChip=document.createElement('button');
-  worldFavChip.className='chip fav-chip'; worldFavChip.type='button';
-  worldFavChip.innerHTML='★';
-  worldFavChip.title='Mostrar solo mis risas del mundo marcadas con estrella';
-  worldFavChip.setAttribute('aria-label','Favoritas del mundo');
-  worldFavChip.setAttribute('aria-pressed','false');
-  worldFavChip.addEventListener('click', ()=>{
-    worldFavFilter=!worldFavFilter;
-    worldFavChip.setAttribute('aria-pressed', worldFavFilter?'true':'false');
-    updateWorldPlaylist();
-  });
-
-  const worldReciente=document.createElement('button');
-  worldReciente.className='chip reciente'; worldReciente.type='button';
-  worldReciente.textContent='Recientes';
-  worldReciente.title='Deseleccionar todas las categorías y ver las risas más recientes';
-  worldReciente.setAttribute('aria-pressed','true');
-  worldReciente.addEventListener('click', ()=>{
-    if(!worldSelected.size && !worldFavFilter) return;
-    worldSelected.clear();
-    worldFavFilter=false;
-    worldFavChip.setAttribute('aria-pressed','false');
-    [...worldSpace.querySelectorAll('.chip.world-chip')].forEach(b=>{
-      b.setAttribute('aria-pressed', worldSelected.has(b.dataset.tag)?'true':'false');
-    });
-    updateWorldPlaylist();
-  });
-
-  const worldAllTracks=[];
-  playlists.forEach(pl=>{
-    pl.tracks.forEach(t=>{ worldAllTracks.push(Object.assign({}, t, {cat:pl.id})); });
-  });
-
-  function worldCurrentTracks(){
-    let list=worldAllTracks;
-    if(worldSelected.size) list=list.filter(t=>worldSelected.has(t.cat));
-    if(worldFavFilter) list=list.filter(t=>favs.has(t.src));
-    return list;
-  }
-
-  function updateWorldPlaylist(){
-    worldReciente.setAttribute('aria-pressed', (worldSelected.size||worldFavFilter)?'false':'true');
-    let name=esTxt('Risas del mundo 🌍','World laughs 🌍');
-    let empty=esTxt('Aún no hay pistas todavía 💛','No tracks yet 💛');
-    if(worldFavFilter){
-      name=esTxt('Mis favoritas del mundo ⭐','My world favourites ⭐');
-      empty=esTxt('Aún no has marcado ninguna risa del mundo con la estrella ⭐','You haven\u2019t starred any world laugh yet ⭐');
-    } else if(worldSelected.size===1){
-      const pl=playlists.find(p=>worldSelected.has(p.id));
-      if(pl) name=esc(pl.name)+' '+pl.emoji;
-    }
-    worldPlayer.select(worldCurrentTracks(), name, t=>t.cat||'', empty);
-  }
-
-  function toggleWorldCat(id, btn){
-    if(worldSelected.has(id)) worldSelected.delete(id); else worldSelected.add(id);
-    btn.setAttribute('aria-pressed', worldSelected.has(id)?'true':'false');
-    updateWorldPlaylist();
-  }
-
-  // Los chips de categorías: al principio solo 2 flotan; el + revela 3 más (un toque).
-  // Solo muestran el emoji (2×) y, al pasar el ratón, el nombre de la categoría.
-  const worldCatBtns=playlists.map(pl=>{
-    const b=document.createElement('button');
-    b.className='chip world-chip'; b.type='button';
-    b.dataset.tag=pl.id;
-    b.setAttribute('aria-pressed', worldSelected.has(pl.id)?'true':'false');
-    b.setAttribute('aria-label', pl.name);
-    b.innerHTML=pl.emoji;
-    b.title=pl.name;
-    b.addEventListener('click', ()=>toggleWorldCat(pl.id, b));
-    return b;
-  });
-  const WORLD_SHOWN_START=2;      // cuántas categorías flotan al principio
-  const WORLD_BATCH=3;            // cuántas añade el + en su único toque
-  let worldShown=WORLD_SHOWN_START;
-
-  const worldPlus=document.createElement('button');
-  worldPlus.className='chip plus-chip'; worldPlus.type='button';
-  worldPlus.textContent='+';
-  worldPlus.title='Más categorías: añade 3 más';
-  worldPlus.addEventListener('click', ()=>{
-    if(worldShown>=worldCatBtns.length) return;
-    worldShown=Math.min(worldCatBtns.length, worldShown+WORLD_BATCH);
-    buildWorldChips();
-  });
-
-  function buildWorldChips(){
-    [...worldSpace.children].forEach(c=>{ if(c!==worldFavChip && c!==worldPlus && c!==worldReciente) c.remove(); });
-    worldCatBtns.slice(0, worldShown).forEach(b=>worldSpace.appendChild(b));
-    if(worldShown>=worldCatBtns.length) worldPlus.classList.add('done');
-    if(worldRaf.id) cancelAnimationFrame(worldRaf.id);
-    floatChips(worldSpace, [...worldSpace.children], worldRaf);
-  }
-
-  worldSpace.appendChild(worldFavChip);
-  worldSpace.appendChild(worldReciente);
-  worldSpace.appendChild(worldPlus);
-  buildWorldChips();
-
-  updateWorldPlaylist();   // estado inicial
-
-  /* ============ RISAS DE LA GENTE · chips de etiquetas + playlist ============ */
-  function timeAgo(when){
-    if(!when) return '';
-    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(when).trim());
-    if(!m) return '';
-    const days=Math.floor((Date.now()-Date.UTC(+m[1], +m[2]-1, +m[3]))/86400000);
-    if(days<=0) return 'hoy';
-    if(days<7) return days===1?'1 día':days+' días';
-    if(days<30){ const w=Math.floor(days/7); return w===1?'1 semana':w+' semanas'; }
-    if(days<365){ const mo=Math.floor(days/30.44); return mo===1?'1 mes':mo+' meses'; }
-    const y=Math.floor(days/365.25); return y===1?'1 año':y+' años';
-  }
-
-  // Telegram id del clip (sin @): nick, username o nombre que empieza por @.
-  // Si no es una id de Telegram (nombre normal como "Loko Puro" o "Anónima"), devuelve ''.
-  function tgOf(c){
-    if(!c) return '';
-    if(c.nick) return String(c.nick).replace(/^@/,'').trim();
-    const n=String(c.name||'').trim();
-    if(/^@/.test(n)) return n.slice(1);
-    if(c.username) return String(c.username).replace(/^@/,'').trim();
-    return '';
-  }
-
-  // Meta de cada clip: telegram id (como tag conmutable), y cuándo llegó.
-  // Anónimo no muestra autor. La licencia se queda en el footer.
-  // C19: el enlace a t.me solo aparece si el autor hizo opt-in (c.tg), nunca automático.
-  function clipMeta(t){
-    const c=t.clip||{};
-    const anon=c.anonimo || !c.name || /^an[oó]nima$/.test(String(c.name).trim());
-    const optIn=String(c.tg||'').replace(/^@/,'');
-    let author='';
-    if(!anon){
-      const key=(c.key||'').trim();
-      const tg=tgOf(c);
-      if(key){
-        author='<a class="clip-author clip-flove" href="#/u/'+esc(encodeURIComponent(key))+'">'+esc(c.name)+'</a>';
-      } else if(tg){
-        const on=selected.has(tg);
-        author='<button type="button" class="clip-tg'+(on?' on':'')+'" data-tg="'+esc(tg)+'" aria-pressed="'+(on?'true':'false')+'">@'+esc(tg)+'</button>';
-      } else if(c.username) author='<span class="clip-author">@'+esc(c.username)+'</span>';
-      else author='<span class="clip-author">'+esc(c.name)+'</span>';
-    }
-    if(optIn){
-      author += ' <a class="clip-tg-link" href="https://t.me/'+esc(optIn)+'" target="_blank" rel="noopener" title="Telegram del autor (solo con su permiso)">@'+esc(optIn)+' ↗</a>';
-    }
-    const when=timeAgo(c.when);
-    const parts=[author, when].filter(Boolean);
-    return '<span class="by">'+parts.join(' · ')+'</span>';
-  }
-
-  const gentePlayer=createPlayer(document.getElementById('gente-player'), {
-    playBtn: document.getElementById('gente-play'),
-    prevBtn: document.getElementById('gente-prev'),
-    nextBtn: document.getElementById('gente-next'),
-    iconOnly: true,
-    pageSize: 10,
-    alwaysPage: true,
-    repo: 'https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/',
-    metaHTML: clipMeta,
-    tagsAsChips: true,
-    titlesAsTags: true,
-    isTagOn: tag=>selected.has(tag)
-  });
-  const space=document.getElementById('tag-space');
-  // Máx. de etiquetas flotantes ×5 (antes 12 → ahora 60 = TAG_START + PLUS_CLICKS·TAG_BATCH).
-  const TAG_START=5;                // etiquetas flotando al empezar el flujo
-  const TAG_BATCH=5;                // cuántas añade el + en cada toque
-  const PLUS_CLICKS=11;             // el + añade 5 más, durante 11 toques
-  let risas=[];
-  // v2-d1 · identidad de dev para D1 (claim desde #/entrar; fail-silent).
-  const devKey=(()=>{ try{ return localStorage.getItem('flove:key')||'marcflove'; }catch(_){ return 'marcflove'; } })();
-  const devClaim=(()=>{ try{ return localStorage.getItem('flove:claim')||'devris'; }catch(_){ return 'devris'; } })();
-  let feedError=false;       // true si risa.json no llegó (sin servidor/file:///offline)
-  let floveOn=false;         // enriquecimiento: solo se enciende si flove.json responde
-  let floveAllowed=true;     // J47: el flag del feed puede apagar el addon (fallback)
-  const selected=new Set();
-  const genteRaf={id:null};
-
-  // URL hash: #tag (o tag1+tag2) selecciona etiquetas al cargar. Los nombres de
-  // sección (#ciencia, #cultura…) quedan reservados para el deep-link de pestañas.
-  const TAG_SECTIONS=new Set(['espiritualidad','cultura','ciencia','comunidad']);
-  const initialTagHash=(location.hash||'').slice(1);
-  if(!TAG_SECTIONS.has(initialTagHash)){
-    initialTagHash.split('+').forEach(raw=>{
-      let t=raw; try{ t=decodeURIComponent(raw); }catch{}
-      if(t) selected.add(t);
-    });
-  }
-
-  let favFilter=false;
-  const favChip=document.createElement('button');
-  favChip.className='chip fav-chip'; favChip.type='button';
-  favChip.innerHTML='★';
-  favChip.title='Mostrar solo mis risas marcadas con estrella';
-  favChip.setAttribute('aria-label','Favoritas');
-  favChip.setAttribute('aria-pressed','false');
-  favChip.style.position='absolute';
-  favChip.addEventListener('click', ()=>{
-    favFilter=!favFilter;
-    favChip.setAttribute('aria-pressed', favFilter?'true':'false');
-    updateGentePlaylist();
-  });
-  space.appendChild(favChip);
-  const favRaf={id:null};
-  floatChips(space, [favChip], favRaf);   // la estrella flota siempre, incluso antes del flujo
-
-  // Audio / Vídeo: filtro de tipo de risa arriba a la derecha de la playlist.
-  // Audio empieza seleccionado y es excluyente: al volver a activarlo quita el
-  // vídeo (solo audios). Vídeo es multiselect: se suma, nunca quita el audio.
-  let audioOn=true, videoOn=false;
-  const mtAudio=document.getElementById('mt-audio');
-  const mtVideo=document.getElementById('mt-video');
-  function setMediaFilter(){
-    mtAudio.setAttribute('aria-pressed', audioOn?'true':'false');
-    mtVideo.setAttribute('aria-pressed', videoOn?'true':'false');
-    updateGentePlaylist();
-  }
-  mtAudio.addEventListener('click', ()=>{
-    if(audioOn){ audioOn=false; }
-    else { audioOn=true; videoOn=false; }   // reactivar audio = solo audios, sin vídeos
-    setMediaFilter();
-  });
-  mtVideo.addEventListener('click', ()=>{   // multiselect: no toca el audio
-    videoOn=!videoOn;
-    setMediaFilter();
-  });
-
-  // Clic en la telegram-id, una etiqueta o el título de un clip -> lo conmuta como filtro.
-  const genteListEl=document.querySelector('#gente-player .tracklist');
-  genteListEl.addEventListener('click',(e)=>{
-    const b=e.target.closest('.clip-tg');
-    if(b){ toggleTag(b.dataset.tg, b); return; }
-    const c=e.target.closest('.clip-tag');
-    if(c){ toggleTag(c.dataset.tag, c); return; }
-  });
-
-  let recienteOn=true;
-  const recienteBtn=document.createElement('button');
-  recienteBtn.className='chip reciente'; recienteBtn.type='button';
-  recienteBtn.textContent='Recientes';
-  recienteBtn.title='Ver las risas más recientes: deselecciona todas las etiquetas. Púlsalo sin filtros para apagarlo.';
-  recienteBtn.setAttribute('aria-pressed','true');
-  recienteBtn.addEventListener('click', ()=>{
-    if(selected.size || favFilter){
-      selected.clear();
-      favFilter=false;
-      recienteOn=true;
-      refreshTagChips();
-    }else{
-      recienteOn=!recienteOn;
-    }
-    updateGentePlaylist();
-    syncTagHash();
-  });
-  space.appendChild(recienteBtn);
-
-  function refreshTagChips(){
-    [...space.querySelectorAll('.chip[data-tag]')].forEach(b=>{
-      b.setAttribute('aria-pressed', selected.has(b.dataset.tag)?'true':'false');
-    });
-    [...space.querySelectorAll('.title-tag')].forEach(b=>{
-      b.setAttribute('aria-pressed', selected.has(b.dataset.title)?'true':'false');
-    });
-  }
-
-  function tagList(tags){ return String(tags||'').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean); }
-
-  function trackKeys(t){
-    const keys=tagList(t.tags);
-    const tg=t.clip?tgOf(t.clip):'';
-    if(tg) keys.push(tg);
-    const title=String(t.t||'').trim().toLowerCase();
-    if(title) keys.push(title);
-    const name=String((t.clip&&t.clip.name)||'').trim().toLowerCase();
-    if(name) keys.push(name);
-    return keys;
-  }
-
-  function currentTracks(){
-    const all=window.Risa.buildRisaTracks(risas);   // sin tope: puede agregar feeds de otros bots
-    let list=all;
-    if(selected.size) list=list.filter(t=>trackKeys(t).some(k=>selected.has(k)));
-    if(favFilter) list=list.filter(t=>favs.has(t.src));
-    if(audioOn && !videoOn) list=list.filter(t=>!t.isVideo);      // solo audios
-    else if(!audioOn && videoOn) list=list.filter(t=>t.isVideo);  // solo vídeos
-    // Orden en profundidad: una respuesta suena ANTES que el siguiente hermano.
-    const byId=new Map();
-    list.forEach(t=>{ if(t.clip&&t.clip.id) byId.set(t.clip.id,t); });
-    const threaded=window.Risa.threadOrder(list.map(t=>t.clip||{}));
-    const out=[];
-    threaded.forEach(o=>{
-      const tr=o.clip && byId.get(o.clip.id);
-      if(tr) out.push(Object.assign({}, tr, { depth:o.depth }));
-    });
-    return out;
-  }
-
-  function updateGentePlaylist(){
-    const sel=selected.size;
-    recienteBtn.setAttribute('aria-pressed', (recienteOn && !sel && !favFilter)?'true':'false');
-    favChip.setAttribute('aria-pressed', favFilter?'true':'false');
-    const mediaEmpty=(videoOn&&!audioOn)?esTxt('Aún no hay vídeos en el feed 🎬','No videos in the feed yet 🎬')
-      :(audioOn&&!videoOn)?esTxt('Aún no hay audios en el feed 🎙','No audio in the feed yet 🎙'):'';
-    gentePlayer.select(currentTracks(),
-      favFilter?esTxt('Mis risas favoritas ⭐','My favourite laughs ⭐'):esTxt('Risas de la gente 😹','People\u2019s laughs 😹'), t=>t.tags,
-      favFilter?esTxt('Aún no has marcado ninguna risa con la estrella ⭐','You haven\u2019t starred any laugh yet ⭐')
-        :(mediaEmpty || (sel?esTxt('Ninguna risa lleva esas etiquetas 😅','No laugh has those tags 😅'):esTxt('Aún no hay risas en el feed · sé la primera 💛','No laughs in the feed yet · be the first 💛'))));
-  }
-
-  function tagStats(){
-    const m=new Map();
-    risas.forEach(c=>{
-      [...new Set([...tagList(c.tags), tgOf(c)]).values()].forEach(tag=>{
-        if(tag) m.set(tag, (m.get(tag)||0)+1);
+  var WORLD_CLIPS = [];
+  WORLD_CATS.forEach(function (cat) {
+    cat[2].forEach(function (tr, i) {
+      WORLD_CLIPS.push({
+        id: 'w' + cat[0] + '_' + i,
+        t: tr[0],
+        src: CW + tr[1],
+        by: tr[2],
+        orig: CP + tr[1],
+        tags: cat[1]
       });
     });
-    return [...m.entries()].sort((a,b)=>b[1]-a[1]);
-  }
-
-  function chipSize(count, max){ return (0.43+0.27*(count/max)).toFixed(2); }
-
-  let chipStart=0, chipCount=TAG_START, plusClicks=0;
-
-  const plusChip=document.createElement('button');
-  plusChip.className='chip plus-chip'; plusChip.type='button';
-  plusChip.textContent='+';
-  plusChip.title='Más etiquetas: añade más en cada toque';
-  plusChip.addEventListener('click', ()=>{ advanceFlow(); });
-  // − flotante: aparece tras el primer + y pliega la nube a las etiquetas iniciales
-  const minusChip=document.createElement('button');
-  minusChip.className='chip minus-chip'; minusChip.type='button';
-  minusChip.textContent='−';
-  minusChip.title='Plegar la nube a las etiquetas iniciales';
-  minusChip.hidden=true;
-  minusChip.addEventListener('click', ()=>{
-    chipStart=0; chipCount=TAG_START; plusClicks=0;
-    plusChip.classList.remove('done');
-    buildTagChips();
   });
 
-  function buildTagChips(){
-    const stats=tagStats();
-    if(!stats.length){
-      if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
-      space.querySelectorAll('.chips-hint').forEach(el=>el.remove());
-      const hint=document.createElement('p');
-      hint.className='chips-hint';
-      hint.setAttribute('role','status');
-      hint.textContent=feedError
-        ? 'No se pudieron cargar las risas. Revisa tu conexión; si abriste este archivo sin servidor (file://), sírvelo con uno local.'
-        : 'Aún no hay risas — la primera que grabes aparecerá aquí.';
-      space.appendChild(hint);
-      floatChips(space, [recienteBtn], genteRaf);
-      return;
-    }
-    const slice=stats.slice(chipStart, chipStart+chipCount);
-    if(!slice.length){ chipStart=0; return buildTagChips(); }
-    [...space.children].forEach(c=>{ if(c!==recienteBtn && c!==favChip && c!==plusChip && c!==minusChip && !c.classList.contains('title-tag')) c.remove(); });
-    slice.forEach(([tag,cnt])=>{
-      const b=document.createElement('button');
-      b.className='chip'; b.type='button';
-      b.dataset.tag=tag;
-      b.setAttribute('aria-pressed', selected.has(tag)?'true':'false');
-      b.style.fontSize=chipSize(cnt, stats[0][1])+'rem';
-      b.innerHTML=tag;
-      b.addEventListener('click', ()=>{ toggleTag(tag, b); });
-      space.appendChild(b);
-    });
-    if(!plusChip.parentNode) space.appendChild(plusChip);
-    minusChip.hidden = plusClicks===0;          // el − aparece tras el primer +
-    if(!minusChip.parentNode) space.appendChild(minusChip);
-    if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
-    floatChips(space, [...space.children].filter(c=>c!==favChip), genteRaf);
-  }
-
-  function advanceFlow(){
-    if(plusClicks>=PLUS_CLICKS) return;
-    plusClicks++;
-    chipCount=Math.min(chipCount+TAG_BATCH, tagStats().length);
-    buildTagChips();
-    if(plusClicks>=PLUS_CLICKS) plusChip.classList.add('done');
-  }
-
-  function toggleTag(tag, btn){
-    if(selected.has(tag)) selected.delete(tag); else selected.add(tag);
-    btn.setAttribute('aria-pressed', selected.has(tag)?'true':'false');
-    updateGentePlaylist();
-    syncTagHash();
-  }
-
-  function syncTagHash(){
-    // No pisar rutas propias: la página de autor y la miniapp tienen su hash.
-    if(/^#\/(u|entrar)\b/.test(location.hash||'')) return;
-    const parts=[...selected].map(t=>encodeURIComponent(t));
-    const base=location.pathname+location.search;
-    const wanted=parts.length ? '#'+parts.join('+') : (initialTagHash?'#'+initialTagHash:base);
-    if(location.hash!==(wanted.startsWith('#')?wanted:'')) history.replaceState(null, '', wanted);
-  }
-
-  function floatChips(container, els, rafRef){
-    const w=container.clientWidth, h=container.clientHeight;
-    const chips=els.map(el=>{
-      const r=el.getBoundingClientRect();
-      return {
-        el, w:r.width, h:r.height,
-        x:Math.random()*Math.max(0, w-r.width), y:Math.random()*Math.max(0, h-r.height),
-        vx:(Math.random()*2-1)*0.55, vy:(Math.random()*2-1)*0.55
-      };
-    });
-    const place=(c)=>{ c.el.style.left=c.x+'px'; c.el.style.top=c.y+'px'; };
-    if(reduce){ chips.forEach(place); return; }
-    const frame=()=>{
-      for(const c of chips){
-        c.x+=c.vx; c.y+=c.vy;
-        if(c.x<0){ c.x=0; c.vx=Math.abs(c.vx); }
-        if(c.y<0){ c.y=0; c.vy=Math.abs(c.vy); }
-        if(c.x+c.w>w){ c.x=w-c.w; c.vx=-Math.abs(c.vx); }
-        if(c.y+c.h>h){ c.y=h-c.h; c.vy=-Math.abs(c.vy); }
+  /* ── GENTE + MUNDO: dos secciones, el mismo driver ── */
+  var app = window.FloveApp.init({
+    app: 'Risa liberada',
+    feedUrl: window.Risa.RISA_URL,
+    clipsOf: window.Risa.clipsOf,
+    favKey: 'risa-liberada-favs',
+    botUrl: window.Risa.TELEGRAM_BOT,
+    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia'],
+    onReply: function (t) { openReplyModal(t); },
+    sections: [
+      {
+        tagSpaceId: 'tag-space',
+        playerRootId: 'gente-player',
+        playBtn: '#gente-play', prevBtn: '#gente-prev', nextBtn: '#gente-next',
+        mediaAudio: '#mt-audio', mediaVideo: '#mt-video',
+        pageSize: 10, alwaysRepo: true,
+        titleEs: 'Risas de la gente 😹', titleEn: 'People\u2019s laughs 😹',
+        shareText: 'Escucha esta risa 😂', shareTitle: 'Risa liberada'
+      },
+      {
+        tagSpaceId: 'world-tag-space',
+        playerRootId: 'world-player',
+        playBtn: '#world-play', prevBtn: '#world-prev', nextBtn: '#world-next',
+        mediaHost: document.getElementById('world-media-toggle'),
+        clips: WORLD_CLIPS,
+        repo: 'https://commons.wikimedia.org/wiki/Category:Laughter',
+        pageSize: 5,
+        titleEs: 'Risas del mundo 😹', titleEn: 'World laughs 😹'
       }
-      for(let i=0;i<chips.length;i++) for(let j=i+1;j<chips.length;j++){
-        const a=chips[i], b=chips[j];
-        const dx=(b.x+b.w/2)-(a.x+a.w/2), dy=(b.y+b.h/2)-(a.y+a.h/2);
-        const dist=Math.hypot(dx,dy)||1, min=(a.w+b.w)/2;
-        if(dist<min){
-          const push=(min-dist)/2, ux=dx/dist, uy=dy/dist;
-          a.x-=ux*push; a.y-=uy*push;
-          b.x+=ux*push; b.y+=uy*push;
-        }
-      }
-      chips.forEach(place);
-      rafRef.id=requestAnimationFrame(frame);
-    };
-    frame();
-  }
-
-  const tagSearchInput=document.getElementById('tag-search-input');
-  const tagSearchBtn=document.getElementById('tag-search-btn');
-
-  function addFloating(text){
-    const key=text.toLowerCase();
-    if(![...space.querySelectorAll('.title-tag')].some(el=>el.dataset.title===key)){
-      const b=document.createElement('button');
-      b.className='title-tag'; b.type='button';
-      b.dataset.title=key;
-      b.textContent=text;
-      b.setAttribute('aria-pressed', selected.has(key)?'true':'false');
-      b.title='Filtrar por «'+text+'»';
-      b.addEventListener('click', ()=>{ toggleTag(key, b); });
-      space.appendChild(b);
-      if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
-      floatChips(space, [...space.children].filter(c=>c!==favChip), genteRaf);
-    }
-    if(!selected.has(key)){
-      selected.add(key);
-      refreshTagChips();
-      updateGentePlaylist();
-      syncTagHash();
-    }
-  }
-
-  function doTagSearch(){
-    const raw=(tagSearchInput.value||'').trim();
-    if(!raw) return;
-    const q=raw.toLowerCase();
-    const stats=tagStats();
-    if(stats.length){
-      const hit=stats.find(([t])=>t.toLowerCase()===q);
-      if(hit){
-        const [tag,cnt]=hit;
-        if(![...space.querySelectorAll('.chip[data-tag]')].some(b=>b.dataset.tag===tag)){
-          const b=document.createElement('button');
-          b.className='chip'; b.type='button';
-          b.dataset.tag=tag;
-          b.setAttribute('aria-pressed','true');
-          b.style.fontSize=chipSize(cnt, stats[0][1])+'rem';
-          b.textContent=tag;
-          b.addEventListener('click', ()=>{ toggleTag(tag, b); });
-          space.appendChild(b);
-          if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
-          floatChips(space, [...space.children].filter(c=>c!==favChip), genteRaf);
-        }
-        if(!selected.has(tag)){
-          selected.add(tag);
-          refreshTagChips();
-          updateGentePlaylist();
-          syncTagHash();
-        }
-        tagSearchInput.value='';
-        return;
-      }
-    }
-    const allTracks=window.Risa.buildRisaTracks(risas);
-    const nameOf=t=>String((t.clip&&t.clip.name)||'').trim();
-    const titleOf=t=>String(t.t||'').trim();
-    const exact=allTracks.find(t=>titleOf(t).toLowerCase()===q);
-    if(exact){ addFloating(titleOf(exact)); tagSearchInput.value=''; return; }
-    const partial=allTracks.find(t=>titleOf(t).toLowerCase().includes(q));
-    if(partial){ addFloating(titleOf(partial)); tagSearchInput.value=''; return; }
-    const exactN=allTracks.find(t=>nameOf(t).toLowerCase()===q);
-    if(exactN){ addFloating(nameOf(exactN)); tagSearchInput.value=''; return; }
-    const partialN=allTracks.find(t=>nameOf(t).toLowerCase().includes(q));
-    if(partialN){ addFloating(nameOf(partialN)); tagSearchInput.value=''; return; }
-    // v2-d1 · búsqueda fina en D1 (f1SS) cuando la API responde: añade los
-    // títulos coincidentes como chips flotantes (fail-silent si no hay red).
-    fetch('/api/search?q='+encodeURIComponent(raw),{cache:'no-store',signal:AbortSignal.timeout(2500)})
-      .then(r=>r.ok?r.json():null)
-      .then(d=>{
-        if(!d || !d.results || !d.results.length) return;
-        d.results.slice(0,4).forEach(res=>{
-          if(res && res.title) addFloating(res.title);
-        });
-        tagSearchInput.value='';
-      })
-      .catch(()=>{});
-  }
-
-  tagSearchBtn.addEventListener('click', doTagSearch);
-  tagSearchInput.addEventListener('keydown', e=>{
-    if(e.key==='Enter'){ e.preventDefault(); doTagSearch(); }
-  });
-
-  updateGentePlaylist(); // estado inicial (risas vacío) hasta que llegue risas.json
-
-  // Carga el feed con reintento; feedError solo se marca si risa.json NO llega.
-  // Un fallo de render no debe disfrazarse de «no se pudieron cargar las risas».
-  function loadFeed(attempt){
-    fetch(window.Risa.RISA_URL, {cache:'no-store'})
-      .then(r=>r.ok?r.json():null)
-      .then(data=>{
-        if(!data){ throw new Error('risa.json no disponible'); }
-        risas=window.Risa.clipsOf(data);
-        feedError=false;
-        floveAllowed=window.Risa.flagsOf(data).flove!==false;   // J47: el feed toglea el addon
-        try {
-          updateGentePlaylist();
-          buildTagChips();   // por defecto las etiquetas flotan
-          renderUserPage();  // si llegamos con #/u/<key>, la página de autor ya tiene feed
-          highlightClip(clipHashId());   // deep link #/c/<id>: resalta el clip en el hilo
-        } catch (err) { console.error('render feed:', err); }
-      })
-      .catch(()=>{
-        if(attempt < 2){
-          setTimeout(()=>loadFeed(attempt+1), 800);   // reintento corto (red/latencia)
-        } else {
-          risas=[]; feedError=true;
-          try { updateGentePlaylist(); buildTagChips(); } catch(_) {}
-        }
-      });
-  }
-  loadFeed(0);
-
-  /* ============ DEEP LINK POR CLIP · #/c/<id> ============ */
-  function clipHashId(){
-    const m=/^#\/c\/(.+)$/.exec(location.hash||'');
-    return m ? decodeURIComponent(m[1]) : '';
-  }
-  function highlightClip(id){
-    if(!id) return;
-    setTimeout(()=>{
-      const li=document.querySelector('#gente-player li[data-id="'+CSS.escape(id)+'"]');
-      if(li){
-        li.classList.add('clip-flash');
-        li.scrollIntoView({behavior:'smooth', block:'center'});
-        setTimeout(()=>li.classList.remove('clip-flash'), 3400);
-      }
-    }, 150);
-  }
-  window.addEventListener('hashchange', ()=>{
-    const id=clipHashId();
-    if(id) highlightClip(id);
-  });
-
-  /* ===== flove.json · llamada mínima y vacía (nota documentativa) =====
-     v1 no consume el contrato de flove: la página de autor se sirve con la key
-     del clip (tag-url automática). Este fetch solo comprueba que el pariente
-     responde y queda listo para v2, cuando flove central validará la identidad
-     real (claims, niveles) y servirá la URL canónica flove.org/users/<key>/.
-     Fail-silent: si calla, risa queda idéntica. El flag del feed (J47) puede
-     apagar incluso esta llamada. */
-  function fetchFlove(){
-    if(!floveAllowed) return;
-    fetch('https://flove.org/flove.json', {cache:'no-store', signal:AbortSignal.timeout(4000)})
-      .then(r=>r.ok?r.json():null)
-      .then(f=>{ floveOn=!!(f && f.authy && f.users); })
-      .catch(()=>{ /* flove.json caído: risa sigue igual */ });
-  }
-  fetchFlove();
-
-  /* ============ PÁGINA DE AUTOR · ruta #/u/<key> ============
-     El nombre de un clip enlaza aquí: cada autor tiene su página, tag-url
-     automática. V1 solo certifica la autenticación en Telegram (un moderador
-     aceptó su publicación); los claims y niveles se construyen en v2. */
-  const upSec=document.getElementById('userpage');
-  const upName=document.getElementById('up-name');
-  const upAvatar=document.getElementById('up-avatar');
-  const upTg=document.getElementById('up-tg');
-  const upUpgrade=document.getElementById('up-upgrade');
-  const upClips=document.getElementById('up-clips');
-
-  const USERS_URL = 'https://risa.liberada.net/usernames.json';
-  function renderUserPage(){
-    const m=/^#\/u\/(.+)$/.exec(location.hash||'');
-    const key=m?decodeURIComponent(m[1]):'';
-    upSec.hidden=!key;
-    if(!key){ return; }
-    const mine=window.Risa.buildRisaTracks(risas).filter(t=>t.key===key);
-    const c=mine[0]&&mine[0].clip;
-    const name=(c&&c.name)||'Anónima';
-    upName.textContent=name;
-    upAvatar.textContent=(name.trim().charAt(0)||'?').toUpperCase();
-    const optIn=mine.find(t=>t.tg);
-    upTg.hidden=!optIn;
-    if(optIn){ upTg.href='https://t.me/'+optIn.tg.replace(/^@/,''); }
-    // Resolve key → username for aggregator link + button label
-    if(upUpgrade){
-      fetch(USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}).then(function(users){
-        var uname=Object.keys(users).find(function(k){return users[k].key===key;});
-        if(uname){
-          upUpgrade.href='https://'+uname+'.liberada.net';
-          upUpgrade.textContent=uname+'.liberada.net →';
-        } else {
-          upUpgrade.href='https://liberada.net/usa/'+encodeURIComponent(key)+'/';
-        }
-      }).catch(function(){});
-    }
-    var crossAma=document.getElementById('up-cross-ama');
-    if(crossAma){
-      crossAma.href='https://ama.liberada.net/#/u/'+encodeURIComponent(key);
-      crossAma.style.display='inline-flex';
-    }
-    upClips.innerHTML='';
-    if(!mine.length){
-      const li=document.createElement('li');
-      li.textContent='Aún no tiene risas publicadas 💛';
-      upClips.appendChild(li);
-    } else {
-      mine.forEach(t=>{
-        const li=document.createElement('li');
-        const btn=document.createElement('button');
-        btn.type='button'; btn.className='up-play'; btn.dataset.src=t.src; btn.textContent=t.t;
-        li.appendChild(btn);
-        const w=document.createElement('span');
-        w.className='up-w'; w.textContent=timeAgo(t.clip&&t.clip.when);
-        li.appendChild(w);
-        upClips.appendChild(li);
-      });
-    }
-    gentePlayer.select(mine, esc(name||'Anónima')+esTxt(' · sus risas',' · their laughs'), null, esTxt('Aún no tiene risas publicadas 💛','No laughs published yet 💛'));
-    if(!m) window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  upClips.addEventListener('click', e=>{
-    const b=e.target.closest('.up-play');
-    if(b) gentePlayer.playSrc(b.dataset.src);
-  });
-  window.addEventListener('hashchange', ()=>{ renderUserPage(); renderEntrar(); });
-  renderUserPage();
-
-  /* ============ BOTÓN BENEFICIOS · un clip del risas por toque ============ */
-  const benefits = [
-    'Libera <b>endorfinas</b> y baja el estrés al instante.',
-    'Relaja los músculos hasta <b>45 minutos</b> después.',
-    'Da un empujón a tu <b>sistema inmunitario</b>.',
-    'Mejora la <b>oxigenación</b> de la sangre.',
-    'Ayuda a <b>bajar la tensión</b> arterial.',
-    'Es un <b>ejercicio abdominal</b> suave y gratis.',
-    'Sube tu <b>tolerancia al dolor</b>.',
-    'Refuerza los <b>vínculos</b> con quien te rodea.',
-    'Espanta la <b>ansiedad</b> y mejora el humor.',
-    'Te ancla en el <b>aquí y ahora</b>.',
-    'Quema unas <b>10 calorías</b> por minuto de carcajada.',
-    'Entrena el <b>diafragma</b> y mejora la respiración.',
-    'Favorece un <b>sueño profundo</b> al final del día.',
-    'Estimula la <b>circulación</b> como un mini cardio.',
-    'La alegría se asocia a <b>vivir más</b> años.',
-    'Llena el cerebro de <b>dopamina</b>, la molécula del placer.',
-    'Contagia: es la emoción <b>más viral</b> que existe.',
-    'Mejora la <b>memoria y la concentración</b> justo después.',
-    'Cuida el corazón: la carcajada <b>ensancha las arterias</b>.',
-    'Te recuerda que <b>jugar</b> también es cosa de mayores.',
-  ];
-  let pool = benefits.slice();
-  const benefitsBtns = [...document.querySelectorAll('.benefits-btn')];
-
-  // Cada toque suena una risa del risas: empieza por la más reciente y avanza.
-  const beneAudio=new Audio();
-  let beneIdx=-1;
-  const bubbles=new Set();
-  function stopBene(){
-    beneAudio.pause();
-    beneAudio.currentTime=0;
-  }
-  function nextGenteClip(){
-    const list=currentTracks().filter(t=>t.src);
-    if(!list.length) return;
-    beneIdx=(beneIdx<0)?0:(beneIdx+1)%list.length;
-    const t=list[beneIdx];
-    beneAudio.src=t.src;
-    beneAudio.play().catch(()=>{});
-  }
-
-  // Las burbujas salen del botón "Porque" hacia abajo, apiladas.
-  // Desaparecen solas y también al pulsarlas; cuando no queda ninguna, la risa para.
-  function spawnBubble(text, k, anchor){
-    const bub = document.createElement('div');
-    bub.className='bubble';
-    bub.innerHTML=text;
-    bub.setAttribute('role','status');
-    const r = anchor.getBoundingClientRect();
-    let x = Math.min(Math.max(r.left, 14), window.innerWidth - 244);
-    let y = r.bottom + 12 + k*96;
-    if(y > window.innerHeight - 140) y = window.innerHeight - 140 - k*96;
-    bub.style.left=x+'px'; bub.style.top=y+'px';
-    document.body.appendChild(bub);
-    bubbles.add(bub);
-    const dismiss=()=>{
-      if(!bub.isConnected) return;
-      bub.remove();
-      bubbles.delete(bub);
-      if(!bubbles.size) stopBene();
-    };
-    bub.addEventListener('click', dismiss);
-    setTimeout(dismiss, 5200);
-  }
-
-  function popBenefit(k, anchor){
-    if(!pool.length) return;
-    const idx = Math.floor(Math.random()*pool.length);
-    const text = pool.splice(idx,1)[0];
-    spawnBubble('<b>Reír</b> '+text.charAt(0).toLowerCase()+text.slice(1), k, anchor);
-  }
-
-  benefitsBtns.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      nextGenteClip();
-      popBenefit(0, btn);                 // el primer chip sale al momento
-      if(!reduce) setTimeout(()=>popBenefit(1, btn), 1000);   // el segundo, 1 segundo después
-      else popBenefit(1, btn);
-    });
-  });
-
-  /* ============ COMPARTIR ============ */
-  const shareData = {
-    title:'Risa liberada',
-    text:'😉 Sube tu risa y escucha las de todos\n@risaliberada\n@RisaLiberadaBot',
-    url: location.href
-  };
-  const note = document.getElementById('copy-note');
-  function fillAlt(){
-    const u=encodeURIComponent(shareData.url), t=encodeURIComponent(shareData.text);
-    const wa=document.getElementById('sh-wa'), tg=document.getElementById('sh-tg');
-    wa.href='https://wa.me/?text='+t; wa.target='_blank'; wa.rel='noopener';
-    tg.href='https://t.me/share/url?url='+u+'&text='+encodeURIComponent(shareData.text); tg.target='_blank'; tg.rel='noopener';
-    document.getElementById('sh-mail').href='mailto:?subject='+encodeURIComponent(shareData.title)+'&body='+t;
-  }
-  fillAlt();
-  document.getElementById('sh-copy').addEventListener('click', async ()=>{
-    try{ await navigator.clipboard.writeText(shareData.url); note.textContent='¡Enlace copiado! 🎉'; }
-    catch(e){ note.textContent='Copia esta dirección: '+shareData.url; }
-  });
-
-  /* Otros · hoja de compartir nativa del móvil */
-  const otrosBtn=document.getElementById('sh-otros');
-  if(otrosBtn) otrosBtn.addEventListener('click', ()=>{
-    if(navigator.share){
-      navigator.share({title:shareData.title, text:shareData.text, url:shareData.url}).catch(()=>{});
-    } else if(navigator.clipboard){
-      navigator.clipboard.writeText(shareData.text)
-        .then(()=>{ note.textContent='¡Mensaje copiado! Compártelo donde quieras 😉'; })
-        .catch(()=>{ note.textContent='Copia esto y compártelo: '+shareData.text; });
+    ],
+    nav: {
+      home: { name: 'Risa', url: '#top', mark: '😹' },
+      apps: { name: 'apps', url: 'https://flove.org/apps' },
+      categories: [
+        { name: 'lib', icon: '🌱', apps: [
+          { name: 'Risa', url: '#top', mark: '😹' },
+          { name: 'Ama', url: 'https://ama.liberada.net', mark: '💗' },
+          { name: 'Maria', url: 'https://maria.liberada.net', mark: '👩' },
+          { name: 'Maria-dev', url: 'https://maria-dev.liberada.net', mark: '🧪' },
+          { name: 'Liberada', url: 'https://liberada.net', mark: '🌱' }
+        ]},
+        { name: 'flove', icon: '🧩', apps: [
+          { name: 'flove.org', url: 'https://flove.org', mark: '🌱' },
+          { name: 'Apps', url: 'https://flove.org/apps', mark: '🧩' }
+        ]}
+      ]
     }
   });
 
-  /* QR · compartir la imagen dentro de apps móviles */
-  const qrShare=document.getElementById('qr-share');
-  const qrImg=document.querySelector('.qr-img');
-  if(qrShare && qrImg){
-    qrShare.addEventListener('click', async ()=>{
-      const src=qrImg.src;
-      try{
-        const res=await fetch(src);
-        const blob=await res.blob();
-        const file=new File([blob],'rievolucio-qr.jpg',{type:blob.type||'image/jpeg'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-          await navigator.share({files:[file], title:shareData.title, text:shareData.text}).catch(()=>{});
-          return;
-        }
-      }catch(e){}
-      if(navigator.share){
-        navigator.share({title:shareData.title, text:shareData.text, url:shareData.url}).catch(()=>{});
-      } else {
-        window.open(src,'_blank','noopener');
-      }
-    });
+  /* ── PESTAÑAS DEL MUNDO (espiritualidad · comunidad · cultura · ciencia · tech) ── */
+  var tabBtns = Array.prototype.slice.call(document.querySelectorAll('.tab-bar .tab-btn'));
+  function showTab(name) {
+    tabBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === name)); });
+    Array.prototype.slice.call(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.hidden = p.id !== name; });
   }
+  tabBtns.forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); }); });
+  showTab('cultura');
 
-  /* ============ FOOTER · créditos desplegables ============ */
-  const credToggle=document.querySelector('.credits-toggle');
-  const credBody=document.getElementById('credits-body');
-  if(credToggle && credBody){
-    credToggle.addEventListener('click', ()=>{
-      const open=credBody.hidden;
-      credBody.hidden=!open;
-      credToggle.setAttribute('aria-expanded', open?'true':'false');
-    });
-  }
-
-  /* ============ BARRAS INFERIORES · Cultura · Ciencia · Común ============ */
-  const tabBtns=[...document.querySelectorAll('.tab-bar .tab-btn')];
-  const tabPanels=[...document.querySelectorAll('.tab-panel')];
-  function showTab(id, scroll){
-    tabPanels.forEach(p=>{ p.hidden=(p.id!==id); });
-    tabBtns.forEach(b=>{ b.setAttribute('aria-pressed', b.dataset.tab===id?'true':'false'); });
-    if(scroll){
-      const target=document.getElementById(id);
-      if(target){ if(reduce) target.scrollIntoView(); else target.scrollIntoView({behavior:'smooth', block:'start'}); }
+  /* ── DROPDOWN TOPBAR (logo) ── */
+  var ddBtn = document.getElementById('brand-logo'), dd = document.getElementById('brand-dd');
+  if (ddBtn && dd) {
+    function setDD(open) {
+      dd.classList.toggle('open', open);
+      dd.hidden = !open;
+      ddBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
+    ddBtn.addEventListener('click', function (e) { e.preventDefault(); setDD(!dd.classList.contains('open')); });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target) && !ddBtn.contains(e.target)) setDD(false); });
+    function ddAct(id, fn) { var b = document.getElementById(id); if (b) b.addEventListener('click', function () { setDD(false); fn(); }); }
+    ddAct('dd-entrar', function () { var p = document.getElementById('entrar-page'); if (p) p.hidden = !p.hidden; });
+    ddAct('dd-mejorar', function () { showTab('tecnologia'); document.getElementById('expande').scrollIntoView({ behavior: 'smooth' }); });
+    ddAct('dd-sobre-liberada', function () { window.open('https://liberada.net', '_blank', 'noopener'); });
+    ddAct('dd-contactar', function () { window.open('https://t.me/RisaLiberadaBot', '_blank', 'noopener'); });
+    ddAct('dd-sobre', function () { document.getElementById('top').scrollIntoView({ behavior: 'smooth' }); });
   }
-  tabBtns.forEach(b=>b.addEventListener('click', ()=>showTab(b.dataset.tab, true)));
-  const initialTab=(location.hash||'').slice(1);
-  if(['espiritualidad','cultura','ciencia','comunidad','tecnologia'].includes(initialTab)) showTab(initialTab, false);
 
-  /* ============ RÉPLICA · pestañas Presentación / Desarrollo ============ */
-  const rtabBtns=[...document.querySelectorAll('.rtab-btn')];
-  const rtabPanels=[...document.querySelectorAll('.rtab-panel')];
-  function showRtab(id){
-    rtabPanels.forEach(p=>{ p.hidden=(p.id!==id); });
-    rtabBtns.forEach(b=>{ b.setAttribute('aria-pressed', b.dataset.tab===id?'true':'false'); });
+  /* ── MODALES · subir risa + responder en cadena ── */
+  var uploadModal = document.getElementById('upload-modal'), umClose = document.getElementById('um-close');
+  var openUpload = document.getElementById('open-upload');
+  function openModal(m) { if (m) m.hidden = false; }
+  function closeModal(m) { if (m) m.hidden = true; }
+  if (openUpload) openUpload.addEventListener('click', function () { openModal(uploadModal); });
+  if (umClose) umClose.addEventListener('click', function () { closeModal(uploadModal); });
+  if (uploadModal) uploadModal.addEventListener('click', function (e) { if (e.target === uploadModal) closeModal(uploadModal); });
+
+  var replyModal = document.getElementById('reply-modal'), rmClose = document.getElementById('rm-close');
+  function openReplyModal(t) {
+    var title = document.getElementById('rm-clip-title'), titleEn = document.getElementById('rm-clip-title-en');
+    if (title) title.textContent = (t && t.t) || 'esta risa';
+    if (titleEn) titleEn.textContent = (t && t.t) || 'this laugh';
+    openModal(replyModal);
   }
-  rtabBtns.forEach(b=>b.addEventListener('click', ()=>showRtab(b.dataset.tab)));
+  if (rmClose) rmClose.addEventListener('click', function () { closeModal(replyModal); });
+  if (replyModal) replyModal.addEventListener('click', function (e) { if (e.target === replyModal) closeModal(replyModal); });
 
-  /* ============ RÉPLICA · paneles desplegables se pliegan al clicar la caja ============ */
-  document.querySelectorAll('#replica details.collapsed').forEach(d=>{
-    d.addEventListener('click', e=>{
-      if(e.target.closest('summary,a,button,input,label,code')) return;   // lo interactivo no alterna
-      if(window.getSelection && window.getSelection().toString()) return;  // seleccionar texto no pliega
-      d.open=!d.open;
+  /* ── PÁGINA DE AUTOR · #/u/<key> (usa la sección gente) ── */
+  function renderAuthor() {
+    var m = /^#\/u\/(.+)$/.exec(location.hash || '');
+    var key = m ? decodeURIComponent(m[1]) : '';
+    var sec = document.getElementById('userpage');
+    if (!sec) return;
+    sec.hidden = !key;
+    if (!key) return;
+    var mine = (app.risas || []).filter(function (c) { return c.key === key; });
+    var name = mine.length ? mine[0].name : key;
+    var av = document.getElementById('up-avatar'), nm = document.getElementById('up-name');
+    if (av) av.textContent = String(name).charAt(0).toUpperCase();
+    if (nm) nm.textContent = name;
+    var list = F.buildTracks(mine);
+    var byId = new Map();
+    list.forEach(function (t) { if (t.clip && t.clip.id) byId.set(t.clip.id, t); });
+    var out = [];
+    F.threadOrder(mine).forEach(function (o) {
+      var tr = o.clip && byId.get(o.clip.id);
+      if (tr) out.push(Object.assign({}, tr, { depth: o.depth }));
     });
+    app.sections[0].player.select(out, name + ' · todas sus risas', null);
+  }
+  window.addEventListener('hashchange', renderAuthor);
+  renderAuthor();
+
+  /* ── EXPANDE · montar réplica ── */
+  var montar = document.getElementById('montar-replica');
+  if (montar) montar.addEventListener('click', function () {
+    var target = document.getElementById('expande');
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 
-  /* ============ EXPANDE · botón «Montar réplica» ============ */
-  const montarReplica=document.getElementById('montar-replica');
-  if(montarReplica){
-    montarReplica.addEventListener('click', ()=>{
-      showTab('tecnologia', false);
-      const r=document.getElementById('replica');
-      if(r){ if(reduce) r.scrollIntoView(); else r.scrollIntoView({behavior:'smooth', block:'start'}); }
-    });
-  }
-
-  /* ============ CANALES · botón ➕ de la propuesta ============ */
-  const chanPropone=document.getElementById('chan-propone');
-  const proponeNote=document.getElementById('propone-note');
-  if(chanPropone && proponeNote){
-    chanPropone.addEventListener('click', ()=>{
-      proponeNote.hidden=!proponeNote.hidden;
-      chanPropone.setAttribute('aria-expanded', proponeNote.hidden?'false':'true');
-    });
-  }
-
-  /* ============ MODAL · SUBIR RISA ============ */
-  function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  // Par es/en en HTML generado por JS (mismo patrón que los spans estáticos).
-  function esTxt(es, en){ return '<span class="es" lang="es">'+esc(es)+'</span><span class="en" lang="en">'+esc(en)+'</span>'; }
-  function openModal(m){ m.hidden=false; document.body.style.overflow='hidden'; }
-  function closeModal(m){ m.hidden=true; document.body.style.overflow=''; }
-
-  const uploadModal = document.getElementById('upload-modal');
-  const tgLink = document.getElementById('um-telegram');
-  if(tgLink) tgLink.href = window.Risa.TELEGRAM_BOT;   // config en un solo sitio
-  document.getElementById('open-upload').addEventListener('click', ()=>openModal(uploadModal));
-  document.getElementById('um-close').addEventListener('click', ()=>closeModal(uploadModal));
-
-  // cerrar al pulsar fuera o con Escape
-  uploadModal.addEventListener('click', e=>{ if(e.target===uploadModal) closeModal(uploadModal); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(uploadModal); });
-
-  /* ============ MODAL · RESPONDER EN CADENA ============ */
-  const replyModal=document.getElementById('reply-modal');
-  if(replyModal){
-    const rmClose=document.getElementById('rm-close');
-    if(rmClose) rmClose.addEventListener('click', ()=>closeModal(replyModal));
-    replyModal.addEventListener('click', e=>{ if(e.target===replyModal) closeModal(replyModal); });
-  }
-
-  /* ============ MODALES · ENTRAR y MEJORAR ============ */
-  const entrarModal=document.getElementById('entrar-modal');
-  const mejorarModal=document.getElementById('mejorar-modal');
-  function wireModal(m, closeId){
-    if(!m) return;
-    const x=document.getElementById(closeId);
-    if(x) x.addEventListener('click', ()=>closeModal(m));
-    m.addEventListener('click', e=>{ if(e.target===m) closeModal(m); });
-  }
-  wireModal(entrarModal, 'em-close');
-  wireModal(mejorarModal, 'mm-close');
-  document.addEventListener('keydown', e=>{
-    if(e.key!=='Escape') return;
-    [uploadModal, entrarModal, mejorarModal].forEach(m=>{ if(m && !m.hidden) closeModal(m); });
+  /* ── BENEFICIOS · lleva a la sección ── */
+  var benefits = document.getElementById('benefits-btn');
+  if (benefits) benefits.addEventListener('click', function () {
+    var b = document.getElementById('ciencia-benefits');
+    if (b) b.scrollIntoView({ behavior: 'smooth' });
   });
 
-  const emNote=document.getElementById('em-note');
-  const emNoteShow=(html)=>{ emNote.innerHTML=html; emNote.hidden=false; };
-  document.getElementById('em-miniapp')?.addEventListener('click', ()=>{ closeModal(entrarModal); });
-  document.getElementById('em-code')?.addEventListener('click', ()=>{
-    emNoteShow('🤖 Consigue tu código de sesión: escribe <code>/entrar</code> a <a href="'+window.Risa.TELEGRAM_BOT+'" target="_blank" rel="noopener">@RisaLiberadaBot</a>, pulsa «Código por el bot» y luego introduce el código en la miniapp.');
+  /* ── copy-prompt ── */
+  var copy = document.getElementById('copy-prompt');
+  if (copy) copy.addEventListener('click', function () {
+    var t = document.querySelector('#prompt-source textarea, #prompt-source pre, textarea');
+    var text = t ? t.value || t.textContent : '';
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
   });
-  document.getElementById('em-email')?.addEventListener('click', ()=>{
-    emNoteShow('📧 Consigue tu código por mail (próximamente). Mientras tanto usa el Bot o abre la miniapp.');
-  });
-
-  const mmSobre=document.getElementById('mm-sobre-liberada');
-  if(mmSobre) mmSobre.addEventListener('click', ()=>{
-    closeModal(mejorarModal);
-    window.open('https://liberada.net', '_blank', 'noopener');
-  });
-  const mmContactar=document.getElementById('mm-contactar');
-  if(mmContactar) mmContactar.addEventListener('click', ()=>{
-    closeModal(mejorarModal);
-    window.location='mailto:risa@liberada.net';
-  });
-
-  /* ============ MINIAPP · #/entrar (perfil con código) ============ */
-  const entrarPage=document.getElementById('entrar-page');
-  const enCode=document.getElementById('en-code');
-  const enGo=document.getElementById('en-go');
-  const enResult=document.getElementById('en-result');
-  function renderEntrar(){
-    const isEntrar=/^#\/entrar$/.test(location.hash||'');
-    if(!entrarPage) return;
-    entrarPage.hidden=!isEntrar;
-    if(isEntrar){
-      enResult.textContent='';
-      enCode.value='';
-      if(!reduce) window.scrollTo({top:0, behavior:'smooth'});
-      else window.scrollTo(0,0);
-      enCode.focus();
-    }
-  }
-  function entrarConCode(){
-    const code=(enCode.value||'').trim();
-    if(!/^\d{6}$/.test(code)){ enResult.innerHTML='⚠️ El código tiene 6 dígitos.'; return; }
-    enResult.textContent='Comprobando…';
-    Promise.all([
-      fetch(window.Risa.CODES_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}),
-      fetch(window.Risa.USERS_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{}),
-      fetch(window.Risa.NAMES_URL,{cache:'no-store'}).then(r=>r.ok?r.json():{})
-    ]).then(([codes, users, names])=>{
-      const hit=codes[code];
-      const today=new Date().toISOString().slice(0,10);
-      if(!hit || !hit.key || (hit.at && hit.at!==today)){
-        enResult.innerHTML='<b>Ese código no es válido o ha caducado.</b> Pide uno nuevo con <code>/entrar</code> al bot.';
-        return;
-      }
-      const key=hit.key;
-      const sub=Object.keys(users||{}).find(k=>users[k].key===key);
-      const name=(names&&names[key])||'Anónima';
-      const page=location.origin+location.pathname+'#/u/'+encodeURIComponent(key);
-      const subUrl='https://'+(sub||key)+'.liberada.net';
-      const activate=sub
-        ? '<a class="btn btn-primary" href="'+subUrl+'" target="_blank" rel="noopener">Activar — '+esc(sub)+'.liberada.net</a>'
-        : '<button type="button" class="btn btn-primary" onclick="window.open(\'https://t.me/RisaLiberadaBot\',\'_blank\')">'+esTxt('Activar en tu próxima publicación','Activate on your next post')+'</button>';
-      enResult.innerHTML='<b>'+esTxt('Hola, ','Hi, ')+esc(name)+'</b> '+esTxt('— sesión iniciada.','— signed in.')+'<br>'+
-        esTxt('👤 Nombre público: ','👤 Public name: ')+'<code>'+esc(name)+'</code> '+esTxt('— cámbialo con','— change it with')+' <code>/name TuNombre</code> '+esTxt('en el bot.','on the bot.')+'<br>'+
-        esTxt('🌐 Subdominio: ','🌐 Subdomain: ')+'<code>'+esc(sub||(key.slice(0,20)||'tu-nombre'))+'.liberada.net</code> '+esTxt('— cámbialo con','— change it with')+' <code>/usuario nuevo_nombre</code>.'+
-        '<div class="en-activate"><h4>'+esTxt('Activa tu perfil en ','Activate your profile at ')+'<code>'+esc(sub||'tunombre')+'.liberada.net</code></h4>'+
-        '<p>'+esTxt('Editar, bio extendida, juega y filtra — muestra la actividad de tus otras aplicaciones.','Edit, extended bio, play and filter — shows the activity of your other apps.')+'</p>'+
-        activate+
-        '<p class="en-note">'+esTxt('Nota: este enlace redirigirá a tus últimas risas en tu nuevo perfil.','Note: this link will redirect to your latest laughs on your new profile.')+'</p></div>'+
-        '<br><a class="btn btn-ghost" href="'+page+'">'+esTxt('Ver mis risas en risa.liberada.net','See my laughs on risa.liberada.net')+'</a>'+
-        (key==='marcflove' ? '<br><a class="btn btn-primary" href="https://liberada.net/usa/marcflove/#auth=devris">'+esTxt('Editar mi perfil','Edit my profile')+'</a>' : '');
-    }).catch(()=>{
-      enResult.textContent='No se pudo comprobar el código. Revisa tu conexión e inténtalo otra vez.';
-    });
-  }
-  if(enGo) enGo.addEventListener('click', entrarConCode);
-  if(enCode) enCode.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); entrarConCode(); } });
-  renderEntrar();   // estado inicial (tras declarar la sección y sus refs)
-
-  /* ============ SERVICIOS · «Quiero» muestra el correo (ofuscado) ============ */
-  const servQuiero=document.getElementById('serv-quiero');
-  const servMail=document.getElementById('serv-mail');
-  if(servQuiero && servMail){
-    servQuiero.addEventListener('click', ()=>{
-      if(!servMail.dataset.ready){
-        const local='risa', domain='liberada.net';
-        const a=document.createElement('a');
-        a.href='mailto:'+local+'@'+domain;
-        a.textContent=local+'@'+domain;
-        servMail.replaceChildren(a);
-        servMail.dataset.ready='1';
-      }
-      servMail.hidden=false;
-      if(reduce) servMail.scrollIntoView();
-      else servMail.scrollIntoView({behavior:'smooth', block:'center'});
-    });
-  }
-
-  /* ============ SLIDERS (carruseles de fotos) ============ */
-  document.querySelectorAll('.slider').forEach(sl=>{
-    const track = sl.querySelector('.slides');
-    const slides = [...sl.querySelectorAll('.slide')];
-    if(slides.length < 2) return;              // 1 sola foto: sin controles
-    let i = 0, timer = null;
-    const ms = parseInt(sl.dataset.autoplay||'0', 10);
-
-    const prev = document.createElement('button'); prev.className='s-btn s-prev'; prev.type='button'; prev.setAttribute('aria-label','Foto anterior'); prev.textContent='‹';
-    const next = document.createElement('button'); next.className='s-btn s-next'; next.type='button'; next.setAttribute('aria-label','Foto siguiente'); next.textContent='›';
-    const dots = document.createElement('div'); dots.className='s-dots';
-    const counter = document.createElement('div'); counter.className='slide-count';
-    slides.forEach((s,k)=>{
-      const d=document.createElement('button'); d.type='button';
-      d.setAttribute('aria-label', s.dataset.dotLabel || ('Ir a la foto '+(k+1)));
-      d.textContent = s.dataset.dot || '';
-      d.addEventListener('click',()=>go(k,true));
-      dots.appendChild(d);
-    });
-    if(sl.classList.contains('vslider')){
-      dots.insertBefore(prev, dots.firstChild);
-      dots.appendChild(next);
-    }
-    sl.append(dots,counter);
-
-    function render(){
-      track.style.transform = 'translateX(-'+(i*100)+'%)';
-      [...dots.children].forEach((d,k)=>d.setAttribute('aria-current', k===i?'true':'false'));
-      counter.textContent = (i+1)+' / '+slides.length;
-    }
-    function go(n,user){ i=(n+slides.length)%slides.length; render(); if(user) restart(); }
-    sl.goto=go;
-    function restart(){ if(timer) clearInterval(timer); if(ms && !reduce) timer=setInterval(()=>go(i+1,false), ms); }
-
-    prev.addEventListener('click',()=>go(i-1,true));
-    next.addEventListener('click',()=>go(i+1,true));
-    sl.addEventListener('mouseenter',()=>{ if(timer) clearInterval(timer); });
-    sl.addEventListener('mouseleave',restart);
-    sl.tabIndex = 0;
-    sl.addEventListener('keydown',e=>{
-      if(e.key==='ArrowLeft'){ e.preventDefault(); go(i-1,true); }
-      else if(e.key==='ArrowRight'){ e.preventDefault(); go(i+1,true); }
-    });
-    // En el carrusel de chistes, pasar al siguiente chiste suena una risa.
-    if(sl.classList.contains('jslider')){
-      const laugh=new Audio(A+'En-us-laugh.ogg');
-      laugh.preload='none';
-      const sfx=()=>{ if(reduce) return; laugh.currentTime=0; laugh.play().catch(()=>{}); };
-      next.addEventListener('click', sfx);
-      sl.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') sfx(); });
-    }
-    render(); restart();
-  });
-
-  /* ============ RÉPLICA · Risa v1 — configurar el prompt del agente ============ */
-  const promptPre=document.getElementById('agente-prompt');
-  const setupChip=document.getElementById('setup-v1');
-  const setupModal=document.getElementById('setup-modal');
-  const copyBtn=document.getElementById('copy-prompt');
-  if(promptPre && setupChip && setupModal){
-    const LS_KEY='risa-v1-setup';
-    const DEFAULT_PROMPT=promptPre.textContent;
-    const EMPTY_FORM={
-      proj:'', bot:'', group:'', channel:'', web:'', media:'',
-      hideTitle:false, hideTags:false, hideName:false,
-      tText:false, tAudio:true, tVideo:true, req:'here'
-    };
-    const sfProj=document.getElementById('sf-proj'), sfBot=document.getElementById('sf-bot'),
-      sfGroup=document.getElementById('sf-group'), sfChannel=document.getElementById('sf-channel'),
-      sfWeb=document.getElementById('sf-web'), sfMedia=document.getElementById('sf-media'),
-      sfHideTitle=document.getElementById('sf-hide-title'),
-      sfHideTags=document.getElementById('sf-hide-tags'),
-      sfHideName=document.getElementById('sf-hide-name'),
-      sfTText=document.getElementById('sf-t-text'), sfTAudio=document.getElementById('sf-t-audio'),
-      sfTVideo=document.getElementById('sf-t-video');
-    function readSetup(){
-      const selReq=document.querySelector('input[name="sf-req"]:checked');
-      return {
-        proj:sfProj.value.trim(), bot:sfBot.value.trim(), group:sfGroup.value.trim(),
-        channel:sfChannel.value.trim(), web:sfWeb.value.trim(), media:sfMedia.value.trim(),
-        hideTitle:sfHideTitle.checked, hideTags:sfHideTags.checked, hideName:sfHideName.checked,
-        tText:sfTText.checked, tAudio:sfTAudio.checked, tVideo:sfTVideo.checked,
-        req:(selReq&&selReq.value)||'here'
-      };
-    }
-    function slug(s){
-      const k=(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-      return k||'risa';
-    }
-    function buildPrompt(v){
-      const tipos=[v.tText&&'texto', v.tAudio&&'audio', v.tVideo&&'vídeo'].filter(Boolean);
-      const tiposStr=tipos.length?tipos.join(' · '):'contenido';
-      const desc=[!v.hideTitle&&'título', !v.hideTags&&'etiquetas', !v.hideName&&'autor'].filter(Boolean);
-      const lineaCampos=desc.length
-        ? 'Campos por pieza: '+desc.join(' · ')+'.'
-        : 'Campos por pieza: ninguno.';
-      const feed=slug(v.proj);
-      const reqLine=(v.req==='ask')
-        ? 'Requisitos: antes de fijar límites, pregunta al dueño del proyecto — duración máx · tamaño máx · cuota diaria · flujo de moderación (qué decide un moderador · visto bueno final).'
-        : 'Requisitos (release completa): piezas ≤ 1 min · ≤ 10 MB · máx. 5 en cola y 5 al día · CC BY-SA 4.0 («Enviar = consentir», tag «libre») · página de autor #/u/<key> con feed propio · comandos de solo lectura /me · /stats · /profile · /status · /queue · /latest · /now · /today · /since · /random · /trending · /play · etiquetas → chips · búsqueda · favoritos (filtro local) · entrada por deep link + QR · repo dedicado con Pages · feed '+feed+'.json newest-first.';
-      const restricciones=v.web
-        ? 'Restricciones: sin servidor ni base de datos propios; despliegue en «'+v.web+'» (piezas gratuitas R2 + Pages + Actions si es GitHub); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.'
-        : 'Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Pages, Actions); respeta la privacidad (nunca guardar ids de Telegram en claro). Responde en español.';
-      const datos=[
-        v.proj&&('Proyecto: '+v.proj), v.bot&&('Bot: '+v.bot+' — cron Actions 5–10 min'),
-        v.group&&('Grupo de moderadores: '+v.group), v.channel&&('Canal público: '+v.channel),
-        v.web&&('Web/repo: '+v.web),
-        v.media&&('Medios: '+v.media+' — R2 público · ffmpeg'),
-        'Contenido: '+tiposStr, 'Feed: '+feed+'.json · newest-first', lineaCampos
-      ].filter(Boolean);
-      return [
-        'Rol: asiste a montar el proyecto «'+(v.proj||'mi proyecto')+'», inspirándote en el proyecto libre github.com/floveorg/risa.',
-        '',
-        'Objetivo: sistema completo — subida de '+tiposStr+' por Telegram → moderación → publicación en canal + feed web. Sin servidor propio.',
-        '',
-        'Datos:',
-        ...datos.map(d=>'- '+d),
-        '',
-        reqLine,
-        '',
-        'Pasos:',
-        '1. Clona el repo de referencia; estudia bot/, index.html, '+feed+'.json y .github/workflows.',
-        '2. Pide y valida los secretos (BOT_TOKEN, CHANNEL_ID, MOD_GROUP_ID, credenciales R2) antes de usarlos.',
-        '3. Configura GitHub Actions como cron que llame a getUpdates cada 5–10 minutos.',
-        '4. Monta el feed '+feed+'.json y la web en GitHub Pages.',
-        '5. Verifica de punta a punta con una prueba real de '+tiposStr+'.',
-        '',
-        'Permisos: leer/escribir el repo del proyecto, instalar dependencias de Node, desplegar Pages y Actions. Nada fuera del repo; confirma antes de crear credenciales.',
-        '',
-        restricciones
-      ].join('\n');
-    }
-    function applyPrompt(){ promptPre.textContent=buildPrompt(readSetup()); }
-    function saveSetup(){
-      try{ localStorage.setItem(LS_KEY, JSON.stringify(readSetup())); }catch(e){}
-    }
-    function fillForm(v){
-      sfProj.value=v.proj||''; sfBot.value=v.bot||''; sfGroup.value=v.group||'';
-      sfChannel.value=v.channel||''; sfWeb.value=v.web||''; sfMedia.value=v.media||'';
-      sfHideTitle.checked=!!v.hideTitle; sfHideTags.checked=!!v.hideTags; sfHideName.checked=!!v.hideName;
-      sfTText.checked=!!v.tText; sfTAudio.checked=v.tAudio!==false; sfTVideo.checked=v.tVideo!==false;
-      const req=(v.req==='ask')?document.getElementById('sf-req-ask'):document.getElementById('sf-req-here');
-      if(req) req.checked=true;
-    }
-    fillForm(EMPTY_FORM);
-    if(copyBtn){
-      copyBtn.addEventListener('click', e=>{
-        e.preventDefault(); e.stopPropagation();   // dentro del summary: no debe plegar el panel
-        const txt=promptPre.textContent;
-        const done=()=>{
-          copyBtn.textContent='¡Copiado!';
-          copyBtn.setAttribute('aria-pressed','true');
-          setTimeout(()=>{ copyBtn.textContent='Copiar'; copyBtn.setAttribute('aria-pressed','false'); }, 1600);
-        };
-        const legacy=()=>{
-          const ta=document.createElement('textarea');
-          ta.value=txt; ta.setAttribute('readonly','');
-          ta.style.position='fixed'; ta.style.opacity='0';
-          document.body.appendChild(ta); ta.select();
-          try{ document.execCommand('copy'); }catch(e){}
-          document.body.removeChild(ta);
-          done();
-        };
-        if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, legacy);
-        else legacy();
-      });
-    }
-    setupChip.addEventListener('click', ()=>openModal(setupModal));
-    document.getElementById('sm-close').addEventListener('click', ()=>closeModal(setupModal));
-    setupModal.addEventListener('click', e=>{ if(e.target===setupModal) closeModal(setupModal); });
-    document.addEventListener('keydown', e=>{
-      if(e.key==='Escape' && !setupModal.hidden) closeModal(setupModal);
-    });
-    document.getElementById('setup-form').addEventListener('submit', e=>{
-      e.preventDefault(); applyPrompt(); saveSetup(); closeModal(setupModal);
-    });
-    const smSee=document.getElementById('sm-see');
-    const smSeeBox=document.getElementById('sm-see-box');
-    if(smSee && smSeeBox){
-      smSee.addEventListener('click', ()=>{
-        const open=smSeeBox.hidden;
-        smSeeBox.hidden=!open;
-        smSee.setAttribute('aria-expanded', open?'true':'false');
-        smSee.textContent=open?'Ocultar':'Ver';
-      });
-    }
-    document.getElementById('sm-reset').addEventListener('click', ()=>{
-      try{ localStorage.removeItem(LS_KEY); }catch(e){}
-      fillForm(EMPTY_FORM);
-      promptPre.textContent=DEFAULT_PROMPT;
-    });
-    try{
-      const saved=JSON.parse(localStorage.getItem(LS_KEY)||'null');
-      if(saved){ fillForm(saved); applyPrompt(); }
-    }catch(e){}
-  }
-
-  /* ============ DROPDOWN MENU (topbar logo) ============ */
-  const brandLogo=document.getElementById('brand-logo');
-  const brandDD=document.getElementById('brand-dd');
-  if(brandLogo && brandDD){
-    brandLogo.addEventListener('click',(e)=>{
-      e.preventDefault();
-      const open=brandDD.classList.toggle('open');
-      brandLogo.setAttribute('aria-expanded',open?'true':'false');
-    });
-    document.addEventListener('click',(e)=>{
-      if(!e.target.closest('.brand-wrap')){
-        brandDD.classList.remove('open');
-        brandLogo.setAttribute('aria-expanded','false');
-      }
-    });
-    const closeDD=()=>{
-      brandDD.classList.remove('open');
-      brandLogo.setAttribute('aria-expanded','false');
-    };
-    const ddEntrar=document.getElementById('dd-entrar');
-    if(ddEntrar) ddEntrar.addEventListener('click',()=>{ closeDD(); openModal(entrarModal); });
-    const ddMejorar=document.getElementById('dd-mejorar');
-    if(ddMejorar) ddMejorar.addEventListener('click',()=>{ closeDD(); openModal(mejorarModal); });
-    const ddSobre=document.getElementById('dd-sobre');
-    if(ddSobre) ddSobre.addEventListener('click',()=>{
-      brandDD.classList.remove('open');
-      brandLogo.setAttribute('aria-expanded','false');
-    });
-    const ddTechLink=brandDD.querySelector('[data-tab-link="tecnologia"]');
-    if(ddTechLink) ddTechLink.addEventListener('click',(e)=>{
-      e.preventDefault();
-      brandDD.classList.remove('open');
-      brandLogo.setAttribute('aria-expanded','false');
-      showTab('tecnologia',true);
-    });
-    const ddSobreLib=document.getElementById('dd-sobre-liberada');
-    if(ddSobreLib) ddSobreLib.addEventListener('click',()=>{ closeDD(); window.open('https://liberada.net','_blank','noopener'); });
-    const ddContactar=document.getElementById('dd-contactar');
-    if(ddContactar) ddContactar.addEventListener('click',()=>{ closeDD(); window.location='mailto:risa@liberada.net'; });
-  }
-
-  /* ============ USERNAME PLAYLIST NAME ============ */
-  function updateGentePlaylistName(){
-    const sel=selected.size;
-    let name=esTxt('Risas de la gente 😹','People\u2019s laughs 😹');
-    if(favFilter) name=esTxt('Mis risas favoritas ⭐','My favourite laughs ⭐');
-    else if(sel===1){
-      const t=[...selected][0];
-      name='@'+esc(t);
-    } else if(sel>1) name=esTxt('Risas filtradas (','Filtered laughs (')+sel+esTxt(' etiquetas)',' tags)');
-    else if(recienteBtn.textContent==='Recientes') name=esTxt('Risas recientes 🎙️','Recent laughs 🎙️');
-    return name;
-  }
-  const _origUpdateGentePlaylist=updateGentePlaylist;
-  updateGentePlaylist=function(){
-    const sel=selected.size;
-    let name=updateGentePlaylistName();
-    let empty=favFilter?esTxt('Aún no has marcado ninguna risa con la estrella ⭐','You haven\u2019t starred any laugh yet ⭐')
-      :(sel?esTxt('Ninguna risa lleva esas etiquetas 😅','No laugh has those tags 😅'):esTxt('Aún no hay risas · sé la primera 💛','No laughs yet · be the first 💛'));
-    gentePlayer.select(currentTracks(), name, t=>t.tags, empty);
-    recienteBtn.setAttribute('aria-pressed', (sel||favFilter)?'false':'true');
-    favChip.setAttribute('aria-pressed', favFilter?'true':'false');
-  };
-
-  /* ============ RUTA /U/username · perfil simplificado ============ */
-  const userPathMatch=location.pathname.match(/^\/U\/([^/]+)\/?$/);
-  if(userPathMatch){
-    const userTag=decodeURIComponent(userPathMatch[1]);
-    selected.add(userTag);
-    document.querySelectorAll('.chip[data-tag]').forEach(c=>{
-      if(c.dataset.tag===userTag) c.setAttribute('aria-pressed','true');
-    });
-    updateGentePlaylist();
-    syncTagHash();
-    const hero=document.querySelector('.hero');
-    if(hero) hero.hidden=true;
-    const header=document.querySelector('header.topbar');
-    if(header){
-      const viewAs=document.createElement('div');
-      viewAs.className='user-view-as';
-      viewAs.innerHTML='<span class="user-view-label">Viendo risas de</span> <span class="user-view-name">@'+userTag+'</span> <a href="/" class="user-view-back">← Volver</a>';
-      header.after(viewAs);
-    }
-    document.querySelectorAll('#ejercicios, #expande, .tab-panel, .slider-framed').forEach(el=>el.hidden=true);
-  }
-
 })();
-</script>
+</script></script>
 
 <script>
 /* translaty engine + theme switcher (flove:lang / flove:theme). */
@@ -3928,5 +2345,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   else { initLang(); initTheme(); }
 })();
 </script>
+<div id="bottom-nav"></div>
 </body>
 </html>
