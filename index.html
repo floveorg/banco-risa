@@ -278,7 +278,7 @@ img{max-width:100%; display:block}
 .thread-arrow-btn:hover .thread-arrow{color:var(--magenta)}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap;
   display:inline-block;transform:translateY(5px)}
-.thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:5}
+.thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:0}
 .thread-toggle-line.sub-arrow{transform:translateY(3px)}
 .clip-tag{vertical-align:middle}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
@@ -293,7 +293,7 @@ img{max-width:100%; display:block}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem;
   position:relative;z-index:1}
-.tracklist li.clip-reply-row.reply-first{margin-top:-36px}   /* solo el primero se alinea con la flecha */
+.tracklist li.clip-reply-row.reply-first{margin-top:0}   /* sin solape: cada respuesta es clicable por sí misma */
 .tracklist li.clip-reply-row .tag.dl{width:24px;height:24px;font-size:.75rem}
 .tracklist li.clip-reply-row .by{font-size:.6rem}
 .tracklist li.tgl{background:none;border:none;border-radius:0;padding:0;gap:2px}
@@ -2260,8 +2260,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     var sec = document.getElementById('userpage');
     if (!sec) return;
     sec.hidden = !key;
-    if (!key) return;
-    var mine = (app.risas || []).filter(function (c) { return c.key === key; });
+    if (!key) {
+      if (app && app.sections && app.sections[0]) app.sections[0].applyFilters();  // restaura la lista principal
+      return;
+    }
+    var mine = ((app && app.risas) || []).filter(function (c) { return c && c.key === key; });
     var name = mine.length ? mine[0].name : key;
     var av = document.getElementById('up-avatar'), nm = document.getElementById('up-name');
     if (av) av.textContent = String(name).charAt(0).toUpperCase();
@@ -2274,7 +2277,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       var tr = o.clip && byId.get(o.clip.id);
       if (tr) out.push(Object.assign({}, tr, { depth: o.depth }));
     });
-    app.sections[0].player.select(out, name + ' · todas sus risas', null);
+    if (app && app.sections && app.sections[0]) app.sections[0].player.select(out, name + ' · todas sus risas', null);
+    if (sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });
   }
   window.addEventListener('hashchange', renderAuthor);
   renderAuthor();
