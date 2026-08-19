@@ -69,7 +69,7 @@ img{max-width:100%; display:block}
 /* ============ TOPBAR ============ */
 .topbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(9px);
   background:rgba(255,232,212,.72); border-bottom:2px solid rgba(42,24,16,.08)}
-.topbar .wrap{display:flex; align-items:center; justify-content:flex-start; gap:12px; height:60px}
+.topbar .wrap{display:flex; align-items:center; justify-content:center; gap:12px; height:60px}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:34px; height:34px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
@@ -392,6 +392,7 @@ a.react-user:hover{text-decoration:underline}
 .player-col{display:flex; flex-direction:column; gap:14px; min-width:0; justify-content:center; align-items:center}
 .player-col .player{width:100%; max-width:560px}
 .title-head{display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; max-width:560px; text-align:left}
+#gente .title-head{justify-content:flex-end}   /* toggles audio/vídeo a la derecha */
 .title-head h3{max-width:calc(100% - 170px); margin:14px auto 10px; font-size:1.3rem}
  .transport{display:flex; gap:10px; flex:none}
  .tr-btn{width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
@@ -2341,7 +2342,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     ddBtn.addEventListener('click', function (e) { e.preventDefault(); setDD(!dd.classList.contains('open')); });
     document.addEventListener('click', function (e) { if (!dd.contains(e.target) && !ddBtn.contains(e.target)) setDD(false); });
     function ddAct(id, fn) { var b = document.getElementById(id); if (b) b.addEventListener('click', function () { setDD(false); fn(); }); }
-    ddAct('dd-porque', function () { /* el efecto lo dispara .benefits-btn (burbujas a la derecha) */ });
     ddAct('dd-entrar', function () { var p = document.getElementById('entrar-page'); if (p) p.hidden = !p.hidden; });
     ddAct('dd-mejorar', function () { showTab('tecnologia'); document.getElementById('expande').scrollIntoView({ behavior: 'smooth' }); });
     ddAct('dd-sobre-liberada', function () { window.open('https://liberada.net', '_blank', 'noopener'); });
@@ -2443,22 +2443,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     beneAudio.src = list[beneIdx].src;
     beneAudio.play().catch(function () {});
   }
-  function spawnBubble(text, k, anchor, dir) {
+  function spawnBubble(text, k, anchor) {
     var bub = document.createElement('div');
     bub.className = 'bubble';
     bub.innerHTML = text;
     bub.setAttribute('role', 'status');
     var r = anchor.getBoundingClientRect();
-    var x, y;
-    if (dir === 'right') {
-      x = r.right + 14 + k * 96;
-      if (x > window.innerWidth - 244) x = window.innerWidth - 244 - k * 96;
-      y = r.top + 8;
-    } else {
-      x = Math.min(Math.max(r.left, 14), window.innerWidth - 244);
-      y = r.bottom + 12 + k * 96;
-      if (y > window.innerHeight - 140) y = window.innerHeight - 140 - k * 96;
-    }
+    // fluyen hacia abajo, centradas horizontalmente, con espaciados distintos cada una
+    var x = Math.max(14, Math.round((window.innerWidth - 230) / 2));
+    var gaps = [0, 84, 176, 250];
+    var g = gaps[k] != null ? gaps[k] : k * 90;
+    var y = r.bottom + 12 + g;
+    if (y > window.innerHeight - 140) y = window.innerHeight - 140 - g;
     bub.style.left = x + 'px'; bub.style.top = y + 'px';
     document.body.appendChild(bub);
     bubbles.add(bub);
@@ -2471,19 +2467,18 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     bub.addEventListener('click', dismiss);
     setTimeout(dismiss, 5200);
   }
-  function popBenefit(k, anchor, dir) {
+  function popBenefit(k, anchor) {
     if (!pool.length) return;
     var idx = Math.floor(Math.random() * pool.length);
     var text = pool.splice(idx, 1)[0];
-    spawnBubble('<b>Reír</b> ' + text.charAt(0).toLowerCase() + text.slice(1), k, anchor, dir);
+    spawnBubble('<b>Reír</b> ' + text.charAt(0).toLowerCase() + text.slice(1), k, anchor);
   }
   benefitsBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var dir = btn.dataset.bubbles === 'right' ? 'right' : 'down';
       nextGenteClip();
-      popBenefit(0, btn, dir);
-      if (!reduce) setTimeout(function () { popBenefit(1, btn, dir); }, 1000);
-      else popBenefit(1, btn, dir);
+      popBenefit(0, btn);
+      if (!reduce) setTimeout(function () { popBenefit(1, btn); }, 1000);
+      else popBenefit(1, btn);
     });
   });
 
