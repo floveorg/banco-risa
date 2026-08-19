@@ -265,10 +265,18 @@ img{max-width:100%; display:block}
   display:grid;place-items:center;cursor:pointer;font-size:.9rem;line-height:1;text-decoration:none;transition:transform .1s}
 .quick-act:hover{transform:translateY(-1px)}
 .quick-act.on{color:var(--marigold)}
-.thread-toggle{padding:6px 12px;border-bottom:1px solid #eee}
+.thread-toggle{padding:2px 12px;border-bottom:1px solid #eee}
 .thread-toggle-btn{background:none;border:none;cursor:pointer;color:var(--grape);font-weight:700;font-size:.8rem;
-  font-family:var(--mono);padding:2px 6px}
+  font-family:var(--mono);padding:4px 6px;display:flex;align-items:center;gap:6px}
 .thread-toggle-btn:hover{text-decoration:underline}
+.thread-arrow{font-size:1.4rem;line-height:1;display:inline-grid;place-items:center}
+.tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
+.tracklist li.clip-reply-row .tag.dl{width:20px;height:20px}
+.tracklist li.clip-reply-row .by{font-size:.6rem}
+.quick-tags{display:flex;gap:4px;flex-wrap:wrap;padding:0 2px 6px}
+.quick-tag{font-family:var(--mono);font-size:.68rem;font-weight:700;color:var(--persimmon);cursor:pointer;
+  background:none;border:1px solid var(--grape);border-radius:999px;padding:2px 8px}
+.quick-tag[aria-pressed="true"]{background:var(--marigold);border-color:var(--ink);color:var(--ink)}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
@@ -2118,7 +2126,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const isDL=!!t.src;
       li.dataset.src=t.src||'';
       li.dataset.id=(t.clip&&t.clip.id)||'';
-      const tags=tagsOf?tagsOf(t):'';
       const byline = opts.metaHTML
         ? opts.metaHTML(t)
         : '<span class="by">'+esc(t.by)+'</span>';
@@ -2132,33 +2139,17 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const titleHtml = opts.titlesAsTags
         ? '<button type="button" class="clip-title" data-title="'+esc(titleKey)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(titleKey))?'true':'false')+'">'+esc(t.t)+'</button>'
         : '<span class="tt">'+esc(t.t)+'</span>';
-      let tagsHtml='';
-      if(tags){
-        if(opts.tagsAsChips){
-          tagsHtml=String(tags).split(',').map(s=>s.trim()).filter(Boolean)
-            .map(tag=>{ const key=tag.toLowerCase();
-              return '<button type="button" class="clip-tag" data-tag="'+esc(key)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(key))?'true':'false')+'">'+esc(tag)+'</button>';
-            }).join('');
-        } else {
-          tagsHtml='<span class="ttags">'+esc(tags)+'</span>';
-        }
-      }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
       const replyBtn=(t.clip&&t.clip.id)
-        ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
+        ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" data-tags="'+esc(String(t.tags||''))+'" title="Responder" aria-label="Responder a este clip">+</button>'
         : '';
       const depth = t.depth || 0;
-      const clip = t.clip || {};
-      const parentLabel = depth > 0 && clip.parent
-        ? '<span class="thread-parent-label">↳ respondiendo a</span>'
-        : '';
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+titleHtml+
-        tagsHtml+
-        byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
       if(depth > 0){
-        li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+parentLabel+clipMeta+'</div>';
+        li.className='clip-reply-row';
+        li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+clipMeta+'</div>';
       } else {
         li.innerHTML=clipMeta;
       }
@@ -2176,22 +2167,29 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const id=t.clip&&t.clip.id;
       const kids=treeChildren.get(id)||[];
       if(!kids.length) return;
-      if(expanded.has(id)){
-        kids.forEach((k)=>renderNode(k, depth+1));
-      } else {
-        const c=countNested(kids);
-        const tg=document.createElement('li');
-        tg.className='thread-toggle';
-        tg.style.paddingLeft=(16+depth*20)+'px';
-        const btn=document.createElement('button');
-        btn.type='button';
-        btn.className='thread-toggle-btn';
-        btn.textContent='↳ '+c+(c===1?' respuesta':' respuestas');
-        btn.setAttribute('aria-expanded','false');
-        btn.addEventListener('click',()=>{ expanded.add(id); render(); });
-        tg.appendChild(btn);
-        trackList.appendChild(tg);
-      }
+      const isExp=expanded.has(id);
+      const c=countNested(kids);
+      const tg=document.createElement('li');
+      tg.className='thread-toggle';
+      tg.style.paddingLeft=(16+depth*20)+'px';
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='thread-toggle-btn';
+      const arrow=document.createElement('span');
+      arrow.className='thread-arrow';
+      arrow.textContent=isExp?'⏷':'⏵';
+      arrow.setAttribute('aria-hidden','true');
+      btn.appendChild(arrow);
+      if(!isExp) btn.appendChild(document.createTextNode(' '+c+(c===1?' respuesta':' respuestas')));
+      btn.setAttribute('aria-expanded', isExp?'true':'false');
+      btn.setAttribute('aria-label', isExp?'Colapsar respuestas':'Mostrar '+c+' respuestas');
+      btn.addEventListener('click',()=>{
+        if(isExp) expanded.delete(id); else expanded.add(id);
+        render();
+      });
+      tg.appendChild(btn);
+      trackList.appendChild(tg);
+      if(isExp) kids.forEach((k)=>renderNode(k, depth+1));
     }
 
     function render(){
@@ -2333,6 +2331,29 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       var menu=document.createElement('div');
       menu.className='quick-menu';
       menu.setAttribute('role','menu');
+      // 0) etiquetas del clip (arriba)
+      var tags=(btn.dataset.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
+      if(tags.length){
+        var tagRow=document.createElement('div');
+        tagRow.className='quick-tags';
+        tagRow.setAttribute('role','group');
+        tagRow.setAttribute('aria-label','Etiquetas');
+        tags.forEach(function(tg){
+          var key=tg.toLowerCase();
+          var tb=document.createElement('button');
+          tb.type='button';
+          tb.className='quick-tag';
+          tb.textContent=tg;
+          tb.setAttribute('aria-pressed', selected.has(key)?'true':'false');
+          tb.addEventListener('click', function(e){
+            e.stopPropagation();
+            toggleTag(key, tb);
+            closeQuick();
+          });
+          tagRow.appendChild(tb);
+        });
+        menu.appendChild(tagRow);
+      }
       // 1) Contestar
       var reply=document.createElement('button');
       reply.type='button'; reply.className='quick-opt'; reply.setAttribute('role','menuitem');
@@ -2369,7 +2390,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       menu.style.top=(r.bottom+6)+'px';
       document.body.appendChild(menu);
       quickMenu=menu;
-      document.addEventListener('click', closeQuick);
+      // El listener se añade en el siguiente tick para no cerrar el menú con el
+      // mismo clic que lo abrió (burbuja del evento hasta document).
+      setTimeout(function(){ document.addEventListener('click', closeQuick); }, 0);
     }
     function openReplyModal(btn){
       var title=btn.dataset.title||'esta risa';
