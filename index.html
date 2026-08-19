@@ -294,7 +294,7 @@ img{max-width:100%; display:block}
 .tracklist li.tgl.active .clip-card{background:rgba(255,176,32,.28);border-color:var(--marigold)}
 .tracklist li.tgl.clip-reply-row{padding:0}
 .tracklist li.tgl.clip-reply-row .clip-card{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
-.tracklist li.tgl.clip-reply-row .clip-card .tag.dl{width:20px;height:20px}
+.tracklist li.tgl.clip-reply-row .clip-card .tag.dl{width:24px;height:24px;font-size:.75rem}
 .tracklist li.tgl.clip-reply-row .clip-card .by{font-size:.6rem}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
@@ -2123,7 +2123,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsOpenSet=new Set(); // ids de clips con sus etiquetas abiertas (en línea)
     let tagsExtra=new Map();   // id → etiquetas extra mostradas (tras el ＋; − resetea)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
@@ -2152,13 +2151,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const depth = t.depth || 0;
       const tagStr=String(t.tags||'');
       const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const tagsOpen=!!cid && tagsOpenSet.has(cid);
-      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'" aria-expanded="'+(tagsOpen?'true':'false')+'" aria-label="'+(tagsOpen?'Ocultar etiquetas':'Mostrar etiquetas')+'">'+esc(t.t)+'</button>';
-      // Etiquetas en continuación, delante del nombre. Muestran una cantidad
-      // por defecto; el chip ＋ añade más y el − (tras el primer ＋) resetea.
+      const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
+      // Etiquetas SIEMPRE abiertas en continuación, delante del nombre. Muestran
+      // una cantidad mínima por defecto; el chip ＋ añade más y el − (tras el
+      // primer ＋) resetea a esa cantidad inicial.
       let chips='';
-      if(tagsOpen){
-        const extra=cid?(tagsExtra.get(cid)||0):0;
+      if(cid && tagArr.length){
+        const extra=tagsExtra.get(cid)||0;
         const shown=Math.min(tagArr.length, 3+extra);
         const hasHidden=shown<tagArr.length;
         chips=tagArr.slice(0, shown).map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('');
@@ -2194,11 +2193,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         li.innerHTML=row;
       }
       if(cid && tagArr.length){
-        li.querySelector('.clip-title').addEventListener('click', function(e){
-          e.stopPropagation();
-          if(tagsOpenSet.has(cid)) tagsOpenSet.delete(cid); else tagsOpenSet.add(cid);
-          render();
-        });
         const growBtn=li.querySelector('[data-taggrow]');
         if(growBtn) growBtn.addEventListener('click', function(e){
           e.stopPropagation();
