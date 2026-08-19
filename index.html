@@ -260,6 +260,15 @@ img{max-width:100%; display:block}
 .quick-emoji:hover{background:#fff;transform:scale(1.15)}
 .quick-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
   padding:8px 16px;border-radius:999px;font-size:.85rem;font-weight:700;z-index:70;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.quick-actions{display:flex;gap:8px;justify-content:center;align-items:center;border-top:1px solid #eee;padding-top:6px}
+.quick-act{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:none;color:var(--ink);
+  display:grid;place-items:center;cursor:pointer;font-size:.9rem;line-height:1;text-decoration:none;transition:transform .1s}
+.quick-act:hover{transform:translateY(-1px)}
+.quick-act.on{color:var(--marigold)}
+.thread-toggle{padding:6px 12px;border-bottom:1px solid #eee}
+.thread-toggle-btn{background:none;border:none;cursor:pointer;color:var(--grape);font-weight:700;font-size:.8rem;
+  font-family:var(--mono);padding:2px 6px}
+.thread-toggle-btn:hover{text-decoration:underline}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
@@ -2092,76 +2101,116 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 
     function playable(){ return tracks.filter(t=>t.src); }
 
-    function pageCount(){ return Math.max(1, Math.ceil(tracks.length/size)); }
-    function pageTracks(){
-      if(!size) return tracks;
-      if(page>pageCount()-1) page=pageCount()-1;
-      return tracks.slice(page*size, (page+1)*size);
+    let rootCount=0;
+    let treeChildren=new Map();
+    let expanded=new Set();   // ids de clips con sus respuestas desplegadas
+
+    function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
+
+    function countNested(kids){
+      let n=kids.length;
+      kids.forEach((k)=>{ const c=treeChildren.get(k.clip.id); if(c) n+=countNested(c); });
+      return n;
+    }
+
+    function buildLi(t){
+      const li=document.createElement('li');
+      const isDL=!!t.src;
+      li.dataset.src=t.src||'';
+      li.dataset.id=(t.clip&&t.clip.id)||'';
+      const tags=tagsOf?tagsOf(t):'';
+      const byline = opts.metaHTML
+        ? opts.metaHTML(t)
+        : '<span class="by">'+esc(t.by)+'</span>';
+      const orig = opts.metaHTML
+        ? ''
+        : (isDL
+            ? '<a class="orig" href="'+t.orig+'" target="_blank" rel="noopener">'+(t.origLabel||'original')+' ↗</a>'
+            : '<a class="orig" href="'+t.link+'" target="_blank" rel="noopener">escuchar original ↗</a>');
+      const src=t.src||'';
+      const titleKey=String(t.t||'').trim().toLowerCase();
+      const titleHtml = opts.titlesAsTags
+        ? '<button type="button" class="clip-title" data-title="'+esc(titleKey)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(titleKey))?'true':'false')+'">'+esc(t.t)+'</button>'
+        : '<span class="tt">'+esc(t.t)+'</span>';
+      let tagsHtml='';
+      if(tags){
+        if(opts.tagsAsChips){
+          tagsHtml=String(tags).split(',').map(s=>s.trim()).filter(Boolean)
+            .map(tag=>{ const key=tag.toLowerCase();
+              return '<button type="button" class="clip-tag" data-tag="'+esc(key)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(key))?'true':'false')+'">'+esc(tag)+'</button>';
+            }).join('');
+        } else {
+          tagsHtml='<span class="ttags">'+esc(tags)+'</span>';
+        }
+      }
+      const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
+      const replyBtn=(t.clip&&t.clip.id)
+        ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
+        : '';
+      const depth = t.depth || 0;
+      const clip = t.clip || {};
+      const parentLabel = depth > 0 && clip.parent
+        ? '<span class="thread-parent-label">↳ respondiendo a</span>'
+        : '';
+      const clipMeta =
+        '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
+        '<span class="ti">'+titleHtml+
+        tagsHtml+
+        byline+'</span>'+orig+replyBtn;
+      if(depth > 0){
+        li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+parentLabel+clipMeta+'</div>';
+      } else {
+        li.innerHTML=clipMeta;
+      }
+      if(isDL){
+        li.style.cursor='pointer';
+        li.addEventListener('click',(e)=>{ if(e.target.closest('a')||e.target.closest('button'))return;
+          if(playing && t.src===audio.src){ audio.pause(); setPlaying(false); return; }
+          const list=playable(); ti=list.indexOf(t); startTrack(); });
+      }
+      return li;
+    }
+
+    function renderNode(t, depth){
+      trackList.appendChild(buildLi(t));
+      const id=t.clip&&t.clip.id;
+      const kids=treeChildren.get(id)||[];
+      if(!kids.length) return;
+      if(expanded.has(id)){
+        kids.forEach((k)=>renderNode(k, depth+1));
+      } else {
+        const c=countNested(kids);
+        const tg=document.createElement('li');
+        tg.className='thread-toggle';
+        tg.style.paddingLeft=(16+depth*20)+'px';
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='thread-toggle-btn';
+        btn.textContent='↳ '+c+(c===1?' respuesta':' respuestas');
+        btn.setAttribute('aria-expanded','false');
+        btn.addEventListener('click',()=>{ expanded.add(id); render(); });
+        tg.appendChild(btn);
+        trackList.appendChild(tg);
+      }
     }
 
     function render(){
       trackList.innerHTML='';
-      pageTracks().forEach((t)=>{
-        const li=document.createElement('li');
-        const isDL=!!t.src;
-        li.dataset.src=t.src||'';
-        li.dataset.id=(t.clip&&t.clip.id)||'';
-        const tags=tagsOf?tagsOf(t):'';
-        const byline = opts.metaHTML
-          ? opts.metaHTML(t)
-          : '<span class="by">'+esc(t.by)+'</span>';
-        const orig = opts.metaHTML
-          ? ''
-          : (isDL
-              ? '<a class="orig" href="'+t.orig+'" target="_blank" rel="noopener">'+(t.origLabel||'original')+' ↗</a>'
-              : '<a class="orig" href="'+t.link+'" target="_blank" rel="noopener">escuchar original ↗</a>');
-        const src=t.src||'';
-        const titleKey=String(t.t||'').trim().toLowerCase();
-        const titleHtml = opts.titlesAsTags
-          ? '<button type="button" class="clip-title" data-title="'+esc(titleKey)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(titleKey))?'true':'false')+'">'+esc(t.t)+'</button>'
-          : '<span class="tt">'+esc(t.t)+'</span>';
-        let tagsHtml='';
-        if(tags){
-          if(opts.tagsAsChips){
-            tagsHtml=String(tags).split(',').map(s=>s.trim()).filter(Boolean)
-              .map(tag=>{ const key=tag.toLowerCase();
-                return '<button type="button" class="clip-tag" data-tag="'+esc(key)+'" aria-pressed="'+((opts.isTagOn&&opts.isTagOn(key))?'true':'false')+'">'+esc(tag)+'</button>';
-              }).join('');
-          } else {
-            tagsHtml='<span class="ttags">'+esc(tags)+'</span>';
-          }
+      const byId=new Map();
+      tracks.forEach((t)=>{ if(t.clip&&t.clip.id) byId.set(t.clip.id,t); });
+      treeChildren=new Map();
+      tracks.forEach((t)=>{
+        const p=t.clip&&t.clip.parent;
+        if(p&&byId.has(p)){
+          if(!treeChildren.has(p)) treeChildren.set(p,[]);
+          treeChildren.get(p).push(t);
         }
-        const favOn=isDL && favs.has(src);
-        const favBtn='<button type="button" class="fav-star'+(favOn?' on':'')+'" data-src="'+esc(src)+'" aria-pressed="'+(favOn?'true':'false')+'" aria-label="'+(favOn?'Quitar de favoritas':'Marcar como favorita')+'">'+(favOn?'★':'☆')+'</button>';
-        const dlBtn=isDL?'<a class="dl-btn" href="'+esc(src)+'" download="'+esc(src.split('/').pop())+'" title="Descargar" aria-label="Descargar">↓</a>':'';
-        const clipUrl='https://risa.liberada.net/#'+encodeURIComponent((t.clip&&t.clip.id)||'');
-        const shareBtn=isDL?'<button type="button" class="share-btn" data-clip="'+esc(clipUrl)+'" title="Compartir" aria-label="Compartir">↗</button>':'';
-        const replyBtn=(t.clip&&t.clip.id)
-          ? '<button type="button" class="reply-btn" data-id="'+esc(t.clip.id)+'" data-title="'+esc(t.t||'esta risa')+'" title="Responder" aria-label="Responder a este clip">+</button>'
-          : '';
-        const depth = t.depth || 0;
-        const clip = t.clip || {};
-        const parentLabel = depth > 0 && clip.parent
-          ? '<span class="thread-parent-label">↳ respondiendo a</span>'
-          : '';
-        const clipMeta =
-          '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-          '<span class="ti">'+titleHtml+
-          tagsHtml+
-          byline+'</span>'+orig+favBtn+replyBtn+dlBtn+shareBtn;
-        if(depth > 0){
-          li.innerHTML='<div class="thread-item" style="padding-left:'+(depth * 20)+'px">'+parentLabel+clipMeta+'</div>';
-        } else {
-          li.innerHTML=clipMeta;
-        }
-        if(isDL){
-          li.style.cursor='pointer';
-          li.addEventListener('click',(e)=>{ if(e.target.closest('a')||e.target.closest('button'))return;
-            if(playing && t.src===audio.src){ audio.pause(); setPlaying(false); return; }
-            const list=playable(); ti=list.indexOf(t); startTrack(); });
-        }
-        trackList.appendChild(li);
       });
+      const roots=tracks.filter((t)=>!(t.clip&&t.clip.parent&&byId.has(t.clip.parent)));
+      rootCount=roots.length;
+      if(page>pageCount()-1) page=pageCount()-1;
+      const pageRoots=size ? roots.slice(page*size,(page+1)*size) : roots;
+      pageRoots.forEach((r)=>renderNode(r, 0));
       highlight();
       renderPaginator();
     }
@@ -2273,34 +2322,53 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     var QUICK_REACTIONS=['🤣','😂','😄','❤️','👏','😹'];
     var quickMenu=null;
     function closeQuick(){ if(quickMenu){ quickMenu.remove(); quickMenu=null; } document.removeEventListener('click', closeQuick); }
+    function shareClip(url){
+      if(!url) return;
+      var text='Escucha esta risa 😂';
+      if(navigator.share){ navigator.share({title:'Risa liberada', text: text, url: url}).catch(function(){}); }
+      else{ window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank','noopener'); }
+    }
     function showQuickMenu(btn){
       closeQuick();
       var menu=document.createElement('div');
       menu.className='quick-menu';
       menu.setAttribute('role','menu');
-      menu.innerHTML=
-        '<button type="button" class="quick-opt quick-reply" role="menuitem">✏️ Contestar</button>'+
-        '<div class="quick-emojis" role="group" aria-label="Reacción rápida">'+
-          QUICK_REACTIONS.map(function(e){ return '<button type="button" class="quick-emoji" data-e="'+e+'" role="menuitem">'+e+'</button>'; }).join('')+
-        '</div>';
+      // 1) Contestar
+      var reply=document.createElement('button');
+      reply.type='button'; reply.className='quick-opt'; reply.setAttribute('role','menuitem');
+      reply.textContent='✏️ Contestar';
+      reply.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); openReplyModal(btn); });
+      menu.appendChild(reply);
+      // 2) reacciones rápidas (solo emojis)
+      var em=document.createElement('div'); em.className='quick-emojis'; em.setAttribute('role','group'); em.setAttribute('aria-label','Reacción rápida');
+      QUICK_REACTIONS.forEach(function(ev){
+        var b=document.createElement('button'); b.type='button'; b.className='quick-emoji'; b.setAttribute('role','menuitem'); b.textContent=ev;
+        b.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); sendReaction(btn, ev); });
+        em.appendChild(b);
+      });
+      menu.appendChild(em);
+      // 3) fila de acciones: favorita · descargar · compartir (centrada)
+      var row=document.createElement('div'); row.className='quick-actions'; row.setAttribute('role','group'); row.setAttribute('aria-label','Acciones');
+      var src=btn.dataset.src||'';
+      var favOn=!!src && favs.has(src);
+      var star=document.createElement('button'); star.type='button'; star.className='quick-act'+(favOn?' on':''); star.title='Favorita'; star.setAttribute('aria-label','Marcar como favorita'); star.textContent=favOn?'★':'☆';
+      star.addEventListener('click', function(e){ e.stopPropagation(); toggleFav(src, star); });
+      row.appendChild(star);
+      if(src){
+        var dl=document.createElement('a'); dl.className='quick-act'; dl.href=src; dl.download=src.split('/').pop(); dl.title='Descargar'; dl.setAttribute('aria-label','Descargar'); dl.textContent='↓';
+        dl.addEventListener('click', function(e){ e.stopPropagation(); });
+        row.appendChild(dl);
+      }
+      var share=document.createElement('button'); share.type='button'; share.className='quick-act'; share.title='Compartir'; share.setAttribute('aria-label','Compartir'); share.textContent='↗';
+      share.addEventListener('click', function(e){ e.stopPropagation(); closeQuick(); shareClip(btn.dataset.clip); });
+      row.appendChild(share);
+      menu.appendChild(row);
+      // posicionar
       var r=btn.getBoundingClientRect();
       menu.style.left=Math.min(r.right-40, Math.max(8, window.innerWidth-220))+'px';
       menu.style.top=(r.bottom+6)+'px';
       document.body.appendChild(menu);
       quickMenu=menu;
-      menu.querySelector('.quick-reply').addEventListener('click', function(e){
-        e.stopPropagation();
-        closeQuick();
-        openReplyModal(btn);
-      });
-      menu.querySelectorAll('.quick-emoji').forEach(function(b){
-        b.addEventListener('click', function(e){
-          e.stopPropagation();
-          var em=b.dataset.e;
-          closeQuick();
-          sendReaction(btn, em);
-        });
-      });
       document.addEventListener('click', closeQuick);
     }
     function openReplyModal(btn){

@@ -796,10 +796,12 @@ async function handleAction(a, tg, cfg, queue, drafts, risas, uploaders, uploads
         const parentChatId = clipOwners[q.parent];
         if (parentClip && parentChatId && parentChatId !== upChatId &&
             notifyprefs[parentClip.key] !== false) {
+          const reactName = (q.name || 'Alguien');
+          const reactUrl = pageUrlOf(q.uploader, cfg.webUrl);
+          // comentado (audio) · reaccionado (emoji rápido) cuando llegue por API.
           await bestEffort(tg.sendMessage(parentChatId,
-            '💬 ¡Alguien respondió a tu risa!\n\n' +
-            '↳ ' + (q.title || '—') + ' · ' + (q.name || 'Anónima') + '\n' +
-            '🔗 ' + pageUrlOf(q.uploader, cfg.webUrl) + '\n' +
+            reactName + ' ha comentado a tu risa\n\n' +
+            'Míralo aquí: ' + reactUrl + '\n' +
             '🚫 Para apagar estos avisos: /notify off'));
         }
       }
