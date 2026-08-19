@@ -278,18 +278,6 @@ img{max-width:100%; display:block}
 .thread-count{font-size:1rem;color:var(--ink-soft);font-weight:700;font-family:var(--mono);white-space:nowrap}
 .thread-toggle-line{width:100%;line-height:1;margin-top:-7px;position:relative;z-index:1}
 .clip-tag{vertical-align:middle}
-.tags-cloud{position:relative;display:inline-flex;vertical-align:middle;margin-right:10px}
-.tags-area{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;overflow:hidden;
-  transition:max-height .35s ease;max-height:0}
-.tag-chip{flex:0 0 auto;font-family:var(--mono);font-size:.68rem;font-weight:700;cursor:pointer;border-radius:999px;
-  padding:2px 8px;line-height:1.5;display:inline-grid;place-items:center;border:1.5px solid var(--ink);vertical-align:middle;
-  box-shadow:0 2px 0 rgba(42,24,16,.18);transition:transform .1s}
-.tag-chip:hover{transform:translateY(-1px)}
-.tags-float{position:absolute;top:-9px;z-index:3;box-shadow:0 2px 0 rgba(42,24,16,.25),0 0 0 3px var(--paper)}
-.tags-float.tag-grow{right:-4px;background:var(--persimmon);color:#fff}
-.tags-float.tag-shrink{right:22px;background:var(--marigold);color:var(--ink)}
-.tag-grow{background:var(--persimmon);color:#fff}
-.tag-shrink{background:var(--marigold);color:var(--ink)}
 .dd-utils{display:flex;gap:6px;align-items:center;padding:8px 10px}
 .clip-title[aria-expanded="true"]{color:var(--persimmon)}
 .tracklist li.clip-reply-row{background:none;border:none;border-radius:0;padding:4px 12px;font-size:.81rem}
@@ -306,6 +294,7 @@ img{max-width:100%; display:block}
 .tracklist li.tgl.clip-reply-row .clip-card .by{font-size:.6rem}
 .chip.plus-chip{background:var(--magenta); color:#fff; font-size:1.1rem; padding:6px 16px}
 .chip.plus-chip.done{opacity:.4; cursor:default}
+.chip.minus-chip{background:var(--marigold); color:var(--ink); font-size:1.1rem; padding:6px 16px}
 .chip.fav-chip{border:none; border-radius:0; background:none; box-shadow:none; padding:0;
   color:var(--marigold); font-size:1.8rem; line-height:1; width:39px; height:39px;
   display:grid; place-items:center}
@@ -2131,7 +2120,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     let rootCount=0;
     let treeChildren=new Map();
     let expanded=new Set();    // ids de clips con sus respuestas desplegadas
-    let tagsLevel=new Map();   // id → nivel de la nube de etiquetas (0 plegada · 1 mínimo · 10 todas)
 
     function pageCount(){ return !size ? 1 : Math.max(1, Math.ceil(rootCount/size)); }
 
@@ -2157,22 +2145,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       const src=t.src||'';
       const cid=t.clip&&t.clip.id;
       const depth = t.depth || 0;
-      const tagStr=String(t.tags||'');
-      const tagArr=tagStr.split(',').map(function(s){return s.trim();}).filter(Boolean);
-      const tagsLvl=cid?(tagsLevel.get(cid)||1):1;   // 1 = tamaño inicial · 10 = todas
       const titleHtml='<button type="button" class="clip-title" data-title="'+esc(cid||'')+'">'+esc(t.t)+'</button>';
-      // Nube flotante de etiquetas a la izquierda (la fila queda limpia: solo el
-      // '+' de la derecha). Los chips ＋/− flotan en su esquina, siempre visibles.
-      let chips='';
-      if(cid && tagArr.length){
-        chips='<span class="tags-cloud">'+
-          '<span class="tags-area" data-tagsarea="'+esc(cid)+'">'+
-            tagArr.map(function(tag){ return '<span class="clip-tag">'+esc(tag)+'</span>'; }).join('')+
-          '</span>'+
-          (tagsLvl<10?'<button type="button" class="tag-chip tags-float tag-grow" data-taggrow="'+esc(cid)+'" aria-label="Más etiquetas" title="Más etiquetas (10% más)">＋</button>':'')+
-          (tagsLvl>1?'<button type="button" class="tag-chip tags-float tag-shrink" data-tagshrink="'+esc(cid)+'" aria-label="Plegar etiquetas" title="Plegar la nube">−</button>':'')+
-          '</span>';
-      }
       const clipUrl='https://risa.liberada.net/#'+encodeURIComponent(cid||'');
       const replyBtn=cid
         ? '<button type="button" class="reply-btn" data-id="'+esc(cid)+'" data-title="'+esc(t.t||'esta risa')+'" data-src="'+esc(src)+'" data-clip="'+esc(clipUrl)+'" title="Responder" aria-label="Responder a este clip">+</button>'
@@ -2190,7 +2163,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       }
       const clipMeta =
         '<span class="tag '+(isDL?'dl':'link')+'"'+(isDL?' title="Descargada" aria-label="Pista descargada"':'')+'>'+(isDL?'▶':'enlace')+'</span>'+
-        '<span class="ti">'+chips+titleHtml+byline+'</span>'+orig+replyBtn;
+        '<span class="ti">'+titleHtml+byline+'</span>'+orig+replyBtn;
       const row='<div class="thread-item" style="padding-left:'+(depth*20)+'px">'+clipMeta+'</div>';
       if(toggleLine){
         // tarjeta aparte (con su fondo) y la flecha fuera, sobre el fondo de la página
@@ -2200,27 +2173,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       } else {
         if(depth > 0) li.className='clip-reply-row';
         li.innerHTML=row;
-      }
-      if(chips){
-        const area=li.querySelector('[data-tagsarea]');
-        if(area){
-          const full=area.scrollHeight||0;
-          area.style.maxHeight=Math.max(22, Math.round(full*(tagsLvl/10)))+'px';   // 10% por nivel
-        }
-      }
-      if(cid && tagArr.length){
-        const growBtn=li.querySelector('[data-taggrow]');
-        if(growBtn) growBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          tagsLevel.set(cid, Math.min(10,(tagsLevel.get(cid)||1)+1));   // +10% hacia abajo
-          render();
-        });
-        const shrinkBtn=li.querySelector('[data-tagshrink]');
-        if(shrinkBtn) shrinkBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          tagsLevel.set(cid,1);   // resetea al tamaño inicial
-          render();
-        });
       }
       if(toggleLine){
         li.querySelector('[data-toggle]').addEventListener('click', function(e){
@@ -2827,8 +2779,19 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   const plusChip=document.createElement('button');
   plusChip.className='chip plus-chip'; plusChip.type='button';
   plusChip.textContent='+';
-  plusChip.title='Más etiquetas: añade 3 más en cada toque (hasta 3)';
+  plusChip.title='Más etiquetas: añade más en cada toque';
   plusChip.addEventListener('click', ()=>{ advanceFlow(); });
+  // − flotante: aparece tras el primer + y pliega la nube a las etiquetas iniciales
+  const minusChip=document.createElement('button');
+  minusChip.className='chip minus-chip'; minusChip.type='button';
+  minusChip.textContent='−';
+  minusChip.title='Plegar la nube a las etiquetas iniciales';
+  minusChip.hidden=true;
+  minusChip.addEventListener('click', ()=>{
+    chipStart=0; chipCount=TAG_START; plusClicks=0;
+    plusChip.classList.remove('done');
+    buildTagChips();
+  });
 
   function buildTagChips(){
     const stats=tagStats();
@@ -2847,7 +2810,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     }
     const slice=stats.slice(chipStart, chipStart+chipCount);
     if(!slice.length){ chipStart=0; return buildTagChips(); }
-    [...space.children].forEach(c=>{ if(c!==recienteBtn && c!==favChip && c!==plusChip && !c.classList.contains('title-tag')) c.remove(); });
+    [...space.children].forEach(c=>{ if(c!==recienteBtn && c!==favChip && c!==plusChip && c!==minusChip && !c.classList.contains('title-tag')) c.remove(); });
     slice.forEach(([tag,cnt])=>{
       const b=document.createElement('button');
       b.className='chip'; b.type='button';
@@ -2859,6 +2822,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       space.appendChild(b);
     });
     if(!plusChip.parentNode) space.appendChild(plusChip);
+    minusChip.hidden = plusClicks===0;          // el − aparece tras el primer +
+    if(!minusChip.parentNode) space.appendChild(minusChip);
     if(genteRaf.id) cancelAnimationFrame(genteRaf.id);
     floatChips(space, [...space.children].filter(c=>c!==favChip), genteRaf);
   }
@@ -3729,7 +3694,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   if(userPathMatch){
     const userTag=decodeURIComponent(userPathMatch[1]);
     selected.add(userTag);
-    document.querySelectorAll('.tag-chip').forEach(c=>{
+    document.querySelectorAll('.chip[data-tag]').forEach(c=>{
       if(c.dataset.tag===userTag) c.setAttribute('aria-pressed','true');
     });
     updateGentePlaylist();
