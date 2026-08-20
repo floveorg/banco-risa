@@ -206,7 +206,6 @@ img{max-width:100%; display:block}
 .tracklist li.tgl.active .clip-card{background:rgba(255,176,32,.28);border-color:var(--marigold);
   animation:clipGlow 2.6s ease-in-out infinite}
 @media (prefers-reduced-motion: reduce){ .tracklist li.active,.tracklist li.tgl.active .clip-card{animation:none} }
-.tracklist .ti{flex:1}
 .tracklist .tag.dl,.tracklist .fav-star,.tracklist .reply-btn,.tracklist .react-chip,.tracklist .clip-video-btn{align-self:center}
 .tracklist .by{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:45%}
 .tracklist .tag{font-family:var(--mono); font-size:.66rem; padding:2px 8px; border-radius:999px; white-space:nowrap}
@@ -215,7 +214,7 @@ img{max-width:100%; display:block}
 .tracklist li.tgl .clip-card .tag.dl{transform:translateY(-7px); width:34px; height:34px}   /* play del padre: 5-10px arriba, 10% mayor, centrado con el fondo */
 .tracklist li.active .tag.dl{background:var(--red-btn-hover)}
 .tag.link{background:transparent; border:1.5px solid var(--grape); color:var(--grape)}
-.tracklist .ti{display:flex; flex-wrap:wrap; align-items:baseline; column-gap:7px; row-gap:1px; min-width:0}
+.tracklist .ti{flex:1; display:flex; flex-wrap:wrap; align-items:baseline; column-gap:7px; row-gap:1px; min-width:0}
 .tracklist .tt{font-weight:600; white-space:nowrap}
 .tracklist .ttags{font-family:var(--mono); font-size:.68rem; color:var(--persimmon); font-weight:700; white-space:nowrap}
 
@@ -670,7 +669,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rx-preview audio{width:100%; border-radius:12px}
 .rx-preview .btn{justify-content:center; text-decoration:none}
 .rx-hint{font-size:.82rem; color:var(--ink-soft); margin:8px 0 0; border-left:3px solid var(--marigold); padding-left:10px}
-.clip-remix{background:linear-gradient(135deg, rgba(255,176,32,.08), rgba(255,120,60,.06)); border-left:3px solid var(--marigold)}
+.tracklist .thread-item.clip-remix{background:linear-gradient(135deg, rgba(255,176,32,.12), rgba(255,120,60,.08)); border-left:3px solid var(--marigold); padding-left:8px !important; border-radius:0 8px 8px 0}
 #upload-modal .btn-primary{justify-content:center; width:100%; text-decoration:none}
 .feed-empty{color:var(--ink-soft); line-height:1.5; padding:8px 2px}
 .field{display:grid; gap:6px}
@@ -2517,16 +2516,29 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     rxRecorder = null;
   }
   if (rxRecord) rxRecord.addEventListener('click', function () {
-    var origAudio = document.querySelector('.player audio, #media-audio');
-    if (origAudio && rxClipSrc) { origAudio.src = rxClipSrc; origAudio.play().catch(function(){}); }
+    var origAudio = document.querySelector('#gente-player audio') || document.querySelector('audio');
+    if (origAudio && rxClipSrc) { origAudio.src = rxClipSrc; origAudio.volume = 0.5; origAudio.play().catch(function(){}); }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Tu navegador no soporta grabación.'; }
+      return;
+    }
     navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-      rxRecorder = new MediaRecorder(stream);
+      var mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : (MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '');
+      rxRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
       var chunks = [];
-      rxRecorder.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
+      rxRecorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+      rxRecorder.onerror = function () {
+        stream.getTracks().forEach(function (tr) { tr.stop(); });
+        if (origAudio) { origAudio.pause(); origAudio.currentTime = 0; }
+        if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Error al grabar.'; }
+        if (rxRecord) rxRecord.disabled = false;
+        if (rxStop) rxStop.disabled = true;
+      };
       rxRecorder.onstop = function () {
         stream.getTracks().forEach(function (tr) { tr.stop(); });
         if (origAudio) { origAudio.pause(); origAudio.currentTime = 0; }
-        rxBlob = new Blob(chunks, { type: 'audio/webm' });
+        if (!chunks.length) { if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Grabación vacía.'; } return; }
+        rxBlob = new Blob(chunks, { type: rxRecorder.mimeType || 'audio/webm' });
         var url = URL.createObjectURL(rxBlob);
         if (rxAudio) rxAudio.src = url;
         if (rxPreview) rxPreview.hidden = false;
@@ -2537,12 +2549,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         a.download = 'remix-' + (rxClipTitle || 'risa').replace(/[^a-z0-9]+/gi, '-').slice(0, 40) + '.webm';
         document.body.appendChild(a); a.click(); a.remove();
       };
-      rxRecorder.start();
+      rxRecorder.start(100);
       if (rxRecord) rxRecord.disabled = true;
       if (rxStop) rxStop.disabled = false;
-    }).catch(function () {
-      var hint = document.getElementById('rx-hint');
-      if (hint) { hint.hidden = false; hint.textContent = 'No se pudo acceder al micrófono.'; }
+    }).catch(function (err) {
+      if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'No se pudo acceder al micrófono: ' + (err.message || err); }
     });
   });
   if (rxStop) rxStop.addEventListener('click', stopRemixRecording);
