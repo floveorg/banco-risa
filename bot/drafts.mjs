@@ -1,6 +1,5 @@
 // bot/drafts.mjs — draft UI helpers, keyboard builders, text generators
 import { hashId, identityOf } from './logic.mjs';
-import { pageUrlOf } from './pages.mjs';
 
 // Identidad (v2): «Autor» elige un alias (draft:aliases); «Anónimo» lo anula.
 export const DEFAULT_SEL = { alias: '', anon: false };
@@ -234,15 +233,14 @@ export function publishedConfirmation(q, cfg, usernames, suboffer) {
   if (q.title) lines.push('✏️ ' + q.title);
   if (q.tags && q.tags.length) lines.push('🏷️ ' + q.tags.join(', '));
   lines.push('🙂 ' + (q.name || 'Anónima'));
-  lines.push('🔗 Todas tus risas juntas: ' + pageUrlOf(q.uploader, cfg.webUrl));
   const who = q.uploader;
   const so = suboffer[who];
   const showEdit = !(so && so.status === 'never');
   const mine = subOf(usernames, who);
   if (so && so.status === 'yes' && mine) {
-    lines.push('🌐 Tu enlace: ' + subdomainUrl(cfg, mine));
+    lines.push('🌐 Subdominio activado: ' + mine + '.liberada.net');
   } else if (showEdit) {
-    lines.push('🌐 Activa gratis: ' + subdomainUrl(cfg, candidateUsernameOf(q, usernames)) + ' · Editar');
+    lines.push('🌐 Tu subdominio <nombre>.liberada.net · Editar');
   }
   lines.push('📣 Grupo Risa liberada: ' + cfg.groupUrl);
   lines.push('📌 Envía /perfil para ver más opciones');

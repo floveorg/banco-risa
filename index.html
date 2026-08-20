@@ -2328,7 +2328,8 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     clipsOf: window.Risa.clipsOf,
     favKey: 'risa-liberada-favs',
     botUrl: window.Risa.TELEGRAM_BOT,
-    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones'],
+    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones']
+      .concat((function () { var h = (location.hash || '').slice(1); return h && h.charAt(0) === '/' ? [h] : []; })()),
     self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
     onRemix: function (t) { openRemixModal(t); },

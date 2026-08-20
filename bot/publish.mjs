@@ -61,10 +61,8 @@ export async function publishClip(tg, cfg, q, id, risas, names, tgpub) {
       const parentClip = risas.find((e) => e.id === q.parent);
       if (parentClip) {
         const ch = String(cfg.channel || '').replace(/^@/, '');
-        const parentLink = (parentClip.channelMsgId && ch)
-          ? ('https://t.me/' + ch + '/' + parentClip.channelMsgId)
-          : ('https://risa.liberada.net/#/c/' + encodeURIComponent(parentClip.id));
-        caption += '\n↳ En respuesta a «' + (parentClip.t || parentClip.name || 'esta risa') + '» — ' + parentLink;
+        caption += '\n↳ En respuesta a «' + (parentClip.t || parentClip.name || 'esta risa') + '»' +
+          ((parentClip.channelMsgId && ch) ? (' — https://t.me/' + ch + '/' + parentClip.channelMsgId) : '');
       }
     }
     if (q.video) {
