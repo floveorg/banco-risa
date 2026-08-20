@@ -2037,19 +2037,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     <button class="modal-x" type="button" id="rx-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
     <h2 id="rx-title">🔀 <span class="es" lang="es">Encima / Remix</span><span class="en" lang="en">Over / Remix</span></h2>
     <p class="modal-sub"><span class="es" lang="es">Graba tu risa encima de este clip.</span><span class="en" lang="en">Record your laugh over this clip.</span></p>
-    <p class="modal-note"><span class="es" lang="es"><b id="rx-clip-title"></b> — pulsa <b>Grabar</b> para escuchar el clip original mientras grabas tu nota de voz encima.</span><span class="en" lang="en"><b id="rx-clip-title-en"></b> — press <b>Record</b> to listen to the original clip while recording your voice note over it.</span></p>
-    <div class="rx-controls">
-      <button type="button" class="btn btn-primary" id="rx-record">🎙️ <span class="es" lang="es">Grabar</span><span class="en" lang="en">Record</span></button>
-      <button type="button" class="btn" id="rx-stop" disabled>⏹ <span class="es" lang="es">Parar</span><span class="en" lang="en">Stop</span></button>
-    </div>
-    <div class="rx-preview" id="rx-preview" hidden>
-      <audio id="rx-audio" controls></audio>
-      <a class="btn btn-primary" id="rx-send" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">
-        <span class="es" lang="es">Enviar al bot</span><span class="en" lang="en">Send to bot</span>
-      </a>
-    </div>
-    <p class="rx-hint" id="rx-hint" hidden><span class="es" lang="es">Abre el bot y <b>envíale el .webm que descargaste</b> (o una nota de voz): se publicará como remix de esta risa, ya con su enlace «en respuesta a».</span><span class="en" lang="en">Open the bot and <b>send it the downloaded .webm</b> (or a voice note): it will publish as a remix of this clip, already linked "in reply to".</span></p>
-    <audio id="rx-guide" preload="auto"></audio>
+    <p class="modal-note"><span class="es" lang="es"><b id="rx-clip-title"></b> — escúchalo aquí y <b>graba tu nota de voz en el bot</b>.</span><span class="en" lang="en"><b id="rx-clip-title-en"></b> — listen here and <b>record your voice note in the bot</b>.</span></p>
+    <audio id="rx-guide" controls preload="none"></audio>
+    <a class="btn btn-primary" id="rx-send" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">
+      <span class="es" lang="es">🎙️ Abrir el bot y grabar</span><span class="en" lang="en">🎙️ Open the bot and record</span>
+    </a>
+    <p class="rx-hint"><span class="es" lang="es">En el bot, <b>graba tu nota de voz</b> (o envía el .webm): se publicará como remix de «<b id="rx-clip-title2"></b>», con su enlace «en respuesta a». Si no detecta el clip, <b>reenvía el clip del canal</b> antes de grabar.</span><span class="en" lang="en">In the bot, <b>record your voice note</b> (or send the .webm): it publishes as a remix of «<b id="rx-clip-title2-en"></b>», linked "in reply to". If it doesn't detect the clip, <b>forward the channel clip</b> before recording.</span></p>
   </div>
 </div>
 
@@ -2492,83 +2485,29 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   if (rmClose) rmClose.addEventListener('click', function () { closeModal(replyModal); });
   if (replyModal) replyModal.addEventListener('click', function (e) { if (e.target === replyModal) closeModal(replyModal); });
 
-  /* ── MODAL REMIX / ENCIMA ── */
+  /* ── MODAL REMIX / ENCIMA ──
+     Grabar en el navegador (MediaRecorder) resultó frágil en varios
+     navegadores; la vía fiable y móvil-es-natural es: escuchar el clip aquí y
+     grabar la nota de voz EN EL BOT (deep link → el bot la enlaza al clip). */
   var remixModal = document.getElementById('remix-modal'), rxClose = document.getElementById('rx-close');
-  var rxRecord = document.getElementById('rx-record'), rxStop = document.getElementById('rx-stop');
-  var rxPreview = document.getElementById('rx-preview'), rxAudio = document.getElementById('rx-audio');
-  var rxSend = document.getElementById('rx-send'), rxHint = document.getElementById('rx-hint');
-  var rxGuide = document.getElementById('rx-guide');
-  var rxClipId = '', rxClipSrc = '', rxClipTitle = '', rxRecorder = null, rxBlob = null;
-  function stopRxGuide() {
-    if (!rxGuide) return;
-    rxGuide.pause();
-    rxGuide.currentTime = 0;
-  }
+  var rxSend = document.getElementById('rx-send'), rxGuide = document.getElementById('rx-guide');
+  var rxClipId = '', rxClipSrc = '', rxClipTitle = '';
   function openRemixModal(t) {
     rxClipId = (t && t.clip && t.clip.id) || '';
     rxClipSrc = (t && t.src) || '';
     rxClipTitle = (t && t.t) || 'esta risa';
     var title = document.getElementById('rx-clip-title'), titleEn = document.getElementById('rx-clip-title-en');
+    var title2 = document.getElementById('rx-clip-title2'), title2En = document.getElementById('rx-clip-title2-en');
     if (title) title.textContent = rxClipTitle;
     if (titleEn) titleEn.textContent = rxClipTitle;
+    if (title2) title2.textContent = rxClipTitle;
+    if (title2En) title2En.textContent = rxClipTitle;
     if (rxSend) rxSend.href = 'https://t.me/RisaLiberadaBot?start=remix_' + encodeURIComponent(rxClipId);
-    if (rxPreview) rxPreview.hidden = true;
-    if (rxHint) rxHint.hidden = true;
-    if (rxRecord) rxRecord.disabled = false;
-    if (rxStop) rxStop.disabled = true;
+    if (rxGuide) { rxGuide.pause(); rxGuide.src = rxClipSrc; }
     openModal(remixModal);
   }
-  if (rxClose) rxClose.addEventListener('click', function () { closeModal(remixModal); stopRemixRecording(); });
-  if (remixModal) remixModal.addEventListener('click', function (e) { if (e.target === remixModal) { closeModal(remixModal); stopRemixRecording(); } });
-  function stopRemixRecording() {
-    stopRxGuide();
-    if (rxRecorder && rxRecorder.state !== 'inactive') { rxRecorder.stop(); }
-    rxRecorder = null;
-  }
-  if (rxRecord) rxRecord.addEventListener('click', function () {
-    // Guía: el clip original suena bajito por un <audio> propio, no por el del
-    // reproductor (el player gestiona el suyo y lo mantiene en 0).
-    if (rxGuide && rxClipSrc) { rxGuide.src = rxClipSrc; rxGuide.volume = 0.4; rxGuide.play().catch(function(){}); }
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Tu navegador no soporta grabación.'; }
-      return;
-    }
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-      var mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : (MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '');
-      rxRecorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
-      var chunks = [];
-      rxRecorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
-      rxRecorder.onerror = function () {
-        stream.getTracks().forEach(function (tr) { tr.stop(); });
-        stopRxGuide();
-        if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Error al grabar.'; }
-        if (rxRecord) rxRecord.disabled = false;
-        if (rxStop) rxStop.disabled = true;
-      };
-      rxRecorder.onstop = function () {
-        stream.getTracks().forEach(function (tr) { tr.stop(); });
-        stopRxGuide();
-        if (!chunks.length) { if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'Grabación vacía.'; } return; }
-        rxBlob = new Blob(chunks, { type: rxRecorder.mimeType || 'audio/webm' });
-        var url = URL.createObjectURL(rxBlob);
-        if (rxAudio) rxAudio.src = url;
-        if (rxPreview) rxPreview.hidden = false;
-        if (rxHint) rxHint.hidden = false;
-        if (rxRecord) rxRecord.disabled = true;
-        if (rxStop) rxStop.disabled = true;
-        var a = document.createElement('a'); a.href = url;
-        a.download = 'remix-' + (rxClipTitle || 'risa').replace(/[^a-z0-9]+/gi, '-').slice(0, 40) + '.webm';
-        document.body.appendChild(a); a.click(); a.remove();
-      };
-      rxRecorder.start(100);
-      if (rxRecord) rxRecord.disabled = true;
-      if (rxStop) rxStop.disabled = false;
-    }).catch(function (err) {
-      stopRxGuide();
-      if (rxHint) { rxHint.hidden = false; rxHint.textContent = 'No se pudo acceder al micrófono: ' + (err.message || err); }
-    });
-  });
-  if (rxStop) rxStop.addEventListener('click', stopRemixRecording);
+  if (rxClose) rxClose.addEventListener('click', function () { closeModal(remixModal); if (rxGuide) rxGuide.pause(); });
+  if (remixModal) remixModal.addEventListener('click', function (e) { if (e.target === remixModal) { closeModal(remixModal); if (rxGuide) rxGuide.pause(); } });
   if (rxSend) rxSend.addEventListener('click', function (e) {
     e.preventDefault();
     window.open(rxSend.href, '_blank', 'noopener');
