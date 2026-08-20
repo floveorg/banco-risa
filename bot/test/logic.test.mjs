@@ -116,8 +116,87 @@ test('forward + reply voice-note in the SAME batch threads the reply (pendingPar
   assert.equal(actions[2].chatId, 777);
 });
 
+test('a webm sent as document (audio mime) becomes a draft', () => {
+  const updates = [{
+    update_id: 25,
+    message: { message_id: 11, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      document: { file_id: 'WEBM', mime_type: 'audio/webm', file_size: 512 * 1024, file_name: 'remix.blas.webm' } }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 1);
+  assert.equal(actions[0].kind, 'draft');
+  assert.equal(actions[0].fileId, 'WEBM');
+  assert.equal(actions[0].video, undefined);
+});
+
+test('a video document is drafted with the video mark', () => {
+  const updates = [{
+    update_id: 26,
+    message: { message_id: 12, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      document: { file_id: 'MP4', mime_type: 'video/mp4', file_size: 4 * 1024 * 1024, file_name: 'remix.mp4' } }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions[0].kind, 'draft');
+  assert.equal(actions[0].video, true);
+});
+
+test('a non-media document is ignored', () => {
+  const updates = [{
+    update_id: 27,
+    message: { message_id: 13, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      document: { file_id: 'PDF', mime_type: 'application/pdf', file_name: 'doc.pdf' } }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 0);
+});
+
+test('/start remix_<clipId> becomes a remix-start action', () => {
+  const updates = [{
+    update_id: 28,
+    message: { message_id: 14, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, text: '/start remix_q_823020302' }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 1);
+  assert.deepEqual(actions[0], { kind: 'remix-start', chatId: 777, clipId: 'q_823020302' });
+});
+
+test('a pendingParent holder (no media yet) is NOT an open draft — the reply webm still threads', () => {
+  // forward/remix-start only writes pendingParent on drafts[key]; the clip that
+  // arrives next must not be refused as "overlap".
+  const drafts = { '777': { pendingParent: { id: 'q_1', remix: true } } };
+  const ctx = { ...CTX, drafts, awaitingDraftParent: {} };
+  const updates = [{
+    update_id: 42, message: { message_id: 17, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      document: { file_id: 'WEBM', mime_type: 'audio/webm', file_name: 'remix.webm' } }
+  }];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.equal(actions[0].kind, 'draft');
+  assert.equal(actions[0].fileId, 'WEBM');
+});
+
+test('remix deep-link + webm in the SAME batch threads it with the remix mark', () => {
+  const ctx = { ...CTX, risas: [{ id: 'q_1', t: 'Padre' }], awaitingDraftParent: {} };
+  const updates = [
+    { update_id: 40, message: { message_id: 15, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, text: '/start remix_q_1' } },
+    { update_id: 41, message: { message_id: 16, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      document: { file_id: 'WEBM', mime_type: 'audio/webm', file_name: 'remix.webm' } } }
+  ];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.equal(actions[0].kind, 'remix-start');
+  assert.equal(actions[1].kind, 'draft');
+  assert.equal(actions[1].parent, 'q_1');
+  assert.equal(actions[1].remix, true);
+});
+
 test('a media while an unsent draft is pending is refused (no silent loss)', () => {
-  const drafts = { '777': { id: 'q_5', chatId: 777, draftMsgId: 9, awaitingTitle: false, awaitingTags: false } };
+  const drafts = { '777': { id: 'q_5', chatId: 777, fileId: 'FIRST', draftMsgId: 9, awaitingTitle: false, awaitingTags: false } };
   const ctx = { ...CTX, drafts };
   const updates = [
     { update_id: 30, message: { message_id: 12, chat: { id: 777, type: 'private' },

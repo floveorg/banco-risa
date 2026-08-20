@@ -83,7 +83,8 @@ async function handleAction(a, tg, cfg, state) {
       title: a.title || '', tags: [], sel: { ...DEFAULT_SEL },
       fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
       draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false,
-      parent: a.parent || prev.pendingParent || null
+      parent: a.parent || (prev.pendingParent && prev.pendingParent.id) || null,
+      remix: !!(a.remix || (prev.pendingParent && prev.pendingParent.remix))
     };
     const text = draftText(drafts[key]);
     if (prev.draftMsgId) {
@@ -236,7 +237,7 @@ async function handleAction(a, tg, cfg, state) {
                     tags: d.tags || [], sel: d.sel || { ...DEFAULT_SEL },
                     uploader: who,
                     ...identityOf(d.sel, a.chatId, TG_ID_SECRET), modMsgId: copied.message_id,
-                    parent: d.parent || null };
+                    parent: d.parent || null, remix: !!d.remix };
     day[who] = (day[who] || 0) + 1;
     uploaders[d.id] = a.chatId;
     delete drafts[String(a.chatId)];
@@ -275,10 +276,26 @@ async function handleAction(a, tg, cfg, state) {
     }
     const key = String(a.chatId);
     const prev = drafts[key] || {};
-    drafts[key] = { ...prev, pendingParent: parent.id };
+    drafts[key] = { ...prev, pendingParent: { id: parent.id, remix: false } };
     await bestEffort(tg.sendMessage(a.chatId,
       '↳ Respondiendo a «' + (parent.t || parent.name || 'esta risa') + '»\n\n' +
       'Ahora envía tu risa (nota de voz o vídeo).'));
+    return { dirty: true };
+  }
+  if (a.kind === 'remix-start') {
+    const clip = (Array.isArray(risas) ? risas : []).find((c) => c.id === a.clipId);
+    if (!clip) {
+      await bestEffort(tg.sendMessage(a.chatId,
+        'No encontré ese clip. Abre el bot desde la risa que quieres remezclar 💛'));
+      return {};
+    }
+    const key = String(a.chatId);
+    const prev = drafts[key] || {};
+    drafts[key] = { ...prev, pendingParent: { id: clip.id, remix: true } };
+    await bestEffort(tg.sendMessage(a.chatId,
+      '🔀 Encima de «' + (clip.t || clip.name || 'esta risa') + '»\n\n' +
+      'Envía tu grabación (el .webm que descargaste o una nota de voz) y la ' +
+      'publicaremos como remix de esa risa. 💛'));
     return { dirty: true };
   }
   if (a.kind === 'rename') {

@@ -74,7 +74,7 @@ export async function publishClip(tg, cfg, q, id, risas, names, tgpub) {
     }
     risas = prependClip(risas, risaEntry({
       id, name, key: who, t: q.title, tags: (q.tags || []).join(', '), when: isoToday(), src, tg: tgLink, video: !!q.video,
-      parent: q.parent || null, channelMsgId: posted && posted.message_id
+      parent: q.parent || null, channelMsgId: posted && posted.message_id, remix: !!q.remix
     }));
     if (posted && posted.message_id) {
       await bestEffort(tg.setMessageReaction(cfg.channel, posted.message_id, '😂'));

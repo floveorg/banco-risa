@@ -178,16 +178,19 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         // attaches to the clip instead of waiting for the next poll tick.
         const parent = clipByChannelMsg(ctx.risas, msg.forward_from_message_id);
         if (parent && ctx.awaitingDraftParent) {
-          ctx.awaitingDraftParent[key] = parent.id;
+          ctx.awaitingDraftParent[key] = { id: parent.id, remix: false };
         }
         continue;
       }
-      const media = msg.voice || msg.audio || msg.video || msg.video_note;
+      // El remix «Grabar encima» se descarga en la web como .webm y se envía al
+      // bot como archivo (document) — un audio/vídeo en documento también entra.
+      const docMedia = msg.document && /^(audio|video)\//i.test(msg.document.mime_type || '') ? msg.document : null;
+      const media = msg.voice || msg.audio || msg.video || msg.video_note || docMedia;
       if (media && media.file_id) {
         // Un vídeo no se rechaza por los 10 MB: entra hasta el tope de descarga
         // (20 MB) y se comprime a MP4 al publicar para que quepa (marca `video`).
         // `video_note` (vídeo circular «mantener pulsado») se trata como vídeo.
-        const video = !!(msg.video || msg.video_note);
+        const video = !!(msg.video || msg.video_note || (docMedia && /^video\//i.test(docMedia.mime_type || '')));
         const sizeCap = video ? maxVideoBytes : maxBytes;
         if (media.file_size && media.file_size > sizeCap) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'size' });
@@ -197,13 +200,16 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           // One draft per user: never silently overwrite an unfinished one.
           // `draftChats` catches another media that already became this user's
           // draft earlier in the SAME batch (drafts only mutate in handleAction,
-          // after parseUpdates).
-          const hasOpenDraft = (ctx.drafts && ctx.drafts[key]) || draftChats.has(key);
+          // after parseUpdates). A pure pendingParent holder (forward/remix
+          // without media yet) is NOT an open draft.
+          const pd = ctx.drafts && ctx.drafts[key];
+          const hasOpenDraft = draftChats.has(key) || !!(pd && (pd.fileId ||
+            pd.awaitingTitle || pd.awaitingTags || pd.awaitingAlias || pd.awaitingSubedit));
           if (hasOpenDraft) {
             actions.push({ kind: 'draft-overlap', chatId: msg.chat.id });
           } else {
-            // Check for pending forward (reply-to-clip flow)
-            const pendingParent = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
+            // Check for pending forward/reply (threading) — { id, remix }
+            const pp = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
             const draftAction = {
               kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
               fileId: media.file_id, ...(video ? { video: true } : {}),
@@ -212,16 +218,30 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
               username: (msg.from && msg.from.username) || '',
               title: (msg.caption || '').trim()
             };
-            if (pendingParent) draftAction.parent = pendingParent;
+            if (pp && pp.id) draftAction.parent = pp.id;
+            if (pp && pp.remix) draftAction.remix = true;
             actions.push(draftAction);
             draftChats.add(key);
             // Clear pending forward after use
-            if (pendingParent && ctx.awaitingDraftParent) {
+            if (pp && ctx.awaitingDraftParent) {
               delete ctx.awaitingDraftParent[key];
             }
           }
         }
       } else if (msg.text) {
+        // Deep link desde la web «Grabar encima» → /start remix_<clipId>
+        const rm = /^\/start\s+remix_([^\s]+)/i.exec(msg.text.trim()) || /^remix_([^\s]+)/i.exec(msg.text.trim());
+        if (rm) {
+          const clipId = decodeURIComponent(rm[1]);
+          actions.push({ kind: 'remix-start', chatId: msg.chat.id, clipId });
+          // Same-batch threading: el .webm llega justo detrás del deep link en
+          // el MISMO lote (getUpdates acumulado) — registra el padre ya.
+          const clip = (Array.isArray(ctx.risas) ? ctx.risas : []).find((c) => c.id === clipId);
+          if (clip && ctx.awaitingDraftParent) {
+            ctx.awaitingDraftParent[key] = { id: clip.id, remix: true };
+          }
+          continue;
+        }
         // /name y /pub mutan tu identidad; el resto son consultas de solo lectura
         // (cmd-*: el bot responde, no cambia estado).
         const cmd = /^\/(name|pub|entrar|mejorar|usuario|me|stats|profile|perfil|notify|status|queue|latest|random|now|since|today|trending|play)\b(?:\s+(.+))?$/i.exec(msg.text.trim());
@@ -252,7 +272,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   return { actions, offset };
 }
 
-export function risaEntry({ id, name, tags, when, src, t, tg, key, video, parent, channelMsgId }) {
+export function risaEntry({ id, name, tags, when, src, t, tg, key, video, parent, channelMsgId, remix }) {
   // `src` is the absolute audio URL (Cloudinary secure_url). The website composes
   // the license (`by`, `orig`) from `name`; the bot never writes those (see spec §4).
   const e = {
@@ -267,6 +287,7 @@ export function risaEntry({ id, name, tags, when, src, t, tg, key, video, parent
   if (key) e.key = key; // página de autor: hash salado del id (tag-url automática), estable e inédito en claro
   if (video) e.video = true; // marca de vídeo: la web lo filtra/reproduce como vídeo (mp4)
   if (parent) e.parent = parent; // hilo: id del clip al que responde (thread reply)
+  if (remix) e.remix = true; // remix «Grabar encima»: la web lo resalta como tal
   if (channelMsgId) e.channelMsgId = channelMsgId; // mapeo canal→clip para forwards
   return e;
 }
