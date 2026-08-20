@@ -95,7 +95,11 @@ img{max-width:100%; display:block}
 .search-dropdown.open{display:flex; flex-direction:column; gap:10px}
 .search-dropdown .tag-search{display:flex; gap:6px; width:100%}
 .search-dropdown .tag-search input{flex:1; min-width:0}
-.search-dropdown .media-toggle{display:flex; gap:6px; justify-content:center}
+.search-dropdown .search-suggest-row{display:flex; align-items:center; gap:12px}
+.search-dropdown .search-suggest{flex:1; min-width:0; font-family:var(--mono); font-size:.72rem; line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.search-suggest .ss-why{color:var(--ink-soft)}
+.search-suggest .ss-tag{color:var(--persimmon); font-weight:700}
+.search-dropdown .media-toggle{display:flex; gap:6px; justify-content:flex-end; flex:none; margin-left:auto}
 .search-dropdown .btn-search{align-self:flex-end}
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
@@ -971,13 +975,18 @@ body:has(#lang-en:checked) .es{display:none}
             <input id="dd-search-input" type="search" placeholder="Título, tags, usuario…" data-ph-es="Título, tags, usuario…" data-ph-en="Title, tags, user…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas" data-aria-es="Buscar por etiqueta, título o nombre de las risas" data-aria-en="Search by tag, title or name of the laughs">
             <button id="dd-search-btn" type="button" class="btn btn-primary btn-search"><span class="es" lang="es">Buscar</span><span class="en" lang="en">Search</span></button>
           </div>
-          <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
-            <button type="button" class="mt-btn mt-audio" id="dd-mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
-              <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 1 0 7.07"/></svg>
-            </button>
-            <button type="button" class="mt-btn mt-video" id="dd-mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
-              <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
-            </button>
+          <div class="search-suggest-row">
+            <div class="search-suggest" id="search-suggest" aria-live="polite">
+              <span class="ss-why" id="search-suggest-why"></span><span class="ss-tag" id="search-suggest-tag"></span>
+            </div>
+            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
+              <button type="button" class="mt-btn mt-audio" id="dd-mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 1 0 7.07"/></svg>
+              </button>
+              <button type="button" class="mt-btn mt-video" id="dd-mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1177,7 +1186,6 @@ body:has(#lang-en:checked) .es{display:none}
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
   <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
-  <button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false"><span class="es" lang="es">Reacciones</span><span class="en" lang="en">Reactions</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -1263,7 +1271,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1322,7 +1330,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1915,7 +1923,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -1945,7 +1953,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
@@ -2001,15 +2009,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
       </nav>
     </div>
   </section>
-  <section class="content-section tab-panel" id="reacciones" aria-label="Reacciones" hidden>
-    <div class="wrap"><p class="feed-empty">…</p></div>
-  </section>
-
-
 <!-- ============ MODAL · COMPARTE TU RISA ============ -->
 <div class="modal-back" id="upload-modal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="um-title">
@@ -2328,7 +2331,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     clipsOf: window.Risa.clipsOf,
     favKey: 'risa-liberada-favs',
     botUrl: window.Risa.TELEGRAM_BOT,
-    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones']
+    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia']
       .concat((function () { var h = (location.hash || '').slice(1); return h && h.charAt(0) === '/' ? [h] : []; })()),
     self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
@@ -2394,7 +2397,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   function showTab(name) {
     tabBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === name)); });
     Array.prototype.slice.call(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.hidden = p.id !== name; });
-    if (name === 'reacciones') renderReactionsTab();
   }
   tabBtns.forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); }); });
   showTab('cultura');
@@ -2475,6 +2477,64 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     var origOnFeed = app.onFeed;
     app.onFeed = function () { if (origOnFeed) origOnFeed(); syncDropdownToMain(); };
   }
+  /* ── Sugerencias de búsqueda: carrusel de 5, cada 10 s ──
+     Un texto corto («por qué buscar») se teclea en la línea, y la etiqueta
+     recomendada se va rellenando en el campo de búsqueda. Se pausa en cuanto
+     la persona teclea algo. */
+  (function () {
+    var dd = document.getElementById('search-dropdown');
+    var input = document.getElementById('dd-search-input');
+    var whyEl = document.getElementById('search-suggest-why');
+    var tagEl = document.getElementById('search-suggest-tag');
+    if (!dd || !input || !whyEl || !tagEl) return;
+    var SUG = [
+      { why: 'Una risotada que lo cura todo', tag: 'risotada' },
+      { why: 'La alegría de un buen café', tag: 'café' },
+      { why: 'Relájate con clase', tag: 'clase' },
+      { why: 'Un giro malvado para tu playlist', tag: 'maldad' },
+      { why: 'Yoga + risa = mejor día', tag: 'yoga' }
+    ];
+    var idx = 0, timer = null, seq = 0;
+    function typeInto(el, text, step, done) {
+      var my = ++seq;
+      var i = 0;
+      (function tick() {
+        if (my !== seq) return;                 // una sugerencia nueva lo cancela
+        if (i > text.length) { if (done) done(); return; }
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(tick, step);
+      })();
+    }
+    function show() {
+      var s = SUG[idx % SUG.length];
+      seq++;                                    // cancela tecleos anteriores
+      var i = 0;
+      (function typeWhy() {
+        whyEl.textContent = s.why.slice(0, i);
+        tagEl.textContent = i > 0 ? ' → #' + s.tag.slice(0, i) : '';
+        i++;
+        if (i <= s.why.length) setTimeout(typeWhy, 45);
+      })();
+      var j = 0;
+      (function typeTag() {
+        input.value = s.tag.slice(0, j);
+        j++;
+        if (j <= s.tag.length) setTimeout(typeTag, 60);
+      })();
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function start() {
+      stop();
+      show();
+      timer = setInterval(function () { idx++; show(); }, 10000);
+    }
+    var toggler = document.getElementById('toggle-search');
+    if (toggler) toggler.addEventListener('click', function () {
+      if (dd.classList.contains('open')) start(); else stop();
+    });
+    input.addEventListener('input', stop);      // la persona teclea → se calla
+  })();
 
   var replyModal = document.getElementById('reply-modal'), rmClose = document.getElementById('rm-close');
   function openReplyModal(t) {
