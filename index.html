@@ -78,7 +78,7 @@ img{max-width:100%; display:block}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:53px; height:53px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
-#open-upload{width:42px; height:42px; min-width:42px; min-height:42px; max-width:42px; max-height:42px; padding:0; padding-top:0; padding-bottom:0; display:grid; place-items:center; flex:0 0 auto; align-self:center; border-radius:50%; font-size:1.2rem; line-height:1; border:2px solid var(--ink); box-shadow:0 2px 0 rgba(42,24,16,.15)}   /* círculo perfecto, mismo diseño que el play */
+#open-upload{width:34px; height:34px; min-width:34px; min-height:34px; max-width:34px; max-height:34px; padding:0; padding-top:0; padding-bottom:0; display:grid; place-items:center; flex:0 0 auto; align-self:center; border-radius:50%; font-size:1rem; line-height:1; border:2px solid var(--ink); box-shadow:0 2px 0 rgba(42,24,16,.15)}   /* + un 20% menor, círculo perfecto */
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
   background:var(--cream); color:var(--ink); border-radius:50%; display:grid; place-items:center; cursor:pointer;
@@ -2503,7 +2503,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     btn.addEventListener('click', function () {
       nextGenteClip();
       popBenefit(0, btn);
-      if (!reduce) setTimeout(function () { popBenefit(1, btn); }, 1000);
+      if (!reduce) setTimeout(function () { popBenefit(1, btn); }, 2000);
       else popBenefit(1, btn);
     });
   });
