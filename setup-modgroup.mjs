@@ -14,9 +14,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = __dirname;
 const cfgPath = path.join(REPO, 'config.json');
 
-const tokenFile = await readFile(path.join(homedir(), 'Claude/token-telegram-risa.md'), 'utf8');
+const tokenFile = await readFile(path.join(homedir(), 'agents/token-telegram-risa.md'), 'utf8');
 const token = (tokenFile.match(/[0-9]{6,}:[A-Za-z0-9_-]{30,}/) || [])[0];
-if (!token) { console.error('✗ No bot token found in ~/Claude/token-telegram-risa.md'); process.exit(1); }
+if (!token) { console.error('✗ No bot token found in ~/agents/token-telegram-risa.md'); process.exit(1); }
 
 const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
 const data = await res.json();

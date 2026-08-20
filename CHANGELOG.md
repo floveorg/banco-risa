@@ -9,6 +9,41 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [v2.1.0] — 2026-08-19 · hito: Calling libs (rama `v2-central`)
+
+**Hito: risa/index deja el monolito y se construye sobre `central/shared/code`**
+(`flove-feed` · `flove-tags` · `flove-player` · `flove-bottom-nav` ·
+`flove-sound` · `flove-app`). La versión anterior queda congelada como **v2.0.0**;
+la descarga canónica es **`risa2.zip`** (siempre la última Risa 2.x.x, cortadas
+futuras `risa2.0.1`, `risa2.1.3`, …).
+
+- **Index nuevo sobre las libs centrales**: el driver `FloveApp` (antes
+  `risa-app.js`) vive ahora en `central/shared/code/js/flove-app.js`; GENTE y
+  RISAS DEL MUNDO llaman al mismo código.
+- **Menú del logo reparado**: el dropdown `#brand-dd` abría/cerraba `hidden`
+  pero el CSS solo reacciona a `.open`; ahora `setDD()` conmuta `.open` +
+  `aria-expanded`.
+- **Media toggle acumulativo**: audio y vídeo son checks independientes (ambos →
+  todo, ninguno → todo); y arreglado el bug que vaciaba la playlist: `select()`
+  alimenta `allTracks` para que el filtro media trabaje sobre lo seleccionado.
+- **Risas del mundo vuelve a la playlist curada**: se readjunta el scrapped de
+  Wikimedia Commons (contagiosa · carcajada · pícara · risita · mundo) tal cual
+  estaba en liberada v1, vía `sc.clips` (fuente propia de la sección); fuera de
+  ahí los clips subidos por el bot.
+- **Tags contenidas**: las chips flotantes ya no derivan hacia el borde de la
+  playlist (rango de deriva acotado en `flove-tags`).
+- **En las listas, el enlace «original»** aparece tras las etiquetas y lleva a
+  la url del clip.
+- **Descarga `risa2.zip`**: empaqueta la última Risa 2.x.x con las libs
+  centrales incluidas (rutas relativas `central/shared/code/…`), lista para
+  abrir sin checkout de flove.
+
+## [v2.0.0] — 2026-08-19 · versión anterior congelada
+
+La versión previa al hito Calling libs: `index.html` monolítico (todo inline,
+sin libs centrales), playlists scrapped de Commons, menú de logo presente.
+Congelada como punto de partida del changelog 2.x (véase el README).
+
 ## [v1.1.0] — 2026-08-19 · hito: navegación de contenidos en la web
 
 **Hito de frontend: la web es ahora un navegador de contenidos** (hilos,

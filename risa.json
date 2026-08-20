@@ -2,6 +2,33 @@
   "schema": "risa-feed/1",
   "clips": [
     {
+      "id": "w_maria_yoga",
+      "name": "María Demostración",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Small_group_laughter.ogg",
+      "when": "2026-08-19",
+      "t": "Yoga y risa",
+      "tags": "yoga, relajación",
+      "key": "maria"
+    },
+    {
+      "id": "w_maria_clase",
+      "name": "María Demostración",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/72843_lonemonk_approx-800-laughter-only-1.wav",
+      "when": "2026-08-18",
+      "t": "Con las alumnas",
+      "tags": "clase, grupo",
+      "key": "maria"
+    },
+    {
+      "id": "w_maria_mañana",
+      "name": "María Demostración",
+      "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Menschen-Lachen.ogg",
+      "when": "2026-08-17",
+      "t": "Clase de mañana",
+      "tags": "yoga, energía",
+      "key": "maria"
+    },
+    {
       "id": "q_823020302",
       "name": "Guillem",
       "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020302.mp3",
