@@ -1,1 +1,22 @@
-{}
+{
+  "4f503e61c48d57f15fe6": {
+    "id": "q_823020335",
+    "fileId": "AwACAgQAAxkBAAO_aodC1o-GiBNAIerp4rFMCFd7X64AAi0fAAKREThQYfYW3whlXFA9BA",
+    "name": "Guillem",
+    "username": "Guillem_ev",
+    "video": false,
+    "title": "Maldad",
+    "tags": [],
+    "sel": {
+      "alias": "",
+      "anon": false
+    },
+    "fromChatId": "4f503e61c48d57f15fe6",
+    "fromMsgId": 191,
+    "draftMsgId": 192,
+    "awaitingTitle": false,
+    "awaitingTags": false,
+    "parent": null,
+    "remix": false
+  }
+}
