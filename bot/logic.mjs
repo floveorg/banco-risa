@@ -47,6 +47,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
   const maxVideoBytes = lim.maxVideoBytes || MAX_VIDEO_BYTES;
   const maxDur = lim.maxDurationS || MAX_DURATION_S;
   const actions = [];
+  const draftChats = new Set();
   let maxId = -1;
   for (const u of updates) {
     if (typeof u.update_id === 'number') maxId = Math.max(maxId, u.update_id);
@@ -193,21 +194,31 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         } else if (media.duration && media.duration > maxDur) {
           actions.push({ kind: 'draft-invalid', chatId: msg.chat.id, reason: 'duration' });
         } else {
-          // Check for pending forward (reply-to-clip flow)
-          const pendingParent = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
-          const draftAction = {
-            kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
-            fileId: media.file_id, ...(video ? { video: true } : {}),
-            fromChatId: msg.chat.id, fromMsgId: msg.message_id,
-            name: (msg.from && msg.from.first_name) || 'Anónima',
-            username: (msg.from && msg.from.username) || '',
-            title: (msg.caption || '').trim()
-          };
-          if (pendingParent) draftAction.parent = pendingParent;
-          actions.push(draftAction);
-          // Clear pending forward after use
-          if (pendingParent && ctx.awaitingDraftParent) {
-            delete ctx.awaitingDraftParent[key];
+          // One draft per user: never silently overwrite an unfinished one.
+          // `draftChats` catches another media that already became this user's
+          // draft earlier in the SAME batch (drafts only mutate in handleAction,
+          // after parseUpdates).
+          const hasOpenDraft = (ctx.drafts && ctx.drafts[key]) || draftChats.has(key);
+          if (hasOpenDraft) {
+            actions.push({ kind: 'draft-overlap', chatId: msg.chat.id });
+          } else {
+            // Check for pending forward (reply-to-clip flow)
+            const pendingParent = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
+            const draftAction = {
+              kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
+              fileId: media.file_id, ...(video ? { video: true } : {}),
+              fromChatId: msg.chat.id, fromMsgId: msg.message_id,
+              name: (msg.from && msg.from.first_name) || 'Anónima',
+              username: (msg.from && msg.from.username) || '',
+              title: (msg.caption || '').trim()
+            };
+            if (pendingParent) draftAction.parent = pendingParent;
+            actions.push(draftAction);
+            draftChats.add(key);
+            // Clear pending forward after use
+            if (pendingParent && ctx.awaitingDraftParent) {
+              delete ctx.awaitingDraftParent[key];
+            }
           }
         }
       } else if (msg.text) {

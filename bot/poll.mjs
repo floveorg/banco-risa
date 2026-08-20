@@ -249,6 +249,12 @@ async function handleAction(a, tg, cfg, state) {
     }
     return { dirty: true };
   }
+  if (a.kind === 'draft-overlap') {
+    await bestEffort(tg.sendMessage(a.chatId,
+      'Ya tienes una risa en borrador — termínala (título, etiquetas y ✅ Enviar) ' +
+      'o cancélala antes de mandar otra, para no perder ninguna 💛'));
+    return {};
+  }
   if (a.kind === 'draft-invalid') {
     const msg = a.reason === 'size'
       ? 'Ups… tu archivo supera el límite de 10 MB. Mándalo en un formato más ligero 💛'

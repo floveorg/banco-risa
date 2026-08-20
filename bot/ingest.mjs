@@ -95,7 +95,7 @@ export async function pollLoop(tg, cfg, state, handleBatch) {
     const { actions, offset: nextOffset } = parseUpdates(
       updates, { modGroupId: cfg.modGroupId, modMsgToId, awaitingTitle, awaitingTags,
                  awaitingDraftParent, awaitingModEdit, awaitingSubedit, awaitingAlias,
-                 uploaderOf: uploaders, risas: state.risas, limits: cfg.limits }, offset);
+                 uploaderOf: uploaders, drafts, risas: state.risas, limits: cfg.limits }, offset);
 
     if (actions.length) {
       const result = await handleBatch(actions, state);

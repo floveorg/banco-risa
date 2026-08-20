@@ -110,10 +110,22 @@ test('forward + reply voice-note in the SAME batch threads the reply (pendingPar
   assert.equal(actions[1].kind, 'draft');
   assert.equal(actions[1].fileId, 'REPLY');
   assert.equal(actions[1].parent, 'clipA');
-  // …and the following plain voice-note stays a root clip.
-  assert.equal(actions[2].kind, 'draft');
-  assert.equal(actions[2].fileId, 'SOLO');
-  assert.equal(actions[2].parent, undefined);
+  // …and the following plain voice-note is NOT silently overwritten: it is
+  // refused so the threaded draft survives (one draft per user).
+  assert.equal(actions[2].kind, 'draft-overlap');
+  assert.equal(actions[2].chatId, 777);
+});
+
+test('a media while an unsent draft is pending is refused (no silent loss)', () => {
+  const drafts = { '777': { id: 'q_5', chatId: 777, draftMsgId: 9, awaitingTitle: false, awaitingTags: false } };
+  const ctx = { ...CTX, drafts };
+  const updates = [
+    { update_id: 30, message: { message_id: 12, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, voice: { file_id: 'EXTRA', duration: 5 } } }
+  ];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.equal(actions.length, 1);
+  assert.equal(actions[0].kind, 'draft-overlap');
 });
 
 test('an audio message with a caption carries the caption as title', () => {
