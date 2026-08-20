@@ -2,6 +2,16 @@
   "schema": "risa-feed/1",
   "clips": [
     {
+      "id": "q_823020330",
+      "name": "Marc",
+      "src": "https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/q_823020330.mp3",
+      "when": "2026-08-20",
+      "t": "Blas",
+      "tg": "@marcflove",
+      "key": "84559b7a1e80ec172569aee2eb97d9f5b2f5c643268b5814c8c1c3c176369d0c",
+      "channelMsgId": 24
+    },
+    {
       "id": "w_maria_yoga",
       "name": "María Demostración",
       "src": "https://commons.wikimedia.org/wiki/Special:FilePath/Small_group_laughter.ogg",
