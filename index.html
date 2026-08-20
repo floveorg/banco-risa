@@ -78,6 +78,7 @@ img{max-width:100%; display:block}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:44px; height:44px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
+#open-upload{margin:0 10px; width:44px; height:44px; padding:0; justify-content:center; border-radius:50%; font-size:1.35rem; line-height:1}   /* + redondo, mismo hueco a ambos lados */
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
   background:var(--cream); color:var(--ink); border-radius:50%; display:grid; place-items:center; cursor:pointer;
@@ -914,7 +915,7 @@ body:has(#lang-en:checked) .es{display:none}
 <header class="topbar">
   <div class="wrap">
     <div class="brand-wrap">
-      <a class="brand" id="brand-logo" href="#top" role="button" aria-expanded="false" aria-controls="brand-dd">
+      <a class="brand" id="brand-logo" href="#top" role="button" aria-expanded="false" aria-controls="brand-dd" title="Clicka para Menú" data-aria-es="Clicka para Menú" data-aria-en="Click for menu">
         <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino-anim-guina.svg" alt="" width="44" height="44" onerror="this.onerror=null;this.src='https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg'">
         
       </a>
@@ -944,10 +945,10 @@ body:has(#lang-en:checked) .es{display:none}
       </nav>
     </div>
     <div class="brand-group">
-      <button class="btn btn-primary" type="button" id="open-upload"><span class="es" lang="es">Publicar risa</span><span class="en" lang="en">Share a laugh</span></button>
+      <button class="btn btn-primary" type="button" id="open-upload" title="Publicar risa" aria-label="Publicar risa" data-aria-es="Publicar risa" data-aria-en="Share a laugh">+</button>
         <div class="transport topbar-transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
           <button class="tr-btn" type="button" id="gente-prev" data-prev aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
-          <button class="tr-btn tr-play" type="button" id="gente-play" data-play aria-label="Reproducir" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
+          <button class="tr-btn tr-play" type="button" id="gente-play" data-play aria-label="Reproducir" title="Escuchar risas" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
           <button class="tr-btn" type="button" id="gente-next" data-next aria-label="Pista siguiente" data-aria-es="Pista siguiente" data-aria-en="Next track">›</button>
         </div>
 
