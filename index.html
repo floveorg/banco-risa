@@ -78,7 +78,7 @@ img{max-width:100%; display:block}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:44px; height:44px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
-#open-upload{margin:0 10px; width:44px; height:44px; padding:0; justify-content:center; border-radius:50%; font-size:1.35rem; line-height:1}   /* + redondo, mismo hueco a ambos lados */
+#open-upload{width:44px; height:44px; padding:0; justify-content:center; border-radius:50%; font-size:1.35rem; line-height:1}   /* + redondo, separación estándar del topbar */
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
   background:var(--cream); color:var(--ink); border-radius:50%; display:grid; place-items:center; cursor:pointer;
@@ -96,7 +96,6 @@ img{max-width:100%; display:block}
   .brand-group{gap:6px}
   .topbar .btn{padding:7px 12px; font-size:.8rem}
 }
-@media(max-width:420px){.topbar #benefits-btn .btn-anim{display:none}}
 
 /* ============ HERO ============ */
 .hero{padding:56px 0 40px; text-align:center; position:relative}
@@ -248,10 +247,6 @@ a.clip-tg-link:hover{color:var(--persimmon); border-bottom-color:var(--persimmon
 .up-clips .up-play{font-family:var(--disp); font-weight:700; font-size:1rem; background:none; border:none;
   padding:0; color:var(--ink); cursor:pointer; text-align:left}
 .up-clips .up-play:hover{color:var(--azure); text-decoration:underline}
-.clip-tg{font-family:var(--mono); font-size:.7rem; font-weight:700; color:var(--grape); cursor:pointer;
-  border:1.5px solid var(--grape); border-radius:999px; background:transparent; padding:1px 8px; line-height:1.4}
-.clip-tg:hover{background:var(--marigold)}
-.clip-tg[aria-pressed="true"]{background:var(--marigold); border-color:var(--ink)}
 .clip-tag{font-family:var(--mono); font-size:.68rem; font-weight:700; color:var(--persimmon); cursor:pointer;
   border:1.5px solid var(--persimmon); border-radius:999px; background:transparent; padding:1px 8px; line-height:1.4}
 .clip-tag:hover{background:var(--marigold)}
