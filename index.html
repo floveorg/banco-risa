@@ -90,15 +90,6 @@ img{max-width:100%; display:block}
 @media(max-width:720px){.topbar .topbar-transport{order:5; width:100%; justify-content:center; padding:6px 0 2px}}
 .topbar .btn{padding:9px 16px; font-size:.92rem; box-shadow:0 4px 0 rgba(42,24,16,.18)}
 .topbar .btn .btn-anim{width:1.5em; height:1.5em; margin:-.35em -.45em -.35em 0}
-.btn-icon{width:34px; height:34px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
-  color:var(--ink); display:grid; place-items:center; cursor:pointer; padding:0;
-  box-shadow:0 2px 0 rgba(42,24,16,.15); transition:transform .12s, background .12s}
-.btn-icon:hover{background:var(--marigold); transform:translateY(-1px)}
-.btn-icon.open{background:var(--checked); color:#fff}
-.search-panel{display:flex; align-items:center; gap:12px; padding:10px 0; margin-bottom:10px; width:100%}
-.search-panel[hidden]{display:none}
-.search-panel .tag-search{flex:1; max-width:340px}
-.search-panel .media-toggle{flex:none}
 @media(max-width:720px){
   .topbar .wrap{height:auto; min-height:56px; padding:8px 14px; flex-wrap:wrap; gap:8px}
   .brand{font-size:1.05rem}
@@ -427,6 +418,7 @@ a.react-user:hover{text-decoration:underline}
 .player-col{display:flex; flex-direction:column; gap:14px; min-width:0; justify-content:center; align-items:center}
 .player-col .player{width:100%; max-width:560px}
 .title-head{display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; max-width:560px; text-align:left}
+#gente .title-head{justify-content:flex-end}   /* toggles audio/vídeo a la derecha */
 .title-head h3{max-width:calc(100% - 170px); margin:14px auto 10px; font-size:1.3rem}
  .transport{display:flex; gap:10px; flex:none}
  .tr-btn{width:28px; height:28px; border-radius:50%; border:2px solid var(--ink); background:var(--cream);
@@ -678,12 +670,6 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
   color:var(--persimmon); font-weight:700; background:var(--cream); padding:4px 12px; border-radius:999px;
   text-decoration:none; transition:background .12s, color .12s}
 .vslider .vph-soon:hover{background:var(--marigold); color:var(--ink)}
-.vph-vid{cursor:pointer; overflow:hidden}
-.vph-vid img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-.vph-vid .vph-play{position:relative; z-index:1; width:64px; height:64px; border-radius:50%; background:var(--persimmon); color:#fff;
-  display:grid; place-items:center; font-size:1.5rem; box-shadow:0 6px 0 rgba(42,24,16,.2); transition:transform .15s}
-.vph-vid:hover .vph-play{transform:scale(1.08)}
-.vph-vid iframe{position:absolute; inset:0; width:100%; height:100%; border:none; border-radius:12px}
 .vslider .slide figcaption{position:static; background:none; color:var(--ink); text-align:center;
   font-family:var(--body); font-size:.92rem; line-height:1.4; padding:16px 18px 22px}
 .vslider .slide figcaption b{font-family:var(--disp); display:block; font-size:1.1rem; color:var(--persimmon); margin-bottom:4px}
@@ -949,7 +935,6 @@ body:has(#lang-en:checked) .es{display:none}
     </div>
     <div class="brand-group">
       <button class="btn btn-primary" type="button" id="open-upload" title="Publicar risa" aria-label="Publicar risa" data-aria-es="Publicar risa" data-aria-en="Share a laugh">+</button>
-      <button class="btn-icon" type="button" id="toggle-search" title="Buscar" aria-label="Buscar" data-aria-es="Buscar" data-aria-en="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
         <div class="transport topbar-transport" role="group" aria-label="Controles de reproducción" data-aria-es="Controles de reproducción" data-aria-en="Playback controls">
           <button class="tr-btn" type="button" id="gente-prev" data-prev aria-label="Pista anterior" data-aria-es="Pista anterior" data-aria-en="Previous track">‹</button>
           <button class="tr-btn tr-play" type="button" id="gente-play" data-play aria-label="Reproducir" title="Escuchar risas" data-aria-es="Reproducir" data-aria-en="Play">▶</button>
@@ -1017,25 +1002,25 @@ body:has(#lang-en:checked) .es{display:none}
   <!-- ============ 1 · RISAS DE LA GENTE ============ -->
   <section class="content-section" id="gente" aria-label="Risas de la gente" data-aria-es="Risas de la gente" data-aria-en="People's laughs">
     <div class="wrap">
-      <div class="search-panel" id="search-panel" hidden>
-        <div class="tag-search">
-          <input id="tag-search-input" type="search" placeholder="Título, tags, usuario…" data-ph-es="Título, tags, usuario…" data-ph-en="Title, tags, user…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas" data-aria-es="Buscar por etiqueta, título o nombre de las risas" data-aria-en="Search by tag, title or name of the laughs">
-          <button id="tag-search-btn" type="button"><span class="es" lang="es">Buscar</span><span class="en" lang="en">Search</span></button>
-        </div>
-        <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
-          <button type="button" class="mt-btn mt-audio" id="mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
-            <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          </button>
-          <button type="button" class="mt-btn mt-video" id="mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
-            <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
-          </button>
-        </div>
-      </div>
       <div class="gente-grid">
         <div class="tag-col">
+          <div class="tag-search">
+            <input id="tag-search-input" type="search" placeholder="Título, tags, usuario…" data-ph-es="Título, tags, usuario…" data-ph-en="Title, tags, user…" autocomplete="off" aria-label="Buscar por etiqueta, título o nombre de las risas" data-aria-es="Buscar por etiqueta, título o nombre de las risas" data-aria-en="Search by tag, title or name of the laughs">
+            <button id="tag-search-btn" type="button"><span class="es" lang="es">Go</span><span class="en" lang="en">Go</span></button>
+          </div>
           <div class="tag-space flowing" id="tag-space" role="group" aria-label="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas" data-aria-es="Etiquetas de las risas: pulsa un chip para filtrar la playlist, o Recientes para deseleccionar todas" data-aria-en="Laugh tags: tap a chip to filter the playlist, or Recent to clear all"></div>
         </div>
         <div class="player-col">
+          <div class="title-head">
+            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
+              <button type="button" class="mt-btn mt-audio" id="mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <button type="button" class="mt-btn mt-video" id="mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
+              </button>
+            </div>
+          </div>
           <div class="player" id="gente-player">
             <ul class="tracklist"></ul>
             <div class="paginator" hidden>
@@ -1060,7 +1045,7 @@ body:has(#lang-en:checked) .es{display:none}
   <section class="section wrap" id="ejercicios">
     <div class="section-head head-center">
       <p class="eyebrow"><span class="es" lang="es">En movimiento</span><span class="en" lang="en">In motion</span></p>
-      <h2><img class="btn-anim" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/07-descorche-anim-lanza.svg" alt="" aria-hidden="true" width="30" height="30"><span class="es" lang="es">Técnicas para reír</span><span class="en" lang="en">Laughing techniques</span></h2>
+      <h2><span class="es" lang="es">Técnicas para reír</span><span class="en" lang="en">Laughing techniques</span></h2>
     </div>
     <div class="jgrid">
       <div class="jcol">
@@ -1074,23 +1059,23 @@ body:has(#lang-en:checked) .es{display:none}
       <div class="slider vslider exercises-big" role="region" data-autoplay="0" aria-roledescription="carrusel" aria-label="Vídeos de técnicas: risa del león, del claxon, del batido, del móvil y silenciosa" data-aria-es="Vídeos de técnicas: risa del león, del claxon, del batido, del móvil y silenciosa" data-aria-en="Technique videos: lion laugh, horn laugh, shake laugh, phone laugh and silent laugh">
         <div class="slides">
           <figure class="slide" data-dot="🦁" data-dot-label="Risa del león">
-            <div class="vph vph-vid" data-yt="MXbKsYlNABE"><img src="https://img.youtube.com/vi/MXbKsYlNABE/hqdefault.jpg" alt="" loading="lazy"><span class="vph-play">▶</span></div>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del león" data-aria-es="Ver vídeo de la risa del león" data-aria-en="Watch the lion laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=MXbKsYlNABE" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
             <figcaption><b><span class="es" lang="es">Risa del león</span><span class="en" lang="en">Lion laugh</span></b><span class="es" lang="es">Saca la lengua, abre las manos como garras y ríe con todo el pecho mirando al techo.</span><span class="en" lang="en">Stick out your tongue, open your hands like claws and laugh with all your chest looking up.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🚗" data-dot-label="Risa del claxon">
-            <div class="vph vph-vid" data-yt="UbaA0coUtY0"><img src="https://img.youtube.com/vi/UbaA0coUtY0/hqdefault.jpg" alt="" loading="lazy"><span class="vph-play">▶</span></div>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del claxon" data-aria-es="Ver vídeo de la risa del claxon" data-aria-en="Watch the horn laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=UbaA0coUtY0" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
             <figcaption><b><span class="es" lang="es">Risa del claxon</span><span class="en" lang="en">Horn laugh</span></b><span class="es" lang="es">Aprieta una nariz imaginaria: «¡pi, pi!» y suelta la carcajada después de cada toque.</span><span class="en" lang="en">Squeeze an imaginary nose: “beep, beep!” and burst out laughing after each honk.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🥤" data-dot-label="Risa del batido">
-            <div class="vph vph-vid" data-yt="lsR6oPpGnqE"><img src="https://img.youtube.com/vi/lsR6oPpGnqE/hqdefault.jpg" alt="" loading="lazy"><span class="vph-play">▶</span></div>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del batido" data-aria-es="Ver vídeo de la risa del batido" data-aria-en="Watch the shake laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=lsR6oPpGnqE" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
             <figcaption><b><span class="es" lang="es">Risa del batido</span><span class="en" lang="en">Shake laugh</span></b><span class="es" lang="es">Mezcla un batido invisible de un vaso a otro diciendo «aeee…» y remátalo riendo.</span><span class="en" lang="en">Mix an invisible shake from one glass to another saying “aeee…” and finish it laughing.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="📱" data-dot-label="Risa del móvil">
-            <div class="vph vph-vid" data-yt="Inb51OMu7Kg"><img src="https://img.youtube.com/vi/Inb51OMu7Kg/hqdefault.jpg" alt="" loading="lazy"><span class="vph-play">▶</span></div>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa del móvil" data-aria-es="Ver vídeo de la risa del móvil" data-aria-en="Watch the phone laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=Inb51OMu7Kg" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
             <figcaption><b><span class="es" lang="es">Risa del móvil</span><span class="en" lang="en">Phone laugh</span></b><span class="es" lang="es">Contesta un teléfono imaginario y, en vez de hablar, ríete a quien llama.</span><span class="en" lang="en">Answer an imaginary phone and, instead of talking, laugh at the caller.</span></figcaption>
           </figure>
           <figure class="slide" data-dot="🤫" data-dot-label="Risa silenciosa">
-            <div class="vph vph-vid" data-yt="QvAkyoA7l4U"><img src="https://img.youtube.com/vi/QvAkyoA7l4U/hqdefault.jpg" alt="" loading="lazy"><span class="vph-play">▶</span></div>
+            <div class="vph"><a class="vph-play" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener" aria-label="Ver vídeo de la risa silenciosa" data-aria-es="Ver vídeo de la risa silenciosa" data-aria-en="Watch the silent laugh video">▶</a><a class="vph-soon" href="https://www.youtube.com/watch?v=QvAkyoA7l4U" target="_blank" rel="noopener"><span class="es" lang="es">Ver vídeo ↗</span><span class="en" lang="en">Watch video ↗</span></a></div>
             <figcaption><b><span class="es" lang="es">Risa silenciosa</span><span class="en" lang="en">Silent laugh</span></b><span class="es" lang="es">Ríe con toda la cara y el cuerpo pero sin hacer ruido. Es sorprendentemente contagiosa.</span><span class="en" lang="en">Laugh with your whole face and body but no sound. It's surprisingly contagious.</span></figcaption>
           </figure>
         </div>
@@ -1161,6 +1146,7 @@ body:has(#lang-en:checked) .es{display:none}
   <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true"><span class="es" lang="es">Cultura</span><span class="en" lang="en">Culture</span></button>
   <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false"><span class="es" lang="es">Ciencia</span><span class="en" lang="en">Science</span></button>
   <button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false"><span class="es" lang="es">Tech</span><span class="en" lang="en">Tech</span></button>
+  <button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false"><span class="es" lang="es">Reacciones</span><span class="en" lang="en">Reactions</span></button>
 </nav>
 
 <section class="content-section tab-panel" id="cultura" aria-label="Risas del mundo">
@@ -1246,7 +1232,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="true">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1305,7 +1291,7 @@ body:has(#lang-en:checked) .es{display:none}
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="true">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1898,7 +1884,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1928,7 +1914,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="true">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="false">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
   </section>
@@ -1984,9 +1970,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
         <button type="button" class="tab-btn" data-tab="espiritualidad" aria-pressed="false">Ohm</button>
         <button type="button" class="tab-btn" data-tab="comunidad" aria-pressed="true">Común</button>
         <button type="button" class="tab-btn" data-tab="cultura" aria-pressed="false">Cultura</button>
-        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button>
+        <button type="button" class="tab-btn" data-tab="ciencia" aria-pressed="false">Ciencia</button><button type="button" class="tab-btn" data-tab="tecnologia" aria-pressed="false">Tech</button><button type="button" class="tab-btn" data-tab="reacciones" aria-pressed="false">Reacciones</button>
       </nav>
     </div>
+  </section>
+  <section class="content-section tab-panel" id="reacciones" aria-label="Reacciones" hidden>
+    <div class="wrap"><p class="feed-empty">…</p></div>
   </section>
 
 
@@ -2253,6 +2242,38 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       });
     });
     app.sections.forEach(function (s) { if (s.player && s.player.render) s.player.render(); });
+    renderReactionsTab();
+  }
+  function renderReactionsTab() {
+    var panel = document.getElementById('reacciones');
+    if (!panel) return;
+    if (!currentSelf()) {
+      panel.innerHTML = '<div class="wrap"><div class="section-head head-center"><p class="eyebrow">Reacciones</p>' +
+        '<h2><span class="es" lang="es">Reacciones de la gente</span><span class="en" lang="en">People\'s reactions</span></h2>' +
+        '<p class="feed-empty"><span class="es" lang="es">Inicia sesión con Telegram para ver y dejar reacciones.</span><span class="en" lang="en">Sign in with Telegram to see and leave reactions.</span></p></div></div>';
+      return;
+    }
+    var items = [];
+    (app.risas || []).forEach(function (c) {
+      if (!c || !c.id) return;
+      var m = null;
+      app.sections.forEach(function (s) { if (!m && s.player && s.player.getReactions) m = s.player.getReactions().get(c.id) || null; });
+      if (!m || !m.size) return;
+      var chips = [];
+      m.forEach(function (uids, emoji) {
+        var names = Array.from(uids).map(function (uid) {
+          var r = REACTORS.find(function (x) { return x.key === uid; });
+          return { uid: uid, name: r ? r.name : uid };
+        });
+        chips.push('<span class="react-chip-static">' + emoji + ' ' + uids.size +
+          ' <span class="rr-users">' + names.map(function (n) { return '<a class="react-user" href="#/u/' + encodeURIComponent(n.uid) + '">' + F.esc(n.name) + '</a>'; }).join(', ') + '</span></span>');
+      });
+      items.push('<li class="reaction-item"><div class="reaction-title">' + F.esc(c.t || c.name || '') + '</div>' + chips.join(' ') + '</li>');
+    });
+    panel.innerHTML = '<div class="wrap"><div class="section-head head-center"><p class="eyebrow">Reacciones</p>' +
+      '<h2><span class="es" lang="es">Reacciones de la gente</span><span class="en" lang="en">People\'s reactions</span></h2>' +
+      (items.length ? '<ul class="reaction-list">' + items.join('') + '</ul>' : '<p class="feed-empty">Aún no hay reacciones.</p>') +
+      '</div></div>';
   }
   /* ── GENTE + MUNDO: dos secciones, el mismo driver ── */
   var app = window.FloveApp.init({
@@ -2261,7 +2282,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     clipsOf: window.Risa.clipsOf,
     favKey: 'risa-liberada-favs',
     botUrl: window.Risa.TELEGRAM_BOT,
-    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia'],
+    reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones'],
     self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
     onFeed: seedReactions,
@@ -2325,6 +2346,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   function showTab(name) {
     tabBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === name)); });
     Array.prototype.slice.call(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.hidden = p.id !== name; });
+    if (name === 'reacciones') renderReactionsTab();
   }
   tabBtns.forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); }); });
   showTab('cultura');
@@ -2531,31 +2553,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', function(){ initLang(); initTheme(); }); }
   else { initLang(); initTheme(); }
 })();
-/* ── Search panel toggle ── */
-(function(){
-  var btn = document.getElementById('toggle-search');
-  var panel = document.getElementById('search-panel');
-  if (!btn || !panel) return;
-  btn.addEventListener('click', function(){
-    var isOpen = !panel.hidden;
-    panel.hidden = isOpen;
-    btn.classList.toggle('open', !isOpen);
-    if (!isOpen) { var inp = document.getElementById('tag-search-input'); if (inp) inp.focus(); }
-  });
-})();
-/* ── Tecnicas: click thumbnail to embed YouTube ── */
-document.addEventListener('click', function(e){
-  var vid = e.target.closest('.vph-vid');
-  if (!vid || vid.querySelector('iframe')) return;
-  var ytId = vid.dataset.yt;
-  if (!ytId) return;
-  var iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0';
-  iframe.allow = 'autoplay; encrypted-media';
-  iframe.allowFullscreen = true;
-  iframe.title = 'YouTube video';
-  vid.appendChild(iframe);
-});
 </script>
 <div id="bottom-nav"></div>
 </body>
