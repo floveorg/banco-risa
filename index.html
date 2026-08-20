@@ -76,9 +76,9 @@ img{max-width:100%; display:block}
   background:rgba(255,232,212,.72);}
 .topbar .wrap{display:flex; align-items:center; justify-content:center; gap:12px; height:60px}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
-.brand-logo{width:44px; height:44px; flex:0 0 auto}
+.brand-logo{width:53px; height:53px; flex:0 0 auto}
 .brand-group{display:flex; align-items:center; gap:10px; min-width:0}
-#open-upload{width:44px; height:44px; padding:0; justify-content:center; border-radius:50%; font-size:1.35rem; line-height:1}   /* + redondo, separación estándar del topbar */
+#open-upload{width:34px; height:34px; padding:0; justify-content:center; border-radius:50%; font-size:1.1rem; line-height:1}   /* + redondo, mismo estilo que play pero 20% menor */
 .topbar .topbar-transport{display:flex; align-items:center; gap:6px; margin-left:4px}
 .topbar .topbar-transport .tr-btn{width:27px; height:27px; font-size:.75rem; border:2px solid var(--ink);
   background:var(--cream); color:var(--ink); border-radius:50%; display:grid; place-items:center; cursor:pointer;
@@ -92,7 +92,7 @@ img{max-width:100%; display:block}
 @media(max-width:720px){
   .topbar .wrap{height:auto; min-height:56px; padding:8px 14px; flex-wrap:wrap; gap:8px}
   .brand{font-size:1.05rem}
-  .brand-logo{width:36px; height:36px}
+  .brand-logo{width:43px; height:43px}
   .brand-group{gap:6px}
   .topbar .btn{padding:7px 12px; font-size:.8rem}
 }
@@ -911,7 +911,7 @@ body:has(#lang-en:checked) .es{display:none}
   <div class="wrap">
     <div class="brand-wrap">
       <a class="brand" id="brand-logo" href="#top" role="button" aria-expanded="false" aria-controls="brand-dd" title="Clicka para Menú" data-aria-es="Clicka para Menú" data-aria-en="Click for menu">
-        <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino-anim-guina.svg" alt="" width="44" height="44" onerror="this.onerror=null;this.src='https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg'">
+        <img class="brand-logo" src="https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino-anim-guina.svg" alt="" width="53" height="53" onerror="this.onerror=null;this.src='https://pub-e3cbc6c5f1c945358670af27745479f1.r2.dev/risa/media/logos/15-guino.svg'">
         
       </a>
       <nav class="brand-dropdown" id="brand-dd" aria-label="Menú principal" data-aria-es="Menú principal" data-aria-en="Main menu">
@@ -1990,8 +1990,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="um-title">
     <button class="modal-x" type="button" id="um-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
     <h2 id="um-title"><span class="es" lang="es">Compartir mi risa</span><span class="en" lang="en">Share my laugh</span></h2>
-    <p class="modal-sub"><span class="es" lang="es">Añádela a la risa. Solo risas, con cariño y en libre. 💛</span><span class="en" lang="en">Add it to the laughs. Only laughs, with love, and free. 💛</span></p>
-    <p class="modal-note"><span class="es" lang="es">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas. 💛</span><span class="en" lang="en">Send your laugh as a <b>voice note</b> to our Telegram bot. A couple of moderators review it and, if it's in, it plays on the web. By sending it you publish it free, under <b>CC BY-SA 4.0</b>, with the name you choose. 💛</span></p>
+    <p class="modal-note"><span class="es" lang="es">Envía tu risa como <b>nota de voz</b> a nuestro bot de Telegram. Un par de moderadores la revisan y, si entra, suena en la web. Al enviarla la publicas en libre, bajo <b>CC BY-SA 4.0</b>, con el nombre que elijas o anónimo. 💛</span><span class="en" lang="en">Send your laugh as a <b>voice note</b> to our Telegram bot. A couple of moderators review it and, if it's in, it plays on the web. By sending it you publish it free, under <b>CC BY-SA 4.0</b>, with the name you choose or anonymous. 💛</span></p>
     <a class="btn btn-primary" id="um-telegram" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> <span class="es" lang="es">Abrir Telegram</span><span class="en" lang="en">Open Telegram</span></a>
   </div>
 </div>
