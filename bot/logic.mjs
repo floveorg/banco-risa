@@ -171,6 +171,14 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           channelMsgId: msg.forward_from_message_id,
           channelId: fwd.id
         });
+        // Threading in the same batch: the forward and the reply voice-note
+        // usually arrive together (e.g. after the bot was offline). Register
+        // the pending parent NOW so the media parsed right after this forward
+        // attaches to the clip instead of waiting for the next poll tick.
+        const parent = clipByChannelMsg(ctx.risas, msg.forward_from_message_id);
+        if (parent && ctx.awaitingDraftParent) {
+          ctx.awaitingDraftParent[key] = parent.id;
+        }
         continue;
       }
       const media = msg.voice || msg.audio || msg.video || msg.video_note;

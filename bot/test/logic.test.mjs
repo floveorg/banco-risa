@@ -76,6 +76,46 @@ test('a private voice message becomes a draft action', () => {
   });
 });
 
+test('a forward from the channel becomes a forward-channel action', () => {
+  const updates = [{
+    update_id: 11,
+    message: { message_id: 7, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      forward_from_chat: { id: -100999, type: 'channel' },
+      forward_from_message_id: 42 }
+  }];
+  const { actions } = parseUpdates(updates, CTX);
+  assert.equal(actions.length, 1);
+  assert.deepEqual(actions[0], {
+    kind: 'forward-channel', chatId: 777, channelMsgId: 42, channelId: -100999
+  });
+});
+
+test('forward + reply voice-note in the SAME batch threads the reply (pendingParent)', () => {
+  const risas = [{ id: 'clipA', name: 'Padre', channelMsgId: 42 }];
+  const awaitingDraftParent = {};
+  const ctx = { ...CTX, risas, awaitingDraftParent };
+  const updates = [
+    { update_id: 20, message: { message_id: 8, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' },
+      forward_from_chat: { id: -100999, type: 'channel' }, forward_from_message_id: 42 } },
+    { update_id: 21, message: { message_id: 9, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, voice: { file_id: 'REPLY', duration: 5 } } },
+    { update_id: 22, message: { message_id: 10, chat: { id: 777, type: 'private' },
+      from: { first_name: 'Marta' }, voice: { file_id: 'SOLO', duration: 4 } } }
+  ];
+  const { actions } = parseUpdates(updates, ctx);
+  assert.equal(actions[0].kind, 'forward-channel');
+  // the reply voice-note attaches to the forwarded clip…
+  assert.equal(actions[1].kind, 'draft');
+  assert.equal(actions[1].fileId, 'REPLY');
+  assert.equal(actions[1].parent, 'clipA');
+  // …and the following plain voice-note stays a root clip.
+  assert.equal(actions[2].kind, 'draft');
+  assert.equal(actions[2].fileId, 'SOLO');
+  assert.equal(actions[2].parent, undefined);
+});
+
 test('an audio message with a caption carries the caption as title', () => {
   const updates = [{
     update_id: 12,

@@ -3,7 +3,7 @@ import { hashId, identityOf } from './logic.mjs';
 import { pageUrlOf } from './pages.mjs';
 
 // Identidad (v2): «Autor» elige un alias (draft:aliases); «Anónimo» lo anula.
-const DEFAULT_SEL = { alias: '', anon: false };
+export const DEFAULT_SEL = { alias: '', anon: false };
 export const selOf = (d) => d.sel || { ...DEFAULT_SEL };
 
 export function displayName(d) {
