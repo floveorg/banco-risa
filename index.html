@@ -663,6 +663,14 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 /* formulario de subida */
 .modal-note{color:var(--ink-soft); line-height:1.5; margin:0 0 4px}
+.rx-controls{display:flex; gap:8px; margin:16px 0 12px}
+.rx-controls .btn{flex:1; justify-content:center}
+.rx-controls .btn[disabled]{opacity:.4; pointer-events:none}
+.rx-preview{display:flex; flex-direction:column; gap:10px; margin:12px 0}
+.rx-preview audio{width:100%; border-radius:12px}
+.rx-preview .btn{justify-content:center; text-decoration:none}
+.rx-hint{font-size:.82rem; color:var(--ink-soft); margin:8px 0 0; border-left:3px solid var(--marigold); padding-left:10px}
+.clip-remix{background:linear-gradient(135deg, rgba(255,176,32,.08), rgba(255,120,60,.06)); border-left:3px solid var(--marigold)}
 #upload-modal .btn-primary{justify-content:center; width:100%; text-decoration:none}
 .feed-empty{color:var(--ink-soft); line-height:1.5; padding:8px 2px}
 .field{display:grid; gap:6px}
@@ -2024,6 +2032,27 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   </div>
 </div>
 
+<!-- ============ MODAL · REMIX / ENCIMA ============ -->
+<div class="modal-back" id="remix-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rx-title">
+    <button class="modal-x" type="button" id="rx-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
+    <h2 id="rx-title">🔀 <span class="es" lang="es">Encima / Remix</span><span class="en" lang="en">Over / Remix</span></h2>
+    <p class="modal-sub"><span class="es" lang="es">Graba tu risa encima de este clip.</span><span class="en" lang="en">Record your laugh over this clip.</span></p>
+    <p class="modal-note"><span class="es" lang="es"><b id="rx-clip-title"></b> — pulsa <b>Grabar</b> para escuchar el clip original mientras grabas tu nota de voz encima.</span><span class="en" lang="en"><b id="rx-clip-title-en"></b> — press <b>Record</b> to listen to the original clip while recording your voice note over it.</span></p>
+    <div class="rx-controls">
+      <button type="button" class="btn btn-primary" id="rx-record">🎙️ <span class="es" lang="es">Grabar</span><span class="en" lang="en">Record</span></button>
+      <button type="button" class="btn" id="rx-stop" disabled>⏹ <span class="es" lang="es">Parar</span><span class="en" lang="en">Stop</span></button>
+    </div>
+    <div class="rx-preview" id="rx-preview" hidden>
+      <audio id="rx-audio" controls></audio>
+      <a class="btn btn-primary" id="rx-send" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">
+        <span class="es" lang="es">Enviar al bot</span><span class="en" lang="en">Send to bot</span>
+      </a>
+    </div>
+    <p class="rx-hint" id="rx-hint" hidden><span class="es" lang="es">Tu grabación se descarga. <b>Enviársela al bot</b> con el clip original reenviado para publicarla como remix.</span><span class="en" lang="en">Your recording downloads. <b>Send it to the bot</b> with the original clip forwarded to publish it as a remix.</span></p>
+  </div>
+</div>
+
 <!-- ============ MODAL · RISA V1 — CONFIGURAR EL PROMPT DEL AGENTE ============ -->
 <div class="modal-back" id="setup-modal" hidden>
   <div class="modal setup-modal" role="dialog" aria-modal="true" aria-labelledby="sm-title">
@@ -2309,6 +2338,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     reservedSections: ['espiritualidad', 'cultura', 'ciencia', 'comunidad', 'tecnologia', 'reacciones'],
     self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
+    onRemix: function (t) { openRemixModal(t); },
     onFeed: seedReactions,
     onReaction: function (t, emoji) {
       var id = t && t.clip && t.clip.id;
@@ -2461,6 +2491,65 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   }
   if (rmClose) rmClose.addEventListener('click', function () { closeModal(replyModal); });
   if (replyModal) replyModal.addEventListener('click', function (e) { if (e.target === replyModal) closeModal(replyModal); });
+
+  /* ── MODAL REMIX / ENCIMA ── */
+  var remixModal = document.getElementById('remix-modal'), rxClose = document.getElementById('rx-close');
+  var rxRecord = document.getElementById('rx-record'), rxStop = document.getElementById('rx-stop');
+  var rxPreview = document.getElementById('rx-preview'), rxAudio = document.getElementById('rx-audio');
+  var rxSend = document.getElementById('rx-send'), rxHint = document.getElementById('rx-hint');
+  var rxClipSrc = '', rxClipTitle = '', rxRecorder = null, rxBlob = null;
+  function openRemixModal(t) {
+    rxClipSrc = (t && t.src) || '';
+    rxClipTitle = (t && t.t) || 'esta risa';
+    var title = document.getElementById('rx-clip-title'), titleEn = document.getElementById('rx-clip-title-en');
+    if (title) title.textContent = rxClipTitle;
+    if (titleEn) titleEn.textContent = rxClipTitle;
+    if (rxPreview) rxPreview.hidden = true;
+    if (rxHint) rxHint.hidden = true;
+    if (rxRecord) rxRecord.disabled = false;
+    if (rxStop) rxStop.disabled = true;
+    openModal(remixModal);
+  }
+  if (rxClose) rxClose.addEventListener('click', function () { closeModal(remixModal); stopRemixRecording(); });
+  if (remixModal) remixModal.addEventListener('click', function (e) { if (e.target === remixModal) { closeModal(remixModal); stopRemixRecording(); } });
+  function stopRemixRecording() {
+    if (rxRecorder && rxRecorder.state !== 'inactive') { rxRecorder.stop(); }
+    rxRecorder = null;
+  }
+  if (rxRecord) rxRecord.addEventListener('click', function () {
+    var origAudio = document.querySelector('.player audio, #media-audio');
+    if (origAudio && rxClipSrc) { origAudio.src = rxClipSrc; origAudio.play().catch(function(){}); }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      rxRecorder = new MediaRecorder(stream);
+      var chunks = [];
+      rxRecorder.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
+      rxRecorder.onstop = function () {
+        stream.getTracks().forEach(function (tr) { tr.stop(); });
+        if (origAudio) { origAudio.pause(); origAudio.currentTime = 0; }
+        rxBlob = new Blob(chunks, { type: 'audio/webm' });
+        var url = URL.createObjectURL(rxBlob);
+        if (rxAudio) rxAudio.src = url;
+        if (rxPreview) rxPreview.hidden = false;
+        if (rxHint) rxHint.hidden = false;
+        if (rxRecord) rxRecord.disabled = true;
+        if (rxStop) rxStop.disabled = true;
+        var a = document.createElement('a'); a.href = url;
+        a.download = 'remix-' + (rxClipTitle || 'risa').replace(/[^a-z0-9]+/gi, '-').slice(0, 40) + '.webm';
+        document.body.appendChild(a); a.click(); a.remove();
+      };
+      rxRecorder.start();
+      if (rxRecord) rxRecord.disabled = true;
+      if (rxStop) rxStop.disabled = false;
+    }).catch(function () {
+      var hint = document.getElementById('rx-hint');
+      if (hint) { hint.hidden = false; hint.textContent = 'No se pudo acceder al micrófono.'; }
+    });
+  });
+  if (rxStop) rxStop.addEventListener('click', stopRemixRecording);
+  if (rxSend) rxSend.addEventListener('click', function (e) {
+    e.preventDefault();
+    window.open('https://t.me/RisaLiberadaBot', '_blank', 'noopener');
+  });
 
   /* ── PÁGINA DE AUTOR · #/u/<key> (usa la sección gente) ── */
   function renderAuthor() {
