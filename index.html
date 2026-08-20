@@ -37,6 +37,8 @@
   --red-btn:#c84320;   /* rojo de botones: 30% menos intenso que --persimmon */
   --mag-btn:#ab1c63;   /* magenta de botones: 30% menos intenso */
   --checked:#c84320;   /* color unificado de los estados marcados (topbar + 1ª sección) */
+  --red-btn-hover:#a83a1e;   /* rojo al pasar el ratón */
+  --red-btn-active:#8f3219;   /* rojo al pulsar */
   --shadow:rgba(58,26,10,.16);
   --r:22px;
   --maxw:1080px;
@@ -108,7 +110,25 @@ img{max-width:100%; display:block}
   transition:transform .12s ease, box-shadow .12s ease; box-shadow:0 6px 0 rgba(42,24,16,.18)}
 .btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(42,24,16,.18)}
 .btn-primary{background:var(--red-btn); color:#fff}
-.btn-primary:hover{transform:translateY(-2px)}
+.btn-primary:hover,
+.tr-btn.tr-play:hover,
+.topbar .topbar-transport .tr-play:hover,
+.tracklist .tag.dl:hover,
+.tracklist li.tgl .clip-card .tag.dl:hover,
+.mt-btn.mt-audio:hover,
+.tag-search button:hover,
+.reply-btn:hover{
+  background:var(--red-btn-hover); color:#fff; transform:translateY(-2px)
+}
+.btn-primary:active,
+.tr-btn.tr-play:active,
+.topbar .topbar-transport .tr-play:active,
+.tracklist .tag.dl:active,
+.mt-btn.mt-audio:active,
+.tag-search button:active,
+.reply-btn:active{
+  background:var(--red-btn-active); color:#fff; transform:translateY(2px) scale(.97)
+}
 .btn-ghost{background:var(--cream); color:var(--ink); box-shadow:0 6px 0 rgba(42,24,16,.12)}
 .btn-mag{background:var(--mag-btn); color:#fff}
 .btn-grape{background:var(--grape); color:#fff}
@@ -175,7 +195,7 @@ img{max-width:100%; display:block}
 .tag.dl{width:31px; height:31px; padding:1px 0 0 2px; border-radius:50%; background:var(--red-btn); color:#fff;
   display:grid; place-items:center; font-size:.85rem; flex:0 0 auto; box-shadow:0 2px 0 rgba(42,24,16,.25)}
 .tracklist li.tgl .clip-card .tag.dl{transform:translateY(-7px); width:34px; height:34px}   /* play del padre: 5-10px arriba, 10% mayor, centrado con el fondo */
-.tracklist li.active .tag.dl{background:var(--magenta)}
+.tracklist li.active .tag.dl{background:var(--red-btn-hover)}
 .tag.link{background:transparent; border:1.5px solid var(--grape); color:var(--grape)}
 .tracklist .ti{display:flex; flex-wrap:wrap; align-items:baseline; column-gap:7px; row-gap:1px; min-width:0}
 .tracklist .tt{font-weight:600; white-space:nowrap}
