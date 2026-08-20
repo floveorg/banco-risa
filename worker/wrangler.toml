@@ -9,15 +9,16 @@ compatibility_date = "2024-01-01"
 route = { pattern = "*.liberada.net/*", zone_name = "liberada.net" }
 
 # v2-d1 · D1 (SQL gestionado) para identidad, actividad, favoritos y búsqueda.
-# Para crear la base y aplicar migraciones:
-#   npx wrangler d1 create risa-d1
-#   npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0001_initial.sql
-# Sustituye database_id por el que devuelva el create (NO lo comprometas si
-# prefieres usar un binding por variable de entorno; aquí va como native binding).
+# Setup:
+#   1. Crear la base:    npx wrangler d1 create risa-d1
+#   2. Copiar el ID:     pega el database_id que devuelva el create
+#   3. Aplicar esquema:  npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0001_schema.sql
+#   4. Cargar seed:      npx wrangler d1 execute risa-d1 --remote --file=worker/seed/0001_core.sql
+# ⚠️  El database_id es UNIQUE por base — si lo cambias, actualiza aquí.
 [[d1_databases]]
 binding = "DB"
 database_name = "risa-d1"
-database_id = "<d1-id-risa-d1>"
+database_id = "<reemplaza-con-el-id-de-wrangler-d1-create>"
 
 # Secrets del entorno (nunca en el repo):
 #   npx wrangler secret put TG_WEBHOOK_SECRET   # secreto compartido con setWebhook

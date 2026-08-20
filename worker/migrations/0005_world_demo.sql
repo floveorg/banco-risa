@@ -1,4 +1,5 @@
 -- v2-d1 · 0005_world_demo.sql — usuarios demo reales con los clips de la
+-- ⚠️  SUPERSEDED: este dato fue reemplazado por seed/0003_real_users.sql
 -- playlist «Risas del mundo» (sin subdominio, sin contactos, bio demo).
 --   npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0005_world_demo.sql
 

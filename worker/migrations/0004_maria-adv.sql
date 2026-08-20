@@ -1,4 +1,5 @@
 -- v2-d1 · 0004_maria-adv.sql — identidad avanzada de PoC (D1 + plugins) para
+-- ⚠️  SUPERSEDED: este dato ya está en seed/0001_core.sql
 -- liberada.net/usa/maria-adv/. Aplicar tras 0003.
 
 INSERT OR IGNORE INTO identities (key, username, name, bio, email, socials, recover, tier, claimed_at, updated_at)

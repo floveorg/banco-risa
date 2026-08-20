@@ -1,4 +1,6 @@
 -- v2-d1 · 0001_initial.sql — esquema D1 + seed (marcflove simple · maria avanzada)
+-- ⚠️  SUPERSEDED: usa 0001_schema.sql + seed/ para nueva instalación.
+--     Este archivo se mantiene para bases que ya lo aplicaron.
 -- Aplicar: npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0001_initial.sql
 
 PRAGMA foreign_keys = ON;

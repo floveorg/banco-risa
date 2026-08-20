@@ -1,4 +1,5 @@
 -- v2-d1 · 0003_aliases.sql — aliases de autor (públicos/privados) para el
+-- ⚠️  SUPERSEDED: este dato ya está en seed/0002_aliases.sql
 -- selector de «Autor» del borrador y los chips del perfil.
 --   npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0003_aliases.sql
 

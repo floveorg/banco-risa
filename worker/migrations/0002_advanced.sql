@@ -1,4 +1,5 @@
 -- v2-d1 · 0002_advanced.sql — features avanzadas de maria para TODOS los usuarios
+-- ⚠️  SUPERSEDED: este dato ya está en seed/0001_core.sql
 -- (marcflove incluido). Aplicar tras 0001:
 --   npx wrangler d1 execute risa-d1 --remote --file=worker/migrations/0002_advanced.sql
 

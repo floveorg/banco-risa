@@ -134,6 +134,9 @@ respetar eso, no romperlo:
    ~5 M lecturas/mes; Workers gratis 100k peticiones/día).
 8. **Moderación intacta en v1.** El grupo de moderadores y el bot no cambian;
    D1 solo añade auditoría opcional (quién aprobó, cuándo).
+9. **Ban de usuarios (pendiente v2-D1).** El admin del grupo de moderación
+   podría banear usuarios via `/ban @username` — nueva tabla `banned_users`
+   en D1 + check en el bot antes de aceptar uploads. No en v1.
 
 ## 6b. Hilos y navegación profunda (v2-d1)
 
