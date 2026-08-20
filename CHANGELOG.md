@@ -9,6 +9,21 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 > (tag-url `#/u/<key>`) y, con permiso, en tu subdominio `<username>.liberada.net`.
 > El paquete descargable incluye versión, ciclo de release y el manual de uso.
 
+## [Unreleased] — hito: Abstracting the bot
+
+**Hito: poll.mjs se divide en módulos responsables.** El monolito de 1248 líneas
+se separa en cuatro archivos con responsabilidades claras:
+
+- **bot/publish.mjs** — subida a R2, feed RSS, publicación en canal, commit git.
+- **bot/drafts.mjs** — helpers de UI, teclados, textos, gestión de aliases.
+- **bot/ingest.mjs** — loop de polling de Telegram, carga/guardado de estado.
+- **bot/poll.mjs** — orquestador fino que importa de los tres módulos.
+
+Migraciones D1 reestructuradas: `0001_schema.sql` (puro esquema) separado de
+los seeds (`worker/seed/dev/`). Los archivos 0001-0006 originales marcados
+SUPERSEDED. `wrangler.toml` con instrucciones de setup. Admin ban anotado
+como pendiente para v2-D1 en PLAN-V2-D1.md.
+
 ## [v2.1.0] — 2026-08-19 · hito: Calling libs (rama `v2-central`)
 
 **Hito: risa/index deja el monolito y se construye sobre `central/shared/code`**
