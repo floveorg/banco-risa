@@ -2049,7 +2049,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <div class="rx-dock" id="rx-dock" hidden>
   <button class="rx-dock-btn" type="button" id="rx-dock-toggle" aria-label="Pausar o reanudar" data-aria-es="Pausar o reanudar" data-aria-en="Pause or resume">▶️</button>
   <span class="rx-dock-title" id="rx-dock-title"></span>
-  <button class="rx-dock-btn" type="button" id="rx-dock-bot" aria-label="Abrir el bot" data-aria-es="Abrir el bot" data-aria-en="Open the bot" title="Al saltar al bot el guía se pausa solo, para que tu grabación salga limpia (sin el original de fondo). Reanúdalo con ▶️ al volver." data-title-es="Al saltar al bot el guía se pausa solo, para que tu grabación salga limpia (sin el original de fondo). Reanúdalo con ▶️ al volver." data-title-en="When you jump to the bot the guide pauses by itself, so your recording comes out clean (no original bleeding in). Resume with ▶️ when you return.">🤖</button>
+  <button class="rx-dock-btn" type="button" id="rx-dock-bot" aria-label="Abrir el bot" data-aria-es="Abrir el bot" data-aria-en="Open the bot" title="El clip sigue sonando mientras estás en el bot (Android); puede pausarse al mantener el micro. En iPhone se pausa al salir." data-title-es="El clip sigue sonando mientras estás en el bot (Android); puede pausarse al mantener el micro. En iPhone se pausa al salir." data-title-en="The clip keeps playing while you're in the bot (Android); it may pause when you hold the mic. On iPhone it pauses when you leave.">🤖</button>
   <button class="rx-dock-btn rx-dock-stop" type="button" id="rx-dock-stop" aria-label="Parar" data-aria-es="Parar" data-aria-en="Stop">⏹</button>
 </div>
 
@@ -2598,12 +2598,6 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     rxGuide.addEventListener('play', function () { rxIcon(true); });
     rxGuide.addEventListener('pause', function () { if (rxDock && !rxDock.hidden) rxIcon(false); });
   }
-  /* Al salir de la página (saltar al bot, cambiar de app) el guía se PAUSA:
-     si siguiera sonando, el micrófono grabaría el original de fondo y saldría
-     distorsionado. Reanúdalo con ▶️ al volver. */
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden && rxGuide && !rxGuide.paused) rxGuide.pause();
-  });
   if (rxDockToggle) rxDockToggle.addEventListener('click', function () {
     if (!rxGuide) return;
     if (rxGuide.paused) rxGuide.play(); else rxGuide.pause();

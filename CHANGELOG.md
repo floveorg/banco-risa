@@ -15,9 +15,9 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 desaparece: un clic en «Encima» pone el clip a sonar **en bucle**, abre el bot
 a la vez (`?start=remix_<id>`) y deja una **barra acoplada** que sobrevive al
 salto al bot y a recargar la página (vuelve pausada, lista para reanudar).
-⏹ la quita; 🤖 reabre el bot; ▶️/🔊 pausa. Al salir de la página (saltar al
-bot, cambiar de app) el guía **se pausa solo**: si siguiera sonando, el
-micrófono grabaría el original de fondo y la risa saldría distorsionada.
+⏹ la quita; 🤖 reabre el bot; ▶️/🔊 pausa. El guía **sigue sonando** mientras
+grabs en el bot: la idea es grabar tu risa *encima* del original (en iPhone
+el sistema pausa al salir de la página).
 
 Tres bugs del bot arreglados (con regresión en `bot/test/poll.test.mjs`):
 
