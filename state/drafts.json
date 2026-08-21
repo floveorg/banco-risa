@@ -38,11 +38,8 @@
     "draftMsgId": 238,
     "awaitingTitle": false,
     "awaitingTags": false,
-    "parent": "q_823020265",
+    "parent": "q_823020302",
     "remix": true,
-    "pendingParent": {
-      "id": "q_823020302",
-      "remix": true
-    }
+    "parentTitle": "Risa Maliciosa"
   }
 }
