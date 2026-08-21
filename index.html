@@ -2584,10 +2584,10 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
      (vuelve pausada, lista para reanudar). El bot enlaza la nota de voz al
      clip vía deep link remix_<id> y la publica como remix. */
    var rxGuide = document.getElementById('rx-guide');
-   /* El guía suena al 80%: en Encima el micrófono graba TAMBIÉN el original que
+   /* El guía suena al 70%: en Encima el micrófono graba TAMBIÉN el original que
       se está oyendo — bajar el GUÍA (no el micro) deja la voz por encima y el
       original de fondo sin saturar. */
-   if (rxGuide) rxGuide.volume = 0.8;
+   if (rxGuide) rxGuide.volume = 0.7;
    var rxDock = document.getElementById('rx-dock'), rxDockTitle = document.getElementById('rx-dock-title');
   var rxDockToggle = document.getElementById('rx-dock-toggle'), rxDockStop = document.getElementById('rx-dock-stop');
   var rxDockBot = document.getElementById('rx-dock-bot');
