@@ -20,10 +20,23 @@
     "remix": false
   },
   "4c593a61c68f50fc51ef": {
-    "pendingParent": {
-      "id": "q_823020265",
-      "remix": true
+    "id": "q_823020366",
+    "fileId": "AwACAgQAAxkBAAPsaog3Z1VFX9Fil0OUQA1xj7jPAAH4AAJSIwACAeBBUDImAAHoeNPM1D0E",
+    "name": "Marc",
+    "username": "marcflove",
+    "video": false,
+    "title": "",
+    "tags": [],
+    "sel": {
+      "alias": "",
+      "anon": false
     },
-    "fromChatId": "0b076d3d92d30da10c"
+    "fromChatId": "4c593a61c68f50fc51ef",
+    "fromMsgId": 236,
+    "draftMsgId": 238,
+    "awaitingTitle": false,
+    "awaitingTags": false,
+    "parent": "q_823020265",
+    "remix": true
   }
 }
