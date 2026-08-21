@@ -73,8 +73,11 @@ img{max-width:100%; display:block}
 :focus-visible{outline:3px solid var(--grape); outline-offset:3px; border-radius:8px}
 
 /* ============ TOPBAR ============ */
-.topbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(9px);
+/* fija (no sticky): body tiene overflow-x:hidden y eso rompe sticky */
+.topbar{position:fixed; top:0; left:0; right:0; z-index:40; backdrop-filter:blur(9px);
   background:rgba(255,232,212,.72);}
+body{padding-top:60px}
+html{scroll-padding-top:72px}
 .topbar .wrap{display:flex; align-items:center; justify-content:center; gap:12px; height:60px}
 .brand{font-family:var(--disp); font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:.45em; text-decoration:none; white-space:nowrap}
 .brand-logo{width:53px; height:53px; flex:0 0 auto}
@@ -85,13 +88,19 @@ img{max-width:100%; display:block}
   box-shadow:0 2px 0 rgba(42,24,16,.15); transition:transform .12s, background .12s}
 .btn-icon:hover{background:var(--marigold); transform:translateY(-1px)}
 .btn-icon.open{background:var(--checked); color:#fff}
+/* recarga de risas: mismo diseño, la mitad de tamaño */
+.btn-icon.btn-reload{width:20px; height:20px; box-shadow:0 1px 0 rgba(42,24,16,.15)}
+.btn-icon.btn-reload svg{width:11px; height:11px}
+.btn-reload.spin svg{animation:reloadspin .7s linear infinite}
+@keyframes reloadspin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.btn-reload.spin svg{animation:none}}
 .search-panel{display:flex; align-items:center; gap:12px; padding:10px 0; margin-bottom:10px; width:100%}
 .search-panel[hidden]{display:none}
 .search-panel .tag-search{flex:1; max-width:340px}
 .search-panel .media-toggle{flex:none}
-.search-dropdown{position:absolute; top:100%; right:0; z-index:50; margin-top:6px;
+.search-dropdown{position:fixed; top:66px; left:50%; right:auto; transform:translateX(-50%); z-index:50;
   background:var(--cream); border:2px solid var(--ink); border-radius:12px; padding:10px 14px;
-  box-shadow:6px 6px 0 var(--shadow); display:none; min-width:280px}
+  box-shadow:6px 6px 0 var(--shadow); display:none; width:min(92vw,380px)}
 .search-dropdown.open{display:flex; flex-direction:column; gap:10px}
 .search-dropdown .tag-search{display:flex; gap:6px; width:100%}
 .search-dropdown .tag-search input{flex:1; min-width:0}
@@ -792,7 +801,7 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 
 /* ============ TECNOLOGÍAS · RÉPLICA DEL SISTEMA ============ */
 .tecnologias{margin-top:46px}
-.tech-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:20px 0 8px}
+.tech-grid{display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:1fr; gap:16px; margin:20px 0 8px}
 @media(max-width:640px){.tech-grid{grid-template-columns:1fr}}
 .tech-card{background:var(--cream); border:2px solid var(--ink); border-radius:18px; padding:18px 20px}
 .tech-card h4{margin:0 0 8px; font-family:var(--disp); font-size:1.15rem; color:var(--ink)}
@@ -987,10 +996,9 @@ body:has(#lang-en:checked) .es{display:none}
           </div>
           <div class="search-suggest-row">
             <div class="search-suggest" id="search-suggest" aria-live="polite">
-              <span class="ss-why" id="search-suggest-why"></span><span class="ss-tag" id="search-suggest-tag"></span>
+              <span class="ss-why" id="search-suggest-why"></span>
             </div>
-            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
-              <button type="button" class="mt-btn mt-audio" id="dd-mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
+            <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">              <button type="button" class="mt-btn mt-audio" id="dd-mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
                 <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
               <button type="button" class="mt-btn mt-video" id="dd-mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
@@ -1000,6 +1008,7 @@ body:has(#lang-en:checked) .es{display:none}
           </div>
         </div>
       </div>
+      <button class="btn-icon btn-reload" type="button" id="reload-feed" title="Recargar risas" aria-label="Recargar risas" data-aria-es="Recargar risas" data-aria-en="Reload laughs"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
 
     </div>
   </div>
@@ -1135,7 +1144,7 @@ body:has(#lang-en:checked) .es{display:none}
           <p class="eyebrow"><span class="es" lang="es">Servicios</span><span class="en" lang="en">Services</span></p>
           <h3><span class="es" lang="es">A tu medida</span><span class="en" lang="en">Tailor-made</span></h3>
           <p><span class="es" lang="es">Contrata a expertos para tus sesiones y/o celebraciones.</span><span class="en" lang="en">Hire experts for your sessions and celebrations.</span></p>
-          <button class="btn btn-primary" type="button" id="serv-quiero"><span class="es" lang="es">Quiero</span><span class="en" lang="en">I want it</span></button>
+          <button class="btn btn-primary" type="button" id="serv-quiero" aria-expanded="false" aria-controls="serv-mail"><span class="es" lang="es">Quiero</span><span class="en" lang="en">I want it</span></button>
           <p class="serv-mail" id="serv-mail" aria-live="polite" hidden></p>
         </div>
       </div>
@@ -1350,20 +1359,20 @@ body:has(#lang-en:checked) .es{display:none}
         <div class="section-head">
           <p class="eyebrow">Techs</p>
           <h2>Con qué está hecha</h2>
-          <p>Piezas pequeñas, estándares abiertos y coste cero: el proyecto corre sin servidor propio y cualquiera puede montar el suyo. Este sistema se replica al pie de la letra.</p>
+          <p>Piezas pequeñas, estándares abiertos y coste cero: el proyecto corre sin servidor propio y cualquiera puede montar el suyo. La web (v1) es un solo HTML servido.</p>
         </div>
         <div class="tech-grid">
           <article class="tech-card">
-            <h4>Cloudflare R2 · D1 · SW</h4>
-            <p>Almacenamiento de objetos gratuito (10 GB) para audios con URL pública; <b>D1</b> (SQL) para la comunidad — follows, reacciones, escuchas y avisos — y un <b>service worker</b> para servir la web offline y con precarga.</p>
+            <h4>Node.js + Telegram Bot API</h4>
+            <p>El bot recibe notas de voz, las normaliza con <code>ffmpeg</code> y las publica en el canal y en <code>risa.json</code>.</p>
           </article>
           <article class="tech-card">
             <h4>GitHub Pages · Actions</h4>
             <p>La web es un solo HTML servido desde un repositorio público; un cron de <b>GitHub Actions</b> llama al bot cada 5–10 minutos para vaciar la cola de subidas.</p>
           </article>
           <article class="tech-card">
-            <h4>Node.js + Telegram Bot API</h4>
-            <p>El bot recibe notas de voz, las normaliza con <code>ffmpeg</code> y las publica en el canal y en <code>risa.json</code>.</p>
+            <h4>Cloudflare R2 · D1 · SW</h4>
+            <p>Almacenamiento de objetos gratuito (10 GB) para audios con URL pública; <b>D1</b> (SQL) para la comunidad — follows, reacciones, escuchas y avisos — y un <b>service worker</b> para servir la web offline y con precarga.</p>
           </article>
           <article class="tech-card">
             <h4>opencode</h4>
@@ -2405,6 +2414,37 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   tabBtns.forEach(function (b) { b.addEventListener('click', function () { showTab(b.dataset.tab); }); });
   showTab('cultura');
 
+  /* ── PESTAÑAS DE VERSIONES (Liberada v1 · v2 · Flove v3) ── */
+  var rtabBtns = Array.prototype.slice.call(document.querySelectorAll('.rtab-btn'));
+  function showRtab(name) {
+    rtabBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === name)); });
+    Array.prototype.slice.call(document.querySelectorAll('.rtab-panel')).forEach(function (p) { p.hidden = p.id !== name; });
+  }
+  rtabBtns.forEach(function (b) { b.addEventListener('click', function () { showRtab(b.dataset.tab); }); });
+
+  /* ── QUIERO (servicios): despliega el contacto debajo del botón ── */
+  var servQuiero = document.getElementById('serv-quiero'), servMail = document.getElementById('serv-mail');
+  if (servQuiero && servMail) {
+    servQuiero.setAttribute('aria-expanded', 'false');
+    servQuiero.addEventListener('click', function () {
+      var open = servMail.hidden;
+      if (open && !servMail.innerHTML) {
+        servMail.innerHTML = '<span class="es" lang="es">Cuéntanos tu idea por Telegram ↗ </span>' +
+          '<span class="en" lang="en">Tell us your idea on Telegram ↗ </span>' +
+          '<a href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">@RisaLiberadaBot</a>';
+      }
+      servMail.hidden = !open;
+      servQuiero.setAttribute('aria-expanded', String(open));
+    });
+  }
+
+  /* ── RECARGAR RISAS: gira y recarga la página (feed nuevo) ── */
+  var reloadBtn = document.getElementById('reload-feed');
+  if (reloadBtn) reloadBtn.addEventListener('click', function () {
+    reloadBtn.classList.add('spin');
+    setTimeout(function () { location.reload(); }, 250);
+  });
+
   /* ── DROPDOWN TOPBAR (logo) ── */
   var ddBtn = document.getElementById('brand-logo'), dd = document.getElementById('brand-dd');
   if (ddBtn && dd) {
@@ -2482,49 +2522,38 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     app.onFeed = function () { if (origOnFeed) origOnFeed(); syncDropdownToMain(); };
   }
   /* ── Sugerencias de búsqueda: carrusel de 5, cada 10 s ──
-     Un texto corto («por qué buscar») se teclea en la línea, y la etiqueta
-     recomendada se va rellenando en el campo de búsqueda. Se pausa en cuanto
-     la persona teclea algo. */
+     Un texto corto («por qué buscar») se teclea en la línea. Solo se sugieren
+     etiquetas que EXISTEN en el feed (buscar una que no está no daría nada).
+     Se pausa en cuanto la persona teclea algo. */
   (function () {
     var dd = document.getElementById('search-dropdown');
     var input = document.getElementById('dd-search-input');
     var whyEl = document.getElementById('search-suggest-why');
-    var tagEl = document.getElementById('search-suggest-tag');
-    if (!dd || !input || !whyEl || !tagEl) return;
+    if (!dd || !input || !whyEl) return;
     var SUG = [
-      { why: 'Una risotada que lo cura todo', tag: 'risotada' },
-      { why: 'La alegría de un buen café', tag: 'café' },
-      { why: 'Relájate con clase', tag: 'clase' },
+      { why: 'Yoga + risa = mejor día', tag: 'yoga' },
       { why: 'Un giro malvado para tu playlist', tag: 'maldad' },
-      { why: 'Yoga + risa = mejor día', tag: 'yoga' }
+      { why: 'Relájate con clase', tag: 'clase' },
+      { why: 'Risas del campo', tag: 'rural' },
+      { why: 'Una alegría contagiosa', tag: 'alegría' }
     ];
     var idx = 0, timer = null, seq = 0;
-    function typeInto(el, text, step, done) {
-      var my = ++seq;
-      var i = 0;
-      (function tick() {
-        if (my !== seq) return;                 // una sugerencia nueva lo cancela
-        if (i > text.length) { if (done) done(); return; }
-        el.textContent = text.slice(0, i);
-        i++;
-        setTimeout(tick, step);
-      })();
-    }
     function show() {
       var s = SUG[idx % SUG.length];
-      seq++;                                    // cancela tecleos anteriores
+      var my = ++seq;                           // cancela tecleos anteriores
       var i = 0;
       (function typeWhy() {
+        if (my !== seq) return;                 // una sugerencia nueva lo cancela
         whyEl.textContent = s.why.slice(0, i);
-        tagEl.textContent = i > 0 ? ' → #' + s.tag.slice(0, i) : '';
         i++;
-        if (i <= s.why.length) setTimeout(typeWhy, 45);
+        if (i <= s.why.length) setTimeout(typeWhy, 135);
       })();
       var j = 0;
       (function typeTag() {
+        if (my !== seq) return;
         input.value = s.tag.slice(0, j);
         j++;
-        if (j <= s.tag.length) setTimeout(typeTag, 60);
+        if (j <= s.tag.length) setTimeout(typeTag, 180);
       })();
     }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
