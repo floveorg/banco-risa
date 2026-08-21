@@ -11,9 +11,10 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 ## [Unreleased] — hito: Abstracting the bot
 
-**Encima: el guía baja al 90%.** Al mezclar, el micrófono graba también el
-original que suena en el dispositivo; el guía se reproduce al 90% de volumen
-para que tu voz quede por encima sin saturar (bajar el guía, no el micro).
+**Encima: el guía baja al 75%.** Al mezclar, el micrófono graba también el
+original que suena en el dispositivo; el guía se reproduce al 75% de volumen
+para que tu voz quede por encima sin saturar. Un solo ajuste: lo que oyes es
+lo que se graba (bajar el guía, no el micro).
 
 **UI pulida.** Barra superior fija al hacer scroll; buscador centrado con
 botón ↻ de recarga a su lado (mismo diseño, mitad de tamaño); la búsqueda
