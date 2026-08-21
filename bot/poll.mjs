@@ -17,6 +17,7 @@ import {
   MEJORAR_TEXT, SUBOFFER_TEXT, SUBOFFER_KEYS, SUBEDIT_TEXT, SUBEDIT_KEYS,
   BUTTONS, EDIT_PROMPT_KEYS, EDIT_KEYS, ACCEPT_KEYS, CANCEL_KEYS,
   ALIAS_KEYS, OPTIONS, draftText, tagsText, tagsKeys,
+  OVERLAP_TEXT, OVERLAP_KEYS, RESUME_KEYS,
   displayName, identityLabel, tagsHash, addTags, selOf, DEFAULT_SEL,
   clipLine, detailLines, proposalLines, modCaption, parseEditDetails,
   subdomainUrl, subdomainBase, candidateUsernameOf, claimUsername,
@@ -89,34 +90,56 @@ export async function handleAction(a, tg, cfg, state) {
       prev.parentTitle = title;
       prev.remix = !!remix;
       delete prev.pendingParent;
-      if (prev.draftMsgId) {
-        await bestEffort(tg.editMessageText(chatId, prev.draftMsgId, draftText(prev), OPTIONS(prev)));
-      }
+      if (prev.draftMsgId) await renderDraftCard(chatId, prev);
       return true;
     }
     drafts[key] = { ...prev, pendingParent: { id: parent.id, remix: !!remix, title } };
     return false;
   }
 
-  if (a.kind === 'draft') {
-    const key = String(a.chatId);
-    const prev = drafts[key] || {};
-    drafts[key] = {
+  // Pinta la ficha del borrador (texto + botones título/tags/enviar). Si el
+  // mensaje anterior ya no existe («message not found», chat limpiado…), el
+  // edit falla y se reenvía la ficha COMO MENSAJE NUEVO — el formulario nunca
+  // se pierde; el id del mensaje se actualiza para los siguientes edits.
+  async function renderDraftCard(chatId, d) {
+    const text = draftText(d);
+    if (d.draftMsgId) {
+      try {
+        await tg.editMessageText(chatId, d.draftMsgId, text, OPTIONS(d));
+        return;
+      } catch (err) {
+        console.error('draft card edit failed → resending fresh:', err.message);
+      }
+    }
+    const sent = await tg.sendMessage(chatId, text, OPTIONS(d));
+    d.draftMsgId = sent.message_id;
+  }
+
+  // Borrador nuevo a partir de una acción con medio (draft / draft-replace).
+  function newDraftFrom(a) {
+    return {
       id: a.id, fileId: a.fileId, name: a.name, username: a.username, video: !!a.video,
       title: a.title || '', tags: [], sel: { ...DEFAULT_SEL },
       fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
-      draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false,
-      parent: a.parent || (prev.pendingParent && prev.pendingParent.id) || null,
-      parentTitle: a.parentTitle || (prev.pendingParent && prev.pendingParent.title) || null,
-      remix: !!(a.remix || (prev.pendingParent && prev.pendingParent.remix))
+      awaitingTitle: false, awaitingTags: false,
+      parent: a.parent || null, parentTitle: a.parentTitle || null, remix: !!a.remix
     };
-    const text = draftText(drafts[key]);
-    if (prev.draftMsgId) {
-      await bestEffort(tg.editMessageText(a.chatId, prev.draftMsgId, text, OPTIONS(drafts[key])));
-    } else {
-      const sent = await tg.sendMessage(a.chatId, text, OPTIONS(drafts[key]));
-      drafts[key].draftMsgId = sent.message_id;
+  }
+
+  if (a.kind === 'draft') {
+    const key = String(a.chatId);
+    const prev = drafts[key] || {};
+    const base = newDraftFrom(a);
+    // Red de seguridad: un pendingParent de un lote anterior que parseUpdates
+    // no haya podido fusionar se honra aquí.
+    const pp = prev.pendingParent;
+    if (!base.parent && pp && pp.id) {
+      base.parent = pp.id;
+      base.parentTitle = pp.title || null;
+      if (pp.remix) base.remix = true;
     }
+    drafts[key] = { ...base, draftMsgId: prev.draftMsgId };
+    await renderDraftCard(a.chatId, drafts[key]);
     return { dirty: true };
   }
   if (a.kind === 'draft-title') {
@@ -132,7 +155,7 @@ export async function handleAction(a, tg, cfg, state) {
     const d = drafts[String(a.chatId)];
     if (!d || !d.awaitingTitle) return {};
     d.title = (a.title || '').slice(0, 60); d.awaitingTitle = false;
-    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, draftText(d), OPTIONS(d)));
+    await renderDraftCard(a.chatId, d);
     return { dirty: true };
   }
   if (a.kind === 'draft-tags') {
@@ -155,7 +178,7 @@ export async function handleAction(a, tg, cfg, state) {
     if (!d) return {};
     d.awaitingTags = false;
     await bestEffort(tg.answerCallback(a.callbackId, 'Etiquetas guardadas'));
-    await bestEffort(tg.editMessageText(a.chatId, d.draftMsgId, draftText(d), OPTIONS(d)));
+    await renderDraftCard(a.chatId, d);
     return { dirty: true };
   }
   if (a.kind === 'draft-id') {
@@ -164,7 +187,7 @@ export async function handleAction(a, tg, cfg, state) {
     const s = selOf(d);
     if (a.mode === 'anon') { s.anon = !s.anon; if (s.anon) s.alias = ''; }
     await bestEffort(tg.answerCallback(a.callbackId, 'Autor: ' + displayName(d)));
-    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
+    await renderDraftCard(a.chatId, d);
     return { dirty: true };
   }
   if (a.kind === 'draft-aliases') {
@@ -284,10 +307,54 @@ export async function handleAction(a, tg, cfg, state) {
     return { dirty: true };
   }
   if (a.kind === 'draft-overlap') {
-    await bestEffort(tg.sendMessage(a.chatId,
-      'Ya tienes una risa en borrador — termínala (título, etiquetas y ✅ Enviar) ' +
-      'o cancélala antes de mandar otra, para no perder ninguna 💛'));
-    return {};
+    const key = String(a.chatId);
+    const d = drafts[key];
+    if (d && d.fileId) {
+      // La risa nueva se guarda como reemplazo pendiente; el usuario elige.
+      d.pendingMedia = {
+        id: a.id, fileId: a.fileId, video: !!a.video, name: a.name, username: a.username,
+        fromChatId: a.fromChatId, fromMsgId: a.fromMsgId, title: a.title || '',
+        parent: a.parent || null, parentTitle: a.parentTitle || null, remix: !!a.remix
+      };
+      await bestEffort(tg.sendMessage(a.chatId, OVERLAP_TEXT, OVERLAP_KEYS()));
+      return { dirty: true };
+    }
+    // Carrera: el borrador ya no está abierto → trátala como risa nueva.
+    const prev = drafts[key] || {};
+    const base = newDraftFrom(a);
+    const pp = prev.pendingParent;
+    if (!base.parent && pp && pp.id) {
+      base.parent = pp.id;
+      base.parentTitle = pp.title || null;
+      if (pp.remix) base.remix = true;
+    }
+    drafts[key] = { ...base, draftMsgId: prev.draftMsgId };
+    await renderDraftCard(a.chatId, drafts[key]);
+    return { dirty: true };
+  }
+  if (a.kind === 'draft-resume') {
+    const d = drafts[String(a.chatId)];
+    await bestEffort(tg.answerCallback(a.callbackId, d && d.fileId ? 'Aquí está tu borrador' : 'No hay ningún borrador'));
+    if (!d || !d.fileId) return {};
+    delete d.pendingMedia;
+    await renderDraftCard(a.chatId, d);       // reabre/refresca el formulario
+    return { dirty: true };
+  }
+  if (a.kind === 'draft-replace') {
+    const key = String(a.chatId);
+    const d = drafts[key];
+    const pm = d && d.pendingMedia;
+    await bestEffort(tg.answerCallback(a.callbackId, pm ? 'Borrador cambiado a la nueva' : 'No hay risa nueva guardada'));
+    if (!d || !pm) return {};
+    const oldMsgId = d.draftMsgId;
+    drafts[key] = { ...newDraftFrom(pm), draftMsgId: oldMsgId };
+    delete d.pendingMedia;
+    await renderDraftCard(a.chatId, drafts[key]);
+    // El botón «Enviar» de la ficha vieja apuntaría al borrador nuevo: sin botones.
+    if (oldMsgId && oldMsgId !== drafts[key].draftMsgId) {
+      await bestEffort(tg.editReplyMarkupClear(a.chatId, oldMsgId));
+    }
+    return { dirty: true };
   }
   if (a.kind === 'draft-invalid') {
     const msg = a.reason === 'size'
@@ -297,7 +364,8 @@ export async function handleAction(a, tg, cfg, state) {
     return {};
   }
   if (a.kind === 'welcome') {
-    await bestEffort(tg.sendMessage(a.chatId, WELCOME_TEXT));
+    const d = drafts[String(a.chatId)];
+    await bestEffort(tg.sendMessage(a.chatId, WELCOME_TEXT, (d && d.fileId) ? RESUME_KEYS() : undefined));
     return {};
   }
   if (a.kind === 'forward-channel') {

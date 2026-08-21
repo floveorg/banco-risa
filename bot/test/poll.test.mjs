@@ -9,12 +9,16 @@ function tgMock() {
   const tg = {
     calls,
     async sendMessage(chatId, text, opts) {
-      calls.push(['sendMessage', chatId, text]);
+      calls.push(['sendMessage', chatId, text, opts]);
       return { message_id: ++mid };
     },
     async editMessageText(chatId, msgId, text, opts) {
       calls.push(['editMessageText', chatId, msgId, text]);
       return { message_id: msgId };
+    },
+    async editReplyMarkupClear(chatId, msgId) {
+      calls.push(['editReplyMarkupClear', chatId, msgId]);
+      return true;
     },
     async answerCallback(id, text) { calls.push(['answerCallback', id, text]); return true; },
     async copyMessage(to, from, msgId, ...rest) {
@@ -94,4 +98,66 @@ test('draft action consumes a pendingParent holder including its title', async (
   assert.equal(d.parent, 'q_2');
   assert.equal(d.parentTitle, 'Risa Maliciosa');
   assert.equal(d.remix, true);
+});
+
+// ── Overlap: la risa nueva no se pierde y el formulario siempre vuelve ──
+
+test('draft-overlap keeps the incoming media and offers resume/replace buttons', async () => {
+  const state = { queue: {}, drafts: { c1: baseDraft() }, risas: RISAS, uploads: {} };
+  const tg = tgMock();
+  await handleAction({
+    kind: 'draft-overlap', id: 'q_11', chatId: 'c1', fileId: 'FID2',
+    fromChatId: 'c1', fromMsgId: 3, name: 'Marc', username: 'marcflove'
+  }, tg, CFG, state);
+  const d = state.drafts.c1;
+  assert.equal(d.pendingMedia.fileId, 'FID2');       // la nueva queda guardada
+  assert.equal(d.fileId, 'FID');                     // el borrador no cambia solo
+  const said = tg.calls.find((c) => c[0] === 'sendMessage');
+  assert.ok(said && /borrador/i.test(said[2]));
+});
+
+test('draft-resume re-renders the form even when the old card is gone (stale edit → fresh send)', async () => {
+  const state = { queue: {}, drafts: { c1: baseDraft({ draftMsgId: 999 }) }, risas: RISAS, uploads: {} };
+  const tg = tgMock();
+  tg.editMessageText = async (...args) => {
+    tg.calls.push(['editMessageText', ...args]);
+    throw new Error('editMessageText failed: {"ok":false,"error_code":400,"description":"Bad Request: message to edit not found"}');
+  };
+  await handleAction({ kind: 'draft-resume', chatId: 'c1', callbackId: 'cb' }, tg, CFG, state);
+  const resent = tg.calls.find((c) => c[0] === 'sendMessage' && /Risa recibida/.test(c[2]));
+  assert.ok(resent, 'la ficha se reenvía como mensaje nuevo');
+  assert.equal(state.drafts.c1.draftMsgId !== 999, true);   // id actualizado
+});
+
+test('draft-replace swaps the open draft for the pending media (parent intent kept)', async () => {
+  const state = {
+    queue: {}, risas: RISAS, uploads: {},
+    drafts: { c1: baseDraft({ pendingMedia: {
+      id: 'q_12', fileId: 'NEW', video: false, name: 'Marc', username: 'marcflove',
+      fromChatId: 'c1', fromMsgId: 4, title: '', parent: 'q_2', parentTitle: 'Risa Maliciosa', remix: false
+    } }) }
+  };
+  const tg = tgMock();
+  // La ficha vieja ya no existe (el usuario la borró): el render cae a un
+  // mensaje nuevo y la vieja debe quedarse sin botones.
+  tg.editMessageText = async (...args) => {
+    tg.calls.push(['editMessageText', ...args]);
+    throw new Error('editMessageText failed: {"ok":false,"error_code":400,"description":"Bad Request: message to edit not found"}');
+  };
+  await handleAction({ kind: 'draft-replace', chatId: 'c1', callbackId: 'cb' }, tg, CFG, state);
+  const d = state.drafts.c1;
+  assert.equal(d.fileId, 'NEW');
+  assert.equal(d.parent, 'q_2');
+  assert.equal(d.remix, false);
+  assert.equal(d.pendingMedia, undefined);
+  const cleared = tg.calls.find((c) => c[0] === 'editReplyMarkupClear');
+  assert.ok(cleared, 'la ficha vieja queda sin botones');
+});
+
+test('welcome offers «Abrir mi borrador» when a draft is open', async () => {
+  const state = { queue: {}, drafts: { c1: baseDraft() }, risas: RISAS, uploads: {} };
+  const tg = tgMock();
+  await handleAction({ kind: 'welcome', chatId: 'c1' }, tg, CFG, state);
+  const said = tg.calls.find((c) => c[0] === 'sendMessage');
+  assert.ok(said && JSON.stringify(said).includes('draft:resume'));
 });

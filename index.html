@@ -2056,7 +2056,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
 <!-- ============ ENCIMA · sin modal: un clic y ya ============ -->
 <audio id="rx-guide" preload="none" hidden></audio>
 <div class="rx-dock" id="rx-dock" hidden>
-  <button class="rx-dock-btn" type="button" id="rx-dock-toggle" aria-label="Pausar o reanudar" data-aria-es="Pausar o reanudar" data-aria-en="Pause or resume">▶️</button>
+  <button class="rx-dock-btn" type="button" id="rx-dock-toggle" aria-label="Pausar o reanudar" aria-pressed="false" data-aria-es="Pausar o reanudar" data-aria-en="Pause or resume">▶️</button>
   <span class="rx-dock-title" id="rx-dock-title"></span>
   <button class="rx-dock-btn" type="button" id="rx-dock-bot" aria-label="Abrir el bot" data-aria-es="Abrir el bot" data-aria-en="Open the bot" title="El clip sigue sonando mientras estás en el bot (Android); puede pausarse al mantener el micro. En iPhone se pausa al salir." data-title-es="El clip sigue sonando mientras estás en el bot (Android); puede pausarse al mantener el micro. En iPhone se pausa al salir." data-title-en="The clip keeps playing while you're in the bot (Android); it may pause when you hold the mic. On iPhone it pauses when you leave.">🤖</button>
   <button class="rx-dock-btn rx-dock-stop" type="button" id="rx-dock-stop" aria-label="Parar" data-aria-es="Parar" data-aria-en="Stop">⏹</button>
@@ -2608,7 +2608,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       window.open(rxHref(), '_blank', 'noopener');
     }
   }
-  function rxIcon(playing) { if (rxDockToggle) rxDockToggle.textContent = playing ? '🔊' : '▶️'; }
+  /* Botón de la barra: ⏸ mientras suena (un clic pausa), ▶️ en pausa. */
+  function rxIcon(playing) {
+    if (!rxDockToggle) return;
+    rxDockToggle.textContent = playing ? '⏸' : '▶️';
+    rxDockToggle.setAttribute('aria-pressed', String(!playing));
+    rxDockToggle.title = playing ? 'Pausar' : 'Reanudar';
+  }
   function rxShow(title) {
     if (rxDockTitle) rxDockTitle.textContent = '«' + title + '»';
     if (rxDock) rxDock.hidden = false;
@@ -2623,7 +2629,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     if (rxGuide) {
       rxGuide.loop = true;
       if (rxGuide.getAttribute('src') !== rxClipSrc) { rxGuide.pause(); rxGuide.src = rxClipSrc; }
-      rxGuide.play();
+      rxGuide.play().catch(function () {});
     }
     rxShow(rxClipTitle);
     openBot();
@@ -2634,11 +2640,11 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   }
   if (rxDockToggle) rxDockToggle.addEventListener('click', function () {
     if (!rxGuide) return;
-    if (rxGuide.paused) rxGuide.play(); else rxGuide.pause();
+    if (rxGuide.paused) rxGuide.play().catch(function () {}); else rxGuide.pause();
   });
   if (rxDockBot) rxDockBot.addEventListener('click', function () { openBot(); });
   if (rxDockStop) rxDockStop.addEventListener('click', function () {
-    if (rxGuide) rxGuide.pause();
+    if (rxGuide) { rxGuide.pause(); rxGuide.currentTime = 0; }   // para y rebobina
     if (rxDock) rxDock.hidden = true;
     try { localStorage.removeItem(RX_STORE); } catch (_) {}
   });

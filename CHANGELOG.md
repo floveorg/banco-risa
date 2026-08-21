@@ -11,6 +11,25 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 ## [Unreleased] — hito: Abstracting the bot
 
+**El formulario de detalles ya no se pierde (crítico).** Antes, mandar una
+risa con otra aún en borrador solo decía «termínala o cancélala» — sin
+botones y sin guardar la nueva; y si la ficha se había borrado del chat, el
+formulario desaparecía para siempre. Ahora:
+
+- La risa nueva **se guarda** y el bot pregunta con botones: «✏️ Abrir mi
+  borrador» (reabre la ficha con título/tags/Enviar), «🆕 Usar esta nueva»
+  (cambia el borrador a la risa recién mandada) o «✖️ Cancelar borrador».
+- Si editar la ficha falla porque el mensaje ya no existe («message to edit
+  not found»), el bot **la reenvía como mensaje nuevo** automáticamente — el
+  error 404 se autorepara y el formulario siempre vuelve.
+- /welcome ofrece «✏️ Abrir mi borrador» cuando tienes uno abierto.
+
+**Bot más rápido.** El cron pasa de cada 10 a cada 5 minutos (el retardo que
+veías era la cadencia del cron de GitHub Actions, no el bot en sí).
+
+**Barra Encima.** El botón muestra ⏸ mientras suena (un clic pausa) y ▶️ en
+pausa; ⏹ para y rebobina el clip al principio.
+
 **Encima: el guía baja al 75%.** Al mezclar, el micrófono graba también el
 original que suena en el dispositivo; el guía se reproduce al 75% de volumen
 para que tu voz quede por encima sin saturar. Un solo ajuste: lo que oyes es

@@ -116,6 +116,24 @@ export const CANCEL_KEYS = () => ({ inline_keyboard: [[
   { text: '✖️ Cancelar', callback_data: 'draft:cancel' }
 ]] });
 
+// Llegó una risa nueva con otra en borrador: ofrecer abrir la ficha actual
+// (vuelve a mostrar el formulario aunque el mensaje anterior se haya perdido),
+// usar la nueva, o cancelar el borrador.
+export const OVERLAP_TEXT = 'Ya tienes una risa en borrador 💛 ¿Qué hacemos?\n\n' +
+  '«Abrir mi borrador» te vuelve a mostrar la ficha con sus botones (título, ' +
+  'etiquetas y ✅ Enviar). «Usar esta nueva» cambia el borrador a la risa que ' +
+  'acabas de mandar.';
+export const OVERLAP_KEYS = () => ({ inline_keyboard: [
+  [{ text: '✏️ Abrir mi borrador', callback_data: 'draft:resume' },
+   { text: '🆕 Usar esta nueva', callback_data: 'draft:replace' }],
+  [{ text: '✖️ Cancelar borrador', callback_data: 'draft:cancel' }]
+] });
+
+// Hay un borrador abierto (p. ej. tras /welcome): botón para reabrir su ficha.
+export const RESUME_KEYS = () => ({ inline_keyboard: [[
+  { text: '✏️ Abrir mi borrador', callback_data: 'draft:resume' }
+]] });
+
 // Moderación: botones de aprobar/borrar/editar.
 export const BUTTONS = (id) => ({ inline_keyboard: [[
   { text: '✅ Publicar', callback_data: 'ok:' + id },

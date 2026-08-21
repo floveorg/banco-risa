@@ -86,7 +86,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           } else if (act === 'alias' && m[2]) {
             actions.push({ kind: 'draft-alias', chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id, mode: m[2] });
-          } else if (['title', 'tags', 'tags-done', 'send', 'cancel', 'alias-new'].includes(act)) {
+          } else if (['title', 'tags', 'tags-done', 'send', 'cancel', 'alias-new', 'resume', 'replace'].includes(act)) {
             actions.push({ kind: 'draft-' + act, chatId, callbackId: cb.id,
               draftMsgId: cb.message.message_id });
           }
@@ -205,11 +205,24 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           const pd = ctx.drafts && ctx.drafts[key];
           const hasOpenDraft = draftChats.has(key) || !!(pd && (pd.fileId ||
             pd.awaitingTitle || pd.awaitingTags || pd.awaitingAlias || pd.awaitingSubedit));
+          // Check for pending forward/reply (threading) — { id, remix }
+          const pp = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
           if (hasOpenDraft) {
-            actions.push({ kind: 'draft-overlap', chatId: msg.chat.id });
+            // La risa nueva NO se pierde: viaja en la acción para que el bot
+            // ofrezca abrir el borrador actual o usar esta en su lugar.
+            actions.push({
+              kind: 'draft-overlap', id: 'q_' + u.update_id, chatId: msg.chat.id,
+              fileId: media.file_id, ...(video ? { video: true } : {}),
+              fromChatId: msg.chat.id, fromMsgId: msg.message_id,
+              name: (msg.from && msg.from.first_name) || 'Anónima',
+              username: (msg.from && msg.from.username) || '',
+              title: (msg.caption || '').trim(),
+              ...(pp && pp.id ? { parent: pp.id } : {}),
+              ...(pp && pp.title ? { parentTitle: pp.title } : {}),
+              ...(pp && pp.remix ? { remix: true } : {})
+            });
+            if (pp && ctx.awaitingDraftParent) delete ctx.awaitingDraftParent[key];
           } else {
-            // Check for pending forward/reply (threading) — { id, remix }
-            const pp = ctx.awaitingDraftParent && ctx.awaitingDraftParent[key];
             const draftAction = {
               kind: 'draft', id: 'q_' + u.update_id, chatId: msg.chat.id,
               fileId: media.file_id, ...(video ? { video: true } : {}),
