@@ -19,6 +19,10 @@ D1 es el nuevo canónico de escritura y `risa.json` queda como read-model que el
 Workers regenera. Si D1/Workers se apaga, v1 sigue sirviendo (base de
 recuperación).
 
+> **Pendiente de plan:** alineación de reacciones/respuestas en clips sin
+> hilo (`plans/2026-08-20-clips-alignment-data-model.md`) — necesita exponer
+> el grafo de hilos desde D1 antes de unificar el render de clips.
+
 ---
 
 ## 1. Arquitectura
