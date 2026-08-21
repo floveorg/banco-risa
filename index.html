@@ -2429,9 +2429,9 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     servQuiero.addEventListener('click', function () {
       var open = servMail.hidden;
       if (open && !servMail.innerHTML) {
-        servMail.innerHTML = '<span class="es" lang="es">Cuéntanos tu idea por Telegram ↗ </span>' +
-          '<span class="en" lang="en">Tell us your idea on Telegram ↗ </span>' +
-          '<a href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">@RisaLiberadaBot</a>';
+        servMail.innerHTML = '<span class="es" lang="es">Cuéntanos tu idea ↗ </span>' +
+          '<span class="en" lang="en">Tell us your idea ↗ </span>' +
+          '<a href="mailto:risa@liberada.net">risa@liberada.net</a>';
       }
       servMail.hidden = !open;
       servQuiero.setAttribute('aria-expanded', String(open));
@@ -2583,8 +2583,12 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
      La barra acoplada manda: sobrevive al salto al bot y a recargar la página
      (vuelve pausada, lista para reanudar). El bot enlaza la nota de voz al
      clip vía deep link remix_<id> y la publica como remix. */
-  var rxGuide = document.getElementById('rx-guide');
-  var rxDock = document.getElementById('rx-dock'), rxDockTitle = document.getElementById('rx-dock-title');
+   var rxGuide = document.getElementById('rx-guide');
+   /* El guía suena al 45%: en Encima el micrófono graba TAMBIÉN el original que
+      se está oyendo — bajar el GUÍA (no el micro) deja la voz por encima y el
+      original de fondo sin saturar. */
+   if (rxGuide) rxGuide.volume = 0.45;
+   var rxDock = document.getElementById('rx-dock'), rxDockTitle = document.getElementById('rx-dock-title');
   var rxDockToggle = document.getElementById('rx-dock-toggle'), rxDockStop = document.getElementById('rx-dock-stop');
   var rxDockBot = document.getElementById('rx-dock-bot');
   var RX_STORE = 'risa-encima';

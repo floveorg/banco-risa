@@ -11,6 +11,18 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 ## [Unreleased] — hito: Abstracting the bot
 
+**Encima: el guía baja al 45%.** Al mezclar, el micrófono graba también el
+original que suena en el dispositivo; el guía se reproduce al 45% de volumen
+para que tu voz quede por encima sin saturar (bajar el guía, no el micro).
+
+**UI pulida.** Barra superior fija al hacer scroll; buscador centrado con
+botón ↻ de recarga a su lado (mismo diseño, mitad de tamaño); la búsqueda
+filtra de verdad por título · autor · etiquetas (nuevo `player.search()` en
+el player central); las sugerencias solo proponen etiquetas que existen en el
+feed y teclean 3× más lento (sin «→ #etiqueta»); pestañas Liberada v1 / v2 /
+Flove v3 funcionales; «Quiero» despliega el contacto (`risa@liberada.net`);
+tarjetas técnicas reordenadas (Node+Telegram primero) y a igual altura.
+
 **Encima sin fricción: barra acoplada + bot honesto.** El modal de remix
 desaparece: un clic en «Encima» pone el clip a sonar **en bucle**, abre el bot
 a la vez (`?start=remix_<id>`) y deja una **barra acoplada** que sobrevive al
