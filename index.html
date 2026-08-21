@@ -672,7 +672,17 @@ footer p, footer li{font-size:.84rem; line-height:1.7}
 .rx-preview{display:flex; flex-direction:column; gap:10px; margin:12px 0}
 .rx-preview audio{width:100%; border-radius:12px}
 .rx-preview .btn{justify-content:center; text-decoration:none}
-.rx-hint{font-size:.82rem; color:var(--ink-soft); margin:8px 0 0; border-left:3px solid var(--marigold); padding-left:10px}
+/* barra acoplada del Encima: el guía sigue sonando fuera del modal
+   (ciérralo, salta al bot… y el clip no se calla hasta que pares) */
+.rx-dock{position:fixed; left:12px; right:12px; bottom:12px; z-index:55; display:flex; align-items:center; gap:10px;
+  max-width:520px; margin:0 auto; padding:10px 12px; border:2.5px solid var(--ink); border-radius:16px;
+  background:var(--cream); color:var(--ink); box-shadow:0 6px 18px var(--shadow)}
+.rx-dock[hidden]{display:none}
+.rx-dock-btn{flex:none; width:40px; height:40px; border-radius:50%; border:2px solid var(--ink); background:#fff;
+  color:var(--ink); font-size:1.05rem; display:flex; align-items:center; justify-content:center; cursor:pointer}
+.rx-dock-btn:hover{background:var(--marigold)}
+.rx-dock-title{flex:1; min-width:0; font-family:var(--body); font-weight:700; font-size:.9rem;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .tracklist .thread-item.clip-remix{background:linear-gradient(135deg, rgba(255,176,32,.12), rgba(255,120,60,.08)); border-left:3px solid var(--marigold); padding-left:8px !important; border-radius:0 8px 8px 0}
 #upload-modal .btn-primary{justify-content:center; width:100%; text-decoration:none}
 .feed-empty{color:var(--ink-soft); line-height:1.5; padding:8px 2px}
@@ -981,7 +991,7 @@ body:has(#lang-en:checked) .es{display:none}
             </div>
             <div class="media-toggle" role="group" aria-label="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-es="Tipo de risas de la playlist: filtrar por audio o vídeo" data-aria-en="Playlist laugh type: filter by audio or video">
               <button type="button" class="mt-btn mt-audio" id="dd-mt-audio" data-media="audio" aria-pressed="true" aria-label="Filtrar audios" title="Filtrar audios" data-aria-es="Filtrar audios" data-aria-en="Filter audio">
-                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 1 0 7.07"/></svg>
+                <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
               <button type="button" class="mt-btn mt-video" id="dd-mt-video" data-media="video" aria-pressed="false" aria-label="Filtrar vídeos" title="Filtrar vídeos">
                 <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="m15 10 7-4v12l-7-4"/></svg>
@@ -2034,19 +2044,13 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   </div>
 </div>
 
-<!-- ============ MODAL · REMIX / ENCIMA ============ -->
-<div class="modal-back" id="remix-modal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rx-title">
-    <button class="modal-x" type="button" id="rx-close" aria-label="Cerrar" data-aria-es="Cerrar" data-aria-en="Close">×</button>
-    <h2 id="rx-title">🔀 <span class="es" lang="es">Encima / Remix</span><span class="en" lang="en">Over / Remix</span></h2>
-    <p class="modal-sub"><span class="es" lang="es">Graba tu risa encima de este clip.</span><span class="en" lang="en">Record your laugh over this clip.</span></p>
-    <p class="modal-note"><span class="es" lang="es"><b id="rx-clip-title"></b> — escúchalo aquí y <b>graba tu nota de voz en el bot</b>.</span><span class="en" lang="en"><b id="rx-clip-title-en"></b> — listen here and <b>record your voice note in the bot</b>.</span></p>
-    <audio id="rx-guide" controls preload="none"></audio>
-    <a class="btn btn-primary" id="rx-send" href="https://t.me/RisaLiberadaBot" target="_blank" rel="noopener">
-      <span class="es" lang="es">🎙️ Abrir el bot y grabar</span><span class="en" lang="en">🎙️ Open the bot and record</span>
-    </a>
-    <p class="rx-hint"><span class="es" lang="es">En el bot, <b>graba tu nota de voz</b> (o envía el .webm): se publicará como remix de «<b id="rx-clip-title2"></b>», con su enlace «en respuesta a». Si no detecta el clip, <b>reenvía el clip del canal</b> antes de grabar.</span><span class="en" lang="en">In the bot, <b>record your voice note</b> (or send the .webm): it publishes as a remix of «<b id="rx-clip-title2-en"></b>», linked "in reply to". If it doesn't detect the clip, <b>forward the channel clip</b> before recording.</span></p>
-  </div>
+<!-- ============ ENCIMA · sin modal: un clic y ya ============ -->
+<audio id="rx-guide" preload="none" hidden></audio>
+<div class="rx-dock" id="rx-dock" hidden>
+  <button class="rx-dock-btn" type="button" id="rx-dock-toggle" aria-label="Pausar o reanudar" data-aria-es="Pausar o reanudar" data-aria-en="Pause or resume">▶️</button>
+  <span class="rx-dock-title" id="rx-dock-title"></span>
+  <button class="rx-dock-btn" type="button" id="rx-dock-bot" aria-label="Abrir el bot" data-aria-es="Abrir el bot" data-aria-en="Open the bot" title="Al saltar al bot el guía se pausa solo, para que tu grabación salga limpia (sin el original de fondo). Reanúdalo con ▶️ al volver." data-title-es="Al saltar al bot el guía se pausa solo, para que tu grabación salga limpia (sin el original de fondo). Reanúdalo con ▶️ al volver." data-title-en="When you jump to the bot the guide pauses by itself, so your recording comes out clean (no original bleeding in). Resume with ▶️ when you return.">🤖</button>
+  <button class="rx-dock-btn rx-dock-stop" type="button" id="rx-dock-stop" aria-label="Parar" data-aria-es="Parar" data-aria-en="Stop">⏹</button>
 </div>
 
 <!-- ============ MODAL · RISA V1 — CONFIGURAR EL PROMPT DEL AGENTE ============ -->
@@ -2335,7 +2339,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
       .concat((function () { var h = (location.hash || '').slice(1); return h && h.charAt(0) === '/' ? [h] : []; })()),
     self: currentSelf(),
     onReply: function (t) { openReplyModal(t); },
-    onRemix: function (t) { openRemixModal(t); },
+    onRemix: function (t) { startEncima(t); },
     onFeed: seedReactions,
     onReaction: function (t, emoji) {
       var id = t && t.clip && t.clip.id;
@@ -2546,33 +2550,82 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
   if (rmClose) rmClose.addEventListener('click', function () { closeModal(replyModal); });
   if (replyModal) replyModal.addEventListener('click', function (e) { if (e.target === replyModal) closeModal(replyModal); });
 
-  /* ── MODAL REMIX / ENCIMA ──
-     Grabar en el navegador (MediaRecorder) resultó frágil en varios
-     navegadores; la vía fiable y móvil-es-natural es: escuchar el clip aquí y
-     grabar la nota de voz EN EL BOT (deep link → el bot la enlaza al clip). */
-  var remixModal = document.getElementById('remix-modal'), rxClose = document.getElementById('rx-close');
-  var rxSend = document.getElementById('rx-send'), rxGuide = document.getElementById('rx-guide');
+  /* ── ENCIMA · sin modal: un clic arranca el clip EN BUCLE y abre el bot.
+     La barra acoplada manda: sobrevive al salto al bot y a recargar la página
+     (vuelve pausada, lista para reanudar). El bot enlaza la nota de voz al
+     clip vía deep link remix_<id> y la publica como remix. */
+  var rxGuide = document.getElementById('rx-guide');
+  var rxDock = document.getElementById('rx-dock'), rxDockTitle = document.getElementById('rx-dock-title');
+  var rxDockToggle = document.getElementById('rx-dock-toggle'), rxDockStop = document.getElementById('rx-dock-stop');
+  var rxDockBot = document.getElementById('rx-dock-bot');
+  var RX_STORE = 'risa-encima';
   var rxClipId = '', rxClipSrc = '', rxClipTitle = '';
-  function openRemixModal(t) {
+  function rxHref() { return 'https://t.me/RisaLiberadaBot?start=remix_' + encodeURIComponent(rxClipId); }
+  function openBot() {
+    if (!rxClipId) return;
+    var desktop = false;
+    try { desktop = matchMedia('(pointer: fine)').matches && matchMedia('(min-width: 900px)').matches; } catch (_) {}
+    if (desktop) {
+      // ventana con nombre «risa-bot»: si sigue abierta se REUTILIZA y trae al frente
+      var w = window.open(rxHref(), 'risa-bot', 'width=420,height=700');
+      try { if (w) w.focus(); } catch (_) {}
+      if (!w) window.open(rxHref(), '_blank', 'noopener');   // bloqueador de pop-ups → pestaña
+    } else {
+      window.open(rxHref(), '_blank', 'noopener');
+    }
+  }
+  function rxIcon(playing) { if (rxDockToggle) rxDockToggle.textContent = playing ? '🔊' : '▶️'; }
+  function rxShow(title) {
+    if (rxDockTitle) rxDockTitle.textContent = '«' + title + '»';
+    if (rxDock) rxDock.hidden = false;
+  }
+  /* Un clic en «Encima»: suena el clip (en bucle) y el bot se abre a la vez. */
+  function startEncima(t) {
     rxClipId = (t && t.clip && t.clip.id) || '';
     rxClipSrc = (t && t.src) || '';
     rxClipTitle = (t && t.t) || 'esta risa';
-    var title = document.getElementById('rx-clip-title'), titleEn = document.getElementById('rx-clip-title-en');
-    var title2 = document.getElementById('rx-clip-title2'), title2En = document.getElementById('rx-clip-title2-en');
-    if (title) title.textContent = rxClipTitle;
-    if (titleEn) titleEn.textContent = rxClipTitle;
-    if (title2) title2.textContent = rxClipTitle;
-    if (title2En) title2En.textContent = rxClipTitle;
-    if (rxSend) rxSend.href = 'https://t.me/RisaLiberadaBot?start=remix_' + encodeURIComponent(rxClipId);
-    if (rxGuide) { rxGuide.pause(); rxGuide.src = rxClipSrc; }
-    openModal(remixModal);
+    if (!rxClipId || !rxClipSrc) return;
+    try { localStorage.setItem(RX_STORE, JSON.stringify({ id: rxClipId, src: rxClipSrc, t: rxClipTitle })); } catch (_) {}
+    if (rxGuide) {
+      rxGuide.loop = true;
+      if (rxGuide.getAttribute('src') !== rxClipSrc) { rxGuide.pause(); rxGuide.src = rxClipSrc; }
+      rxGuide.play();
+    }
+    rxShow(rxClipTitle);
+    openBot();
   }
-  if (rxClose) rxClose.addEventListener('click', function () { closeModal(remixModal); if (rxGuide) rxGuide.pause(); });
-  if (remixModal) remixModal.addEventListener('click', function (e) { if (e.target === remixModal) { closeModal(remixModal); if (rxGuide) rxGuide.pause(); } });
-  if (rxSend) rxSend.addEventListener('click', function (e) {
-    e.preventDefault();
-    window.open(rxSend.href, '_blank', 'noopener');
+  if (rxGuide) {
+    rxGuide.addEventListener('play', function () { rxIcon(true); });
+    rxGuide.addEventListener('pause', function () { if (rxDock && !rxDock.hidden) rxIcon(false); });
+  }
+  /* Al salir de la página (saltar al bot, cambiar de app) el guía se PAUSA:
+     si siguiera sonando, el micrófono grabaría el original de fondo y saldría
+     distorsionado. Reanúdalo con ▶️ al volver. */
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden && rxGuide && !rxGuide.paused) rxGuide.pause();
   });
+  if (rxDockToggle) rxDockToggle.addEventListener('click', function () {
+    if (!rxGuide) return;
+    if (rxGuide.paused) rxGuide.play(); else rxGuide.pause();
+  });
+  if (rxDockBot) rxDockBot.addEventListener('click', function () { openBot(); });
+  if (rxDockStop) rxDockStop.addEventListener('click', function () {
+    if (rxGuide) rxGuide.pause();
+    if (rxDock) rxDock.hidden = true;
+    try { localStorage.removeItem(RX_STORE); } catch (_) {}
+  });
+  /* Tras recargar, la barra vuelve PAUSADA con el último clip de Encima:
+     reanuda con ▶️ o reabre el bot con 🤖. */
+  (function () {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(RX_STORE) || 'null'); } catch (_) {}
+    if (s && s.id && s.src && rxGuide) {
+      rxClipId = s.id; rxClipSrc = s.src; rxClipTitle = s.t || 'esta risa';
+      rxGuide.src = rxClipSrc;
+      rxShow(rxClipTitle);
+      rxIcon(false);
+    }
+  })();
 
   /* ── PÁGINA DE AUTOR · #/u/<key> (usa la sección gente) ── */
   function renderAuthor() {
@@ -2713,6 +2766,7 @@ Restricciones: sin servidor ni base de datos propios; piezas gratuitas (R2, Page
     document.querySelectorAll('option[data-en]').forEach(function(o){ if(o.dataset[li]!=null) o.textContent=o.dataset[li]; });
     document.querySelectorAll('[data-ph-en]').forEach(function(el){ var v=el.dataset['ph'+cap(li)]; if(v!=null) el.placeholder=v; });
     document.querySelectorAll('[data-aria-en]').forEach(function(el){ var v=el.dataset['aria'+cap(li)]; if(v!=null) el.setAttribute('aria-label', v); });
+    document.querySelectorAll('[data-title-en]').forEach(function(el){ var v=el.dataset['title'+cap(li)]; if(v!=null) el.setAttribute('title', v); });
     document.querySelectorAll('[data-alt-en]').forEach(function(el){ var v=el.dataset['alt'+cap(li)]; if(v!=null) el.setAttribute('alt', v); });
     try{ localStorage.setItem(LS, li); }catch(_){}
   }

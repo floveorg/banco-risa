@@ -178,7 +178,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
         // attaches to the clip instead of waiting for the next poll tick.
         const parent = clipByChannelMsg(ctx.risas, msg.forward_from_message_id);
         if (parent && ctx.awaitingDraftParent) {
-          ctx.awaitingDraftParent[key] = { id: parent.id, remix: false };
+          ctx.awaitingDraftParent[key] = { id: parent.id, remix: false, title: parent.t || parent.name || '' };
         }
         continue;
       }
@@ -219,6 +219,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
               title: (msg.caption || '').trim()
             };
             if (pp && pp.id) draftAction.parent = pp.id;
+            if (pp && pp.title) draftAction.parentTitle = pp.title;
             if (pp && pp.remix) draftAction.remix = true;
             actions.push(draftAction);
             draftChats.add(key);
@@ -238,7 +239,7 @@ export function parseUpdates(updates, ctx, currentOffset = 0) {
           // el MISMO lote (getUpdates acumulado) — registra el padre ya.
           const clip = (Array.isArray(ctx.risas) ? ctx.risas : []).find((c) => c.id === clipId);
           if (clip && ctx.awaitingDraftParent) {
-            ctx.awaitingDraftParent[key] = { id: clip.id, remix: true };
+            ctx.awaitingDraftParent[key] = { id: clip.id, remix: true, title: clip.t || clip.name || '' };
           }
           continue;
         }

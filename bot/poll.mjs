@@ -1,5 +1,6 @@
 // bot/poll.mjs — thin orchestrator: config → state → loop → handleAction
 import { readFile, writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import { parseUpdates, risaEntry, prependClip, identityOf, hashId, MAX_FILE_BYTES, clipsOf,
   latestClips, clipsOfAuthor, clipsToday, clipsSince, randomClip,
   tagTrend, authorStats, searchClips, inlineResult,
@@ -70,10 +71,32 @@ async function setupBotPresence(tg, cfg) {
 }
 
 // ── Handle one action (the core switch) ──────────────────────────────────────
-async function handleAction(a, tg, cfg, state) {
+export async function handleAction(a, tg, cfg, state) {
   const { queue, drafts, risas, uploaders, uploads, tgpub, names,
           suboffer, codes, usernames, clipOwners, notifyprefs } = state;
   const limits = cfg.limits || {};
+
+  // Parent intent (remix deep link / forward) → open draft or pending holder.
+  // With an OPEN draft the promise applies to THAT draft — the web dock and the
+  // bot text both say «esta risa», so silently keeping the old parent would lie.
+  // Returns true when an open draft was reparented (message re-rendered).
+  async function attachParent(chatId, parent, remix) {
+    const key = String(chatId);
+    const prev = drafts[key] || {};
+    const title = parent.t || parent.name || 'esta risa';
+    if (prev.fileId) {
+      prev.parent = parent.id;
+      prev.parentTitle = title;
+      prev.remix = !!remix;
+      delete prev.pendingParent;
+      if (prev.draftMsgId) {
+        await bestEffort(tg.editMessageText(chatId, prev.draftMsgId, draftText(prev), OPTIONS(prev)));
+      }
+      return true;
+    }
+    drafts[key] = { ...prev, pendingParent: { id: parent.id, remix: !!remix, title } };
+    return false;
+  }
 
   if (a.kind === 'draft') {
     const key = String(a.chatId);
@@ -84,6 +107,7 @@ async function handleAction(a, tg, cfg, state) {
       fromChatId: a.fromChatId, fromMsgId: a.fromMsgId,
       draftMsgId: prev.draftMsgId, awaitingTitle: false, awaitingTags: false,
       parent: a.parent || (prev.pendingParent && prev.pendingParent.id) || null,
+      parentTitle: a.parentTitle || (prev.pendingParent && prev.pendingParent.title) || null,
       remix: !!(a.remix || (prev.pendingParent && prev.pendingParent.remix))
     };
     const text = draftText(drafts[key]);
@@ -204,15 +228,24 @@ async function handleAction(a, tg, cfg, state) {
     return { dirty: true };
   }
   if (a.kind === 'draft-cancel') {
-    const d = drafts[String(a.chatId)];
-    if (!d) return {};
-    d.awaitingTitle = false; d.awaitingTags = false; d.awaitingAlias = false;
-    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId, draftText(d), OPTIONS(d)));
+    const key = String(a.chatId);
+    if (!drafts[key]) return {};
+    delete drafts[key];
+    await bestEffort(tg.editMessageText(a.chatId, a.draftMsgId,
+      '❌ Risa cancelada — mándame otra cuando quieras 💛'));
     return { dirty: true };
   }
   if (a.kind === 'draft-send') {
     const d = drafts[String(a.chatId)];
     if (!d) { await bestEffort(tg.answerCallback(a.callbackId, 'Nada que enviar')); return {}; }
+    // Heal drafts stuck with a parent intent that arrived after the media:
+    // honour it now so «Enviar» publishes what the bot promised.
+    if (d.pendingParent && d.pendingParent.id) {
+      d.parent = d.pendingParent.id;
+      d.parentTitle = d.pendingParent.title || null;
+      d.remix = !!d.pendingParent.remix;
+      delete d.pendingParent;
+    }
     if (queue[d.id] || risas.some((e) => e.id === d.id)) { delete drafts[String(a.chatId)]; return { dirty: true }; }
     const who = hashId(a.chatId, TG_ID_SECRET);
     const today = new Date().toISOString().slice(0, 10);
@@ -274,12 +307,12 @@ async function handleAction(a, tg, cfg, state) {
         'No encontré esa risa en el feed. Prueba a reenviarla más tarde.'));
       return {};
     }
-    const key = String(a.chatId);
-    const prev = drafts[key] || {};
-    drafts[key] = { ...prev, pendingParent: { id: parent.id, remix: false } };
+    const open = await attachParent(a.chatId, parent, false);
     await bestEffort(tg.sendMessage(a.chatId,
       '↳ Respondiendo a «' + (parent.t || parent.name || 'esta risa') + '»\n\n' +
-      'Ahora envía tu risa (nota de voz o vídeo).'));
+      (open
+        ? 'Tu borrador ahora responde a esa risa.'
+        : 'Ahora envía tu risa (nota de voz o vídeo).')));
     return { dirty: true };
   }
   if (a.kind === 'remix-start') {
@@ -289,13 +322,13 @@ async function handleAction(a, tg, cfg, state) {
         'No encontré ese clip. Abre el bot desde la risa que quieres remezclar 💛'));
       return {};
     }
-    const key = String(a.chatId);
-    const prev = drafts[key] || {};
-    drafts[key] = { ...prev, pendingParent: { id: clip.id, remix: true } };
+    const open = await attachParent(a.chatId, clip, true);
     await bestEffort(tg.sendMessage(a.chatId,
       '🔀 Encima de «' + (clip.t || clip.name || 'esta risa') + '»\n\n' +
-      'Envía tu grabación (el .webm que descargaste o una nota de voz) y la ' +
-      'publicaremos como remix de esa risa. 💛'));
+      (open
+        ? 'Tu borrador se publicará como remix de esa risa.'
+        : 'Envía tu grabación (el .webm que descargaste o una nota de voz) y la ' +
+          'publicaremos como remix de esa risa.') + ' 💛'));
     return { dirty: true };
   }
   if (a.kind === 'rename') {
@@ -787,4 +820,6 @@ async function main() {
   await commitState();
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// Run the loop only when executed directly (tests import handleAction).
+const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMain) main().catch((e) => { console.error(e); process.exit(1); });

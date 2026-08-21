@@ -11,6 +11,28 @@ versionado `v1.x.y` · política de versiones y retrocompatibilidad en
 
 ## [Unreleased] — hito: Abstracting the bot
 
+**Encima sin fricción: barra acoplada + bot honesto.** El modal de remix
+desaparece: un clic en «Encima» pone el clip a sonar **en bucle**, abre el bot
+a la vez (`?start=remix_<id>`) y deja una **barra acoplada** que sobrevive al
+salto al bot y a recargar la página (vuelve pausada, lista para reanudar).
+⏹ la quita; 🤖 reabre el bot; ▶️/🔊 pausa. Al salir de la página (saltar al
+bot, cambiar de app) el guía **se pausa solo**: si siguiera sonando, el
+micrófono grabaría el original de fondo y la risa saldría distorsionada.
+
+Tres bugs del bot arreglados (con regresión en `bot/test/poll.test.mjs`):
+
+- **El deep link remix mentía con borrador abierto**: `remix-start` /
+  reenvío apuntaban `pendingParent` sobre un borrador ya abierto y «Enviar»
+  publicaba con el padre VIEJO. Ahora el intent se aplica al borrador abierto
+  (se re-renderiza su ficha) y, como red de seguridad, `draft-send` honra
+  cualquier `pendingParent` pendiente.
+- **«↳ Responde a: q_823…»**: la ficha del borrador mostraba el id crudo;
+  ahora lleva el título del clip (`parentTitle`) en todas las vías.
+- **«✖️ Cancelar» no cancelaba**: solo limpiaba flags y el borrador seguía
+  bloqueando nuevas subidas; ahora borra el borrador de verdad.
+
+Arreglado también el icono de volumen truncado (error de consola SVG).
+
 **Hito: poll.mjs se divide en módulos responsables.** El monolito de 1248 líneas
 se separa en cuatro archivos con responsabilidades claras:
 
