@@ -30,8 +30,8 @@ veías era la cadencia del cron de GitHub Actions, no el bot en sí).
 **Barra Encima.** El botón muestra ⏸ mientras suena (un clic pausa) y ▶️ en
 pausa; ⏹ para y rebobina el clip al principio.
 
-**Encima: el guía baja al 75%.** Al mezclar, el micrófono graba también el
-original que suena en el dispositivo; el guía se reproduce al 75% de volumen
+**Encima: el guía baja al 66%.** Al mezclar, el micrófono graba también el
+original que suena en el dispositivo; el guía se reproduce al 66% de volumen
 para que tu voz quede por encima sin saturar. Un solo ajuste: lo que oyes es
 lo que se graba (bajar el guía, no el micro).
 
