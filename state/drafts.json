@@ -18,28 +18,5 @@
     "awaitingTags": false,
     "parent": null,
     "remix": false
-  },
-  "4c593a61c68f50fc51ef": {
-    "id": "q_823020366",
-    "fileId": "AwACAgQAAxkBAAPsaog3Z1VFX9Fil0OUQA1xj7jPAAH4AAJSIwACAeBBUDImAAHoeNPM1D0E",
-    "name": "Marc",
-    "username": "marcflove",
-    "video": false,
-    "title": "Gud mornin",
-    "tags": [
-      "rural"
-    ],
-    "sel": {
-      "alias": "",
-      "anon": false
-    },
-    "fromChatId": "4c593a61c68f50fc51ef",
-    "fromMsgId": 236,
-    "draftMsgId": 238,
-    "awaitingTitle": false,
-    "awaitingTags": false,
-    "parent": "q_823020302",
-    "remix": true,
-    "parentTitle": "Risa Maliciosa"
   }
 }
